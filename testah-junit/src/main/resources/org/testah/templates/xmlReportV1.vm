@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite tests=""  failures="" disabled="0" errors="0" time="" name="">
+
+    <testcase name=\"" + pending + "\" time=\"0.0\">
+        <skipped/>
+    </testcase>
+    
+    <testcase name="" status="" time="" classname="application">
+        <failure message="" type="failed">
+        <![CDATA[]]>
+        </failure>
+    </testcase>
+
+</testsuite>
