@@ -3,6 +3,7 @@ package org.testah.framework.dto;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.testah.TS;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.enums.TestStepActionType;
@@ -79,6 +80,7 @@ public class StepActionDto {
 		return message3;
 	}
 
+	@JsonIgnore
 	public AssertionError getException() {
 		return exception;
 	}

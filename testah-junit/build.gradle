@@ -55,10 +55,10 @@ dependencies {
     compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
     compile 'org.apache.httpcomponents:httpclient:4.5'
     compile 'org.apache.httpcomponents:httpasyncclient:4.1.1'
-    compile( 'org.reflections:reflections:0.9.5-RC2'){
+    compile( 'org.reflections:reflections:0.9.10'){
 	  exclude group: 'ch.qos.logback', module: 'logback-classic'
-	  exclude group: 'com.google.collections', module: 'google-collections'
-	  exclude group: 'com.google.code.gson', module: 'gson'
+	  //exclude group: 'com.google.collections', module: 'google-collections'
+	 // exclude group: 'com.google.code.gson', module: 'gson'
 	}
 	compile('commons-configuration:commons-configuration:1.10')
 	compile 'org.apache.cxf:cxf-common-utilities:2.5.11'
