@@ -12,6 +12,7 @@ public class TestPlanDto {
 	private RunTimeDto runTime = new RunTimeDto();
 	private List<TestCaseDto> testCases = new ArrayList<TestCaseDto>();
 	private Boolean status = null;
+	private final RunInfoDto runInfo = new RunInfoDto();
 
 	public TestPlanDto() {
 		this(null);
@@ -37,7 +38,12 @@ public class TestPlanDto {
 	public TestPlanDto stop() {
 		setStatus();
 		getRunTime().stop();
+		runInfo.recalc(this);
 		return this;
+	}
+
+	public RunInfoDto getRunInfo() {
+		return runInfo;
 	}
 
 	public TestPlanDto setStatus() {

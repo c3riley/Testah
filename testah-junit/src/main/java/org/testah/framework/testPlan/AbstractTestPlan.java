@@ -23,6 +23,7 @@ import org.testah.framework.dto.StepActionDto;
 import org.testah.framework.dto.TestCaseDto;
 import org.testah.framework.dto.TestPlanDto;
 import org.testah.framework.dto.TestStepDto;
+import org.testah.framework.report.JUnitFormatter;
 
 public abstract class AbstractTestPlan {
 
@@ -122,6 +123,7 @@ public abstract class AbstractTestPlan {
 		try {
 			stopTestPlan();
 			TS.util().toJsonPrint(getTestPlan());
+			new JUnitFormatter(getTestPlan()).createReport();
 		} catch (final Exception e) {
 			TS.log().error("after testplan", e);
 		}
@@ -176,14 +178,12 @@ public abstract class AbstractTestPlan {
 	}
 
 	protected static void stopTestPlan() {
-		stopTestCase();
 		getTestPlan().stop();
 		AbstractTestPlan.testPlanStart = false;
 	}
 
 	private TestCaseDto startTestCase(final TestMeta testCase) {
 		if (didTestPlanStart()) {
-			stopTestCase();
 			getTestCaseThreadLocal().set(new TestCaseDto(testCase).start());
 		}
 		return getTestCase();

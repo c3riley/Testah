@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite tests=""  failures="" disabled="0" errors="0" time="" name="">
-
-    <testcase name=\"" + pending + "\" time=\"0.0\">
-        <skipped/>
-    </testcase>
-    
-    <testcase name="" status="" time="" classname="application">
-        <failure message="" type="failed">
-        <![CDATA[]]>
-        </failure>
-    </testcase>
-
+<testsuite tests="" name="$testPlan.getMeta().getName()" errors="$testPlan.getRunInfo().getFail()" skipped="$testPlan.getRunInfo().getIgnore()"
+ tests="$testPlan.getRunInfo().getTotal()" failures="$testPlan.getRunInfo().getFail()" time="$testPlan.getRunTime().getDuration()" timestamp="$testPlan.getRunTime().getStartTime()">
+#foreach( $testCaseRow in $testPlan.getTestCases() )
+    #if("$!testCaseRow.getStatus()" == "")
+        <testcase name="$testCaseRow.getMeta().getName()" time="$testCaseRow.getRunTime().getDuration()">
+            <skipped/>
+        </testcase>
+    #elseif($testCaseRow.getStatus())
+        <testcase name="$testCaseRow.getMeta().getName()" time="$testCaseRow.getRunTime().getDuration()" status="pass">
+        </testcase>
+    #else
+        <testcase name="$testCaseRow.getMeta().getName()" time="$testCaseRow.getRunTime().getDuration()" status="fail">
+            <failure message="" type="failed">
+            <![CDATA[]]>
+            </failure>
+        </testcase>
+    #end
+#end
 </testsuite>
