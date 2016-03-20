@@ -12,27 +12,29 @@ import org.testah.framework.enums.TestType;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface TestMeta {
-    
-    String uuid()
 
-    default "";
-    
-    String name()
+	String uuid()
 
-    default "";
-    
-    String description()
+	default "";
 
-    default "";
-    
-    String[]relatedLinks() default {};
-    
-    String[]relatedIds() default {};
-    
-    String[]tags() default {};
-    
-    TestType testType() default TestType.AUTOMATED;
-    
-    String[]aut() default {};
-    
+	String name()
+
+	default "";
+
+	String description()
+
+	default "";
+
+	String[]relatedLinks() default {};
+
+	String[]relatedIds() default {};
+
+	String[]tags() default {};
+
+	TestType testType() default TestType.AUTOMATED;
+
+	String[]components() default {};
+
+	String[]runTypes() default {};
+
 }

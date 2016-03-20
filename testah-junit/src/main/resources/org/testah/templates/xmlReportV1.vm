@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite tests="" name="$testPlan.getMeta().getName()" errors="$testPlan.getRunInfo().getFail()" skipped="$testPlan.getRunInfo().getIgnore()"
+<testsuite name="$testPlan.getMeta().getName()" errors="$testPlan.getRunInfo().getFail()" skipped="$testPlan.getRunInfo().getIgnore()"
  tests="$testPlan.getRunInfo().getTotal()" failures="$testPlan.getRunInfo().getFail()" time="$testPlan.getRunTime().getDuration()" timestamp="$testPlan.getRunTime().getStartTime()">
 #foreach( $testCaseRow in $testPlan.getTestCases() )
     #if("$!testCaseRow.getStatus()" == "")

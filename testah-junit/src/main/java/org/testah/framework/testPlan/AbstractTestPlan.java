@@ -23,13 +23,15 @@ import org.testah.framework.dto.StepActionDto;
 import org.testah.framework.dto.TestCaseDto;
 import org.testah.framework.dto.TestPlanDto;
 import org.testah.framework.dto.TestStepDto;
-import org.testah.framework.report.JUnitFormatter;
+import org.testah.framework.report.TestPlanReporter;
+import org.testah.runner.testPlan.TestPlanActor;
 
 public abstract class AbstractTestPlan {
 
 	private static ThreadLocal<TestPlanDto> testPlan;
 	private static ThreadLocal<TestCaseDto> testCase;
 	private static ThreadLocal<TestStepDto> testStep;
+	private static ThreadLocal<Boolean> testPlanStart = new ThreadLocal<Boolean>();;
 
 	public TestName name = new TestName();
 
@@ -65,14 +67,14 @@ public abstract class AbstractTestPlan {
 	public TestWatcher watchman2 = new TestWatcher() {
 
 		protected void failed(final Throwable e, final Description description) {
-			TS.log().error("TestCase Status: failed");
+			TS.log().error("TESTCASE Status: failed");
 			stopTestCase(false);
 		}
 
 		protected void succeeded(final Description description) {
-			TS.log().info("TestCase Status: passed");
-			stopTestCase(null);
 
+			stopTestCase(null);
+			TS.log().info("TESTCASE Status: " + getTestCase().getStatusEnum());
 			try {
 				final Test testAnnotation = description.getAnnotation(Test.class);
 				if (null != testAnnotation && None.class == testAnnotation.expected()) {
@@ -89,20 +91,21 @@ public abstract class AbstractTestPlan {
 		}
 
 		protected void finished(final Description desc) {
-			TS.log().info("Finished TestCase: " + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId()
+			TS.log().info("TESTCASE Complete: " + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId()
 					+ "]");
 		}
 
 		protected void starting(final Description desc) {
 
 			if (!didTestPlanStart()) {
-				TS.log().info("starting TestPlan:" + desc.getTestClass().getName() + " - thread["
+				TS.log().info("TESTPLAN started:" + desc.getTestClass().getName() + " - thread["
 						+ Thread.currentThread().getId() + "]");
-				startTestPlan(desc.getTestClass().getAnnotation(TestMeta.class));
+				startTestPlan(desc, desc.getTestClass().getAnnotation(TestMeta.class));
 			}
+			TS.log().info("###############################################################################");
 			TS.log().info(
-					"starting TestCase:" + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
-			startTestCase(desc.getAnnotation(TestMeta.class));
+					"TESTCASE started:" + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
+			startTestCase(desc, desc.getAnnotation(TestMeta.class), desc.getTestClass().getAnnotation(TestMeta.class));
 		}
 	};
 
@@ -110,20 +113,31 @@ public abstract class AbstractTestPlan {
 	public TestRule chain = RuleChain.outerRule(watchman2).around(initialize).around(name).around(filter);
 
 	@BeforeClass
-	public static void setupBase() {
+	public static void setupAbstractTestPlan() {
 		try {
-
+			// testPlan = null;
 		} catch (final Exception e) {
 
 		}
 	}
 
 	@AfterClass
-	public static void tearDownBase() {
+	public static void tearDownAbstractTestPlan() {
 		try {
-			stopTestPlan();
-			TS.util().toJsonPrint(getTestPlan());
-			new JUnitFormatter(getTestPlan()).createReport();
+			if (TS.isBrowser()) {
+
+				if (!TestPlanActor.isResultsInUse()) {
+					TS.browser().close();
+				}
+
+			}
+			if (null != getTestPlan()) {
+				getTestPlan().stop();
+			}
+			if (!TestPlanActor.isResultsInUse()) {
+				TestPlanReporter.reportResults(getTestPlan());
+			}
+
 		} catch (final Exception e) {
 			TS.log().error("after testplan", e);
 		}
@@ -133,10 +147,15 @@ public abstract class AbstractTestPlan {
 
 	public abstract void doOnPass();
 
-	private static boolean testPlanStart = false;
-
 	private static boolean didTestPlanStart() {
-		return testPlanStart;
+		if (null == testPlanStart.get()) {
+			testPlanStart.set(false);
+		}
+		return testPlanStart.get();
+	}
+
+	private static void setTestPlanStart(final boolean testPlanStart) {
+		AbstractTestPlan.testPlanStart.set(testPlanStart);
 	}
 
 	public static ThreadLocal<TestPlanDto> getTestPlanThreadLocal() {
@@ -171,20 +190,19 @@ public abstract class AbstractTestPlan {
 		return testStep.get();
 	}
 
-	protected TestPlanDto startTestPlan(final TestMeta testPlan) {
-		getTestPlanThreadLocal().set(new TestPlanDto(testPlan).start());
-		AbstractTestPlan.testPlanStart = true;
+	protected TestPlanDto startTestPlan(final Description desc, final TestMeta testPlan) {
+		getTestPlanThreadLocal().set(new TestPlanDto(desc, testPlan).start());
+		setTestPlanStart(true);
 		return AbstractTestPlan.testPlan.get();
 	}
 
-	protected static void stopTestPlan() {
-		getTestPlan().stop();
-		AbstractTestPlan.testPlanStart = false;
+	public static void stopTestPlan() {
+		setTestPlanStart(false);
 	}
 
-	private TestCaseDto startTestCase(final TestMeta testCase) {
+	private TestCaseDto startTestCase(final Description desc, final TestMeta testCase, final TestMeta testPlan) {
 		if (didTestPlanStart()) {
-			getTestCaseThreadLocal().set(new TestCaseDto(testCase).start());
+			getTestCaseThreadLocal().set(new TestCaseDto(desc, testCase, testPlan).start());
 		}
 		return getTestCase();
 	}
@@ -213,14 +231,15 @@ public abstract class AbstractTestPlan {
 	protected static void stopTestStep() {
 		if (null != getTestStep()) {
 			getTestCase().addTestStep(getTestStep().stop());
+			testStep = null;
 		}
 	}
 
-	public static boolean addAssertHistory(final StepActionDto assertHistoryItem) {
+	public static boolean addStepAction(final StepActionDto stepAction) {
 		if (null == getTestStep()) {
 			return false;
 		}
-		getTestStep().addAssertHistory(assertHistoryItem);
+		getTestStep().addStepAction(stepAction);
 		return true;
 	}
 

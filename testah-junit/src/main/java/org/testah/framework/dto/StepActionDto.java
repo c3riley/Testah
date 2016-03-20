@@ -1,12 +1,16 @@
 package org.testah.framework.dto;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.openqa.selenium.By;
 import org.testah.TS;
 import org.testah.driver.http.response.ResponseDto;
+import org.testah.framework.enums.TestStatus;
 import org.testah.framework.enums.TestStepActionType;
+import org.testah.framework.testPlan.AbstractTestPlan;
 
 public class StepActionDto {
 
@@ -23,45 +27,81 @@ public class StepActionDto {
 
 	}
 
-	public StepActionDto addAssertResult(final String message, final Boolean status, final String assertMethod,
-			final Object actual, final Object expected, final AssertionError exception) {
-		this.actionName = assertMethod;
-		this.message1 = message;
-		this.status = status;
-		this.message2 = actual;
-		this.message3 = expected;
-		this.exception = exception;
-		this.setTestStepActionType(TestStepActionType.ASSERT);
-		if (TS.isBrowser() && !status && message1.toLowerCase().contains("web")) {
-			this.snapShotPath = TS.browser().takeScreenShot();
+	public StepActionDto add() {
+		if (TS.params().isRecordSteps()) {
+			AbstractTestPlan.addStepAction(this);
 		}
 		return this;
 	}
 
-	public StepActionDto addInfo(final String message1, final String message2) {
-		this.message1 = message1;
-		this.message2 = message2;
-		this.setTestStepActionType(TestStepActionType.INFO);
-		return this;
+	public static StepActionDto createAssertResult(final String message, final Boolean status,
+			final String assertMethod, final Object expected, final Object actual, final AssertionError exception) {
+		final StepActionDto step = new StepActionDto();
+		step.actionName = assertMethod;
+		step.message1 = message;
+		step.status = status;
+		step.message2 = expected;
+		step.message3 = actual;
+		step.exception = exception;
+		step.setTestStepActionType(TestStepActionType.ASSERT);
+		if (TS.isBrowser() && !status) {
+			step.snapShotPath = TS.browser().takeScreenShot();
+		}
+		TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message
+				+ " - expected[" + expected + "] actual[" + actual + "]");
+		return step;
 	}
 
-	public StepActionDto addHttpAction(final ResponseDto response) {
-		this.message1 = response.getUrl();
-		this.message2 = response.getStatusCode();
-		this.message3 = response.getResponseBody();
-		this.setTestStepActionType(TestStepActionType.HTTP_REQUEST);
-		return this;
+	public static StepActionDto createVerifyResult(final String message, final Boolean status,
+			final String assertMethod, final Object expected, final Object actual, final AssertionError exception) {
+		final StepActionDto step = new StepActionDto();
+		step.actionName = assertMethod;
+		step.message1 = message + " - " + status;
+		step.status = null;
+		step.message2 = expected;
+		step.message3 = actual;
+		step.exception = null;
+		step.setTestStepActionType(TestStepActionType.VERIFY);
+
+		TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " + status + " - " + message
+				+ " - expected[" + expected + "] actual[" + actual + "]");
+		return step;
 	}
 
-	public StepActionDto addBrowserAction(final String message1, final String message2) {
-		this.message1 = message1;
-		this.message2 = message2;
-		this.setTestStepActionType(TestStepActionType.BROWSER_ACTION);
-		return this;
+	public static StepActionDto createInfo(final String message1, final String message2) {
+		final StepActionDto step = new StepActionDto();
+		step.message1 = message1;
+		step.message2 = message2;
+		step.setTestStepActionType(TestStepActionType.INFO);
+		TS.log().debug(TestStepActionType.INFO + " - " + step.message1 + " - " + step.message2);
+		return step;
 	}
 
-	public String getMessage() {
-		return message1;
+	public static StepActionDto createHttpAction(final ResponseDto response) {
+		final StepActionDto step = new StepActionDto();
+		step.message1 = response.getUrl();
+		step.message2 = response.getStatusCode();
+		step.message3 = response.getResponseBody();
+		step.setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+		TS.log().debug(TestStepActionType.HTTP_REQUEST + " STATUS[" + step.message2 + "] - " + step.message1);
+		return step;
+	}
+
+	public static StepActionDto createBrowserAction(final String message1, final By by) {
+		return createBrowserAction(message1, by.toString());
+	}
+
+	public static StepActionDto createBrowserAction(final String message1, final String message2) {
+		final StepActionDto step = new StepActionDto();
+		step.message1 = message1;
+		step.message2 = message2;
+		step.setTestStepActionType(TestStepActionType.BROWSER_ACTION);
+		TS.log().debug(TestStepActionType.BROWSER_ACTION + "[" + step.message1 + "] - " + step.message2);
+		return step;
+	}
+
+	public String getDescription() {
+		return getActionName() + "[" + message1 + "]";
 	}
 
 	public Boolean getStatus() {
@@ -136,40 +176,49 @@ public class StepActionDto {
 		return message1;
 	}
 
-	public void setMessage1(final String message1) {
+	public StepActionDto setMessage1(final String message1) {
 		this.message1 = message1;
+		return this;
 	}
 
 	public Object getMessage2() {
 		return message2;
 	}
 
-	public void setMessage2(final Object message2) {
+	public StepActionDto setMessage2(final Object message2) {
 		this.message2 = message2;
+		return this;
 	}
 
 	public Object getMessage3() {
 		return message3;
 	}
 
-	public void setMessage3(final Object message3) {
+	public StepActionDto setMessage3(final Object message3) {
 		this.message3 = message3;
+		return this;
 	}
 
 	public String getActionName() {
 		return actionName;
 	}
 
-	public void setActionName(final String actionName) {
+	public StepActionDto setActionName(final String actionName) {
 		this.actionName = actionName;
+		return this;
 	}
 
 	public String getSnapShotPath() {
 		return snapShotPath;
 	}
 
-	public void setSnapShotPath(final String snapShotPath) {
+	public StepActionDto setSnapShotPath(final String snapShotPath) {
 		this.snapShotPath = snapShotPath;
+		return this;
+	}
+
+	public TestStatus getStatusEnum() {
+		return TestStatus.getStatus(status);
 	}
 
 }

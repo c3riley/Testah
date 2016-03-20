@@ -15,9 +15,10 @@ import org.testah.framework.dto.TestPlanDto;
 
 public abstract class AbstractFormatter {
 
-	public final static String DEFAULT_PACKAGE = "org/testah/templates/";
-	public final String pathToTemplate;
-	final TestPlanDto testPlan;
+	protected final static String DEFAULT_PACKAGE = "org/testah/templates/";
+	protected final String pathToTemplate;
+	protected final TestPlanDto testPlan;
+	protected File reportFile = null;
 
 	public AbstractFormatter(final TestPlanDto testPlan, final String pathToTemplate) {
 		this.testPlan = testPlan;
@@ -28,7 +29,6 @@ public abstract class AbstractFormatter {
 		VelocityContext context = new VelocityContext();
 
 		if (null != testPlan) {
-
 			context.put("testPlan", testPlan);
 
 			context = getContext(context);
@@ -70,11 +70,32 @@ public abstract class AbstractFormatter {
 
 	public AbstractFormatter createReport(final String reportName) {
 		try {
-			FileUtils.writeStringToFile(new File(Params.addUserDir(reportName)), getReport());
+			reportFile = new File(Params.addUserDir(reportName));
+			FileUtils.writeStringToFile(reportFile, getReport());
 		} catch (final IOException e) {
 			TS.log().error("issue creating report: " + reportName, e);
 		}
 		return this;
+	}
+
+	public static String getDefaultPackage() {
+		return DEFAULT_PACKAGE;
+	}
+
+	public String getPathToTemplate() {
+		return pathToTemplate;
+	}
+
+	public File getReportFile() {
+		return this.reportFile;
+	}
+
+	public TestPlanDto getTestPlan() {
+		return testPlan;
+	}
+
+	public void setReportFile(final File reportFile) {
+		this.reportFile = reportFile;
 	}
 
 }

@@ -6,33 +6,29 @@ import org.junit.BeforeClass;
 public class BrowserTestPlan extends AbstractTestPlan {
 
 	public void initlizeTest() {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void tearDownTest() {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void doOnFail() {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void doOnPass() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@BeforeClass
-	public static void setup() {
-		setupBase();
+	public static void setupBrowserTestPlan() {
+
 	}
 
 	@AfterClass
-	public static void tearDown() {
-		tearDownBase();
+	public static void tearDownBrowserTestPlan() {
+
 	}
 
 }

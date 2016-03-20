@@ -2,8 +2,12 @@ package org.testah.framework.cli;
 
 import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
 
+import java.util.List;
+
 import org.testah.TS;
+import org.testah.framework.dto.ResultDto;
 import org.testah.framework.enums.BrowserType;
+import org.testah.framework.report.TestPlanReporter;
 import org.testah.runner.TestahJUnitRunner;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
@@ -57,9 +61,9 @@ public class Cli {
 				res = parser.parseArgs(args);
 				parser.parseArgs(args, opt);
 				TS.setParams(opt);
-
-				TS.log().info("CLI Inputs - " + res);
-
+				TS.log().debug("###############################################################################");
+				TS.log().info("# CLI Inputs - " + res);
+				TS.log().debug("###############################################################################");
 				final String subProcess = res.getString("subparserName");
 				if (null != res.getString("subparserName")) {
 					if (subProcess.equalsIgnoreCase("run")) {
@@ -80,7 +84,11 @@ public class Cli {
 				}
 
 			} else {
-				TS.log().debug("Not using cli params, only loading from properties file");
+				TS.setParams(opt);
+				TS.log().debug("###############################################################################");
+				TS.log().debug("# Not using cli params, only loading from properties file [ "
+						+ ParamLoader.getDefaultPropFilePath() + " ]");
+				TS.log().debug("###############################################################################");
 			}
 		} catch (final ArgumentParserException e) {
 			parser.handleError(e);
@@ -101,7 +109,48 @@ public class Cli {
 		testPlanFilter.filterTestPlansToRun();
 
 		final TestahJUnitRunner junitRunner = new TestahJUnitRunner();
-		junitRunner.runTests(TS.params().getNumConcurrentThreads(), testPlanFilter.getTestClassesMetFilters());
+		final List<ResultDto> results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
+				testPlanFilter.getTestClassesMetFilters());
+
+		int totalTestCases = 0;
+		int totalTestCasesFailed = 0;
+		int totalTestCasesPassed = 0;
+		int totalTestCasesIgnored = 0;
+		final int totalTestPlans = results.size();
+
+		if (null != results) {
+			TS.log().info("###############################################################################");
+			TS.log().info("# TestPlan Result(s):");
+
+			TS.util().pause(1000L, "Waiting for TestsPlans to complete");
+			for (final ResultDto result : results) {
+				if (null != result.getTestPlan()) {
+					totalTestCases += result.getTestPlan().getRunInfo().getTotal();
+					totalTestCasesFailed += result.getTestPlan().getRunInfo().getFail();
+					totalTestCasesPassed += result.getTestPlan().getRunInfo().getPass();
+					totalTestCasesIgnored += result.getTestPlan().getRunInfo().getIgnore();
+				} else {
+					TS.log().error("Testplan is null, for " + result.getJunitResult().getFailures());
+				}
+			}
+		}
+
+		for (final ResultDto result : results) {
+			if (null != result.getTestPlan()) {
+				TestPlanReporter.reportResults(result.getTestPlan());
+			}
+		}
+
+		TS.log().info("###############################################################################");
+		TS.log().info("# Overall Results:");
+		TS.log().info("###############################################################################");
+		TS.log().info("# Total TestPlans: " + totalTestPlans);
+		TS.log().info("# Total TestCases: " + totalTestCases);
+		TS.log().info("# Total TestCases Failed: " + totalTestCasesFailed);
+		TS.log().info("# Total TestCases Passed: " + totalTestCasesPassed);
+		TS.log().info("# Total TestCases Ignored: " + totalTestCasesIgnored);
+		TS.log().info("###############################################################################");
+
 	}
 
 	public void processQuery() {

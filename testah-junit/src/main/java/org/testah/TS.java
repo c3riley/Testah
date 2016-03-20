@@ -6,10 +6,11 @@ import org.apache.logging.log4j.Logger;
 import org.testah.driver.http.AbstractHttpWrapper;
 import org.testah.driver.http.HttpWrapperV1;
 import org.testah.driver.web.browser.AbstractBrowser;
-import org.testah.driver.web.browser.FirefoxBrowser;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.cli.Params;
+import org.testah.framework.dto.StepActionDto;
 import org.testah.framework.report.VerboseAsserts;
+import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.util.Log;
 import org.testah.util.TestahUtil;
 
@@ -18,6 +19,7 @@ public class TS {
 	private static ThreadLocal<HashMap<String, Object>> _statefulData;
 	private static ThreadLocal<AbstractBrowser> _browser;
 	private static ThreadLocal<AbstractHttpWrapper> _http;
+
 	private static VerboseAsserts _asserts;
 	private static VerboseAsserts _verify;
 	private static TestahUtil _testahUtil;
@@ -69,13 +71,14 @@ public class TS {
 		return _params;
 	}
 
-	public static void setParams(final Params params) {
+	public static Params setParams(final Params params) {
 		TS._params = params;
+		return TS._params;
 	}
 
 	public static AbstractBrowser browser() {
 		if (null == _browser) {
-			setBrowser(new FirefoxBrowser());
+			setBrowser(AbstractBrowser.getDefaultBrowser());
 		}
 		return _browser.get();
 	}
@@ -87,6 +90,7 @@ public class TS {
 	public static AbstractBrowser setBrowser(final AbstractBrowser browser) {
 		TS._browser = new ThreadLocal<AbstractBrowser>();
 		TS._browser.set(browser);
+		_browser.get().start();
 		return _browser.get();
 	}
 
@@ -101,6 +105,11 @@ public class TS {
 		TS._http = new ThreadLocal<AbstractHttpWrapper>();
 		TS._http.set(http);
 		return TS._http.get();
+	}
+
+	public static void addStepAction(final StepActionDto stepAction) {
+		AbstractTestPlan.addStepAction(stepAction);
+		return;
 	}
 
 }

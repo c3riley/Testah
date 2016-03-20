@@ -1,10 +1,13 @@
 package org.testah.framework.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.junit.runner.Description;
 import org.testah.framework.annotations.TestMeta;
+import org.testah.framework.enums.TestStatus;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class TestPlanDto {
@@ -20,6 +23,14 @@ public class TestPlanDto {
 
 	public TestPlanDto(final TestMeta meta) {
 		this.meta.fillFromTestMeta(meta);
+	}
+
+	public TestPlanDto(final Description desc, final TestMeta meta) {
+		this.meta.setName(desc.getClassName());
+		this.meta.setSource(desc.getTestClass().getCanonicalName());
+		if (null != meta) {
+			this.meta.fillFromTestMeta(meta);
+		}
 	}
 
 	public TestPlanDto addTestCase(final TestCaseDto testCase) {
@@ -91,4 +102,9 @@ public class TestPlanDto {
 	public void setTestCases(final List<TestCaseDto> testCases) {
 		this.testCases = testCases;
 	}
+
+	public TestStatus getStatusEnum() {
+		return TestStatus.getStatus(status);
+	}
+
 }

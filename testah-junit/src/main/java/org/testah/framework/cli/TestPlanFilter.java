@@ -51,7 +51,8 @@ public class TestPlanFilter {
 
 			}
 			TS.log().info("###################################################");
-			TS.log().info("# TestPlan Classes To Run: ( " + testClassesMetFilters.size() + " of " + testClasses.size());
+			TS.log().info("# TestPlan Classes To Run: ( " + testClassesMetFilters.size() + " of " + testClasses.size()
+					+ " )");
 			TS.log().info("#");
 			for (final Class<?> test : testClassesMetFilters) {
 				TS.log().info("#  " + test.getName());
@@ -94,6 +95,7 @@ public class TestPlanFilter {
 
 	public TestPlanFilter loadUncompiledTestPlans() {
 		final String externalValue = TS.params().getLookAtExternalTests();
+
 		if (null != externalValue && externalValue.length() > 0) {
 			final List<File> files = new ArrayList<File>();
 			final ClassLoader parent = this.getClass().getClassLoader();

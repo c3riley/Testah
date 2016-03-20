@@ -1,0 +1,172 @@
+<html>
+		<head>
+		<title>Automation Results for testPlan: $testPlan.getName()</title>
+
+		<script>
+		function DisplayLayer(LayerName){
+			var obj = document.getElementById(LayerName);
+			if(obj.style.display==''){
+			  obj.style.display = 'none';
+			}else{
+			  obj.style.display = '';
+			}
+		}
+		</script>
+
+		<style>
+
+			.report_name {width: 100%; border: 1px solid black;}
+
+			.tp_table {width: 100%; border: 1px solid black;}
+
+			.tp_details  {width: 80%; border: 1px solid black;}
+			.chart {width: 20%; }
+
+			.label {white-space:nowrap; width: 18%; border: 1px solid black; background-color:silver;}
+			.value {border: 1px solid black;}
+			.tc_table {width: 100%; border: 1px solid black;}
+			.steps_table {width: 100%; border: 1px solid black;}
+			.step_row {width: 100%; border: 1px solid black;}
+			.step_header {width: 100%; border: 1px solid black; background-color:silver;}
+
+			.step_id {}
+			.step_status_FAILED {background-color:red;}
+			.step_status_PASSED {background-color:green;}
+			.step_status_NA {background-color:grey;}
+
+			.FAILED {background-color:red;width:100%;color:white}
+			.PASSED {background-color:green;width:100%;color:white}
+			.NA {background-color:grey;width:100%;color:white}
+
+			.step_desc {width: 45%;}
+			.step_expected {width: 25%;}
+			.step_actual {width: 25%;}
+			.screenshot {width: 5%;}
+			.sa_row {width: 100%; border: 1px solid black;}
+			.sa_id {}
+
+		</style>
+
+		</head>
+
+		<body onload='elasticTextAreas();'>
+
+		<table class='report_main'>
+
+		<tr><td>
+
+		<table class='tp_table'><tr><td>
+
+		<table class='tp_details'>
+
+		<tr><td class='label'>testPlan:</td><td class='value'>$testPlan.getMeta().getName() [ $testPlan.getMeta().getSource() ] </td></tr>
+		<tr><td class='label'>testPlan Status:</td><td class='value'><div class='$testPlan.getStatusEnum()'>
+				$testPlan.getStatusEnum() 
+				#foreach( $tc in $testPlan.getTestCases() )
+				    #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
+						| <a style='color:white;' href='\#$tc.getMeta().getName()' title='See TestCase Results'>$tc.getMeta().getName()</a>
+					#end
+				#end
+		</td></tr>
+		<tr><td class='label'>TestCases Passed</td><td class='value'>$testPlan.getRunInfo().getPass()</td></tr>
+		<tr><td class='label'>TestCases Failed:</td><td class='value'>$testPlan.getRunInfo().getFail()</td></tr>
+		<tr><td class='label'>TestCases Ignored:</td><td class='value'>$testPlan.getRunInfo().getIgnore()</td></tr>
+		<tr><td class='label'>User:</td><td class='value'>$testPlan.getUser()</td></tr>
+		<tr><td class='label'>Build:</td><td class='value'>
+		#if("$!testPlan.getCiUrl()" != "")
+			<a href='testPlan.getCiUrl()' target='_blank'>View CI</a>
+		#end
+		</td></tr>
+		<tr><td class='label'>Environment:</td><td class='value'>$testPlan.getEnvironment()</td></tr>
+		<tr><td class='label'>Time</td><td class='value'>$testPlan.getRunTime().getStartTimePretty() to $testPlan.getRunTime().getEndTimePretty()</td></tr>
+        <tr><td class='label'>Duration</td><td class='value'>$testPlan.getRunTime().getDurationPretty()</td></tr>
+		</table>
+		</td>
+
+		<td class='chart'><img src='$GoogleChart' alt='Test Results'/>
+
+		</td>
+		</tr>
+		</table>
+
+		</td>
+		</tr>
+		
+		
+		<!-- TESTCASES -->
+		#foreach( $testcase in $testPlan.getTestCases() )
+		<tr>
+			<td>
+
+				<table class='tc_table'>
+
+					<tr><td class='label'>TestCase:</td><td class='value'><a name='$testcase.getName()'>$testcase.getMeta().getName() [ $testcase.getMeta().getSource() ]</a></td></tr>
+					<tr><td class='label'>Description:</td><td class='value'>$testcase.getMeta().getDescription()</td></tr>
+					<tr><td class='label'>Status:</td><td class='value'><div class='$testcase.getStatusEnum()'>$testcase.getStatusEnum()</div></td></tr>
+					<tr><td class='label'>Time:</td><td class='value'>$testcase.getRunTime().getStartTimePretty() to $testcase.getRunTime().getEndTimePretty()  [Duration: $testcase.getRunTime().getDurationPretty()]</td></tr>
+
+				</table>
+
+			</td>
+		</tr>
+		
+		
+		
+		
+			<tr>
+				<td>
+					<table class='steps_table'>
+
+						#foreach ($step in $testcase.getTestSteps()) 
+
+							<tr class='step_header'>
+							<td class='step_id'>ID</td><td class='step_desc'>Description</td>
+							<td class='step_expected'>Expected</td><td class='step_actual'>Actual</td><td></td></tr>
+
+							<tr>
+								<td class='step_id'>$step.getId()</td>
+								<td class='step_desc'>$step.getMeta().getName()</td>
+								<td class='step_expected'>$step.getMeta().getDescription()</td>
+								<td class='step_actual'></td><td></td>
+							</tr>
+
+							#foreach ($stepAction in $step.getStepActions())
+								<tr>
+									<td class='step_status_$stepAction.getStatusEnum()'></td>
+									<td class='step_desc'>
+									
+										<textarea rows='4' cols='50' style='word-wrap:break-word;'>$stepAction.getDescription()</textarea>
+									
+									</td>
+									<td  class='step_expected'>
+									
+										<textarea rows='4' cols='50' style='word-wrap:break-word;'>$!stepAction.getExpected()</textarea>
+									
+									</td>
+									<td  class='step_actual'>
+									
+										<textarea rows='4' cols='50' style='word-wrap:break-word;'>$!stepAction.getActual()</textarea>
+									
+									</td>
+									
+									<td id='screenshot'>
+									#if("$!stepAction.getSnapShotPath()" != "")
+										<a href='$stepAction.getSnapShotPath()' target='_blank'>View</a>
+									#end
+									</td>
+								</tr>
+							#end
+						#end
+					</table>
+				</td>
+			</tr>
+			</td>
+			</tr>
+		
+		
+		
+		
+		
+		
+		#end
+		

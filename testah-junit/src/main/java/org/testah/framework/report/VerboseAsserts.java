@@ -2,22 +2,23 @@ package org.testah.framework.report;
 
 import org.hamcrest.Matcher;
 import org.junit.Assert;
+import org.testah.TS;
 import org.testah.framework.dto.StepActionDto;
-import org.testah.framework.testPlan.AbstractTestPlan;
 
 @SuppressWarnings("deprecation")
 public class VerboseAsserts {
 
+	private boolean recordSteps = true;
 	private boolean throwExceptionOnFail = true;
-	private boolean recordHistory = true;
+	private boolean isVerifyOnly = false;
 
 	public VerboseAsserts() {
-
+		setRecordSteps(TS.params().isRecordSteps());
+		throwExceptionOnFail = TS.params().isThrowExceptionOnFail();
 	}
 
 	public VerboseAsserts(final boolean throwExceptionOnFail) {
-		setThrowExceptionOnFail(throwExceptionOnFail);
-		;
+		this.throwExceptionOnFail = throwExceptionOnFail;
 	}
 
 	public boolean same(final Object expected, final Object actual) {
@@ -72,12 +73,12 @@ public class VerboseAsserts {
 		}
 	}
 
-	public boolean notNull(final String expected, final Object actual) {
+	public boolean notNull(final String message, final Object actual) {
 		try {
-			Assert.assertNotNull(expected, actual);
-			return addAssertHistory("", true, "assertNotNull", expected, actual);
+			Assert.assertNotNull(message, actual);
+			return addAssertHistory(message, true, "assertNotNull", true, actual);
 		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertNotNull", expected, actual, e);
+			final boolean rtn = addAssertHistory(message, false, "assertNotNull", true, actual, e);
 			if (getThrowExceptionOnFail()) {
 				throw e;
 			}
@@ -86,16 +87,7 @@ public class VerboseAsserts {
 	}
 
 	public boolean notNull(final Object actual) {
-		try {
-			Assert.assertNotNull(actual);
-			return addAssertHistory("", true, "assertNotNull", null, actual);
-		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertNotNull", null, actual, e);
-			if (getThrowExceptionOnFail()) {
-				throw e;
-			}
-			return rtn;
-		}
+		return notNull("", actual);
 	}
 
 	public boolean isNull(final String message, final Object actual) {
@@ -112,16 +104,7 @@ public class VerboseAsserts {
 	}
 
 	public boolean isNull(final Object actual) {
-		try {
-			Assert.assertNull(actual);
-			return addAssertHistory("", true, "assertNull", null, actual);
-		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertNull", null, actual, e);
-			if (getThrowExceptionOnFail()) {
-				throw e;
-			}
-			return rtn;
-		}
+		return isNull("", actual);
 	}
 
 	public boolean notSame(final String message, final Object expected, final Object actual) {
@@ -306,12 +289,12 @@ public class VerboseAsserts {
 		}
 	}
 
-	public boolean isFalse(final String expected, final boolean actual) {
+	public boolean isFalse(final String message, final boolean actual) {
 		try {
-			Assert.assertFalse(expected, actual);
-			return addAssertHistory("", true, "assertFalse", expected, actual);
+			Assert.assertFalse(message, actual);
+			return addAssertHistory(message, true, "assertFalse", false, actual);
 		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertFalse", expected, actual, e);
+			final boolean rtn = addAssertHistory(message, false, "assertFalse", false, actual, e);
 			if (getThrowExceptionOnFail()) {
 				throw e;
 			}
@@ -320,24 +303,15 @@ public class VerboseAsserts {
 	}
 
 	public boolean isFalse(final boolean actual) {
-		try {
-			Assert.assertFalse(actual);
-			return addAssertHistory("", true, "assertFalse", false, actual);
-		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertFalse", false, actual, e);
-			if (getThrowExceptionOnFail()) {
-				throw e;
-			}
-			return rtn;
-		}
+		return isFalse("", actual);
 	}
 
-	public boolean isTrue(final String expected, final boolean actual) {
+	public boolean isTrue(final String message, final boolean actual) {
 		try {
-			Assert.assertTrue(expected, actual);
-			return addAssertHistory("", true, "assertTrue", expected, actual);
+			Assert.assertTrue(message, actual);
+			return addAssertHistory(message, true, "assertTrue", true, actual);
 		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertTrue", expected, actual, e);
+			final boolean rtn = addAssertHistory(message, false, "assertTrue", true, actual, e);
 			if (getThrowExceptionOnFail()) {
 				throw e;
 			}
@@ -346,16 +320,7 @@ public class VerboseAsserts {
 	}
 
 	public boolean isTrue(final boolean actual) {
-		try {
-			Assert.assertTrue(actual);
-			return addAssertHistory("", true, "assertTrue", true, actual);
-		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertTrue", true, actual, e);
-			if (getThrowExceptionOnFail()) {
-				throw e;
-			}
-			return rtn;
-		}
+		return isTrue("", actual);
 	}
 
 	public boolean notEquals(final Object expected, final Object actual) {
@@ -735,17 +700,18 @@ public class VerboseAsserts {
 	}
 
 	public boolean addAssertHistory(final String message, final Boolean status, final String assertMethod,
-			final Object actual, final Object expected) {
-		return addAssertHistory(message, status, assertMethod, actual, expected, null);
+			final Object expected, final Object actual) {
+		return addAssertHistory(message, status, assertMethod, expected, actual, null);
 	}
 
 	public boolean addAssertHistory(final String message, final Boolean status, final String assertMethod,
-			final Object actual, final Object expected, final AssertionError exception) {
-
-		if (isRecordHistory()) {
-			AbstractTestPlan.addAssertHistory(
-					new StepActionDto().addAssertResult(message, status, assertMethod, actual, expected, exception));
+			final Object expected, final Object actual, final AssertionError exception) {
+		if (isVerifyOnly()) {
+			StepActionDto.createVerifyResult(message, status, assertMethod, expected, actual, exception).add();
+		} else {
+			StepActionDto.createAssertResult(message, status, assertMethod, expected, actual, exception).add();
 		}
+
 		return status;
 	}
 
@@ -757,22 +723,31 @@ public class VerboseAsserts {
 		return getThrowExceptionOnFail();
 	}
 
+	public VerboseAsserts onlyVerfiy() {
+		this.recordSteps = false;
+		this.throwExceptionOnFail = false;
+		this.setVerifyOnly(true);
+		return this;
+	}
+
+	public boolean isRecordSteps() {
+		return recordSteps;
+	}
+
 	public void setThrowExceptionOnFail(final boolean throwExceptionOnFail) {
 		this.throwExceptionOnFail = throwExceptionOnFail;
 	}
 
-	public boolean isRecordHistory() {
-		return recordHistory;
+	public void setRecordSteps(final boolean recordSteps) {
+		this.recordSteps = recordSteps;
 	}
 
-	public void setRecordHistory(final boolean recordHistory) {
-		this.recordHistory = recordHistory;
+	public boolean isVerifyOnly() {
+		return isVerifyOnly;
 	}
 
-	public VerboseAsserts onlyVerfiy() {
-		this.recordHistory = false;
-		this.throwExceptionOnFail = false;
-		return this;
+	public void setVerifyOnly(final boolean isVerifyOnly) {
+		this.isVerifyOnly = isVerifyOnly;
 	}
 
 }

@@ -1,7 +1,11 @@
 package org.testah.framework.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.testah.TS;
+import org.testah.framework.enums.TestStatus;
 
 public class TestStepDto {
 
@@ -9,6 +13,7 @@ public class TestStepDto {
 	private TestMetaDto meta = new TestMetaDto();
 	private RunTimeDto runTime = new RunTimeDto();
 	private Boolean status = null;
+	private int id = 0;
 
 	public TestStepDto() {
 
@@ -19,14 +24,15 @@ public class TestStepDto {
 		meta.setDescription(description);
 	}
 
-	public TestStepDto addAssertHistory(final StepActionDto assertHistoryItem) {
-		if (null != assertHistoryItem) {
-			getStepActions().add(assertHistoryItem);
+	public TestStepDto addStepAction(final StepActionDto stepActions) {
+		if (null != stepActions) {
+			getStepActions().add(stepActions);
 		}
 		return this;
 	}
 
 	public TestStepDto start() {
+		TS.log().info("TESTSTEP starting - " + this.getMeta().getName());
 		setStatus(null);
 		getRunTime().start();
 		return this;
@@ -42,8 +48,7 @@ public class TestStepDto {
 		for (final StepActionDto e : stepActions) {
 			if (null == e.getStatus()) {
 
-			}
-			if (e.getStatus() == false) {
+			} else if (e.getStatus() == false) {
 				status = false;
 				return this;
 			} else if (e.getStatus() == true) {
@@ -107,6 +112,19 @@ public class TestStepDto {
 	public TestStepDto setStepActions(final List<StepActionDto> stepActions) {
 		this.stepActions = stepActions;
 		return this;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public TestStepDto setId(final int id) {
+		this.id = id;
+		return this;
+	}
+
+	public TestStatus getStatusEnum() {
+		return TestStatus.getStatus(status);
 	}
 
 }

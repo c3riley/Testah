@@ -4,17 +4,17 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.PropertiesConfigurationLayout;
+import org.apache.logging.log4j.Level;
 import org.testah.TS;
 import org.testah.framework.annotations.Comment;
 
 public class ParamLoader {
 
 	private PropertiesConfiguration paramsFromProperties = null;
-	private CompositeConfiguration config = null;
+
 	private static final String fieldPrefix = "param.";
 	private final String pathToParamPropFile;
 
@@ -30,6 +30,7 @@ public class ParamLoader {
 		this.pathToParamPropFile = pathToParamPropFile;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Params loadParamValues() {
 
 		final Params params = new Params();
@@ -42,15 +43,15 @@ public class ParamLoader {
 
 			final File f = new File(pathToParamPropFile);
 			if (f.exists()) {
-				config = new CompositeConfiguration();
-				config.addConfiguration(paramsFromProperties);
-				config.addConfiguration(getCustomParamProperties(f));
+
+				// paramsFromProperties
 				boolean accessible;
 				for (final Field field : Params.class.getDeclaredFields()) {
+
 					accessible = field.isAccessible();
 					try {
 						field.setAccessible(true);
-						field.set(params, config.getProperty(fieldPrefix + field.getName()));
+						field.set(params, paramsFromProperties.getProperty(fieldPrefix + field.getName()));
 					} catch (final Exception e) {
 						TS.log().warn(e);
 					} finally {
@@ -58,8 +59,51 @@ public class ParamLoader {
 					}
 				}
 
+				// getCustomParamProperties
+				final PropertiesConfiguration config = getCustomParamProperties(f);
+
+				for (final Field field : Params.class.getDeclaredFields()) {
+
+					accessible = field.isAccessible();
+					try {
+						field.setAccessible(true);
+						if (null != config.getProperty(fieldPrefix + field.getName())) {
+							if (field.getType().isAssignableFrom(String.class)) {
+
+								field.set(params, config.getProperty(fieldPrefix + field.getName()));
+							} else if (field.getType().isAssignableFrom(int.class)) {
+								field.setInt(params,
+										Integer.parseInt((String) config.getProperty(fieldPrefix + field.getName())));
+							} else if (field.getType().isAssignableFrom(Long.class)) {
+								field.set(params,
+										(Long.parseLong((String) config.getProperty(fieldPrefix + field.getName()))));
+							} else if (field.getType().isAssignableFrom(boolean.class)) {
+								field.setBoolean(params, Boolean
+										.parseBoolean((String) config.getProperty(fieldPrefix + field.getName())));
+							} else if (((Class<?>) field.getType()).isEnum()) {
+								field.set(params, Enum.valueOf((Class<Enum>) field.getType(),
+										(String) config.getProperty(fieldPrefix + field.getName())));
+							} else if (field.getType() == Level.class) {
+								field.set(params,
+										Level.toLevel((String) config.getProperty(fieldPrefix + field.getName())));
+							} else {
+								field.set(params, config.getProperty(fieldPrefix + field.getName()));
+							}
+						}
+					} catch (final Exception e) {
+						TS.log().warn(e);
+					} finally {
+						try {
+							TS.log().trace(field.getName() + " = " + field.get(params));
+						} catch (final Exception e2) {
+
+						}
+						field.setAccessible(accessible);
+					}
+				}
+
 			} else {
-				TS.log().warn("Issue loading custom Propfile[" + f.getAbsolutePath()
+				TS.log().warn("Issue loading custom properties[" + f.getAbsolutePath()
 						+ "] - was not found, will create one for the next runs use");
 				try {
 					paramsFromProperties.save(f);
@@ -67,10 +111,15 @@ public class ParamLoader {
 					TS.log().warn("Issue saving custom Propfile[" + f.getAbsolutePath() + "]", e);
 				}
 			}
-		} catch (final ConfigurationException e) {
+		} catch (
+
+		final ConfigurationException e)
+
+		{
 			TS.log().warn("Issues with testah.properties");
 		}
 		return params;
+
 	}
 
 	public ParamLoader overwriteDefaultConfig() {

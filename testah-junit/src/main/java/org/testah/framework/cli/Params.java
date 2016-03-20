@@ -13,7 +13,7 @@ public class Params {
 
 	@Comment(info = "Number of Concurrent Threads")
 	@Arg(dest = "numConcurrentThreads")
-	private final int numConcurrentThreads = 1;
+	private int numConcurrentThreads = 1;
 
 	@Comment(info = "Folder to write output to, if empty will be {user dir}/testahOutput")
 	@Arg(dest = "output")
@@ -29,7 +29,7 @@ public class Params {
 
 	@Comment(info = "Log level for log4j: TRACE, DEBUG, INFO, WARN, ERROR")
 	@Arg(dest = "level")
-	private final Level level = Level.DEBUG;
+	private Level level = Level.DEBUG;
 
 	private int defaultWaitTime = 10;
 	private Long defaultPauseTime = 500L;
@@ -38,34 +38,141 @@ public class Params {
 	private String userAgentValue = null;
 
 	private boolean useRemoteDriver = false;
+
+	@Comment(info = "")
+	@Arg(dest = "FirefoxDriverBinary")
 	private String FirefoxDriverBinary = "";
+
+	public String getPhantomJsDriverBinary() {
+		return PhantomJsDriverBinary;
+	}
+
+	public void setPhantomJsDriverBinary(final String phantomJsDriverBinary) {
+		PhantomJsDriverBinary = phantomJsDriverBinary;
+	}
+
+	@Comment(info = "")
+	@Arg(dest = "PhantomJsDriverBinary")
+	private String PhantomJsDriverBinary = "";
+
+	@Comment(info = "")
+	@Arg(dest = "ChromeDriverBinary")
+	private String ChromeDriverBinary = "";
 
 	private static String osName = null;
 	private static String userDir = null;
 
 	@Comment(info = "")
 	@Arg(dest = "filterByTagFound")
-	private final String filterByTagFound = "";
+	private String filterByTagFound = "";
 
 	@Comment(info = "")
 	@Arg(dest = "filterByTagNotFound")
-	private final String filterByTagNotFound = "";
+	private String filterByTagNotFound = "";
 
 	@Comment(info = " ")
 	@Arg(dest = "filterByNameStartsWith")
-	private final String filterByNameStartsWith = "";
+	private String filterByNameStartsWith = "";
 
 	@Comment(info = "")
 	@Arg(dest = "filterByTestType")
-	private final TestType filterByTestType = TestType.AUTOMATED;
+	private TestType filterByTestType = TestType.AUTOMATED;
 
 	@Comment(info = "")
 	@Arg(dest = "lookAtInternalTests")
-	private final String lookAtInternalTests = "org.testah";
+	private String lookAtInternalTests = "org.testah";
+
+	public void setNumConcurrentThreads(final int numConcurrentThreads) {
+		this.numConcurrentThreads = numConcurrentThreads;
+	}
+
+	public void setLevel(final Level level) {
+		this.level = level;
+	}
+
+	public void setFilterByTagFound(final String filterByTagFound) {
+		this.filterByTagFound = filterByTagFound;
+	}
+
+	public void setFilterByTagNotFound(final String filterByTagNotFound) {
+		this.filterByTagNotFound = filterByTagNotFound;
+	}
+
+	public void setFilterByNameStartsWith(final String filterByNameStartsWith) {
+		this.filterByNameStartsWith = filterByNameStartsWith;
+	}
+
+	public void setFilterByTestType(final TestType filterByTestType) {
+		this.filterByTestType = filterByTestType;
+	}
+
+	public void setLookAtInternalTests(final String lookAtInternalTests) {
+		this.lookAtInternalTests = lookAtInternalTests;
+	}
+
+	public void setLookAtExternalTests(final String lookAtExternalTests) {
+		this.lookAtExternalTests = lookAtExternalTests;
+	}
 
 	@Comment(info = "")
 	@Arg(dest = "lookAtExternalTests")
-	private final String lookAtExternalTests = "";
+	private String lookAtExternalTests = "";
+
+	@Comment(info = "")
+	@Arg(dest = "recordSteps")
+	private boolean recordSteps = true;
+
+	@Comment(info = "")
+	@Arg(dest = "throwExceptionOnFail")
+	private boolean throwExceptionOnFail = true;
+
+	@Comment(info = "")
+	@Arg(dest = "useXunitFormatter")
+	private boolean useXunitFormatter = true;
+
+	public boolean isUseXunitFormatter() {
+		return useXunitFormatter;
+	}
+
+	public void setUseXunitFormatter(final boolean useXunitFormatter) {
+		this.useXunitFormatter = useXunitFormatter;
+	}
+
+	public boolean isUseHtmlFormatter() {
+		return useHtmlFormatter;
+	}
+
+	public void setUseHtmlFormatter(final boolean useHtmlFormatter) {
+		this.useHtmlFormatter = useHtmlFormatter;
+	}
+
+	@Comment(info = "")
+	@Arg(dest = "useHtmlFormatter")
+	private boolean useHtmlFormatter = true;
+
+	public boolean isThrowExceptionOnFail() {
+		return throwExceptionOnFail;
+	}
+
+	public void setThrowExceptionOnFail(final boolean throwExceptionOnFail) {
+		this.throwExceptionOnFail = throwExceptionOnFail;
+	}
+
+	public void setRecordSteps(final boolean recordSteps) {
+		this.recordSteps = recordSteps;
+	}
+
+	public boolean isRecordSteps() {
+		return recordSteps;
+	}
+
+	public void setOutput(final String output) {
+		this.output = output;
+	}
+
+	public static void setUserDir(final String userDir) {
+		Params.userDir = userDir;
+	}
 
 	public static void setOsName(final String osName) {
 		Params.osName = osName;
@@ -188,6 +295,20 @@ public class Params {
 		return true;
 	}
 
+	public static boolean isMac() {
+		if (getOsName().contains("darwin")) {
+			return true;
+		}
+		return true;
+	}
+
+	public static boolean isWIndows() {
+		if (getOsName().contains("win")) {
+			return true;
+		}
+		return true;
+	}
+
 	public int getNumConcurrentThreads() {
 		return numConcurrentThreads;
 	}
@@ -198,5 +319,13 @@ public class Params {
 			new File(output).mkdirs();
 		}
 		return output;
+	}
+
+	public String getChromeDriverBinary() {
+		return ChromeDriverBinary;
+	}
+
+	public void setChromeDriverBinary(final String chromeDriverBinary) {
+		ChromeDriverBinary = chromeDriverBinary;
 	}
 }

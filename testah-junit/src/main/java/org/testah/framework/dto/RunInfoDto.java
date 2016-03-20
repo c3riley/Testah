@@ -3,6 +3,8 @@ package org.testah.framework.dto;
 public class RunInfoDto {
 
 	private String runId = "";
+	private String runLocation = null;
+	private String buildNumber = null;
 	private int pass = 0;
 	private int fail = 0;
 	private int ignore = 0;
@@ -68,6 +70,25 @@ public class RunInfoDto {
 
 	public void setTotal(final int total) {
 		this.total = total;
+	}
+
+	public String getRunLocation() {
+		if (null == runLocation) {
+			runLocation = "localhost";
+		}
+		return runLocation;
+	}
+
+	public void setRunLocation(final String runLocation) {
+		this.runLocation = runLocation;
+	}
+
+	public String getBuildNumber() {
+		return buildNumber;
+	}
+
+	public void setBuildNumber(final String buildNumber) {
+		this.buildNumber = buildNumber;
 	}
 
 }

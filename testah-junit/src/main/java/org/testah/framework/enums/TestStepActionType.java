@@ -2,10 +2,10 @@ package org.testah.framework.enums;
 
 public enum TestStepActionType {
 
-    ASSERT(), BROWSER_ACTION(), HTTP_REQUEST(), INFO();
+	ASSERT(), BROWSER_ACTION(), HTTP_REQUEST(), INFO(), VERIFY();
 
-    TestStepActionType() {
+	TestStepActionType() {
 
-    }
-    
+	}
+
 }

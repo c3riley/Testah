@@ -36,7 +36,10 @@ repositories {
 
 dependencies {
 
-	
+	compile 'uk.com.robust-it:cloning:1.9.2'
+	compile 'joda-time:joda-time:2.9.2'
+	compile 'com.kohlschutter.junixsocket:junixsocket-common:2.0.4'
+	compile 'com.codeborne:phantomjsdriver:1.2.1'
 	//compile gradleApi() logger issues
 	compile localGroovy()
 	compile 'org.slf4j:slf4j-simple:1.7.18'
@@ -71,6 +74,16 @@ dependencies {
 			}
 		}
 	}
+}
+
+task fatJar(type: Jar) {
+	baseName = project.name + '-all'
+	from sourceSets.test.output
+	from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	manifest {
+		attributes("Main-Class": "org.testah.Testah" )
+	}
+	with jar
 }
 
 task local(type: LocalizerTask)

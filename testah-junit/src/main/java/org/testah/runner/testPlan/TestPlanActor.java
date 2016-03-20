@@ -53,6 +53,10 @@ public class TestPlanActor extends UntypedActor {
 		return results;
 	}
 
+	public static boolean isResultsInUse() {
+		return (null != results);
+	}
+
 	public static void resetResults() {
 		results = new ArrayList<ResultDto>();
 	}

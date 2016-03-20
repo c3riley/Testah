@@ -1,6 +1,7 @@
 package org.testah.driver.web.browser;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,23 +29,35 @@ public abstract class AbstractBrowser {
 	private final String userAgentValue = TS.params().getUserAgentValue();
 	private DesiredCapabilities desiredCapabilities = null;
 
+	public static AbstractBrowser getDefaultBrowser() {
+		switch (TS.params().getBrowser()) {
+		case PHANTOMJS:
+			return new PhantomJsBrowser();
+		case FIREFOX:
+			return new FirefoxBrowser();
+		default:
+			return new FirefoxBrowser();
+		}
+	}
+
 	public AbstractBrowser start() {
 		return start(remote);
 	}
 
 	public AbstractBrowser start(final boolean remote) {
-		final DesiredCapabilities capabilities = getCapabilities();
+		try {
+			final DesiredCapabilities capabilities = getCapabilities();
 
-		startInternal();
-
-		if (remote) {
-			driver = getRemoteDriver(capabilities);
-		} else {
-			getDriverBinay();
-			startService();
+			if (remote) {
+				driver = getRemoteDriver(capabilities);
+			} else {
+				getDriverBinay();
+				startService();
+				driver = getWebDriver(capabilities);
+			}
+		} catch (final Exception e) {
+			throw new RuntimeException("Issue Stating browser", e);
 		}
-		driver = getWebDriver(capabilities);
-
 		return this;
 	}
 
@@ -62,13 +75,16 @@ public abstract class AbstractBrowser {
 
 	public abstract WebDriver getWebDriver(final DesiredCapabilities capabilities);
 
-	public abstract AbstractBrowser startInternal();
-
 	public abstract AbstractBrowser getDriverBinay();
 
-	public abstract AbstractBrowser startService();
+	public abstract AbstractBrowser startService() throws IOException;
+
+	public abstract AbstractBrowser stopService() throws IOException;
 
 	public DesiredCapabilities getCapabilities() {
+		if (null == desiredCapabilities) {
+			desiredCapabilities = createCapabilities();
+		}
 		return desiredCapabilities;
 	}
 
@@ -77,7 +93,7 @@ public abstract class AbstractBrowser {
 		return this;
 	}
 
-	public abstract AbstractBrowser setCapabilities();
+	public abstract DesiredCapabilities createCapabilities();
 
 	public AbstractWebElementWrapper getWebelement(final By by) {
 		return new WebElementWrapperV1(by, getWebElementNative(by, false));
@@ -97,10 +113,12 @@ public abstract class AbstractBrowser {
 
 	private List<WebElement> getWebElementsNative(final By by, final boolean noWait) {
 		String error = "";
+		List<WebElement> lst = new ArrayList<WebElement>();
 		for (int i = 1; i <= elementWaitTime; i++) {
 			error = "";
 			try {
-				return driver.findElements(by);
+				lst = driver.findElements(by);
+				break;
 			} catch (final Exception e) {
 				error = e.getMessage();
 			}
@@ -109,16 +127,18 @@ public abstract class AbstractBrowser {
 			}
 			TS.util().pause("getWebElementsNative", i);
 		}
-		TS.asserts().equals("Expected to find WebElement with By[" + by + "] - error: " + error, true, false);
-		return new ArrayList<WebElement>();
+		TS.asserts().isTrue("Expected to find WebElements with By[" + by + "] found: " + lst.size() + " " + error,
+				lst.size() > 0);
+		return lst;
 	}
 
 	private WebElement getWebElementNative(final By by, final boolean noWait) {
 		String error = "";
+		WebElement element = null;
 		for (int i = 1; i <= elementWaitTime; i++) {
 			try {
-				return driver.findElement(by);
-
+				element = driver.findElement(by);
+				break;
 			} catch (final Exception e) {
 				error = e.getMessage();
 			}
@@ -127,8 +147,8 @@ public abstract class AbstractBrowser {
 			}
 			TS.util().pause("getWebElementNative", i);
 		}
-		TS.asserts().equals("Expected to find WebElement with By[" + by + "] - error: " + error, true, false);
-		return null;
+		TS.asserts().notNull("Expected to find WebElement with By[" + by + "]: " + error, element);
+		return element;
 	}
 
 	public WebDriver getDriver() {
@@ -169,7 +189,18 @@ public abstract class AbstractBrowser {
 			}
 			TS.util().pause("waitForTitleToChange from [" + pageTitleToChange + "] - current [" + title + "]", i);
 		}
+		return this;
+	}
 
+	public AbstractBrowser waitForTitle(final String pageTitle, final int timeout) {
+		String title;
+		for (int i = 1; i <= timeout; i++) {
+			title = getTitle();
+			if (TS.verify().equals(pageTitle, title)) {
+				break;
+			}
+			TS.util().pause("waitForTitle from [" + pageTitle + "] - current [" + title + "]", i);
+		}
 		return this;
 	}
 
@@ -204,11 +235,17 @@ public abstract class AbstractBrowser {
 		return this;
 	}
 
-	public AbstractBrowser goToAndWaitForTitle(final String uri) {
+	public AbstractBrowser goToAndWaitForTitleToChange(final String uri) {
 		final String title = "WaitingForChange - " + TS.util().now();
 		runJavaScript("document.title='" + title + "';");
 		goTo(uri);
 		waitForTitleToChange(title, 10);
+		return this;
+	}
+
+	public AbstractBrowser goToAndWaitForTitle(final String uri, final String title) {
+		goTo(uri);
+		waitForTitle(title, 10);
 		return this;
 	}
 
@@ -242,8 +279,10 @@ public abstract class AbstractBrowser {
 	public String takeScreenShot(final String path) {
 		try {
 			final String version = driver.toString().toLowerCase();
-			final File f = new File(path);
-
+			File f = new File(path);
+			if (f.isDirectory()) {
+				f = File.createTempFile("screenshot_", ".png", f);
+			}
 			if (version.contains("remotewebdriver")) {
 				final WebDriver augmentedDriver = new Augmenter().augment(driver);
 				final File s = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.FILE);
@@ -251,7 +290,7 @@ public abstract class AbstractBrowser {
 				TS.log().info("Screenshot file: " + f.getAbsolutePath());
 			} else {
 				final File sf = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-				FileUtils.copyFile(sf, new File(path));
+				FileUtils.copyFile(sf, f);
 				TS.log().info("Screenshot file: " + f.getAbsolutePath());
 			}
 			return f.getAbsolutePath();
@@ -262,4 +301,16 @@ public abstract class AbstractBrowser {
 		return null;
 	}
 
+	public void close() {
+		if (null != driver) {
+			try {
+				driver.close();
+				driver = null;
+				stopService();
+			} catch (final Exception e) {
+				TS.log().warn("issue closing browser", e);
+			}
+		}
+
+	}
 }

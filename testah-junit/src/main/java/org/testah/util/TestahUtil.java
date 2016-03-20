@@ -1,11 +1,22 @@
 package org.testah.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig.Feature;
 import org.testah.TS;
+import org.testah.framework.cli.Params;
 
 public class TestahUtil {
 
@@ -60,6 +71,10 @@ public class TestahUtil {
 		pause(TS.params().getDefaultPauseTime(), reasonForPause, null);
 	}
 
+	public void pause(final Long milliseconds, final String reasonForPause) {
+		pause(milliseconds, reasonForPause, null);
+	}
+
 	public void pause(final String reasonForPause, final Integer iteration) {
 		pause(TS.params().getDefaultPauseTime(), reasonForPause, iteration);
 	}
@@ -67,9 +82,9 @@ public class TestahUtil {
 	public void pause(final Long milliseconds, final String reasonForPause, final Integer iteration) {
 		try {
 			if (null == iteration) {
-				TS.log().debug(reasonForPause + " - " + milliseconds + "ms");
+				TS.log().debug("pause - " + reasonForPause + " - " + milliseconds + "ms");
 			} else {
-				TS.log().debug(iteration + "] " + reasonForPause + " - " + milliseconds + "ms");
+				TS.log().debug("pause - " + iteration + "] " + reasonForPause + " - " + milliseconds + "ms");
 			}
 
 			Thread.sleep(milliseconds);
@@ -83,7 +98,7 @@ public class TestahUtil {
 	}
 
 	public String nowUnique() {
-		return now("MMddyyyyHH:mm:ss.S");
+		return now("MMddyyyyHHmmssS");
 	}
 
 	public String now(final String dateTimeFormat) {
@@ -97,6 +112,46 @@ public class TestahUtil {
 	public String toDateString(final Long time, final String dateTimeFormat) {
 		final SimpleDateFormat f = new SimpleDateFormat(dateTimeFormat);
 		return f.format(new Date(time));
+	}
+
+	public File downloadFile(final String urlToUse, final String destination) {
+		try {
+			final File driver = new File(Params.addUserDir(destination));
+			driver.mkdirs();
+			final URL uri = new URL(urlToUse);
+			final File zip = new File(driver, destination + ".zip");
+			FileUtils.copyURLToFile(uri, zip);
+			return zip;
+		} catch (final Exception e) {
+			TS.log().warn(e);
+		}
+		return null;
+	}
+
+	public File unZip(final File zip, final File destination) {
+		destination.mkdirs();
+		try (ZipFile zipFile = new ZipFile(zip)) {
+			final Enumeration<? extends ZipEntry> entries = zipFile.entries();
+			while (entries.hasMoreElements()) {
+				final ZipEntry entry = entries.nextElement();
+				final File entryDestination = new File(destination, entry.getName());
+				if (entry.isDirectory()) {
+					entryDestination.mkdirs();
+				} else {
+					entryDestination.getParentFile().mkdirs();
+					final InputStream in = zipFile.getInputStream(entry);
+					final OutputStream out = new FileOutputStream(entryDestination);
+					IOUtils.copy(in, out);
+					IOUtils.closeQuietly(in);
+					out.close();
+				}
+			}
+		} catch (final Exception e) {
+			TS.log().warn(e);
+		} finally {
+
+		}
+		return destination;
 	}
 
 }
