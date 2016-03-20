@@ -79,7 +79,7 @@ public class Cli {
 						processCreate();
 
 					} else {
-
+						throw new RuntimeException("Unknown SubParser: " + subProcess);
 					}
 				}
 
@@ -105,6 +105,7 @@ public class Cli {
 	}
 
 	public void processRun() {
+
 		final TestPlanFilter testPlanFilter = new TestPlanFilter();
 		testPlanFilter.filterTestPlansToRun();
 

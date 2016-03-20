@@ -1,7 +1,5 @@
 package org.testah.framework.dto;
 
-import java.io.Serializable;
-
 public class Result {
 
 	private int total;

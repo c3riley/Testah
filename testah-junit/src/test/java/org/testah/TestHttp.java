@@ -16,8 +16,8 @@ public class TestHttp extends HttpTestPlan {
 	@Test
 	public void t2() throws ClientProtocolException, IOException {
 		final HttpWrapperV1 http = new HttpWrapperV1();
-		http.setHttpClient().preformRequestWithAssert(new GetRequestDto("http://www.google.com")).print();
-		http.setHttpClient().preformRequestWithAssert(new GetRequestDto("http://www.google.com")).printStatus();
+		http.setHttpClient().preformRequestWithAssert(new GetRequestDto("http://www.google.com"));
+		http.setHttpClient().preformRequestWithAssert(new GetRequestDto("http://www.google.com"));
 
 	}
 }

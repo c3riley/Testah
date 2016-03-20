@@ -1,13 +1,11 @@
 package org.testah.framework.dto;
 
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.io.StringWriter;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openqa.selenium.By;
 import org.testah.TS;
-import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.enums.TestStatus;
 import org.testah.framework.enums.TestStepActionType;
 import org.testah.framework.testPlan.AbstractTestPlan;
@@ -68,22 +66,24 @@ public class StepActionDto {
 		return step;
 	}
 
+	public static StepActionDto createInfo(final String message1) {
+		return createInfo(message1, "", "", false);
+	}
+
 	public static StepActionDto createInfo(final String message1, final String message2) {
+		return createInfo(message1, message2, "", false);
+	}
+
+	public static StepActionDto createInfo(final String message1, final String message2, final String message3,
+			final boolean autoLog) {
 		final StepActionDto step = new StepActionDto();
 		step.message1 = message1;
 		step.message2 = message2;
+		step.message3 = message3;
 		step.setTestStepActionType(TestStepActionType.INFO);
-		TS.log().debug(TestStepActionType.INFO + " - " + step.message1 + " - " + step.message2);
-		return step;
-	}
-
-	public static StepActionDto createHttpAction(final ResponseDto response) {
-		final StepActionDto step = new StepActionDto();
-		step.message1 = response.getUrl();
-		step.message2 = response.getStatusCode();
-		step.message3 = response.getResponseBody();
-		step.setTestStepActionType(TestStepActionType.HTTP_REQUEST);
-		TS.log().debug(TestStepActionType.HTTP_REQUEST + " STATUS[" + step.message2 + "] - " + step.message1);
+		if (autoLog) {
+			TS.log().debug(TestStepActionType.INFO + " - " + step.message1 + " - " + step.message2);
+		}
 		return step;
 	}
 
@@ -113,11 +113,11 @@ public class StepActionDto {
 	}
 
 	public Object getActual() {
-		return message2;
+		return message3;
 	}
 
 	public Object getExpected() {
-		return message3;
+		return message2;
 	}
 
 	@JsonIgnore
@@ -148,12 +148,12 @@ public class StepActionDto {
 	}
 
 	public StepActionDto setActual(final Object actual) {
-		this.message2 = actual;
+		this.message3 = actual;
 		return this;
 	}
 
 	public StepActionDto setExpected(final Object expected) {
-		this.message3 = expected;
+		this.message2 = expected;
 		return this;
 	}
 
@@ -200,6 +200,9 @@ public class StepActionDto {
 	}
 
 	public String getActionName() {
+		if (null == actionName) {
+			actionName = getTestStepActionType().name();
+		}
 		return actionName;
 	}
 

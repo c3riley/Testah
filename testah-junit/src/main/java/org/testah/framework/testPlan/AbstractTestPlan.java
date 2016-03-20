@@ -1,7 +1,6 @@
 package org.testah.framework.testPlan;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.Assume;
@@ -241,13 +240,6 @@ public abstract class AbstractTestPlan {
 		}
 		getTestStep().addStepAction(stepAction);
 		return true;
-	}
-
-	public static List<StepActionDto> getAssertHistory() {
-		if (null == getTestStep()) {
-			return null;
-		}
-		return getTestStep().getStepActions();
 	}
 
 }

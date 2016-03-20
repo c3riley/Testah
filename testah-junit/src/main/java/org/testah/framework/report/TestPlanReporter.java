@@ -13,11 +13,12 @@ public class TestPlanReporter {
 			filename += "_" + testPlan.getMeta().getSource().replace(".", "_") + "_" + TS.util().nowUnique();
 		}
 		final RunInfoDto ri = testPlan.getRunInfo();
+		System.out.println("\n\n\n");
 		TS.log().info("###############################################################################");
 		TS.log().info("# TestPlan[" + testPlan.getMeta().getSource() + " (thread:" + Thread.currentThread().getId()
 				+ ") Status: " + testPlan.getStatusEnum());
-		TS.log().info("# Failed: " + ri.getFail());
 		TS.log().info("# Passed: " + ri.getPass());
+		TS.log().info("# Failed: " + ri.getFail());
 		TS.log().info("# Ignore: " + ri.getIgnore());
 		TS.log().info("# Total: " + ri.getTotal());
 		TS.log().info("# Duration: " + testPlan.getRunTime().getDurationPretty());

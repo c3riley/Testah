@@ -58,6 +58,7 @@ import org.apache.http.util.EntityUtils;
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
+import org.testah.framework.testPlan.AbstractTestPlan;
 
 public abstract class AbstractHttpWrapper {
 
@@ -96,8 +97,8 @@ public abstract class AbstractHttpWrapper {
 
 	public ResponseDto preformRequestWithAssert(final AbstractRequestDto request, final ResponseDto expected) {
 		final ResponseDto response = preformRequest(request);
-		if (TS.asserts().notNull("preformRequestWithAssert expected", response)
-				&& TS.asserts().notNull("preformRequestWithAssert expected", expected)) {
+		if (TS.asserts().notNull("preformRequestWithAssert actual response is not null", response)
+				&& TS.asserts().notNull("preformRequestWithAssert expected response is not null", expected)) {
 			response.assertStatus(expected.getStatusCode());
 		}
 		return response;
@@ -122,7 +123,10 @@ public abstract class AbstractHttpWrapper {
 				responseDto.setStatusText(response.getStatusLine().getReasonPhrase());
 				responseDto.setResponseBody(EntityUtils.toString(response.getEntity()));
 				responseDto.setUrl(request.getHttpRequestBase().getURI().toString());
-				responseDto.setHeaders(response.getAllHeaders());
+				responseDto.setHeaders(response.getAllHeaders()).setRequestType(request.getHttpMethod());
+			}
+			if (verbose) {
+				AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500));
 			}
 			return responseDto;
 		} catch (final Exception e) {
@@ -269,7 +273,7 @@ public abstract class AbstractHttpWrapper {
 			/*
 			 * final SSLHostnameVerifier sSLHostnameVerifier = new
 			 * NoopHostnameVerifier();
-			 * 
+			 *
 			 * final TrustStrategy ts = new TrustSelfSignedStrategy(); return
 			 * setSslcontext(SSLContexts.custom().loadTrustMaterial(new
 			 * TrustSelfSignedStrategy()).build());
@@ -352,6 +356,9 @@ public abstract class AbstractHttpWrapper {
 	}
 
 	public ResponseDto getExpectedResponse() {
+		if (null == expectedResponse) {
+			expectedResponse = new ResponseDto(200);
+		}
 		return expectedResponse;
 	}
 
