@@ -1,3 +1,4 @@
+#set( $blockNumber = 1 )
 <html>
 		<head>
 		<title>Automation Results for testPlan: $testPlan.getName()</title>
@@ -59,12 +60,12 @@
 
 		<table class='tp_details'>
 
-		<tr><td class='label'>testPlan:</td><td class='value'>$testPlan.getMeta().getName() [ $testPlan.getMeta().getSource() ] </td></tr>
+		<tr><td class='label'>testPlan:</td><td class='value'>$testPlan.getName() [ $testPlan.getSource() ] </td></tr>
 		<tr><td class='label'>testPlan Status:</td><td class='value'><div class='$testPlan.getStatusEnum()'>
 				$testPlan.getStatusEnum() 
 				#foreach( $tc in $testPlan.getTestCases() )
 				    #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
-						| <a style='color:white;' href='\#$tc.getMeta().getName()' title='See TestCase Results'>$tc.getMeta().getName()</a>
+						| <a style='color:white;' href='\#$tc.getName()' title='See TestCase Results'>$tc.getName()</a>
 					#end
 				#end
 		</td></tr>
@@ -100,8 +101,8 @@
 
 				<table class='tc_table'>
 
-					<tr><td class='label'>TestCase:</td><td class='value'><a name='$testcase.getName()'>$testcase.getMeta().getName() [ $testcase.getMeta().getSource() ]</a></td></tr>
-					<tr><td class='label'>Description:</td><td class='value'>$testcase.getMeta().getDescription()</td></tr>
+					<tr><td class='label'>TestCase:</td><td class='value'><a name='$testcase.getName()'>$testcase.getName() [ $testcase.getSource() ]</a></td></tr>
+					<tr><td class='label'>Description:</td><td class='value'>$testcase.getDescription()</td></tr>
 					<tr><td class='label'>Status:</td><td class='value'><div class='$testcase.getStatusEnum()'>$testcase.getStatusEnum()</div></td></tr>
 					<tr><td class='label'>Time:</td><td class='value'>$testcase.getRunTime().getStartTimePretty() to $testcase.getRunTime().getEndTimePretty()  [Duration: $testcase.getRunTime().getDurationPretty()]</td></tr>
 
@@ -125,14 +126,15 @@
 
 							<tr>
 								<td class='step_id'>$step.getId()</td>
-								<td class='step_desc'>$step.getMeta().getName()</td>
-								<td class='step_expected'>$step.getMeta().getDescription()</td>
+								<td class='step_desc'>$step.getName()</td>
+								<td class='step_expected'>$step.getDescription()</td>
 								<td class='step_actual'></td><td></td>
 							</tr>
 
 							#foreach ($stepAction in $step.getStepActions())
 								<tr>
-									<td class='step_status_$stepAction.getStatusEnum()'></td>
+									<td class='step_status_$stepAction.getStatusEnum()' 
+									onclick="DisplayLayer('Step_$step.getId()_$blockNumber');" title='Click here to see Exception'></td>
 									<td class='step_desc'>
 									
 										<textarea rows='4' cols='50' style='word-wrap:break-word;'>$stepAction.getDescription()</textarea>
@@ -155,6 +157,14 @@
 									#end
 									</td>
 								</tr>
+								<tr id='Step_$step.getId()_$blockNumber' style='display: none;'>
+									<td colspan='5'>
+<pre>
+$!stepAction.getExceptionString()
+</pre>
+									</td>
+								</tr>
+								#set( $blockNumber = $blockNumber + 1 )
 							#end
 						#end
 					</table>

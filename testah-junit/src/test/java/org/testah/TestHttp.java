@@ -6,18 +6,21 @@ import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 import org.testah.driver.http.HttpWrapperV1;
 import org.testah.driver.http.requests.GetRequestDto;
-import org.testah.framework.annotations.TestMeta;
+import org.testah.framework.annotations.TestCase;
+import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.HttpTestPlan;
 
-@TestMeta
+@TestPlan
 public class TestHttp extends HttpTestPlan {
 
-	@TestMeta
-	@Test
-	public void t2() throws ClientProtocolException, IOException {
-		final HttpWrapperV1 http = new HttpWrapperV1();
-		http.setHttpClient().preformRequestWithAssert(new GetRequestDto("http://www.google.com"));
-		http.setHttpClient().preformRequestWithAssert(new GetRequestDto("http://www.google.com"));
+    @TestCase
+    @Test
+    public void t2() throws ClientProtocolException, IOException {
+        step("cool");
+        final HttpWrapperV1 http = new HttpWrapperV1();
+        http.setHttpClient().doRequestWithAssert(new GetRequestDto("http://www.google.com"));
+        step("cool");
+        http.setHttpClient().doRequestWithAssert(new GetRequestDto("http://www.2google.com"));
 
-	}
+    }
 }

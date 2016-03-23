@@ -2,16 +2,17 @@ package org.testah.formatter;
 
 import org.junit.Test;
 import org.testah.TS;
-import org.testah.framework.annotations.TestMeta;
+import org.testah.framework.annotations.TestCase;
+import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.HttpTestPlan;
 
-@TestMeta
+@TestPlan
 public class TestFormatters extends HttpTestPlan {
 
-	@Test
-	@TestMeta
-	public void test1() {
-		TS.asserts().isNull(null);
-	}
+    @Test
+    @TestCase
+    public void test1() {
+        TS.asserts().isNull(null);
+    }
 
 }
