@@ -68,7 +68,7 @@ public abstract class AbstractTestPlan {
     public TestWatcher watchman2 = new TestWatcher() {
 
                                      protected void failed(final Throwable e, final Description description) {
-                                         TS.log().error("TESTCASE Status: failed");
+                                         TS.log().error("TESTCASE Status: failed", e);
                                          stopTestCase(false);
                                      }
 
