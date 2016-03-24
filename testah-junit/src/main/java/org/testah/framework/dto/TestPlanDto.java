@@ -3,10 +3,11 @@ package org.testah.framework.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.junit.runner.Description;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.enums.TestStatus;
+
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class TestPlanDto extends TestMetaDto {

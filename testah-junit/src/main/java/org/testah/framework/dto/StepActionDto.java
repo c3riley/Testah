@@ -3,12 +3,13 @@ package org.testah.framework.dto;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.openqa.selenium.By;
 import org.testah.TS;
 import org.testah.framework.enums.TestStatus;
 import org.testah.framework.enums.TestStepActionType;
 import org.testah.framework.testPlan.AbstractTestPlan;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class StepActionDto {
 

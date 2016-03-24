@@ -8,10 +8,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
-import org.codehaus.jackson.JsonNode;
 import org.testah.TS;
 import org.testah.framework.dto.StepActionDto;
 import org.testah.framework.enums.TestStepActionType;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class ResponseDto {
 
