@@ -13,10 +13,11 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig.Feature;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class TestahUtil {
 
@@ -24,9 +25,9 @@ public class TestahUtil {
 
     public TestahUtil() {
         map = new ObjectMapper();
-        map.enable(Feature.INDENT_OUTPUT);
+        map.enable(SerializationFeature.INDENT_OUTPUT);
         // map.setVisibility(JsonMethod.FIELD, Visibility.ANY);
-        map.configure(Feature.FAIL_ON_EMPTY_BEANS, false);
+        map.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     }
 
     public String toJsonPrint(final Object object) {
