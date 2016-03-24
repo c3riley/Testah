@@ -127,7 +127,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     @BeforeClass
     public static void setupAbstractTestPlan() {
         try {
-            testPlan = null;
+
         } catch (final Exception e) {
 
         }
