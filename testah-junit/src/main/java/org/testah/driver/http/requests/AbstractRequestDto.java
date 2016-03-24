@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
@@ -141,20 +140,6 @@ public abstract class AbstractRequestDto {
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public AbstractRequestDto setPayload(final HttpEntity payload) {
-        try {
-            if (null != payload) {
-                httpEntity = payload;
-                ((HttpPost) httpRequestBase).setEntity(payload);
-            } else {
-                TS.log().warn("payload was null so ignoreing");
-            }
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-        return this;
     }
 
     public String getPayloadString() {

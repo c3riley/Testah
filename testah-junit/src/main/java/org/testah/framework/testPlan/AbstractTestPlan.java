@@ -68,6 +68,10 @@ public abstract class AbstractTestPlan {
     public TestWatcher watchman2 = new TestWatcher() {
 
                                      protected void failed(final Throwable e, final Description description) {
+                                         StepActionDto
+                                                 .createAssertResult("Unexpected Error occured", false,
+                                                         "UnhandledExceptionFoundByJUnit", "", e.getMessage(), null)
+                                                 .setException(e).add();
                                          TS.log().error("TESTCASE Status: failed", e);
                                          stopTestCase(false);
                                      }
