@@ -8,6 +8,7 @@ import org.testah.driver.http.HttpWrapperV1;
 import org.testah.driver.http.requests.GetRequestDto;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
+import org.testah.framework.dto.TestCaseDto;
 import org.testah.framework.testPlan.HttpTestPlan;
 
 @TestPlan
@@ -22,5 +23,25 @@ public class TestHttp extends HttpTestPlan {
         step("cool");
         http.setHttpClient().doRequestWithAssert(new GetRequestDto("http://www.2google.com"));
 
+        http.doPost("http://www.google.com", null);
+
+    }
+
+    @TestCase
+    @Test
+    public void postWithNUll() throws ClientProtocolException, IOException {
+        TS.http().doPost("http://www.google.com", null);
+    }
+
+    @TestCase
+    @Test
+    public void postWithEmptyString() throws ClientProtocolException, IOException {
+        TS.http().doPost("http://www.google.com", "");
+    }
+
+    @TestCase
+    @Test
+    public void postWithObject() throws ClientProtocolException, IOException {
+        TS.http().doPost("http://www.google.com", new TestCaseDto());
     }
 }
