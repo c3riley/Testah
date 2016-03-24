@@ -16,6 +16,9 @@ import org.junit.rules.TestWatcher;
 import org.junit.rules.Timeout;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.testah.TS;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
@@ -26,7 +29,8 @@ import org.testah.framework.dto.TestStepDto;
 import org.testah.framework.report.TestPlanReporter;
 import org.testah.runner.testPlan.TestPlanActor;
 
-public abstract class AbstractTestPlan {
+@ContextHierarchy({ @ContextConfiguration(classes = TestConfiguration.class) })
+public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests {
 
     private static ThreadLocal<TestPlanDto> testPlan;
     private static ThreadLocal<TestCaseDto> testCase;
@@ -123,7 +127,7 @@ public abstract class AbstractTestPlan {
     @BeforeClass
     public static void setupAbstractTestPlan() {
         try {
-            // testPlan = null;
+            testPlan = null;
         } catch (final Exception e) {
 
         }

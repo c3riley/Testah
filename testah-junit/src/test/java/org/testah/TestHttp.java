@@ -4,13 +4,17 @@ import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
 import org.testah.driver.http.HttpWrapperV1;
 import org.testah.driver.http.requests.GetRequestDto;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.dto.TestCaseDto;
 import org.testah.framework.testPlan.HttpTestPlan;
+import org.testah.framework.testPlan.TestConfiguration;
 
+@ContextHierarchy({ @ContextConfiguration(classes = TestConfiguration.class) })
 @TestPlan
 public class TestHttp extends HttpTestPlan {
 

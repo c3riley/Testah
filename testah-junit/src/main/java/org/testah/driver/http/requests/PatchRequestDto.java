@@ -26,8 +26,11 @@ public class PatchRequestDto extends AbstractRequestDto {
         setPayload(payload);
     }
 
-    public AbstractRequestDto setPayload(final String payload) {
+    public AbstractRequestDto setPayload(String payload) {
         try {
+            if (null == payload) {
+                payload = "";
+            }
             return setPayload(new StringEntity(payload));
         } catch (final Exception e) {
             throw new RuntimeException(e);
