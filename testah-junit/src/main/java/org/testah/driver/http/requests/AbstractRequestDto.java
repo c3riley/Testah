@@ -7,7 +7,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.testah.TS;
@@ -126,21 +125,11 @@ public abstract class AbstractRequestDto {
         return this;
     }
 
-    public AbstractRequestDto setPayload(final String payload) {
-        try {
-            return setPayload(new StringEntity(payload));
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    public abstract AbstractRequestDto setPayload(final String payload);
 
-    public AbstractRequestDto setPayload(final Object payload) {
-        try {
-            return setPayload(new StringEntity(TS.util().toJson(payload)));
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    public abstract AbstractRequestDto setPayload(final HttpEntity payload);
+
+    public abstract AbstractRequestDto setPayload(final Object payload);
 
     public String getPayloadString() {
         try {
