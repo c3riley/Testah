@@ -35,7 +35,8 @@ repositories {
 
 
 dependencies {
-
+    compile 'org.springframework:spring-context:4.2.3.RELEASE'
+    compile 'org.springframework:spring-test:4.2.2.RELEASE'
 	compile 'uk.com.robust-it:cloning:1.9.2'
 	compile 'joda-time:joda-time:2.9.2'
 	compile 'com.kohlschutter.junixsocket:junixsocket-common:2.0.4'
