@@ -144,7 +144,9 @@ public abstract class AbstractHttpWrapper {
                 context.setCredentialsProvider(defaultCredentialsProvider);
             }
             final ResponseDto responseDto = new ResponseDto().setStart();
-
+            if (verbose) {
+                AbstractTestPlan.addStepAction(request.createRequestInfoStep());
+            }
             try (final CloseableHttpResponse response = (CloseableHttpResponse) getHttpClient()
                     .execute(request.getHttpRequestBase(), context)) {
                 responseDto.setEnd().setStatusCode(response.getStatusLine().getStatusCode());
@@ -152,6 +154,7 @@ public abstract class AbstractHttpWrapper {
                 responseDto.setResponseBody(EntityUtils.toString(response.getEntity()));
                 responseDto.setUrl(request.getHttpRequestBase().getURI().toString());
                 responseDto.setHeaders(response.getAllHeaders()).setRequestType(request.getHttpMethod());
+                responseDto.setRequestUsed(request);
             }
             if (verbose) {
                 AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500));
