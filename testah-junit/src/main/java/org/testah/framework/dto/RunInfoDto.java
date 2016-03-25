@@ -2,11 +2,13 @@ package org.testah.framework.dto;
 
 import java.util.HashMap;
 
+import org.testah.TS;
+
 public class RunInfoDto {
 
-    private String                  runId             = "";
-    private String                  runType           = "";
-    private String                  versionId         = "";
+    private String                  runId             = null;
+    private String                  runType           = null;
+    private String                  versionId         = null;
     private String                  runLocation       = null;
     private String                  buildNumber       = null;
     private int                     pass              = 0;
@@ -62,6 +64,9 @@ public class RunInfoDto {
     }
 
     public String getRunId() {
+        if (null == runId) {
+            runId = System.getProperty("testah.runId", TS.params().getRunId());
+        }
         return runId;
     }
 
@@ -79,7 +84,7 @@ public class RunInfoDto {
 
     public String getRunLocation() {
         if (null == runLocation) {
-            runLocation = "localhost";
+            runLocation = System.getProperty("testah.runLocation", TS.params().getRunLocation());
         }
         return runLocation;
     }
@@ -89,6 +94,9 @@ public class RunInfoDto {
     }
 
     public String getBuildNumber() {
+        if (null == buildNumber) {
+            buildNumber = System.getProperty("testah.buildNumber", TS.params().getBuildNumber());
+        }
         return buildNumber;
     }
 
@@ -97,6 +105,9 @@ public class RunInfoDto {
     }
 
     public String getRunType() {
+        if (null == runType) {
+            runType = System.getProperty("testah.runType", TS.params().getRunType());
+        }
         return runType;
     }
 
@@ -105,6 +116,9 @@ public class RunInfoDto {
     }
 
     public String getVersionId() {
+        if (null == versionId) {
+            versionId = System.getProperty("testah.versionId", TS.params().getVersionId());
+        }
         return versionId;
     }
 

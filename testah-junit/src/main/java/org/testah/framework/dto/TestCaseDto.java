@@ -16,6 +16,7 @@ public class TestCaseDto extends TestMetaDto {
     private RunTimeDto        runTime   = new RunTimeDto();
     private List<TestStepDto> testSteps = new ArrayList<TestStepDto>();
     private Boolean           status    = null;
+    private String            dataValue = "";
 
     public TestCaseDto() {
         this(null, null, null);
@@ -114,6 +115,14 @@ public class TestCaseDto extends TestMetaDto {
 
     public TestStatus getStatusEnum() {
         return TestStatus.getStatus(status);
+    }
+
+    public String getDataValue() {
+        return dataValue;
+    }
+
+    public void setDataValue(String dataValue) {
+        this.dataValue = dataValue;
     }
 
 }
