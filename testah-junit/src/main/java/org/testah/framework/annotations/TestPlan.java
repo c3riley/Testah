@@ -13,28 +13,32 @@ import org.testah.framework.enums.TestType;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface TestPlan {
 
-	String uuid()
+    String uuid()
 
-	default "";
+    default "";
 
-	String name()
+    String name()
 
-	default "";
+    default "";
 
-	String description()
+    String description()
 
-	default "";
+    default "";
 
-	String[]relatedLinks() default {};
+    String[] relatedLinks() default {};
 
-	String[]relatedIds() default {};
+    String[] relatedIds() default {};
 
-	String[]tags() default {};
+    String[] tags() default {};
 
-	TestType testType() default TestType.AUTOMATED;
+    TestType testType() default TestType.AUTOMATED;
 
-	String[]components() default {};
+    String[] components() default {};
 
-	String[]runTypes() default {};
+    String[] platforms() default {};
+
+    String[] devices() default {};
+
+    String[] runTypes() default {};
 
 }

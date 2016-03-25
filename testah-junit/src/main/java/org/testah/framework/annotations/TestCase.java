@@ -35,6 +35,10 @@ public @interface TestCase {
 
     String[] components() default {};
 
+    String[] platforms() default {};
+
+    String[] devices() default {};
+
     String[] runTypes() default {};
 
 }
