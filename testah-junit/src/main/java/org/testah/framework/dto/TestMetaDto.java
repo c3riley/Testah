@@ -21,6 +21,8 @@ public class TestMetaDto {
     private TestType        testType;
     private String          source       = null;
     private List<String>    components   = new ArrayList<String>();
+    private List<String>    devices      = new ArrayList<String>();
+    private List<String>    platforms    = new ArrayList<String>();
     private List<String>    runTypes     = new ArrayList<String>();
 
     public TestMetaDto() {
@@ -183,6 +185,22 @@ public class TestMetaDto {
 
     public void setRunTypes(final List<String> runTypes) {
         this.runTypes = runTypes;
+    }
+
+    public List<String> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<String> devices) {
+        this.devices = devices;
+    }
+
+    public List<String> getPlatforms() {
+        return platforms;
+    }
+
+    public void setPlatforms(List<String> platforms) {
+        this.platforms = platforms;
     }
 
 }
