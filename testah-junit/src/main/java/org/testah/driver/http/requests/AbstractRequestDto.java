@@ -1,6 +1,9 @@
 package org.testah.driver.http.requests;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.Header;
@@ -10,6 +13,8 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.testah.TS;
+import org.testah.framework.dto.StepActionDto;
+import org.testah.framework.enums.TestStepActionType;
 
 public abstract class AbstractRequestDto {
 
@@ -120,11 +125,6 @@ public abstract class AbstractRequestDto {
         return httpRequestBase.getURI().toString();
     }
 
-    public AbstractRequestDto print() {
-        TS.log().debug(httpRequestBase.getMethod() + " " + uri);
-        return this;
-    }
-
     public abstract AbstractRequestDto setPayload(final String payload);
 
     public abstract AbstractRequestDto setPayload(final HttpEntity payload);
@@ -140,6 +140,43 @@ public abstract class AbstractRequestDto {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    public AbstractRequestDto print() {
+        TS.log().debug(httpRequestBase.getMethod() + " " + uri);
+        return this;
+    }
+
+    public AbstractRequestDto printComplete() {
+        TS.log().debug("###########");
+        TS.log().debug("# Request " + httpMethod);
+        TS.log().debug("# URI: " + getUri());
+        if (null != getCredentialsProvider()) {
+            TS.log().debug("# Credential: " + TS.util().toJson(getCredentialsProvider()));
+        }
+        TS.log().debug("# Expected Status: " + getExpectedStatus());
+        TS.log().debug("# Headers: " + (null == headers ? "" : Arrays.toString(headers.toArray())));
+        TS.log().debug("###########");
+        if (null != getPayloadString()) {
+            TS.log().debug("# payload: (see below)");
+            System.out.println(getPayloadString());
+            TS.log().debug("###########");
+        }
+        return this;
+    }
+
+    public StepActionDto createRequestInfoStep() {
+        StepActionDto stepAction = null;
+        stepAction = StepActionDto.createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
+                "Expected Status: " + getExpectedStatus() + " - Headers: "
+                        + (null == headers ? "" : Arrays.toString(headers.toArray())),
+                getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+        printComplete();
+        return stepAction;
+    }
+
+    public String getPayloadStringEscaped() {
+        return escapeHtml(getPayloadString());
     }
 
 }

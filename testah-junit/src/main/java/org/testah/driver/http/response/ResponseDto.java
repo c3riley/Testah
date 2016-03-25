@@ -9,6 +9,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.testah.TS;
+import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.framework.dto.StepActionDto;
 import org.testah.framework.enums.TestStepActionType;
 
@@ -16,16 +17,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class ResponseDto {
 
-    private int      statusCode    = -1;
-    private String   statusText    = null;
-    private String   responseBody  = null;
-    private Header[] headers       = null;
-    private Header[] footers       = null;
-    private byte[]   responseBytes = null;
-    private String   url           = null;
-    private Long     start         = 0L;
-    private Long     end           = 0L;
-    private String   requestType   = null;
+    private int                statusCode    = -1;
+    private String             statusText    = null;
+    private String             responseBody  = null;
+    private Header[]           headers       = null;
+    private Header[]           footers       = null;
+    private byte[]             responseBytes = null;
+    private String             url           = null;
+    private Long               start         = 0L;
+    private Long               end           = 0L;
+    private String             requestType   = null;
+    private AbstractRequestDto requestUsed   = null;
 
     public ResponseDto() {
 
@@ -161,7 +163,7 @@ public class ResponseDto {
     }
 
     public StepActionDto addAsInfoStep() {
-        return createResponseInfoStep(true, true, 500);
+        return createResponseInfoStep(true, true, 2000);
     }
 
     public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapdeBody,
@@ -189,7 +191,6 @@ public class ResponseDto {
         } else {
             return getResponseBody();
         }
-
     }
 
     public ResponseDto printStatus() {
@@ -243,5 +244,13 @@ public class ResponseDto {
     public ResponseDto setRequestType(final String requestType) {
         this.requestType = requestType;
         return this;
+    }
+
+    public AbstractRequestDto getRequestUsed() {
+        return requestUsed;
+    }
+
+    public void setRequestUsed(AbstractRequestDto requestUsed) {
+        this.requestUsed = requestUsed;
     }
 }
