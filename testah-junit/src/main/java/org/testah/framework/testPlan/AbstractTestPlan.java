@@ -276,4 +276,15 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         return StepActionDto.createInfo(message1);
     }
 
+    public void dataValue(final String value) {
+        if (null == value) {
+            getTestCase().setDataValue("");
+        } else if (value.length() > 255) {
+            TS.log().debug("Data Value can only be 255 chars, truncating value");
+            getTestCase().setDataValue(value.substring(0, 254));
+        } else {
+            getTestCase().setDataValue(value);
+        }
+    }
+
 }

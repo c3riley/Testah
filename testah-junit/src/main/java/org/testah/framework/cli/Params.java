@@ -118,6 +118,31 @@ public class Params {
     @Arg(dest = "autoOpenHtmlReport")
     private boolean       autoOpenHtmlReport     = true;
 
+    @Comment(
+            info = "Version Id is a value that can be used to tell what version the test is testing against. Can be passed runtime via -Dtestah.versionId=login-0.0.2")
+    @Arg(dest = "versionId")
+    private String        versionId              = "";
+
+    @Comment(
+            info = "Build Number is a value that can be used to tell what build the test is testing against. Can be passed runtime via -Dtestah.buildNumber=login-0.0.2")
+    @Arg(dest = "buildNumber")
+    private String        buildNumber            = "";
+
+    @Comment(
+            info = "Run Id is a value that can be used to group many differnt results together. Can be passed runtime via -Dtestah.runId=run23")
+    @Arg(dest = "runId")
+    private String        runId                  = "";
+
+    @Comment(
+            info = "Run Location is a way to tell where the test ran, can be local machine name, or Jenkins Job Url. Can be passed runtime via -Dtestah.runLocation=local")
+    @Arg(dest = "runLocation")
+    private String        runLocation            = "localhost";
+
+    @Comment(
+            info = "Run Type is a way to tell what type of run the test execution was involed in, smoke, regression, other. Can be passed runtime via -Dtestah.runType=smoke")
+    @Arg(dest = "runType")
+    private String        runType                = "";
+
     public void setNumConcurrentThreads(final int numConcurrentThreads) {
         this.numConcurrentThreads = numConcurrentThreads;
     }
@@ -359,5 +384,45 @@ public class Params {
 
     public void setAutoOpenHtmlReport(boolean autoOpenHtmlReport) {
         this.autoOpenHtmlReport = autoOpenHtmlReport;
+    }
+
+    public String getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
+    }
+
+    public String getRunId() {
+        return runId;
+    }
+
+    public void setRunId(String runId) {
+        this.runId = runId;
+    }
+
+    public String getRunLocation() {
+        return runLocation;
+    }
+
+    public void setRunLocation(String runLocation) {
+        this.runLocation = runLocation;
+    }
+
+    public String getRunType() {
+        return runType;
+    }
+
+    public void setRunType(String runType) {
+        this.runType = runType;
+    }
+
+    public String getBuildNumber() {
+        return buildNumber;
+    }
+
+    public void setBuildNumber(String buildNumber) {
+        this.buildNumber = buildNumber;
     }
 }
