@@ -13,7 +13,7 @@ import org.testah.framework.enums.TestType;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface TestPlan {
 
-    String uuid()
+    String id()
 
     default "";
 

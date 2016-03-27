@@ -40,9 +40,10 @@ public class FirefoxBrowser extends AbstractBrowser {
 		capabilities.setCapability("nativeEvents", false);
 		capabilities.setCapability(FirefoxDriver.PROFILE, profile);
 		capabilities.setCapability("elementScrollBehavior", 1);
-		if (null != TS.params().getFirefoxDriverBinary() && TS.params().getFirefoxDriverBinary().length() > 0) {
+		if (null != TS.params().getWebDriver_firefoxDriverBinary()
+				&& TS.params().getWebDriver_firefoxDriverBinary().length() > 0) {
 			capabilities.setCapability(FirefoxDriver.BINARY,
-					new FirefoxBinary(new File(TS.params().getFirefoxDriverBinary())));
+					new FirefoxBinary(new File(TS.params().getWebDriver_firefoxDriverBinary())));
 		}
 		return capabilities;
 	}

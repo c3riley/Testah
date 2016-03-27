@@ -44,11 +44,11 @@ public class PhantomJsBrowser extends AbstractBrowser {
 
 	private String getPhantomJsBinPath() {
 
-		String binPath = TS.params().getPhantomJsDriverBinary();
+		String binPath = TS.params().getWebDriver_phantomJsDriverBinary();
 		try {
 			if (null == binPath || binPath.length() == 0 || !(new File(binPath)).exists()) {
 				String urlSource = "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2";
-				if (Params.isWIndows()) {
+				if (Params.isWindows()) {
 					urlSource = "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-windows.zip";
 				} else if (Params.isMac()) {
 					urlSource = "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip";
