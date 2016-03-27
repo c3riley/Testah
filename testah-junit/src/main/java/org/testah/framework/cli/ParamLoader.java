@@ -62,32 +62,38 @@ public class ParamLoader {
 				// getCustomParamProperties
 				final PropertiesConfiguration config = getCustomParamProperties(f);
 
-				for (final Field field : Params.class.getDeclaredFields()) {
+				String filterSchema = (String) config.getProperty("param.usefilterSchema");
+				if (null == filterSchema || filterSchema.length() == 0) {
+					filterSchema = "NOT_USED";
+				}
 
+				Object propValue = null;
+				for (final Field field : Params.class.getDeclaredFields()) {
+					if (field.getName().startsWith("filter")) {
+						propValue = config.getProperty("filter." + filterSchema + "." + field.getName());
+					} else {
+						propValue = config.getProperty(fieldPrefix + field.getName());
+					}
 					accessible = field.isAccessible();
 					try {
 						field.setAccessible(true);
-						if (null != config.getProperty(fieldPrefix + field.getName())) {
+						if (null != propValue) {
 							if (field.getType().isAssignableFrom(String.class)) {
-
-								field.set(params, config.getProperty(fieldPrefix + field.getName()));
+								field.set(params, propValue);
 							} else if (field.getType().isAssignableFrom(int.class)) {
-								field.setInt(params,
-										Integer.parseInt((String) config.getProperty(fieldPrefix + field.getName())));
+								field.setInt(params, Integer.parseInt((String) propValue));
 							} else if (field.getType().isAssignableFrom(Long.class)) {
-								field.set(params,
-										(Long.parseLong((String) config.getProperty(fieldPrefix + field.getName()))));
+								field.set(params, (Long.parseLong((String) propValue)));
 							} else if (field.getType().isAssignableFrom(boolean.class)) {
-								field.setBoolean(params, Boolean
-										.parseBoolean((String) config.getProperty(fieldPrefix + field.getName())));
+								field.setBoolean(params, Boolean.parseBoolean((String) propValue));
+							} else if (field.getType().isAssignableFrom(Boolean.class)) {
+								field.setBoolean(params, Boolean.parseBoolean((String) propValue));
 							} else if (((Class<?>) field.getType()).isEnum()) {
-								field.set(params, Enum.valueOf((Class<Enum>) field.getType(),
-										(String) config.getProperty(fieldPrefix + field.getName())));
+								field.set(params, Enum.valueOf((Class<Enum>) field.getType(), (String) propValue));
 							} else if (field.getType() == Level.class) {
-								field.set(params,
-										Level.toLevel((String) config.getProperty(fieldPrefix + field.getName())));
+								field.set(params, Level.toLevel((String) propValue));
 							} else {
-								field.set(params, config.getProperty(fieldPrefix + field.getName()));
+								field.set(params, propValue);
 							}
 						}
 					} catch (final Exception e) {
@@ -142,22 +148,34 @@ public class ParamLoader {
 	public PropertiesConfiguration getDefaultParamProperties() {
 		final PropertiesConfiguration defaultConfig = new PropertiesConfiguration();
 		final PropertiesConfigurationLayout layout = defaultConfig.getLayout();
-
+		layout.setHeaderComment("##################################################################################"
+				+ "\nTestah Properties - version: " + Cli.version + " - File Created: " + TS.util().now()
+				+ "\nNo values are required. Leaving a key empty will not use the value, turning the property off."
+				+ "\n##################################################################################");
 		boolean accessible;
 		final Params params = new Params();
 		Comment comment = null;
+		String propName = null;
+		String commentValue = null;
 		for (final Field f : Params.class.getDeclaredFields()) {
 			accessible = f.isAccessible();
 			try {
 				f.setAccessible(true);
-				defaultConfig.addProperty(fieldPrefix + f.getName(), f.get(params));
+				if (f.getName().startsWith("filter")) {
+					propName = "filter.DEFAULT." + f.getName();
+				} else {
+					propName = fieldPrefix + f.getName();
+				}
+				defaultConfig.addProperty(propName, f.get(params));
 				comment = f.getAnnotation(Comment.class);
 				if (null != comment) {
+					commentValue = comment.info().replace("[BAR1]", "\n\n##############################\n")
+							.replace("[BAR2]", "\n##############################\n\n");
 					if (f.getType().isEnum()) {
-						layout.setComment(fieldPrefix + f.getName(),
-								comment.info() + "values: " + Arrays.toString(f.getType().getEnumConstants()));
+						layout.setComment(propName,
+								commentValue + "values: " + Arrays.toString(f.getType().getEnumConstants()));
 					} else {
-						layout.setComment(fieldPrefix + f.getName(), comment.info());
+						layout.setComment(propName, commentValue);
 					}
 				}
 			} catch (final Exception e) {

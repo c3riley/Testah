@@ -11,7 +11,6 @@ public class HtmlFormatter extends AbstractFormatter {
 	}
 
 	public VelocityContext getContext(final VelocityContext context) {
-
 		context.put("GoogleChart",
 				getGoogleChart(this.getTestPlan().getRunInfo().getFail(), this.getTestPlan().getRunInfo().getPass()));
 		return context;

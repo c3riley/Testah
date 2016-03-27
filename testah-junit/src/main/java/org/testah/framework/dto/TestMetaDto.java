@@ -48,7 +48,7 @@ public class TestMetaDto {
 
     public TestMetaDto fillFromTestCase(final TestCase metadata, final KnownProblem knownProblem) {
         if (null != metadata) {
-            this.setUuid(metadata.uuid());
+            this.setUuid(metadata.id());
             this.setName(metadata.name());
             this.setDescription(metadata.description());
             this.setRelatedIds(Arrays.asList(metadata.relatedIds()));
@@ -70,7 +70,7 @@ public class TestMetaDto {
 
     public TestMetaDto fillFromTestPlan(final TestPlan metadata, final KnownProblem knownProblem) {
         if (null != metadata) {
-            this.setUuid(metadata.uuid());
+            this.setUuid(metadata.id());
             this.setName(metadata.name());
             this.setDescription(metadata.description());
             this.setRelatedIds(Arrays.asList(metadata.relatedIds()));

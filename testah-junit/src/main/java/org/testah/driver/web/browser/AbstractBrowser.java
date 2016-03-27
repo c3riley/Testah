@@ -24,9 +24,9 @@ public abstract class AbstractBrowser {
 
 	private WebDriver driver;
 	private int elementWaitTime = 10;
-	private final String remoteUri = TS.params().getDefaultRemoteUri();
-	private final boolean remote = TS.params().isUseRemoteDriver();
-	private final String userAgentValue = TS.params().getUserAgentValue();
+	private final String remoteUri = TS.params().getWebDriver_defaultRemoteUri();
+	private final boolean remote = TS.params().isWebDriver_useRemoteDriver();
+	private final String userAgentValue = TS.params().getWebDriver_userAgentValue();
 	private DesiredCapabilities desiredCapabilities = null;
 
 	public static AbstractBrowser getDefaultBrowser() {

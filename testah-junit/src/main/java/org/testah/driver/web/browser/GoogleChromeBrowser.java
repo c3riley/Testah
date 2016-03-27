@@ -62,11 +62,11 @@ public class GoogleChromeBrowser extends AbstractBrowser {
 
 	private String getChromePath() {
 
-		String binPath = TS.params().getChromeDriverBinary();
+		String binPath = TS.params().getWebDriver_chromeDriverBinary();
 		try {
 			if (null == binPath || binPath.length() == 0 || !(new File(binPath)).exists()) {
 				String urlSource = "http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip";
-				if (Params.isWIndows()) {
+				if (Params.isWindows()) {
 					urlSource = "http://chromedriver.storage.googleapis.com/2.21/chromedriver_win32.zip";
 				} else if (Params.isMac()) {
 					urlSource = "http://chromedriver.storage.googleapis.com/2.21/chromedriver_mac32.zip";

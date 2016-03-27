@@ -23,7 +23,7 @@ public class Cli {
 	private Namespace res;
 	private final ParamLoader paramLoader;
 	private final Params opt;
-	private final String version = "0.0.1";
+	public static final String version = "0.0.1";
 
 	public Cli() {
 
@@ -52,7 +52,7 @@ public class Cli {
 
 		subparsers.addParser("query").help("query help");
 
-		final Subparser create = subparsers.addParser("create").help("query help");
+		final Subparser create = subparsers.addParser("create").help("create help");
 		create.addArgument("--prop", "--properties").required(false).action(Arguments.storeTrue()).dest("prop");
 		create.addArgument("--guid").required(false).action(Arguments.storeTrue()).dest("guid");
 
