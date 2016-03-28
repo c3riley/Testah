@@ -44,7 +44,7 @@ public abstract class AbstractRequestDto {
     }
 
     public AbstractRequestDto withJson() {
-        addHeader("content-type", "application/json");
+        addHeader("Content-Type", "application/json");
         return this;
     }
 
@@ -110,6 +110,11 @@ public abstract class AbstractRequestDto {
     }
 
     public HttpRequestBase getHttpRequestBase() {
+        if (null != headers && null != httpRequestBase.getAllHeaders() && httpRequestBase.getAllHeaders().length == 0) {
+            for (final Header header : getHeaders()) {
+                httpRequestBase.addHeader(header);
+            }
+        }
         return httpRequestBase;
     }
 

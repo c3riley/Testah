@@ -106,7 +106,7 @@ public class Cli {
 
 	public void processRun() {
 
-		final TestPlanFilter testPlanFilter = new TestPlanFilter();
+		final TestFilter testPlanFilter = new TestFilter();
 		testPlanFilter.filterTestPlansToRun();
 
 		final TestahJUnitRunner junitRunner = new TestahJUnitRunner();
