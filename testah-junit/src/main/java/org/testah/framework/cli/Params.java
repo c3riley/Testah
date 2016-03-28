@@ -184,8 +184,8 @@ public class Params {
 	private String filterByRunType = "";
 
 	@Comment(info = "Filter Using The @KnownProblem Annotation.  True means testplan/testcase must not be a known problem. False means must be a known problem. Empty means do not use filter.")
-	@Arg(dest = "filterKnownProblem")
-	private String filterKnownProblem = "true";
+	@Arg(dest = "filterIgnoreKnownProblem")
+	private boolean filterIgnoreKnownProblem = false;
 
 	@Comment(info = "Filter using the Tag metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
 	@Arg(dest = "filterByTag")
@@ -371,14 +371,6 @@ public class Params {
 		this.filterByRunType = filterByRunType;
 	}
 
-	public String getFilterKnownProblem() {
-		return filterKnownProblem;
-	}
-
-	public void setFilterKnownProblem(final String filterKnownProblem) {
-		this.filterKnownProblem = filterKnownProblem;
-	}
-
 	public String getFilterByTag() {
 		return filterByTag;
 	}
@@ -485,6 +477,14 @@ public class Params {
 
 	public void setRunInfo_runId(final String runInfo_runId) {
 		this.runInfo_runId = runInfo_runId;
+	}
+
+	public boolean getFilterIgnoreKnownProblem() {
+		return filterIgnoreKnownProblem;
+	}
+
+	public void setFilterIgnoreKnownProblem(final boolean filterIgnoreKnownProblem) {
+		this.filterIgnoreKnownProblem = filterIgnoreKnownProblem;
 	}
 
 }

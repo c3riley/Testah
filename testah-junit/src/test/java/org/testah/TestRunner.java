@@ -4,13 +4,13 @@ import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.testah.framework.cli.TestPlanFilter;
+import org.testah.framework.cli.TestFilter;
 
 public class TestRunner {
 
 	@Test
 	public void testLoadCompiledTests() {
-		final TestPlanFilter r = new TestPlanFilter();
+		final TestFilter r = new TestFilter();
 		final Set<Class<?>> classes = r.loadCompiledTestClase().getTestClasses();
 		Assert.assertNotNull(classes);
 		Assert.assertEquals(3, classes.size());

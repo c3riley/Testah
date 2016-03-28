@@ -12,16 +12,17 @@ import org.apache.cxf.helpers.FileUtils;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.reflections.Reflections;
 import org.testah.TS;
+import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestPlan;
 
 import groovy.lang.GroovyClassLoader;
 
-public class TestPlanFilter {
+public class TestFilter {
 
 	private Set<Class<?>> testClasses;
 	private final List<Class<?>> testClassesMetFilters;
 
-	public TestPlanFilter() {
+	public TestFilter() {
 		testClasses = new HashSet<Class<?>>();
 		testClassesMetFilters = new ArrayList<Class<?>>();
 	}
@@ -40,7 +41,10 @@ public class TestPlanFilter {
 			if (null == TS.params().getFilterById() || TS.params().getFilterById().length() == 0) {
 				filterByUuid = false;
 			}
-
+			boolean filterByIgnoreKnownProblem = false;
+			if (TS.params().getFilterIgnoreKnownProblem()) {
+				filterByIgnoreKnownProblem = true;
+			}
 			boolean filterByComponent = true;
 			if (null == TS.params().getFilterByComponent() || TS.params().getFilterByComponent().length() == 0) {
 				filterByComponent = false;
@@ -78,16 +82,22 @@ public class TestPlanFilter {
 					TS.log().trace("test[" + test.getName() + "] filtered out by no TestMeta Annotation");
 					continue;
 				}
+				if (filterByIgnoreKnownProblem) {
+					if (null != test.getAnnotation(KnownProblem.class)) {
+						TS.log().trace("test[" + test.getName() + "] filtered out by filterByIgnoreKnownProblem");
+						continue;
+					}
+				}
 				if (filterByUuid) {
 					filter = filterParams.getFilterById();
 					if (!isFilterById(meta.id(), filter)) {
-						TS.log().trace("test[" + test.getName() + "] filtered out by isFilterTestNameStartsWith");
+						TS.log().trace("test[" + test.getName() + "] filtered out by filterByUuid");
 						continue;
 					}
 				}
 				if (filterByTestPlanNameStartsWith) {
 					if (!isFilterTestNameStartsWith(test)) {
-						TS.log().trace("test[" + test.getName() + "] filtered out by isFilterTestNameStartsWith");
+						TS.log().trace("test[" + test.getName() + "] filtered out by filterByTestPlanNameStartsWith");
 						continue;
 					}
 				}
@@ -212,7 +222,7 @@ public class TestPlanFilter {
 		return true; // Filter is Off
 	}
 
-	public TestPlanFilter loadCompiledTestClase() {
+	public TestFilter loadCompiledTestClase() {
 		if (null != TS.params().getLookAtInternalTests() && TS.params().getLookAtInternalTests().length() > 0) {
 			final Reflections reflections = new Reflections(TS.params().getLookAtInternalTests());
 			testClasses.addAll(reflections.getTypesAnnotatedWith(TestPlan.class));
@@ -220,7 +230,7 @@ public class TestPlanFilter {
 		return this;
 	}
 
-	public TestPlanFilter loadUncompiledTestPlans() {
+	public TestFilter loadUncompiledTestPlans() {
 		final String externalValue = TS.params().getLookAtExternalTests();
 
 		if (null != externalValue && externalValue.length() > 0) {

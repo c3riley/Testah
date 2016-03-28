@@ -53,7 +53,7 @@ public class ParamLoader {
 						field.setAccessible(true);
 						field.set(params, paramsFromProperties.getProperty(fieldPrefix + field.getName()));
 					} catch (final Exception e) {
-						TS.log().warn(e);
+						TS.log().trace(e);
 					} finally {
 						field.setAccessible(accessible);
 					}

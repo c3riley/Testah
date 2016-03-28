@@ -1,7 +1,9 @@
 package org.testah.framework.report;
 
 import org.hamcrest.Matcher;
+import org.json.JSONObject;
 import org.junit.Assert;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 import org.testah.framework.dto.StepActionDto;
 
@@ -19,6 +21,31 @@ public class VerboseAsserts {
 
 	public VerboseAsserts(final boolean throwExceptionOnFail) {
 		this.throwExceptionOnFail = throwExceptionOnFail;
+	}
+
+	// final JsonNode jsonNode=new ObjectMapper().valueToTree(tp);
+	// final JSONAssert.
+	public boolean sameJson(final Object expected, final Object actual) {
+		return sameJson(expected, actual, true);
+	}
+
+	public boolean sameJson(final Object expected, final Object actual, final boolean strict) {
+		final JSONObject expectedJsonNode = new JSONObject(expected);
+		final JSONObject actualJsonNode = new JSONObject(actual);
+		return sameJson(expectedJsonNode, actualJsonNode, strict);
+	}
+
+	public boolean sameJson(final JSONObject expected, final JSONObject actual, final boolean strict) {
+		try {
+			JSONAssert.assertEquals(expected, actual, strict);
+			return addAssertHistory("", true, "assertSameJson", expected, actual);
+		} catch (final Exception e) {
+			final boolean rtn = addAssertHistory("", false, "assertSame", expected.toString(), actual.toString(), e);
+			if (getThrowExceptionOnFail()) {
+				throw new AssertionError(e);
+			}
+			return rtn;
+		}
 	}
 
 	public boolean same(final Object expected, final Object actual) {
@@ -705,7 +732,7 @@ public class VerboseAsserts {
 	}
 
 	public boolean addAssertHistory(final String message, final Boolean status, final String assertMethod,
-			final Object expected, final Object actual, final AssertionError exception) {
+			final Object expected, final Object actual, final Throwable exception) {
 		if (isVerifyOnly()) {
 			StepActionDto.createVerifyResult(message, status, assertMethod, expected, actual, exception).add();
 		} else {
