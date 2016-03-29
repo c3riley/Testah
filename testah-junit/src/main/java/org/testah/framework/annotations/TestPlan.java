@@ -6,16 +6,16 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.testah.framework.enums.TestType;
+import org.testah.client.enums.TestType;
 
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface TestPlan {
 
-    String id()
+    int id()
 
-    default "";
+    default -1;
 
     String name()
 

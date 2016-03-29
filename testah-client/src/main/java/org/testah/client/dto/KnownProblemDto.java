@@ -1,28 +1,20 @@
-package org.testah.framework.dto;
+package org.testah.client.dto;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import org.testah.framework.annotations.KnownProblem;
-import org.testah.framework.enums.TypeOfKnown;
+import org.testah.client.enums.TypeOfKnown;
 
 public class KnownProblemDto {
-    
-    private List<String> linkedIds = new ArrayList<String>();
 
-    private String description = "";
-    
-    private TypeOfKnown typeOfKnown = TypeOfKnown.DEFECT;
-    
+    private List<String> linkedIds   = new ArrayList<String>();
+
+    private String       description = "";
+
+    private TypeOfKnown  typeOfKnown = TypeOfKnown.DEFECT;
+
     public KnownProblemDto() {
-    
-    }
-    
-    public KnownProblemDto(final KnownProblem knownProblem) {
-        this.linkedIds.addAll(Arrays.asList(knownProblem.linkedIds()));
-        this.description = knownProblem.description();
-        this.typeOfKnown = knownProblem.typeOfKnown();
+
     }
 
     public List<String> getLinkedIds() {
@@ -51,5 +43,5 @@ public class KnownProblemDto {
         this.typeOfKnown = typeOfKnown;
         return this;
     }
-    
+
 }
