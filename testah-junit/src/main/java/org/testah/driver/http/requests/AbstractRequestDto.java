@@ -13,8 +13,9 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.testah.TS;
-import org.testah.framework.dto.StepActionDto;
-import org.testah.framework.enums.TestStepActionType;
+import org.testah.framework.dto.StepAction;
+import org.testah.client.dto.StepActionDto;
+import org.testah.client.enums.TestStepActionType;
 
 public abstract class AbstractRequestDto {
 
@@ -172,7 +173,7 @@ public abstract class AbstractRequestDto {
 
     public StepActionDto createRequestInfoStep() {
         StepActionDto stepAction = null;
-        stepAction = StepActionDto.createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
+        stepAction = StepAction.createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
                 "Expected Status: " + getExpectedStatus() + " - Headers: "
                         + (null == headers ? "" : Arrays.toString(headers.toArray())),
                 getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);

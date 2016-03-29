@@ -3,9 +3,9 @@ package org.testah.framework.cli;
 import java.io.File;
 
 import org.apache.logging.log4j.Level;
+import org.testah.client.enums.BrowserType;
+import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.Comment;
-import org.testah.framework.enums.BrowserType;
-import org.testah.framework.enums.TestType;
 
 import net.sourceforge.argparse4j.annotation.Arg;
 
@@ -153,8 +153,16 @@ public class Params {
 
     @Comment(
             info = "Should the Runner Post info to a service in Json Format. If Uri is supplied it will attempt to send the json info as a List of 1 to many TestPlans")
-    @Arg(dest = "filterByTestType")
+    @Arg(dest = "sendJsonTestDataToService")
     private String      sendJsonTestDataToService       = "";
+
+    @Comment(info = "True will send a flag saying to ignore the results.")
+    @Arg(dest = "addResults")
+    private boolean     addResults                      = true;
+
+    @Comment(info = "True will send a flag saying to update the responsitory with metadata.")
+    @Arg(dest = "updateMetadata")
+    private boolean     updateMetadata                  = true;
 
     @Comment(
             info = "[BAR1]Run Info Properties[BAR2]Version Id is a value that can be used to tell what version the test is testing against. Can be passed runtime via -Dtestah.versionId=login-0.0.2")
@@ -510,6 +518,30 @@ public class Params {
 
     public void setFilterIgnoreKnownProblem(final boolean filterIgnoreKnownProblem) {
         this.filterIgnoreKnownProblem = filterIgnoreKnownProblem;
+    }
+
+    public String getSendJsonTestDataToService() {
+        return sendJsonTestDataToService;
+    }
+
+    public void setSendJsonTestDataToService(String sendJsonTestDataToService) {
+        this.sendJsonTestDataToService = sendJsonTestDataToService;
+    }
+
+    public boolean isAddResults() {
+        return addResults;
+    }
+
+    public void setAddResults(boolean addResults) {
+        this.addResults = addResults;
+    }
+
+    public boolean isUpdateMetadata() {
+        return updateMetadata;
+    }
+
+    public void setUpdateMetadata(boolean updateMetadata) {
+        this.updateMetadata = updateMetadata;
     }
 
 }

@@ -6,15 +6,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.testah.framework.enums.TypeOfKnown;
+import org.testah.client.enums.TypeOfKnown;
 
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface KnownProblem {
 
-    String[]linkedIds() default {};
-    
+    String[] linkedIds() default {};
+
     String description() default "";
 
     TypeOfKnown typeOfKnown() default TypeOfKnown.DEFECT;

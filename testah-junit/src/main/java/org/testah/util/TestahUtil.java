@@ -13,6 +13,10 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.joda.time.Duration;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+import org.joda.time.format.PeriodFormat;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
@@ -113,6 +117,11 @@ public class TestahUtil {
     public String toDateString(final Long time, final String dateTimeFormat) {
         final SimpleDateFormat f = new SimpleDateFormat(dateTimeFormat);
         return f.format(new Date(time));
+    }
+
+    public String getDurationPretty(final Long duration) {
+        final Period period = new Duration(duration).toPeriod().normalizedStandard(PeriodType.time());
+        return PeriodFormat.getDefault().print(period);
     }
 
     public File downloadFile(final String urlToUse, final String destination) {

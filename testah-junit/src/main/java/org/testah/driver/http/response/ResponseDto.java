@@ -10,15 +10,18 @@ import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
-import org.testah.framework.dto.StepActionDto;
-import org.testah.framework.enums.TestStepActionType;
+import org.testah.framework.dto.StepAction;
+import org.testah.client.dto.StepActionDto;
+import org.testah.client.enums.TestStepActionType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class ResponseDto {
 
     private int                statusCode    = -1;
     private String             statusText    = null;
+    @JsonIgnore
     private String             responseBody  = null;
     private Header[]           headers       = null;
     private Header[]           footers       = null;
@@ -170,13 +173,13 @@ public class ResponseDto {
             final int truncate) {
         StepActionDto stepAction = null;
         if (shortResponseBody) {
-            stepAction = StepActionDto
+            stepAction = StepAction
                     .createInfo(this.getRequestType() + " - Uri: " + getUrl(),
                             "Status: " + getStatusCode() + " [ " + getStatusText() + " ]",
                             StringUtils.abbreviate(getResponseBody(escapdeBody), truncate), false)
                     .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         } else {
-            stepAction = StepActionDto.createInfo(this.getRequestType() + " - Uri: " + getUrl(),
+            stepAction = StepAction.createInfo(this.getRequestType() + " - Uri: " + getUrl(),
                     "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapdeBody), false)
                     .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
 

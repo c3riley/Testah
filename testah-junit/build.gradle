@@ -14,7 +14,8 @@ apply plugin: 'maven'
 //apply plugin: 'org.jenkins-ci.jpi'
 
 sourceCompatibility = 1.8
-version = ''
+group = 'org.testah'
+version = '0.0.1'
 
 buildscript {
     repositories {
@@ -68,6 +69,7 @@ dependencies {
 	compile 'commons-configuration:commons-configuration:1.10'
 	compile 'org.apache.cxf:cxf-common-utilities:2.5.11'
 	compile 'uk.co.datumedge:hamcrest-json:0.1' // uses compile 'org.skyscreame:jsonassert:1.3.0'
+
 	
 	configurations.all {
 		resolutionStrategy.eachDependency {

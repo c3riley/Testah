@@ -8,7 +8,7 @@ import org.testah.driver.http.HttpWrapperV1;
 import org.testah.driver.web.browser.AbstractBrowser;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.cli.Params;
-import org.testah.framework.dto.StepActionDto;
+import org.testah.client.dto.StepActionDto;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.util.Log;

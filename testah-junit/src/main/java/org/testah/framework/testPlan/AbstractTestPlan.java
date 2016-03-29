@@ -20,12 +20,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.testah.TS;
+import org.testah.client.dto.StepActionDto;
+import org.testah.client.dto.TestCaseDto;
+import org.testah.client.dto.TestPlanDto;
+import org.testah.client.dto.TestStepDto;
+import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
-import org.testah.framework.dto.StepActionDto;
-import org.testah.framework.dto.TestCaseDto;
-import org.testah.framework.dto.TestPlanDto;
-import org.testah.framework.dto.TestStepDto;
+import org.testah.framework.dto.StepAction;
+import org.testah.framework.dto.TestDtoHelper;
 import org.testah.framework.report.TestPlanReporter;
 import org.testah.runner.testPlan.TestPlanActor;
 
@@ -72,10 +75,9 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     public TestWatcher watchman2 = new TestWatcher() {
 
                                      protected void failed(final Throwable e, final Description description) {
-                                         StepActionDto
-                                                 .createAssertResult("Unexpected Error occured", false,
-                                                         "UnhandledExceptionFoundByJUnit", "", e.getMessage(), null)
-                                                 .setException(e).add();
+                                         StepAction.createAssertResult("Unexpected Error occured", false,
+                                                 "UnhandledExceptionFoundByJUnit", "", e.getMessage(), e).add();
+
                                          TS.log().error("TESTCASE Status: failed", e);
                                          stopTestCase(false);
                                      }
@@ -110,14 +112,17 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                                          if (!didTestPlanStart()) {
                                              TS.log().info("TESTPLAN started:" + desc.getTestClass().getName()
                                                      + " - thread[" + Thread.currentThread().getId() + "]");
-                                             startTestPlan(desc, desc.getTestClass().getAnnotation(TestPlan.class));
+                                             startTestPlan(desc, desc.getTestClass().getAnnotation(TestPlan.class),
+                                                     desc.getTestClass().getAnnotation(KnownProblem.class));
+                                             getTestPlan().setRunInfo(TestDtoHelper.createRunInfo());
                                          }
                                          TS.log().info(
                                                  "###############################################################################");
                                          TS.log().info("TESTCASE started:" + desc.getDisplayName() + " - thread["
                                                  + Thread.currentThread().getId() + "]");
                                          startTestCase(desc, desc.getAnnotation(TestCase.class),
-                                                 desc.getTestClass().getAnnotation(TestPlan.class));
+                                                 desc.getTestClass().getAnnotation(TestPlan.class),
+                                                 desc.getTestClass().getAnnotation(KnownProblem.class));
                                      }
                                  };
 
@@ -198,6 +203,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         }
         if (null == testStep.get() && null != getTestCase()) {
             AbstractTestPlan.testStep.set(new TestStepDto("Initial Step", "").start());
+            TS.log().info("TESTSTEP starting - " + AbstractTestPlan.testStep.get().getName());
         }
         return testStep.get();
     }
@@ -209,8 +215,8 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         return testStep;
     }
 
-    private TestPlanDto startTestPlan(final Description desc, final TestPlan testPlan) {
-        getTestPlanThreadLocal().set(new TestPlanDto(desc, testPlan).start());
+    private TestPlanDto startTestPlan(final Description desc, final TestPlan testPlan, final KnownProblem knowProblem) {
+        getTestPlanThreadLocal().set(TestDtoHelper.createTestPlanDto(desc, testPlan, knowProblem).start());
         setTestPlanStart(true);
         return AbstractTestPlan.testPlan.get();
     }
@@ -219,9 +225,10 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         setTestPlanStart(false);
     }
 
-    private TestCaseDto startTestCase(final Description desc, final TestCase testCase, final TestPlan testPlan) {
+    private TestCaseDto startTestCase(final Description desc, final TestCase testCase, final TestPlan testPlan,
+            final KnownProblem knowProblem) {
         if (didTestPlanStart()) {
-            getTestCaseThreadLocal().set(new TestCaseDto(desc, testCase, testPlan).start());
+            getTestCaseThreadLocal().set(TestDtoHelper.createTestCaseDto(desc, testCase, knowProblem).start());
         }
         return getTestCase();
     }
@@ -235,7 +242,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         return null;
     }
 
-    private static TestStepDto startTestStep(final TestStepDto testStep) {
+    public static TestStepDto startTestStep(final TestStepDto testStep) {
         if (didTestPlanStart() && null != getTestCase()) {
             stopTestStep();
             getTestStepThreadLocal().set(testStep.start());
@@ -268,12 +275,19 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         return startTestStep(s);
     }
 
+    public TestStepDto step(final String name, final String description) {
+        TestStepDto s = new TestStepDto();
+        s.setName(name);
+        s.setDescription(description);
+        return startTestStep(s);
+    }
+
     public StepActionDto stepAction() {
         return new StepActionDto();
     }
 
     public StepActionDto stepActionInfo(final String message1) {
-        return StepActionDto.createInfo(message1);
+        return StepAction.createInfo(message1);
     }
 
     public void dataValue(final String value) {

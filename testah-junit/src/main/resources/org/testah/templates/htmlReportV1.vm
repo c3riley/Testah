@@ -79,8 +79,8 @@
 		#end
 		</td></tr>
 		<tr><td class='label'>Environment:</td><td class='value'>$testPlan.getEnvironment()</td></tr>
-		<tr><td class='label'>Time</td><td class='value'>$testPlan.getRunTime().getStartTimePretty() to $testPlan.getRunTime().getEndTimePretty()</td></tr>
-        <tr><td class='label'>Duration</td><td class='value'>$testPlan.getRunTime().getDurationPretty()</td></tr>
+		<tr><td class='label'>Time</td><td class='value'>$util.toDateString($testPlan.getRunTime().getStartTime()) to $util.toDateString($testPlan.getRunTime().getEndTime())</td></tr>
+        <tr><td class='label'>Duration</td><td class='value'>$util.getDurationPretty( $testPlan.getRunTime().getDuration())</td></tr>
 		</table>
 		</td>
 
@@ -104,7 +104,7 @@
 					<tr><td class='label'>TestCase:</td><td class='value'><a name='$testcase.getName()'>$testcase.getName() [ $testcase.getSource() ]</a></td></tr>
 					<tr><td class='label'>Description:</td><td class='value'>$testcase.getDescription()</td></tr>
 					<tr><td class='label'>Status:</td><td class='value'><div class='$testcase.getStatusEnum()'>$testcase.getStatusEnum()</div></td></tr>
-					<tr><td class='label'>Time:</td><td class='value'>$testcase.getRunTime().getStartTimePretty() to $testcase.getRunTime().getEndTimePretty()  [Duration: $testcase.getRunTime().getDurationPretty()]</td></tr>
+					<tr><td class='label'>Time:</td><td class='value'>$util.toDateString($testcase.getRunTime().getStartTime()) to $util.toDateString($testcase.getRunTime().getEndTime()) [Duration: $util.getDurationPretty( $testcase.getRunTime().getDuration() )]</td></tr>
 
 				</table>
 

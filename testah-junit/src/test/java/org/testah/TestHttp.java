@@ -10,7 +10,7 @@ import org.testah.driver.http.HttpWrapperV1;
 import org.testah.driver.http.requests.GetRequestDto;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
-import org.testah.framework.dto.TestCaseDto;
+import org.testah.client.dto.TestCaseDto;
 import org.testah.framework.testPlan.HttpTestPlan;
 import org.testah.framework.testPlan.TestConfiguration;
 

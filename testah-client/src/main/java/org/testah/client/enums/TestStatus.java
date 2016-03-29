@@ -1,4 +1,4 @@
-package org.testah.framework.enums;
+package org.testah.client.enums;
 
 public enum TestStatus {
 

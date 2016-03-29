@@ -1,7 +1,7 @@
 package org.testah.framework.report;
 
 import org.apache.velocity.VelocityContext;
-import org.testah.framework.dto.TestPlanDto;
+import org.testah.client.dto.TestPlanDto;
 
 public class JUnitFormatter extends AbstractFormatter {
 

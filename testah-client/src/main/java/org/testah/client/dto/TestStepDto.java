@@ -1,17 +1,18 @@
-package org.testah.framework.dto;
+package org.testah.client.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.testah.TS;
-import org.testah.framework.enums.TestStatus;
+import org.testah.client.enums.TestStatus;
 
-public class TestStepDto extends TestMetaDto {
+public class TestStepDto {
 
     protected List<StepActionDto> stepActions = new ArrayList<StepActionDto>();
     private RunTimeDto            runTime     = new RunTimeDto();
     private Boolean               status      = null;
     private int                   id          = 0;
+    private String                name        = "";
+    private String                description = "";
 
     public TestStepDto() {
 
@@ -30,7 +31,6 @@ public class TestStepDto extends TestMetaDto {
     }
 
     public TestStepDto start() {
-        TS.log().info("TESTSTEP starting - " + this.getName());
         setStatus(null);
         getRunTime().start();
         return this;
@@ -114,6 +114,22 @@ public class TestStepDto extends TestMetaDto {
 
     public TestStatus getStatusEnum() {
         return TestStatus.getStatus(status);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

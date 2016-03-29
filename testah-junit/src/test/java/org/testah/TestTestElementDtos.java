@@ -3,8 +3,8 @@ package org.testah;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.testah.framework.dto.StepActionDto;
-import org.testah.framework.dto.TestStepDto;
+import org.testah.client.dto.StepActionDto;
+import org.testah.client.dto.TestStepDto;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
