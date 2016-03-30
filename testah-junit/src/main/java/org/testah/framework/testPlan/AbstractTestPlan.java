@@ -32,6 +32,7 @@ import org.testah.client.dto.TestStepDto;
 import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
+import org.testah.framework.cli.Cli;
 import org.testah.framework.cli.TestFilter;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.TestDtoHelper;
@@ -181,7 +182,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                                              
                                          }
                                          TS.log().info(
-                                                 "###############################################################################");
+                                                  Cli.BAR_LONG);
                                          TS.log().info("TESTCASE started:" + desc.getDisplayName() + " - thread["
                                                  + Thread.currentThread().getId() + "]");
                                          startTestCase(desc, desc.getAnnotation(TestCase.class),

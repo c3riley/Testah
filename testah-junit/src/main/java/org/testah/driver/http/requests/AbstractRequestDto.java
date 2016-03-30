@@ -13,9 +13,10 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.testah.TS;
-import org.testah.framework.dto.StepAction;
 import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
+import org.testah.framework.cli.Cli;
+import org.testah.framework.dto.StepAction;
 
 public abstract class AbstractRequestDto {
 
@@ -154,19 +155,19 @@ public abstract class AbstractRequestDto {
     }
 
     public AbstractRequestDto printComplete() {
-        TS.log().debug("###########");
-        TS.log().debug("# Request " + httpMethod);
-        TS.log().debug("# URI: " + getUri());
+        TS.log().debug(Cli.BAR_SHORT);
+        TS.log().debug(Cli.BAR_WALL + "Request " + httpMethod);
+        TS.log().debug(Cli.BAR_WALL + "URI: " + getUri());
         if (null != getCredentialsProvider()) {
-            TS.log().debug("# Credential: " + TS.util().toJson(getCredentialsProvider()));
+            TS.log().debug(Cli.BAR_WALL + "Credential: " + TS.util().toJson(getCredentialsProvider()));
         }
-        TS.log().debug("# Expected Status: " + getExpectedStatus());
-        TS.log().debug("# Headers: " + (null == headers ? "" : Arrays.toString(headers.toArray())));
-        TS.log().debug("###########");
+        TS.log().debug(Cli.BAR_WALL + "Expected Status: " + getExpectedStatus());
+        TS.log().debug(Cli.BAR_WALL + "Headers: " + (null == headers ? "" : Arrays.toString(headers.toArray())));
+        TS.log().debug(Cli.BAR_SHORT);
         if (null != getPayloadString()) {
-            TS.log().debug("# payload: (see below)");
+            TS.log().debug(Cli.BAR_WALL + "payload: (see below)");
             System.out.println(getPayloadString());
-            TS.log().debug("###########");
+            TS.log().debug(Cli.BAR_SHORT);
         }
         return this;
     }

@@ -18,7 +18,6 @@ import org.testah.framework.annotations.TestPlan;
 
 import groovy.lang.GroovyClassLoader;
 
-
 /**
  * The Class TestFilter.
  */
@@ -26,7 +25,7 @@ public class TestFilter {
 
     /** The test classes. */
     private Set<Class<?>>        testClasses;
-    
+
     /** The test classes met filters. */
     private final List<Class<?>> testClassesMetFilters;
 
@@ -160,15 +159,15 @@ public class TestFilter {
                 testClassesMetFilters.add(test);
 
             }
-            TS.log().info("###################################################");
-            TS.log().info("# TestPlan Classes To Run: ( " + testClassesMetFilters.size() + " of " + testClasses.size()
-                    + " )");
-            TS.log().info("#");
+            TS.log().info(Cli.BAR_LONG);
+            TS.log().info(Cli.BAR_WALL + "TestPlan Classes To Run: ( " + testClassesMetFilters.size() + " of "
+                    + testClasses.size() + " )");
+            TS.log().info(Cli.BAR_WALL);
             for (final Class<?> test : testClassesMetFilters) {
-                TS.log().info("#  " + test.getName());
+                TS.log().info(Cli.BAR_WALL + " " + test.getName());
             }
             TS.log().info("#");
-            TS.log().info("###################################################");
+            TS.log().info(Cli.BAR_LONG);
         }
 
     }
@@ -176,8 +175,10 @@ public class TestFilter {
     /**
      * Filter test case.
      *
-     * @param meta the meta
-     * @param testCaseName the test case name
+     * @param meta
+     *            the meta
+     * @param testCaseName
+     *            the test case name
      * @return true, if successful
      */
     public boolean filterTestCase(final TestCase meta, final String testCaseName) {
@@ -275,7 +276,8 @@ public class TestFilter {
     /**
      * Checks if is filter test name starts with.
      *
-     * @param test the test
+     * @param test
+     *            the test
      * @return true, if is filter test name starts with
      */
     public boolean isFilterTestNameStartsWith(final Class<?> test) {
@@ -285,8 +287,10 @@ public class TestFilter {
     /**
      * Checks if is filter test name starts with.
      *
-     * @param test the test
-     * @param startsWith the starts with
+     * @param test
+     *            the test
+     * @param startsWith
+     *            the starts with
      * @return true, if is filter test name starts with
      */
     public boolean isFilterTestNameStartsWith(final Class<?> test, final String startsWith) {
@@ -299,7 +303,8 @@ public class TestFilter {
     /**
      * Checks if is filter by test type.
      *
-     * @param meta the meta
+     * @param meta
+     *            the meta
      * @return true, if is filter by test type
      */
     public boolean isFilterByTestType(final TestPlan meta) {
@@ -312,8 +317,10 @@ public class TestFilter {
     /**
      * Checks if is filter by id.
      *
-     * @param id the id
-     * @param values the values
+     * @param id
+     *            the id
+     * @param values
+     *            the values
      * @return true, if is filter by id
      */
     public boolean isFilterById(final int id, final String values) {
@@ -332,8 +339,10 @@ public class TestFilter {
     /**
      * Checks if is filter check ok.
      *
-     * @param ary the ary
-     * @param values the values
+     * @param ary
+     *            the ary
+     * @param values
+     *            the values
      * @return true, if is filter check ok
      */
     private boolean isFilterCheckOk(final String[] ary, final String values) {
@@ -434,7 +443,8 @@ public class TestFilter {
     /**
      * Sets the test classes.
      *
-     * @param testClasses the new test classes
+     * @param testClasses
+     *            the new test classes
      */
     public void setTestClasses(final Set<Class<?>> testClasses) {
         this.testClasses = testClasses;
