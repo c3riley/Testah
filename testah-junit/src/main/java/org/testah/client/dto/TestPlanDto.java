@@ -220,11 +220,6 @@ public class TestPlanDto {
         return id;
     }
 
-    public TestPlanDto setId(Integer id) {
-        this.id = id;
-        return this;
-    }
-
     public TestPlanDto setId(int id) {
         this.id = id;
         return this;

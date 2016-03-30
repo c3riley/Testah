@@ -131,8 +131,12 @@ public abstract class AbstractHttpWrapper {
         }
         return response;
     }
-
+    
     public ResponseDto doRequest(final AbstractRequestDto request) {
+        return doRequest(request, verbose);
+    }
+
+    public ResponseDto doRequest(final AbstractRequestDto request, boolean verbose) {
         try {
             final HttpClientContext context = HttpClientContext.create();
             if (null != cookieStore) {

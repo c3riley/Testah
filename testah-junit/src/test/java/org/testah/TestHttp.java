@@ -31,7 +31,7 @@ public class TestHttp extends HttpTestPlan {
 
     }
 
-    @TestCase
+    @TestCase(tags="test")
     @Test
     public void postWithNUll() throws ClientProtocolException, IOException {
         TS.http().doPost("http://www.google.com", null);

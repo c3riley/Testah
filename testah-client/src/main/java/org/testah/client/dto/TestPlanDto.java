@@ -10,7 +10,7 @@ public class TestPlanDto {
     private RunTimeDto        runTime      = new RunTimeDto();
     private List<TestCaseDto> testCases    = new ArrayList<TestCaseDto>();
     private Boolean           status       = null;
-    private final RunInfoDto  runInfo      = new RunInfoDto();
+    private RunInfoDto        runInfo      = new RunInfoDto();
     private int               id           = -1;
     private String            name         = "";
     private String            description  = "";
@@ -220,14 +220,13 @@ public class TestPlanDto {
         return id;
     }
 
-    public TestPlanDto setId(Integer id) {
+    public TestPlanDto setId(int id) {
         this.id = id;
         return this;
     }
 
-    public TestPlanDto setId(int id) {
-        this.id = id;
-        return this;
+    public void setRunInfo(RunInfoDto runInfo) {
+        this.runInfo = runInfo;
     }
 
 }

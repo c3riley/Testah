@@ -109,11 +109,10 @@ public class TestCaseDto {
         return sb.toString();
     }
 
-    public TestCaseDto getAssertionError() {
+    public void getAssertionError() {
         if (null != status && !status) {
             throw new AssertionError("TestCase: " + getName() + " Failed!\n " + getExceptions());
         }
-        return this;
     }
 
     public TestStatus getStatusEnum() {

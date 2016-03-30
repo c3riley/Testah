@@ -9,6 +9,7 @@ import org.testah.client.enums.BrowserType;
 import org.testah.framework.dto.ResultDto;
 import org.testah.framework.report.TestPlanReporter;
 import org.testah.runner.TestahJUnitRunner;
+import org.testah.util.Log;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
@@ -90,6 +91,7 @@ public class Cli {
                         + ParamLoader.getDefaultPropFilePath() + " ]");
                 TS.log().debug("###############################################################################");
             }
+            Log.setLevel(TS.params().getLevel());
         } catch (final ArgumentParserException e) {
             parser.handleError(e);
             System.exit(1);
