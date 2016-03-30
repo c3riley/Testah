@@ -13,6 +13,7 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.reflections.Reflections;
 import org.testah.TS;
 import org.testah.framework.annotations.KnownProblem;
+import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 
 import groovy.lang.GroovyClassLoader;
@@ -156,6 +157,89 @@ public class TestFilter {
             TS.log().info("#");
             TS.log().info("###################################################");
         }
+
+    }
+
+    public boolean filterTestCase(final TestCase meta, final String testCaseName) {
+        boolean ok = true;
+        final Params filterParams = TS.params();
+
+        if (null != meta) {
+
+            String filter = null;
+
+            boolean filterByUuid = true;
+            if (null == TS.params().getFilterById() || TS.params().getFilterById().length() == 0) {
+                filterByUuid = false;
+            }
+
+            boolean filterByComponent = true;
+            if (null == TS.params().getFilterByComponent() || TS.params().getFilterByComponent().length() == 0) {
+                filterByComponent = false;
+            }
+            boolean filterByDevice = true;
+            if (null == TS.params().getFilterByDevice() || TS.params().getFilterByDevice().length() == 0) {
+                filterByDevice = false;
+            }
+            boolean filterByPlatform = true;
+            if (null == TS.params().getFilterByPlatform() || TS.params().getFilterByPlatform().length() == 0) {
+                filterByPlatform = false;
+            }
+            boolean filterByTag = true;
+            if (null == TS.params().getFilterByTag() || TS.params().getFilterByTag().length() == 0) {
+                filterByTag = false;
+            }
+            boolean filterByRunType = true;
+            if (null == TS.params().getFilterByRunType() || TS.params().getFilterByRunType().length() == 0) {
+                filterByRunType = false;
+            }
+
+            if (filterByUuid) {
+                filter = filterParams.getFilterById();
+                if (!isFilterById(meta.id(), filter)) {
+                    TS.log().trace("test[" + testCaseName + "] filtered out by filterByUuid");
+                    return false;
+                }
+            }
+
+            if (filterByTag) {
+                filter = filterParams.getFilterByTag();
+                if (!isFilterCheckOk(meta.tags(), filter)) {
+                    TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByTag");
+                    return false;
+                }
+            }
+            if (filterByComponent) {
+                filter = filterParams.getFilterByComponent();
+                if (!isFilterCheckOk(meta.tags(), filter)) {
+                    TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByComponent");
+                    return false;
+                }
+            }
+            if (filterByDevice) {
+                filter = filterParams.getFilterByDevice();
+                if (!isFilterCheckOk(meta.tags(), filter)) {
+                    TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByDevice");
+                    return false;
+                }
+            }
+            if (filterByPlatform) {
+                filter = filterParams.getFilterByPlatform();
+                if (!isFilterCheckOk(meta.tags(), filter)) {
+                    TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByPlatform");
+                    return false;
+                }
+            }
+            if (filterByRunType) {
+                filter = filterParams.getFilterByRunType();
+                if (!isFilterCheckOk(meta.tags(), filter)) {
+                    TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByRunType");
+                    return false;
+                }
+            }
+
+        }
+        return ok;
 
     }
 

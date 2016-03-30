@@ -1,10 +1,15 @@
 package org.testah.framework.testPlan;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.Test.None;
@@ -27,6 +32,7 @@ import org.testah.client.dto.TestStepDto;
 import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
+import org.testah.framework.cli.TestFilter;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.TestDtoHelper;
 import org.testah.framework.report.TestPlanReporter;
@@ -35,25 +41,27 @@ import org.testah.runner.testPlan.TestPlanActor;
 @ContextHierarchy({ @ContextConfiguration(classes = TestConfiguration.class) })
 public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests {
 
-    private static ThreadLocal<TestPlanDto> testPlan;
-    private static ThreadLocal<TestCaseDto> testCase;
-    private static ThreadLocal<TestStepDto> testStep;
-    private static ThreadLocal<Boolean>     testPlanStart = new ThreadLocal<Boolean>();;
+    private static ThreadLocal<TestPlanDto>  testPlan;
+    private static ThreadLocal<TestCaseDto>  testCase;
+    private static ThreadLocal<TestStepDto>  testStep;
+    private static ThreadLocal<Boolean>      testPlanStart = new ThreadLocal<Boolean>();
+    private static TestFilter                testFilter    = null;
+    private static ThreadLocal<HashMap<String,String>> ignoredTests  = null;
 
-    public TestName                         name          = new TestName();
+    public TestName                          name          = new TestName();
 
-    public TestRule                         globalTimeout = Timeout.millis(100000L);
+    public TestRule                          globalTimeout = Timeout.millis(100000L);
 
-    public ExternalResource                 initialize    = new ExternalResource() {
+    public ExternalResource                  initialize    = new ExternalResource() {
 
-                                                              protected void before() throws Throwable {
-                                                                  initlizeTest();
-                                                              }
+                                                               protected void before() throws Throwable {
+                                                                   initlizeTest();
+                                                               }
 
-                                                              protected void after() {
-                                                                  tearDownTest();
-                                                              };
-                                                          };
+                                                               protected void after() {
+                                                                   tearDownTest();
+                                                               };
+                                                           };
 
     public abstract void initlizeTest();
 
@@ -62,23 +70,34 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     public TestWatcher filter    = new TestWatcher() {
 
                                      public Statement apply(final Statement base, final Description description) {
+                                         final String name = description.getClassName() + "#"
+                                                 + description.getMethodName();
+
+                                         /*
+                                         final String onlyRun = System.getProperty("only_run");
+                                         Assume.assumeTrue(onlyRun == null || Arrays.asList(onlyRun.split(","))
+                                                 .contains(description.getTestClass().getSimpleName()));
+                                         final String mth = System.getProperty("method");
+                                         Assume.assumeTrue(mth == null || Arrays.asList(mth.split(","))
+                                                 .contains(description.getMethodName()));
+                                          */
+                                         if (!getTestFilter().filterTestCase(description.getAnnotation(TestCase.class),
+                                                 name)) {
+                                             addIgnoredTest(name,"METADATA_FILTER");
+                                             Assume.assumeTrue("Filtered out, For details use Trace level logging",
+                                                     false);
+                                         }
 
                                          KnownProblem kp = description.getAnnotation(KnownProblem.class);
                                          if (null != kp) {
                                              if (TS.params().getFilterIgnoreKnownProblem()) {
+                                                 addIgnoredTest(name,"KNOWN_PROBLEM_FILTER");
                                                  Assume.assumeTrue(
                                                          "Filtered out, KnownProblem found: " + kp.description(),
                                                          false);
                                              }
                                          }
 
-                                         final String onlyRun = System.getProperty("only_run");
-
-                                         Assume.assumeTrue(onlyRun == null || Arrays.asList(onlyRun.split(","))
-                                                 .contains(description.getTestClass().getSimpleName()));
-                                         final String mth = System.getProperty("method");
-                                         Assume.assumeTrue(mth == null || Arrays.asList(mth.split(","))
-                                                 .contains(description.getMethodName()));
                                          return super.apply(base, description);
 
                                      }
@@ -127,6 +146,13 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                                              startTestPlan(desc, desc.getTestClass().getAnnotation(TestPlan.class),
                                                      desc.getTestClass().getAnnotation(KnownProblem.class));
                                              getTestPlan().setRunInfo(TestDtoHelper.createRunInfo());
+                                             
+                                             for(Method m : desc.getTestClass().getDeclaredMethods()){
+                                                 if(null!=m.getAnnotation(Ignore.class)){
+                                                     addIgnoredTest(desc.getClassName() + "#" + m.getName(),"JUNIT_IGNORE");
+                                                 }
+                                             }
+                                             
                                          }
                                          TS.log().info(
                                                  "###############################################################################");
@@ -312,6 +338,29 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         } else {
             getTestCase().setDataValue(value);
         }
+    }
+
+    public static TestFilter getTestFilter() {
+        if (null == testFilter) {
+            testFilter = new TestFilter();
+        }
+        return testFilter;
+    }
+
+    public static void setTestFilter(TestFilter testFilter) {
+        AbstractTestPlan.testFilter = testFilter;
+    }
+
+    public static HashMap<String, String> getIgnoredTests() {
+        if (null == ignoredTests) {
+            ignoredTests = new ThreadLocal<HashMap<String,String >>();
+            ignoredTests.set(new HashMap<String, String>());
+        }
+        return ignoredTests.get();
+    }
+
+    public static void addIgnoredTest(final String testCaseName,final String reason) {
+        getIgnoredTests().put(testCaseName, reason);
     }
 
 }
