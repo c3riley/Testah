@@ -62,13 +62,25 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     public TestWatcher filter    = new TestWatcher() {
 
                                      public Statement apply(final Statement base, final Description description) {
+
+                                         KnownProblem kp = description.getAnnotation(KnownProblem.class);
+                                         if (null != kp) {
+                                             if (TS.params().getFilterIgnoreKnownProblem()) {
+                                                 Assume.assumeTrue(
+                                                         "Filtered out, KnownProblem found: " + kp.description(),
+                                                         false);
+                                             }
+                                         }
+
                                          final String onlyRun = System.getProperty("only_run");
+
                                          Assume.assumeTrue(onlyRun == null || Arrays.asList(onlyRun.split(","))
                                                  .contains(description.getTestClass().getSimpleName()));
                                          final String mth = System.getProperty("method");
                                          Assume.assumeTrue(mth == null || Arrays.asList(mth.split(","))
                                                  .contains(description.getMethodName()));
                                          return super.apply(base, description);
+
                                      }
                                  };
 
@@ -228,7 +240,8 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     private TestCaseDto startTestCase(final Description desc, final TestCase testCase, final TestPlan testPlan,
             final KnownProblem knowProblem) {
         if (didTestPlanStart()) {
-            getTestCaseThreadLocal().set(TestDtoHelper.createTestCaseDto(desc, testCase, knowProblem).start());
+            getTestCaseThreadLocal()
+                    .set(TestDtoHelper.createTestCaseDto(desc, testCase, knowProblem, testPlan).start());
         }
         return getTestCase();
     }

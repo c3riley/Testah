@@ -87,11 +87,6 @@ public class StepActionDto {
         return this;
     }
 
-    public StepActionDto setException(final AssertionError exception) {
-        this.exception = exception;
-        return this;
-    }
-
     public StepActionDto setException(final Throwable exception) {
         this.exception = exception;
         return this;

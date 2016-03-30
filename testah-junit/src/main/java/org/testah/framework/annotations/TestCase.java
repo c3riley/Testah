@@ -31,7 +31,7 @@ public @interface TestCase {
 
     String[] tags() default {};
 
-    TestType testType() default TestType.AUTOMATED;
+    TestType testType() default TestType.DEFAULT;
 
     String[] components() default {};
 
