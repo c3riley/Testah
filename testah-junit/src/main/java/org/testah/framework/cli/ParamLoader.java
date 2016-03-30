@@ -11,25 +11,51 @@ import org.apache.logging.log4j.Level;
 import org.testah.TS;
 import org.testah.framework.annotations.Comment;
 
+
+/**
+ * The Class ParamLoader.
+ */
 public class ParamLoader {
 
+	/** The params from properties. */
 	private PropertiesConfiguration paramsFromProperties = null;
 
+	/** The Constant fieldPrefix. */
 	private static final String fieldPrefix = "param.";
+	
+	/** The path to param prop file. */
 	private final String pathToParamPropFile;
 
+	/**
+	 * Instantiates a new param loader.
+	 */
 	public ParamLoader() {
 		this(System.getProperty("user.dir") + File.separator + "testah.properties");
 	}
 
+	/**
+	 * Gets the default prop file path.
+	 *
+	 * @return the default prop file path
+	 */
 	public static String getDefaultPropFilePath() {
 		return System.getProperty("user.dir") + File.separator + "testah.properties";
 	}
 
+	/**
+	 * Instantiates a new param loader.
+	 *
+	 * @param pathToParamPropFile the path to param prop file
+	 */
 	public ParamLoader(final String pathToParamPropFile) {
 		this.pathToParamPropFile = pathToParamPropFile;
 	}
 
+	/**
+	 * Load param values.
+	 *
+	 * @return the params
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Params loadParamValues() {
 
@@ -128,6 +154,11 @@ public class ParamLoader {
 
 	}
 
+	/**
+	 * Overwrite default config.
+	 *
+	 * @return the param loader
+	 */
 	public ParamLoader overwriteDefaultConfig() {
 		try {
 			getDefaultParamProperties().save(new File(pathToParamPropFile));
@@ -137,14 +168,31 @@ public class ParamLoader {
 		return this;
 	}
 
+	/**
+	 * Gets the params.
+	 *
+	 * @return the params
+	 */
 	public PropertiesConfiguration getParams() {
 		return paramsFromProperties;
 	}
 
+	/**
+	 * Gets the custom param properties.
+	 *
+	 * @param customPropfile the custom propfile
+	 * @return the custom param properties
+	 * @throws ConfigurationException the configuration exception
+	 */
 	public PropertiesConfiguration getCustomParamProperties(final File customPropfile) throws ConfigurationException {
 		return new PropertiesConfiguration(customPropfile);
 	}
 
+	/**
+	 * Gets the default param properties.
+	 *
+	 * @return the default param properties
+	 */
 	public PropertiesConfiguration getDefaultParamProperties() {
 		final PropertiesConfiguration defaultConfig = new PropertiesConfiguration();
 		final PropertiesConfigurationLayout layout = defaultConfig.getLayout();

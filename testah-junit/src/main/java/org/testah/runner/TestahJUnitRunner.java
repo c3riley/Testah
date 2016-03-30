@@ -14,8 +14,19 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.actor.UntypedActorFactory;
 
+
+/**
+ * The Class TestahJUnitRunner.
+ */
 public class TestahJUnitRunner {
 
+	/**
+	 * Run tests.
+	 *
+	 * @param numConcurrent the num concurrent
+	 * @param jUnitTestPlanClasses the j unit test plan classes
+	 * @return the list
+	 */
 	public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> jUnitTestPlanClasses) {
 		if (null != jUnitTestPlanClasses) {
 			return runTests(numConcurrent, new HashSet<Class<?>>(jUnitTestPlanClasses));
@@ -23,6 +34,13 @@ public class TestahJUnitRunner {
 		return null;
 	}
 
+	/**
+	 * Run tests.
+	 *
+	 * @param numConcurrent the num concurrent
+	 * @param jUnitTestPlanClasses the j unit test plan classes
+	 * @return the list
+	 */
 	public List<ResultDto> runTests(final int numConcurrent, final Set<Class<?>> jUnitTestPlanClasses) {
 		try {
 			if (null == jUnitTestPlanClasses || jUnitTestPlanClasses.size() == 0) {

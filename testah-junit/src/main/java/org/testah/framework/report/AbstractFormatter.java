@@ -13,18 +13,40 @@ import org.testah.TS;
 import org.testah.framework.cli.Params;
 import org.testah.client.dto.TestPlanDto;
 
+
+/**
+ * The Class AbstractFormatter.
+ */
 public abstract class AbstractFormatter {
 
+    /** The Constant DEFAULT_PACKAGE. */
     protected final static String DEFAULT_PACKAGE = "org/testah/templates/";
+    
+    /** The path to template. */
     protected final String        pathToTemplate;
+    
+    /** The test plan. */
     protected final TestPlanDto   testPlan;
+    
+    /** The report file. */
     protected File                reportFile      = null;
 
+    /**
+     * Instantiates a new abstract formatter.
+     *
+     * @param testPlan the test plan
+     * @param pathToTemplate the path to template
+     */
     public AbstractFormatter(final TestPlanDto testPlan, final String pathToTemplate) {
         this.testPlan = testPlan;
         this.pathToTemplate = pathToTemplate.replace("//", "/");
     }
 
+    /**
+     * Gets the context base.
+     *
+     * @return the context base
+     */
     public VelocityContext getContextBase() {
         VelocityContext context = new VelocityContext();
 
@@ -38,12 +60,29 @@ public abstract class AbstractFormatter {
         return context;
     }
 
+    /**
+     * Gets the context.
+     *
+     * @param context the context
+     * @return the context
+     */
     public abstract VelocityContext getContext(final VelocityContext context);
 
+    /**
+     * Gets the report.
+     *
+     * @return the report
+     */
     public String getReport() {
         return getReport(getContextBase());
     }
 
+    /**
+     * Gets the report.
+     *
+     * @param context the context
+     * @return the report
+     */
     public String getReport(final VelocityContext context) {
 
         try {
@@ -67,8 +106,19 @@ public abstract class AbstractFormatter {
 
     }
 
+    /**
+     * Creates the report.
+     *
+     * @return the abstract formatter
+     */
     public abstract AbstractFormatter createReport();
 
+    /**
+     * Creates the report.
+     *
+     * @param reportName the report name
+     * @return the abstract formatter
+     */
     public AbstractFormatter createReport(final String reportName) {
         try {
             reportFile = new File(Params.addUserDir(reportName));
@@ -79,22 +129,47 @@ public abstract class AbstractFormatter {
         return this;
     }
 
+    /**
+     * Gets the default package.
+     *
+     * @return the default package
+     */
     public static String getDefaultPackage() {
         return DEFAULT_PACKAGE;
     }
 
+    /**
+     * Gets the path to template.
+     *
+     * @return the path to template
+     */
     public String getPathToTemplate() {
         return pathToTemplate;
     }
 
+    /**
+     * Gets the report file.
+     *
+     * @return the report file
+     */
     public File getReportFile() {
         return this.reportFile;
     }
 
+    /**
+     * Gets the test plan.
+     *
+     * @return the test plan
+     */
     public TestPlanDto getTestPlan() {
         return testPlan;
     }
 
+    /**
+     * Sets the report file.
+     *
+     * @param reportFile the new report file
+     */
     public void setReportFile(final File reportFile) {
         this.reportFile = reportFile;
     }

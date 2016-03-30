@@ -18,16 +18,29 @@ import org.testah.framework.annotations.TestPlan;
 
 import groovy.lang.GroovyClassLoader;
 
+
+/**
+ * The Class TestFilter.
+ */
 public class TestFilter {
 
+    /** The test classes. */
     private Set<Class<?>>        testClasses;
+    
+    /** The test classes met filters. */
     private final List<Class<?>> testClassesMetFilters;
 
+    /**
+     * Instantiates a new test filter.
+     */
     public TestFilter() {
         testClasses = new HashSet<Class<?>>();
         testClassesMetFilters = new ArrayList<Class<?>>();
     }
 
+    /**
+     * Filter test plans to run.
+     */
     public void filterTestPlansToRun() {
         loadCompiledTestClase();
         loadUncompiledTestPlans();
@@ -160,6 +173,13 @@ public class TestFilter {
 
     }
 
+    /**
+     * Filter test case.
+     *
+     * @param meta the meta
+     * @param testCaseName the test case name
+     * @return true, if successful
+     */
     public boolean filterTestCase(final TestCase meta, final String testCaseName) {
         boolean ok = true;
         final Params filterParams = TS.params();
@@ -243,14 +263,32 @@ public class TestFilter {
 
     }
 
+    /**
+     * Gets the test classes met filters.
+     *
+     * @return the test classes met filters
+     */
     public List<Class<?>> getTestClassesMetFilters() {
         return testClassesMetFilters;
     }
 
+    /**
+     * Checks if is filter test name starts with.
+     *
+     * @param test the test
+     * @return true, if is filter test name starts with
+     */
     public boolean isFilterTestNameStartsWith(final Class<?> test) {
         return isFilterTestNameStartsWith(test, TS.params().getFilterByTestPlanNameStartsWith());
     }
 
+    /**
+     * Checks if is filter test name starts with.
+     *
+     * @param test the test
+     * @param startsWith the starts with
+     * @return true, if is filter test name starts with
+     */
     public boolean isFilterTestNameStartsWith(final Class<?> test, final String startsWith) {
         if (null != startsWith && startsWith.length() > 0) {
             return test.getName().startsWith(startsWith);
@@ -258,6 +296,12 @@ public class TestFilter {
         return true;
     }
 
+    /**
+     * Checks if is filter by test type.
+     *
+     * @param meta the meta
+     * @return true, if is filter by test type
+     */
     public boolean isFilterByTestType(final TestPlan meta) {
         if (meta.testType() != TS.params().getFilterByTestType()) {
             return false;
@@ -265,6 +309,13 @@ public class TestFilter {
         return true;
     }
 
+    /**
+     * Checks if is filter by id.
+     *
+     * @param id the id
+     * @param values the values
+     * @return true, if is filter by id
+     */
     public boolean isFilterById(final int id, final String values) {
         for (final String value : values.split(",")) {
             try {
@@ -278,6 +329,13 @@ public class TestFilter {
         return false;
     }
 
+    /**
+     * Checks if is filter check ok.
+     *
+     * @param ary the ary
+     * @param values the values
+     * @return true, if is filter check ok
+     */
     private boolean isFilterCheckOk(final String[] ary, final String values) {
         if (null != values && values.length() > 0) {
             boolean rtn = false;
@@ -304,6 +362,11 @@ public class TestFilter {
         return true; // Filter is Off
     }
 
+    /**
+     * Load compiled test clase.
+     *
+     * @return the test filter
+     */
     public TestFilter loadCompiledTestClase() {
         if (null != TS.params().getLookAtInternalTests() && TS.params().getLookAtInternalTests().length() > 0) {
             final Reflections reflections = new Reflections(TS.params().getLookAtInternalTests());
@@ -312,6 +375,11 @@ public class TestFilter {
         return this;
     }
 
+    /**
+     * Load uncompiled test plans.
+     *
+     * @return the test filter
+     */
     public TestFilter loadUncompiledTestPlans() {
         final String externalValue = TS.params().getLookAtExternalTests();
 
@@ -354,10 +422,20 @@ public class TestFilter {
         return this;
     }
 
+    /**
+     * Gets the test classes.
+     *
+     * @return the test classes
+     */
     public Set<Class<?>> getTestClasses() {
         return testClasses;
     }
 
+    /**
+     * Sets the test classes.
+     *
+     * @param testClasses the new test classes
+     */
     public void setTestClasses(final Set<Class<?>> testClasses) {
         this.testClasses = testClasses;
     }

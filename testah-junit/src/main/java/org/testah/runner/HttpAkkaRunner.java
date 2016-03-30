@@ -16,10 +16,23 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.actor.UntypedActorFactory;
 
+
+/**
+ * The Class HttpAkkaRunner.
+ */
 public class HttpAkkaRunner {
 
+    /** The http wrapper. */
     public static AbstractHttpWrapper httpWrapper;
 
+    /**
+     * Run and report.
+     *
+     * @param numConcurrent the num concurrent
+     * @param request the request
+     * @param numOfRequestsToMake the num of requests to make
+     * @return the list
+     */
     public List<ResponseDto> runAndReport(final int numConcurrent, final AbstractRequestDto request,
             final int numOfRequestsToMake) {
         final List<ResponseDto> responses = runTests(numConcurrent, request, numOfRequestsToMake);
@@ -33,6 +46,14 @@ public class HttpAkkaRunner {
         return responses;
     }
 
+    /**
+     * Run tests.
+     *
+     * @param numConcurrent the num concurrent
+     * @param request the request
+     * @param numOfRequestsToMake the num of requests to make
+     * @return the list
+     */
     public List<ResponseDto> runTests(final int numConcurrent, final AbstractRequestDto request,
             final int numOfRequestsToMake) {
         final Long hashId = Thread.currentThread().getId();
@@ -70,6 +91,11 @@ public class HttpAkkaRunner {
         }
     }
 
+    /**
+     * Gets the http wrapper.
+     *
+     * @return the http wrapper
+     */
     public static AbstractHttpWrapper getHttpWrapper() {
         if (null == httpWrapper) {
             httpWrapper = new HttpWrapperV1();
@@ -79,6 +105,11 @@ public class HttpAkkaRunner {
         return httpWrapper;
     }
 
+    /**
+     * Sets the http wrapper.
+     *
+     * @param httpWrapper the new http wrapper
+     */
     public static void setHttpWrapper(final AbstractHttpWrapper httpWrapper) {
         HttpAkkaRunner.httpWrapper = httpWrapper;
     }
