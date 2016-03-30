@@ -9,10 +9,11 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.testah.TS;
-import org.testah.driver.http.requests.AbstractRequestDto;
-import org.testah.framework.dto.StepAction;
 import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
+import org.testah.driver.http.requests.AbstractRequestDto;
+import org.testah.framework.cli.Cli;
+import org.testah.framework.dto.StepAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -149,13 +150,13 @@ public class ResponseDto {
     }
 
     public ResponseDto print(final boolean shortResponseBody, final int truncate) {
-        TS.log().debug("###########");
-        TS.log().debug("# Response");
-        TS.log().debug("# URI: " + getUrl());
-        TS.log().debug("# Status: " + getStatusCode() + " [ " + getStatusText() + " ]");
-        TS.log().debug("# Headers: " + Arrays.toString(getHeaders()));
-        TS.log().debug("###########");
-        TS.log().debug("# Body: (see below)");
+        TS.log().debug(Cli.BAR_SHORT);
+        TS.log().debug(Cli.BAR_WALL + "Response");
+        TS.log().debug(Cli.BAR_WALL + "URI: " + getUrl());
+        TS.log().debug(Cli.BAR_WALL + "Status: " + getStatusCode() + " [ " + getStatusText() + " ]");
+        TS.log().debug(Cli.BAR_WALL + "Headers: " + Arrays.toString(getHeaders()));
+        TS.log().debug(Cli.BAR_SHORT);
+        TS.log().debug(Cli.BAR_WALL + "Body: (see below)");
         if (shortResponseBody) {
             System.out.println(StringUtils.abbreviate(getResponseBody(), truncate));
         } else {
@@ -197,11 +198,11 @@ public class ResponseDto {
     }
 
     public ResponseDto printStatus() {
-        TS.log().debug("###########");
-        TS.log().debug("# Response");
-        TS.log().debug("# URI: " + getUrl());
-        TS.log().debug("# Status: " + getStatusCode() + " [ " + getStatusText() + " ]");
-        TS.log().debug("###########");
+        TS.log().debug(Cli.BAR_SHORT);
+        TS.log().debug(Cli.BAR_WALL + "Response");
+        TS.log().debug(Cli.BAR_WALL + "URI: " + getUrl());
+        TS.log().debug(Cli.BAR_WALL + "Status: " + getStatusCode() + " [ " + getStatusText() + " ]");
+        TS.log().debug(Cli.BAR_SHORT);
         return this;
     }
 
