@@ -10,34 +10,77 @@ import org.newsclub.net.unix.AFUNIXSocketAddress;
 import org.newsclub.net.unix.AFUNIXSocketException;
 import org.testah.TS;
 
+
+/**
+ * The Class StrongSwanClient.
+ */
 //https://github.com/strongswan/strongswan/blob/master/src/libcharon/plugins/vici/ruby/lib/vici.rb
 public class StrongSwanClient {
 
+    /** The socket full path. */
     private String socketFullPath = "/tmp/socketname";
 
+    /**
+     * Instantiates a new strong swan client.
+     */
     public StrongSwanClient() {
 
     }
 
+    /**
+     * Instantiates a new strong swan client.
+     *
+     * @param socketFullPath the socket full path
+     */
     public StrongSwanClient(final String socketFullPath) {
         this.setSocketFullPath(socketFullPath);
     }
 
+    /**
+     * The Enum Message.
+     */
     public static enum Message {
-        SECTION_START(1), SECTION_END(2), LIST_START(4), LIST_ITEM(5), LIST_END(6);
+        
+        /** The section start. */
+        SECTION_START(1), 
+ /** The section end. */
+ SECTION_END(2), 
+ /** The list start. */
+ LIST_START(4), 
+ /** The list item. */
+ LIST_ITEM(5), 
+ /** The list end. */
+ LIST_END(6);
 
+        /** The value. */
         private final int value;
 
+        /**
+         * Instantiates a new message.
+         *
+         * @param value the value
+         */
         Message(final int value) {
             this.value = value;
         }
 
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
         public int getValue() {
             return value;
         }
 
     }
 
+    /**
+     * Send message.
+     *
+     * @param a6rgs the a6rgs
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     public void sendMessage(final String[] a6rgs) throws IOException {
         final File socketFile = new File(getSocketFullPath());
         final AFUNIXSocket sock = AFUNIXSocket.newInstance();
@@ -59,10 +102,20 @@ public class StrongSwanClient {
         TS.log().debug("End of communication.");
     }
 
+    /**
+     * Gets the socket full path.
+     *
+     * @return the socket full path
+     */
     public String getSocketFullPath() {
         return socketFullPath;
     }
 
+    /**
+     * Sets the socket full path.
+     *
+     * @param socketFullPath the new socket full path
+     */
     public void setSocketFullPath(final String socketFullPath) {
         this.socketFullPath = socketFullPath;
     }

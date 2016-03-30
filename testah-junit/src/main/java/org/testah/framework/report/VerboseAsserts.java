@@ -7,34 +7,74 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 import org.testah.framework.dto.StepAction;
 
+
+/**
+ * The Class VerboseAsserts.
+ */
 @SuppressWarnings("deprecation")
 public class VerboseAsserts {
 
+    /** The record steps. */
     private boolean recordSteps          = true;
+    
+    /** The throw exception on fail. */
     private boolean throwExceptionOnFail = true;
+    
+    /** The is verify only. */
     private boolean isVerifyOnly         = false;
 
+    /**
+     * Instantiates a new verbose asserts.
+     */
     public VerboseAsserts() {
         setRecordSteps(TS.params().isRecordSteps());
         throwExceptionOnFail = TS.params().isThrowExceptionOnFail();
     }
 
+    /**
+     * Instantiates a new verbose asserts.
+     *
+     * @param throwExceptionOnFail the throw exception on fail
+     */
     public VerboseAsserts(final boolean throwExceptionOnFail) {
         this.throwExceptionOnFail = throwExceptionOnFail;
     }
 
     // final JsonNode jsonNode=new ObjectMapper().valueToTree(tp);
+    /**
+     * Same json.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     // final JSONAssert.
     public boolean sameJson(final Object expected, final Object actual) {
         return sameJson(expected, actual, true);
     }
 
+    /**
+     * Same json.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @param strict the strict
+     * @return true, if successful
+     */
     public boolean sameJson(final Object expected, final Object actual, final boolean strict) {
         final JSONObject expectedJsonNode = new JSONObject(expected);
         final JSONObject actualJsonNode = new JSONObject(actual);
         return sameJson(expectedJsonNode, actualJsonNode, strict);
     }
 
+    /**
+     * Same json.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @param strict the strict
+     * @return true, if successful
+     */
     public boolean sameJson(final JSONObject expected, final JSONObject actual, final boolean strict) {
         try {
             JSONAssert.assertEquals(expected, actual, strict);
@@ -48,6 +88,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Same.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean same(final Object expected, final Object actual) {
         try {
             Assert.assertSame(expected, actual);
@@ -61,6 +108,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Same.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean same(final String message, final Object expected, final Object actual) {
         try {
             Assert.assertSame(message, expected, actual);
@@ -74,6 +129,11 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Fail.
+     *
+     * @return true, if successful
+     */
     public boolean fail() {
         try {
             Assert.fail();
@@ -87,6 +147,12 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Fail.
+     *
+     * @param message the message
+     * @return true, if successful
+     */
     public boolean fail(final String message) {
         try {
             Assert.fail(message);
@@ -100,6 +166,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Not null.
+     *
+     * @param message the message
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean notNull(final String message, final Object actual) {
         try {
             Assert.assertNotNull(message, actual);
@@ -113,10 +186,23 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Not null.
+     *
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean notNull(final Object actual) {
         return notNull("", actual);
     }
 
+    /**
+     * Checks if is null.
+     *
+     * @param message the message
+     * @param actual the actual
+     * @return true, if is null
+     */
     public boolean isNull(final String message, final Object actual) {
         try {
             Assert.assertNull(message, actual);
@@ -130,10 +216,24 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Checks if is null.
+     *
+     * @param actual the actual
+     * @return true, if is null
+     */
     public boolean isNull(final Object actual) {
         return isNull("", actual);
     }
 
+    /**
+     * Not same.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean notSame(final String message, final Object expected, final Object actual) {
         try {
             Assert.assertNotSame(message, expected, actual);
@@ -147,6 +247,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Not same.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean notSame(final Object expected, final Object actual) {
         try {
             Assert.assertNotSame(expected, actual);
@@ -160,6 +267,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean equals(final String message, final double expected, final double actual) {
         try {
             Assert.assertEquals(message, expected, actual);
@@ -173,6 +288,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean equals(final long expected, final long actual) {
         try {
             Assert.assertEquals(expected, actual);
@@ -186,6 +308,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean equals(final String message, final Object[] expected, final Object[] actual) {
         try {
             Assert.assertEquals(message, expected, actual);
@@ -199,6 +329,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean equals(final Object expected, final Object actual) {
         try {
             Assert.assertEquals(expected, actual);
@@ -212,6 +349,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean equals(final Object[] expected, final Object[] actual) {
         try {
             Assert.assertEquals(expected, actual);
@@ -225,6 +369,15 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @param arg3 the arg3
+     * @return true, if successful
+     */
     public boolean equals(final String message, final double expected, final double actual, final double arg3) {
         try {
             Assert.assertEquals(message, expected, actual, arg3);
@@ -238,6 +391,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean equals(final String message, final Object expected, final Object actual) {
         try {
             Assert.assertEquals(message, expected, actual);
@@ -251,6 +412,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @param delta the delta
+     * @return true, if successful
+     */
     public boolean equals(final float expected, final float actual, final float delta) {
         try {
             Assert.assertEquals(expected, actual, delta);
@@ -264,6 +433,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @param delta the delta
+     * @return true, if successful
+     */
     public boolean equals(final double expected, final double actual, final double delta) {
         try {
             Assert.assertEquals(expected, actual, delta);
@@ -277,6 +454,15 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @param arg3 the arg3
+     * @return true, if successful
+     */
     public boolean equals(final String message, final float expected, final float actual, final float arg3) {
         try {
             Assert.assertEquals(message, expected, actual, arg3);
@@ -290,6 +476,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean equals(final String message, final long expected, final long actual) {
         try {
             Assert.assertEquals(message, expected, actual);
@@ -303,6 +497,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean equals(final double expected, final double actual) {
         try {
             Assert.assertEquals(expected, actual);
@@ -316,6 +517,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Checks if is false.
+     *
+     * @param message the message
+     * @param actual the actual
+     * @return true, if is false
+     */
     public boolean isFalse(final String message, final boolean actual) {
         try {
             Assert.assertFalse(message, actual);
@@ -329,10 +537,23 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Checks if is false.
+     *
+     * @param actual the actual
+     * @return true, if is false
+     */
     public boolean isFalse(final boolean actual) {
         return isFalse("", actual);
     }
 
+    /**
+     * Checks if is true.
+     *
+     * @param message the message
+     * @param actual the actual
+     * @return true, if is true
+     */
     public boolean isTrue(final String message, final boolean actual) {
         try {
             Assert.assertTrue(message, actual);
@@ -346,10 +567,23 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Checks if is true.
+     *
+     * @param actual the actual
+     * @return true, if is true
+     */
     public boolean isTrue(final boolean actual) {
         return isTrue("", actual);
     }
 
+    /**
+     * Not equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean notEquals(final Object expected, final Object actual) {
         try {
             Assert.assertNotEquals(expected, actual);
@@ -363,6 +597,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Not equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean notEquals(final String message, final Object expected, final Object actual) {
         try {
             Assert.assertNotEquals(message, expected, actual);
@@ -376,6 +618,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Not equals.
+     *
+     * @param unexpected the unexpected
+     * @param actual the actual
+     * @param delta the delta
+     * @return true, if successful
+     */
     public boolean notEquals(final float unexpected, final float actual, final float delta) {
         try {
             Assert.assertNotEquals(unexpected, actual, delta);
@@ -389,6 +639,15 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Not equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @param arg3 the arg3
+     * @return true, if successful
+     */
     public boolean notEquals(final String message, final float expected, final float actual, final float arg3) {
         try {
             Assert.assertNotEquals(message, expected, actual, arg3);
@@ -402,6 +661,15 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Not equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @param arg3 the arg3
+     * @return true, if successful
+     */
     public boolean notEquals(final String message, final double expected, final double actual, final double arg3) {
         try {
             Assert.assertNotEquals(message, expected, actual, arg3);
@@ -415,6 +683,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Not equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean notEquals(final long expected, final long actual) {
         try {
             Assert.assertNotEquals(expected, actual);
@@ -428,6 +703,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Not equals.
+     *
+     * @param unexpected the unexpected
+     * @param actual the actual
+     * @param delta the delta
+     * @return true, if successful
+     */
     public boolean notEquals(final double unexpected, final double actual, final double delta) {
         try {
             Assert.assertNotEquals(unexpected, actual, delta);
@@ -441,6 +724,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Not equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean notEquals(final String message, final long expected, final long actual) {
         try {
             Assert.assertNotEquals(message, expected, actual);
@@ -454,6 +745,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * That.
+     *
+     * @param <T> the generic type
+     * @param actual the actual
+     * @param matcher the matcher
+     * @return true, if successful
+     */
     public <T> boolean that(final T actual, final Matcher<? super T> matcher) {
         try {
             Assert.assertThat(actual, matcher);
@@ -467,6 +766,15 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * That.
+     *
+     * @param <T> the generic type
+     * @param message the message
+     * @param actual the actual
+     * @param matcher the matcher
+     * @return true, if successful
+     */
     public <T> boolean that(final String message, final T actual, final Matcher<? super T> matcher) {
         try {
             Assert.assertThat(message, actual, matcher);
@@ -480,6 +788,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final String message, final byte[] expected, final byte[] actual) {
         try {
             Assert.assertArrayEquals(message, expected, actual);
@@ -493,6 +809,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final byte[] expected, final byte[] actual) {
         try {
             Assert.assertArrayEquals(expected, actual);
@@ -506,6 +829,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final String message, final char[] expected, final char[] actual) {
         try {
             Assert.assertArrayEquals(message, expected, actual);
@@ -519,6 +850,15 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @param arg3 the arg3
+     * @return true, if successful
+     */
     public boolean arrayEquals(final String message, final double[] expected, final double[] actual,
             final double arg3) {
         try {
@@ -533,6 +873,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final String message, final Object[] expected, final Object[] actual) {
         try {
             Assert.assertArrayEquals(message, expected, actual);
@@ -546,6 +894,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final Object[] expected, final Object[] actual) {
         try {
             Assert.assertArrayEquals(expected, actual);
@@ -559,6 +914,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final String message, final boolean[] expected, final boolean[] actual) {
         try {
             Assert.assertArrayEquals(message, expected, actual);
@@ -572,6 +935,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final boolean[] expected, final boolean[] actual) {
         try {
             Assert.assertArrayEquals(expected, actual);
@@ -585,6 +955,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final long[] expected, final long[] actual) {
         try {
             Assert.assertArrayEquals(expected, actual);
@@ -598,6 +975,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param expecteds the expecteds
+     * @param actuals the actuals
+     * @param delta the delta
+     * @return true, if successful
+     */
     public boolean arrayEquals(final double[] expecteds, final double[] actuals, final double delta) {
         try {
             Assert.assertArrayEquals(expecteds, actuals, delta);
@@ -611,6 +996,15 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param message the message
+     * @param expecteds the expecteds
+     * @param actuals the actuals
+     * @param delta the delta
+     * @return true, if successful
+     */
     public boolean arrayEquals(final String message, final float[] expecteds, final float[] actuals,
             final float delta) {
         try {
@@ -625,6 +1019,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param expecteds the expecteds
+     * @param actuals the actuals
+     * @param delta the delta
+     * @return true, if successful
+     */
     public boolean arrayEquals(final float[] expecteds, final float[] actuals, final float delta) {
         try {
             Assert.assertArrayEquals(expecteds, actuals, delta);
@@ -638,6 +1040,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final char[] expected, final char[] actual) {
         try {
             Assert.assertArrayEquals(expected, actual);
@@ -651,6 +1060,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final String message, final short[] expected, final short[] actual) {
         try {
             Assert.assertArrayEquals(message, expected, actual);
@@ -664,6 +1081,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final short[] expected, final short[] actual) {
         try {
             Assert.assertArrayEquals(expected, actual);
@@ -677,6 +1101,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final String message, final int[] expected, final int[] actual) {
         try {
             Assert.assertArrayEquals(message, expected, actual);
@@ -690,6 +1122,13 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final int[] expected, final int[] actual) {
         try {
             Assert.assertArrayEquals(expected, actual);
@@ -703,6 +1142,14 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Array equals.
+     *
+     * @param message the message
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean arrayEquals(final String message, final long[] expected, final long[] actual) {
         try {
             Assert.assertArrayEquals(message, expected, actual);
@@ -716,21 +1163,52 @@ public class VerboseAsserts {
         }
     }
 
-    /***************************************************************************************/
+    /**
+     * ************************************************************************************.
+     *
+     * @return true, if successful
+     */
 
     public boolean pass() {
         return pass("");
     }
 
+    /**
+     * Pass.
+     *
+     * @param message the message
+     * @return true, if successful
+     */
     public boolean pass(final String message) {
         return addAssertHistory(message, true, "pass", null, null, null);
     }
 
+    /**
+     * Adds the assert history.
+     *
+     * @param message the message
+     * @param status the status
+     * @param assertMethod the assert method
+     * @param expected the expected
+     * @param actual the actual
+     * @return true, if successful
+     */
     public boolean addAssertHistory(final String message, final Boolean status, final String assertMethod,
             final Object expected, final Object actual) {
         return addAssertHistory(message, status, assertMethod, expected, actual, null);
     }
 
+    /**
+     * Adds the assert history.
+     *
+     * @param message the message
+     * @param status the status
+     * @param assertMethod the assert method
+     * @param expected the expected
+     * @param actual the actual
+     * @param exception the exception
+     * @return true, if successful
+     */
     public boolean addAssertHistory(final String message, final Boolean status, final String assertMethod,
             final Object expected, final Object actual, final Throwable exception) {
         if (isVerifyOnly()) {
@@ -742,14 +1220,29 @@ public class VerboseAsserts {
         return status;
     }
 
+    /**
+     * Gets the throw exception on fail.
+     *
+     * @return the throw exception on fail
+     */
     public boolean getThrowExceptionOnFail() {
         return throwExceptionOnFail;
     }
 
+    /**
+     * Checks if is throw exception on fail.
+     *
+     * @return true, if is throw exception on fail
+     */
     public boolean isThrowExceptionOnFail() {
         return getThrowExceptionOnFail();
     }
 
+    /**
+     * Only verfiy.
+     *
+     * @return the verbose asserts
+     */
     public VerboseAsserts onlyVerfiy() {
         this.recordSteps = false;
         this.throwExceptionOnFail = false;
@@ -757,22 +1250,47 @@ public class VerboseAsserts {
         return this;
     }
 
+    /**
+     * Checks if is record steps.
+     *
+     * @return true, if is record steps
+     */
     public boolean isRecordSteps() {
         return recordSteps;
     }
 
+    /**
+     * Sets the throw exception on fail.
+     *
+     * @param throwExceptionOnFail the new throw exception on fail
+     */
     public void setThrowExceptionOnFail(final boolean throwExceptionOnFail) {
         this.throwExceptionOnFail = throwExceptionOnFail;
     }
 
+    /**
+     * Sets the record steps.
+     *
+     * @param recordSteps the new record steps
+     */
     public void setRecordSteps(final boolean recordSteps) {
         this.recordSteps = recordSteps;
     }
 
+    /**
+     * Checks if is verify only.
+     *
+     * @return true, if is verify only
+     */
     public boolean isVerifyOnly() {
         return isVerifyOnly;
     }
 
+    /**
+     * Sets the verify only.
+     *
+     * @param isVerifyOnly the new verify only
+     */
     public void setVerifyOnly(final boolean isVerifyOnly) {
         this.isVerifyOnly = isVerifyOnly;
     }

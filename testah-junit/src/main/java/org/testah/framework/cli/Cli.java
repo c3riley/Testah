@@ -19,13 +19,27 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 
+
+/**
+ * The Class Cli.
+ */
 public class Cli {
 
+    /** The res. */
     private Namespace          res;
+    
+    /** The param loader. */
     private final ParamLoader  paramLoader;
+    
+    /** The opt. */
     private final Params       opt;
+    
+    /** The Constant version. */
     public static final String version = "0.0.1";
 
+    /**
+     * Instantiates a new cli.
+     */
     public Cli() {
 
         String propFilePath = System.getenv("TESTAH_PROP");
@@ -38,6 +52,12 @@ public class Cli {
 
     }
 
+    /**
+     * Gets the argument parser.
+     *
+     * @param args the args
+     * @return the argument parser
+     */
     public Cli getArgumentParser(final String[] args) {
 
         final ArgumentParser parser = ArgumentParsers.newArgumentParser("Testah").defaultHelp(true)
@@ -100,12 +120,18 @@ public class Cli {
 
     }
 
+    /**
+     * Process create.
+     */
     public void processCreate() {
         if (res.getBoolean("prop")) {
             paramLoader.overwriteDefaultConfig();
         }
     }
 
+    /**
+     * Process run.
+     */
     public void processRun() {
 
         final TestFilter testPlanFilter = new TestFilter();
@@ -156,22 +182,45 @@ public class Cli {
 
     }
 
+    /**
+     * Process query.
+     */
     public void processQuery() {
 
     }
 
+    /**
+     * Gets the res.
+     *
+     * @return the res
+     */
     public Namespace getRes() {
         return res;
     }
 
+    /**
+     * Sets the res.
+     *
+     * @param res the new res
+     */
     public void setRes(final Namespace res) {
         this.res = res;
     }
 
+    /**
+     * Gets the param loader.
+     *
+     * @return the param loader
+     */
     public ParamLoader getParamLoader() {
         return paramLoader;
     }
 
+    /**
+     * Gets the opt.
+     *
+     * @return the opt
+     */
     public Params getOpt() {
         return opt;
     }

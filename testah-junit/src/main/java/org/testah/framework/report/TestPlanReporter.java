@@ -13,8 +13,17 @@ import org.testah.runner.testPlan.TestPlanActor;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
+/**
+ * The Class TestPlanReporter.
+ */
 public class TestPlanReporter {
 
+    /**
+     * Report results.
+     *
+     * @param testPlan the test plan
+     */
     public static void reportResults(final TestPlanDto testPlan) {
         String filename = "results";
         HashMap<String, String> ignored = AbstractTestPlan.getIgnoredTests();
@@ -76,6 +85,11 @@ public class TestPlanReporter {
         TS.log().info("###############################################################################");
     }
 
+    /**
+     * Open report.
+     *
+     * @param pathToReport the path to report
+     */
     public static void openReport(final String pathToReport) {
         if (TS.params().isAutoOpenHtmlReport()) {
             try {

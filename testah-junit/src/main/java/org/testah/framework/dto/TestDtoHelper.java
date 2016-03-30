@@ -13,8 +13,18 @@ import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 
+
+/**
+ * The Class TestDtoHelper.
+ */
 public class TestDtoHelper {
 
+    /**
+     * Convert known problem ann to dto.
+     *
+     * @param knownProblem the known problem
+     * @return the known problem dto
+     */
     public static KnownProblemDto convertKnownProblemAnnToDto(final KnownProblem knownProblem) {
         final KnownProblemDto knownProblemDto = new org.testah.client.dto.KnownProblemDto();
         knownProblemDto.setLinkedIds(Arrays.asList(knownProblem.linkedIds()));
@@ -23,6 +33,14 @@ public class TestDtoHelper {
         return knownProblemDto;
     }
 
+    /**
+     * Fill.
+     *
+     * @param testPlanToFill the test plan to fill
+     * @param fillFromTestPlan the fill from test plan
+     * @param knownProblemFillFrom the known problem fill from
+     * @return the test plan dto
+     */
     public static TestPlanDto fill(TestPlanDto testPlanToFill, final TestPlan fillFromTestPlan,
             final KnownProblem knownProblemFillFrom) {
         if (null == testPlanToFill) {
@@ -46,6 +64,15 @@ public class TestDtoHelper {
         return testPlanToFill;
     }
 
+    /**
+     * Fill.
+     *
+     * @param testCaseToFill the test case to fill
+     * @param fillFromTestCase the fill from test case
+     * @param knownProblemFillFrom the known problem fill from
+     * @param tpMeta the tp meta
+     * @return the test case dto
+     */
     public static TestCaseDto fill(TestCaseDto testCaseToFill, final TestCase fillFromTestCase,
             final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
         if (null == testCaseToFill) {
@@ -111,6 +138,14 @@ public class TestDtoHelper {
         return testCaseToFill;
     }
 
+    /**
+     * Creates the test plan dto.
+     *
+     * @param desc the desc
+     * @param meta the meta
+     * @param knownProblemFillFrom the known problem fill from
+     * @return the test plan dto
+     */
     public static TestPlanDto createTestPlanDto(final Description desc, final TestPlan meta,
             final KnownProblem knownProblemFillFrom) {
         TestPlanDto testPlanToFill = new TestPlanDto();
@@ -126,6 +161,15 @@ public class TestDtoHelper {
         return testPlanToFill;
     }
 
+    /**
+     * Creates the test case dto.
+     *
+     * @param desc the desc
+     * @param meta the meta
+     * @param knownProblemFillFrom the known problem fill from
+     * @param tpMeta the tp meta
+     * @return the test case dto
+     */
     public static TestCaseDto createTestCaseDto(final Description desc, final TestCase meta,
             final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
         TestCaseDto testCaseToFill = new TestCaseDto();
@@ -141,10 +185,21 @@ public class TestDtoHelper {
         return testCaseToFill;
     }
 
+    /**
+     * Creates the run info.
+     *
+     * @return the run info dto
+     */
     public static RunInfoDto createRunInfo() {
         return fill(new RunInfoDto());
     }
 
+    /**
+     * Fill.
+     *
+     * @param runInfo the run info
+     * @return the run info dto
+     */
     public static RunInfoDto fill(RunInfoDto runInfo) {
         if (null == runInfo) {
             runInfo = new RunInfoDto();
