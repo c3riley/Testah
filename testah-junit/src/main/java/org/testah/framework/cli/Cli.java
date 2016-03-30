@@ -36,7 +36,7 @@ public class Cli {
     /** The Constant version. */
     public static final String version   = "0.0.1";
 
-    public static final String BAR_LONG  = "==========================================================================================================";
+    public static final String BAR_LONG  = "=============================================================================================";
     public static final String BAR_SHORT = "=========================================";
     public static final String BAR_WALL  = "# ";
 
@@ -234,15 +234,23 @@ public class Cli {
 
     public static void writeOutTestah() {
         System.out.println("\n" + Cli.BAR_LONG);
-        System.out.println("      _____________                    _");
-        System.out.println("     /_____  _____/      ________     | |");
-        System.out.println("          | |           /___ ___/     | |");
-        System.out.println("          | |   ___    __  | |        | |");
-        System.out.println("          | |  / __|  (    | |  ___   | |___");
-        System.out.println("          | |  |       \\   | | / \\ \\  |  __ \\");
-        System.out.println("          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|");
+        System.out.println(
+                "      _____________                    _                                         ============");
+        System.out.println(
+                "     /_____  _____/      ________     | |                                       =======/\\==||");
+        System.out.println(
+                "          | |           /___ ___/     | |                                      =======/  \\=||");
+        System.out.println(
+                "          | |   ___    __  | |        | |                                     =======/    \\||");
+        System.out.println(
+                "          | |  / __|  (    | |  ___   | |___                                  =======\\    /||");
+        System.out.println(
+                "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
+        System.out.println(
+                "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
         System.out.println("=======================================================[Version: " + Cli.version
-                + "]===================================");
+                + "]======================");
+
         System.out.println(Cli.BAR_LONG);
     }
 }
