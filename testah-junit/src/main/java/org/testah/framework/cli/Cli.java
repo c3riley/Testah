@@ -77,6 +77,9 @@ public class Cli {
         create.addArgument("--prop", "--properties").required(false).action(Arguments.storeTrue()).dest("prop");
         create.addArgument("--guid").required(false).action(Arguments.storeTrue()).dest("guid");
 
+        writeOutTestah();
+
+        
         try {
             if (null != args) {
                 res = parser.parseArgs(args);
@@ -224,5 +227,15 @@ public class Cli {
     public Params getOpt() {
         return opt;
     }
-
+    public static void writeOutTestah(){
+        System.out.println("\n###############################################################################");
+        System.out.println("         ____________                       _");
+        System.out.println("        /____________/     _________       | |");
+        System.out.println("             | |          |_________|      | |");
+        System.out.println("             | |   ___    __  | |          | |");
+        System.out.println("             | |  / __|  (    | |   ___    | |___");
+        System.out.println("             | |  |       \\   | |  / \\ \\   |  __ \\");
+        System.out.println("             |_|  \\____  __)  |_|  \\__\\_\\  |_|  |_|");
+        System.out.println("\n###############################################################################");
+    }
 }

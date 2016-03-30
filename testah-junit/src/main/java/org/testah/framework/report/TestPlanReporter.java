@@ -11,6 +11,7 @@ import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.runner.testPlan.TestPlanActor;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
@@ -75,6 +76,17 @@ public class TestPlanReporter {
                         false).print(true);
                 TS.log().trace("Request Payload:\n" + response.getRequestUsed().getPayloadString());
                 TS.log().trace("Response Body:\n" + response.getResponseBody());
+                try{
+                    HashMap<String, String> values = TS.util().getMap().readValue(response.getResponseBody(), new TypeReference<HashMap<String,String>>() {});
+                    if(null!=values.get("message")){
+                    HashMap<Integer, String> ids = TS.util().getMap().readValue(values.get("message"), new TypeReference<HashMap<Integer,String>>() {});
+                    TS.log().info("###############################################################################");
+                    TS.log().info("# Ids From TMS");
+                    ids.forEach((k, v) -> TS.log().info("ID[ " + k + " ] - " + v));
+                    }
+                }catch(Exception issueWithResponse){
+                    TS.log().trace(issueWithResponse);
+                }
 
             } catch (Exception e) {
                 TS.log().warn("Issue posting data to declared service: " + TS.params().getSendJsonTestDataToService(),
