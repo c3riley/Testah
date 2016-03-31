@@ -235,8 +235,9 @@ public class TestStepDto {
      *
      * @param name the new name
      */
-    public void setName(String name) {
+    public TestStepDto setName(String name) {
         this.name = name;
+        return this;
     }
 
     /**
@@ -253,8 +254,9 @@ public class TestStepDto {
      *
      * @param description the new description
      */
-    public void setDescription(String description) {
+    public TestStepDto setDescription(String description) {
         this.description = description;
+        return this;
     }
 
 }
