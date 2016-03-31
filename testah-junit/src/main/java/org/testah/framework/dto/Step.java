@@ -4,7 +4,6 @@ import org.testah.TS;
 import org.testah.client.dto.TestStepDto;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
-
 /**
  * The Class Step.
  */
@@ -15,8 +14,36 @@ public class Step extends TestStepDto {
      *
      * @return the step
      */
-    public Step create() {
+    public static Step create() {
         return new Step();
+    }
+
+    /**
+     * Adds the.
+     *
+     * @param step
+     *            the step
+     * @return the test step dto
+     */
+    public static TestStepDto add(TestStepDto step) {
+        if (TS.params().isRecordSteps()) {
+            AbstractTestPlan.startTestStep(step);
+        }
+        return step;
+    }
+
+    /**
+     * Adds the.
+     *
+     * @param step
+     *            the step
+     * @return the test step dto
+     */
+    public static TestStepDto add(Step step) {
+        if (TS.params().isRecordSteps()) {
+            AbstractTestPlan.startTestStep(step);
+        }
+        return step;
     }
 
     /**
