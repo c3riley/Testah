@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testah.framework.dto.ResultDto;
 import org.testah.http.TestHttp;
@@ -11,6 +12,7 @@ import org.testah.web.TestBrowser;
 
 public class TestTestahJUnitRunner {
 
+	@Ignore
 	@Test
 	public void testWithOneTest() {
 		final TestahJUnitRunner runner = new TestahJUnitRunner();
@@ -22,6 +24,7 @@ public class TestTestahJUnitRunner {
 
 	}
 
+	@Ignore
 	@Test
 	public void testWithTwoDifferentTestOnlyOneConcurrent() {
 		final TestahJUnitRunner runner = new TestahJUnitRunner();
@@ -34,6 +37,7 @@ public class TestTestahJUnitRunner {
 
 	}
 
+	@Ignore
 	@Test
 	public void testWithTwoDifferentTestOnlyTwoConcurrent() {
 		final TestahJUnitRunner runner = new TestahJUnitRunner();
@@ -45,6 +49,7 @@ public class TestTestahJUnitRunner {
 		Assert.assertEquals(2, results.size());
 	}
 
+	@Ignore
 	@Test
 	public void testWithManyDifferentTestOnlyManyConcurrent() {
 		final TestahJUnitRunner runner = new TestahJUnitRunner();
