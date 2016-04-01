@@ -99,6 +99,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                                          final String name = description.getClassName() + "#"
                                                  + description.getMethodName();
 
+                                         
                                          /*
                                          final String onlyRun = System.getProperty("only_run");
                                          Assume.assumeTrue(onlyRun == null || Arrays.asList(onlyRun.split(","))
@@ -107,11 +108,16 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                                          Assume.assumeTrue(mth == null || Arrays.asList(mth.split(","))
                                                  .contains(description.getMethodName()));
                                           */
+                                         
+                                         try{
                                          if (!getTestFilter().filterTestCase(description.getAnnotation(TestCase.class),
                                                  name)) {
                                              addIgnoredTest(name,"METADATA_FILTER");
                                              Assume.assumeTrue("Filtered out, For details use Trace level logging",
                                                      false);
+                                         }
+                                         }catch(Exception e){
+                                             TS.log().warn("Unable to run filtering, groovy must be loaded in the project", e);
                                          }
 
                                          KnownProblem kp = description.getAnnotation(KnownProblem.class);
