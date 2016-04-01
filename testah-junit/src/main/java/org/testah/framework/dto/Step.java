@@ -15,7 +15,18 @@ public class Step extends TestStepDto {
      * @return the step
      */
     public static Step create() {
-        return new Step();
+        return create("");
+    }
+
+    public static Step create(final String name) {
+        return create("", "");
+    }
+
+    public static Step create(final String name, final String description) {
+        Step step = new Step();
+        step.setName(name);
+        step.setDescription(description);
+        return step;
     }
 
     /**
