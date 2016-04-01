@@ -390,43 +390,47 @@ public class TestFilter {
      * @return the test filter
      */
     public TestFilter loadUncompiledTestPlans() {
-        final String externalValue = TS.params().getLookAtExternalTests();
+        try {
+            final String externalValue = TS.params().getLookAtExternalTests();
 
-        if (null != externalValue && externalValue.length() > 0) {
-            final List<File> files = new ArrayList<File>();
-            final ClassLoader parent = this.getClass().getClassLoader();
-            try (final GroovyClassLoader loader = new GroovyClassLoader(parent)) {
+            if (null != externalValue && externalValue.length() > 0) {
+                final List<File> files = new ArrayList<File>();
+                final ClassLoader parent = this.getClass().getClassLoader();
+                try (final GroovyClassLoader loader = new GroovyClassLoader(parent)) {
 
-                for (final String path : externalValue.split(",")) {
+                    for (final String path : externalValue.split(",")) {
 
-                    final File externalTests = new File(Params.addUserDir(path));
+                        final File externalTests = new File(Params.addUserDir(path));
 
-                    if (!externalTests.exists()) {
-                        TS.log().error("Param LookAtExternalTests is set to a directory not found: "
-                                + externalTests.getAbsolutePath());
-                    }
-                    if (externalTests.isDirectory()) {
-                        files.addAll(FileUtils.getFilesRecurse(externalTests, "(.?)*\\.groovy"));
-                        files.addAll(FileUtils.getFilesRecurse(externalTests, "(.?)*\\.java"));
-                    } else {
-                        files.add(externalTests);
-                    }
-                }
-                for (final File c : files) {
-                    Class<?> groovyClass;
-                    try {
-                        groovyClass = loader.parseClass(c);
-                        if (groovyClass != null) {
-                            testClasses.add(groovyClass);
+                        if (!externalTests.exists()) {
+                            TS.log().error("Param LookAtExternalTests is set to a directory not found: "
+                                    + externalTests.getAbsolutePath());
                         }
-                    } catch (CompilationFailedException | IOException e) {
-                        TS.log().error("issue with external class: " + c.getAbsolutePath(), e);
+                        if (externalTests.isDirectory()) {
+                            files.addAll(FileUtils.getFilesRecurse(externalTests, "(.?)*\\.groovy"));
+                            files.addAll(FileUtils.getFilesRecurse(externalTests, "(.?)*\\.java"));
+                        } else {
+                            files.add(externalTests);
+                        }
                     }
+                    for (final File c : files) {
+                        Class<?> groovyClass;
+                        try {
+                            groovyClass = loader.parseClass(c);
+                            if (groovyClass != null) {
+                                testClasses.add(groovyClass);
+                            }
+                        } catch (CompilationFailedException | IOException e) {
+                            TS.log().error("issue with external class: " + c.getAbsolutePath(), e);
+                        }
 
+                    }
+                } catch (final IOException e1) {
+                    TS.log().error("issue with external class loading", e1);
                 }
-            } catch (final IOException e1) {
-                TS.log().error("issue with external class loading", e1);
             }
+        } catch (Exception e) {
+            TS.log().warn("Issue loading uncompiled Tests, if groovy part of the porject?", e);
         }
         return this;
     }

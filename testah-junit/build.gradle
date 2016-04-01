@@ -16,7 +16,7 @@ apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 group = 'org.testah'
-version = '0.1.0'
+version = '0.1.2'
 
 buildscript {
     repositories {
@@ -31,7 +31,7 @@ buildscript {
 
 uploadArchives {
 	repositories.mavenDeployer {
-		repository(url: "file://C:/CODE/maven-repository/")
+		repository(url: "file:///Users/criley/myRepo/maven-repository")
 	}
 }
 
