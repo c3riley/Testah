@@ -6,534 +6,552 @@ import java.util.List;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestType;
 
-
 /**
  * The Class TestCaseDto.
  */
 public class TestCaseDto {
 
-    /** The run time. */
-    private RunTimeDto        runTime      = new RunTimeDto();
-    
-    /** The test steps. */
-    private List<TestStepDto> testSteps    = new ArrayList<TestStepDto>();
-    
-    /** The status. */
-    private Boolean           status       = null;
-    
-    /** The data value. */
-    private String            dataValue    = "";
-    
-    /** The id. */
-    private int               id           = -1;
-    
-    /** The name. */
-    private String            name         = "";
-    
-    /** The description. */
-    private String            description  = "";
-    
-    /** The related links. */
-    private List<String>      relatedLinks = new ArrayList<String>();
-    
-    /** The related ids. */
-    private List<String>      relatedIds   = new ArrayList<String>();
-    
-    /** The tags. */
-    private List<String>      tags         = new ArrayList<String>();
-    
-    /** The known problem. */
-    private KnownProblemDto   knownProblem = null;
-    
-    /** The test type. */
-    private TestType          testType;
-    
-    /** The source. */
-    private String            source       = null;
-    
-    /** The components. */
-    private List<String>      components   = new ArrayList<String>();
-    
-    /** The devices. */
-    private List<String>      devices      = new ArrayList<String>();
-    
-    /** The platforms. */
-    private List<String>      platforms    = new ArrayList<String>();
-    
-    /** The run types. */
-    private List<String>      runTypes     = new ArrayList<String>();
-    
-    /** The owner. */
-    private String            owner        = "NA";
+	/** The run time. */
+	private RunTimeDto runTime = new RunTimeDto();
 
-    /**
-     * Instantiates a new test case dto.
-     */
-    public TestCaseDto() {
+	/** The test steps. */
+	private List<TestStepDto> testSteps = new ArrayList<TestStepDto>();
 
-    }
+	/** The status. */
+	private Boolean status = null;
 
-    /**
-     * Adds the test step.
-     *
-     * @param testStep the test step
-     * @return the test case dto
-     */
-    public TestCaseDto addTestStep(final TestStepDto testStep) {
-        if (null != testStep) {
-            getTestSteps().add(testStep.setId(getTestSteps().size() + 1));
-        }
-        return this;
-    }
+	/** The data value. */
+	private String dataValue = "";
 
-    /**
-     * Start.
-     *
-     * @return the test case dto
-     */
-    public TestCaseDto start() {
-        setStatus(null);
-        getRunTime().start();
-        return this;
-    }
+	/** The id. */
+	private int id = -1;
 
-    /**
-     * Stop.
-     *
-     * @return the test case dto
-     */
-    public TestCaseDto stop() {
-        return stop(null);
-    }
+	/** The name. */
+	private String name = "";
 
-    /**
-     * Stop.
-     *
-     * @param status the status
-     * @return the test case dto
-     */
-    public TestCaseDto stop(final Boolean status) {
-        if (null != status) {
-            setStatus(status);
-        } else {
-            setStatus();
-        }
-        getRunTime().stop();
-        return this;
-    }
+	/** The description. */
+	private String description = "";
 
-    /**
-     * Sets the status.
-     *
-     * @return the test case dto
-     */
-    public TestCaseDto setStatus() {
-        for (final TestStepDto e : testSteps) {
-            if (null == e.getStatus()) {
+	/** The related links. */
+	private List<String> relatedLinks = new ArrayList<String>();
 
-            } else if (e.getStatus() == false) {
-                status = false;
-                return this;
-            } else if (e.getStatus() == true) {
-                status = true;
-            }
-        }
-        return this;
-    }
+	/** The related ids. */
+	private List<String> relatedIds = new ArrayList<String>();
 
-    /**
-     * Gets the run time.
-     *
-     * @return the run time
-     */
-    public RunTimeDto getRunTime() {
-        return runTime;
-    }
+	/** The tags. */
+	private List<String> tags = new ArrayList<String>();
 
-    /**
-     * Sets the run time.
-     *
-     * @param runTime the run time
-     * @return the test case dto
-     */
-    public TestCaseDto setRunTime(final RunTimeDto runTime) {
-        this.runTime = runTime;
-        return this;
-    }
+	/** The known problem. */
+	private KnownProblemDto knownProblem = null;
 
-    /**
-     * Gets the test steps.
-     *
-     * @return the test steps
-     */
-    public List<TestStepDto> getTestSteps() {
-        return testSteps;
-    }
+	/** The test type. */
+	private TestType testType;
 
-    /**
-     * Sets the test steps.
-     *
-     * @param testSteps the test steps
-     * @return the test case dto
-     */
-    public TestCaseDto setTestSteps(final List<TestStepDto> testSteps) {
-        this.testSteps = testSteps;
-        return this;
-    }
+	/** The source. */
+	private String source = null;
 
-    /**
-     * Gets the status.
-     *
-     * @return the status
-     */
-    public Boolean getStatus() {
-        return status;
-    }
+	/** The components. */
+	private List<String> components = new ArrayList<String>();
 
-    /**
-     * Sets the status.
-     *
-     * @param status the status
-     * @return the test case dto
-     */
-    public TestCaseDto setStatus(final Boolean status) {
-        this.status = status;
-        return this;
-    }
+	/** The devices. */
+	private List<String> devices = new ArrayList<String>();
 
-    /**
-     * Gets the exceptions.
-     *
-     * @return the exceptions
-     */
-    public String getExceptions() {
-        final StringBuffer sb = new StringBuffer();
-        for (final TestStepDto e : testSteps) {
-            if (null != e.getStatus() && e.getStatus() == false) {
-                sb.append(e.getExceptionMessages());
-            }
-        }
-        return sb.toString();
-    }
+	/** The platforms. */
+	private List<String> platforms = new ArrayList<String>();
 
-    /**
-     * Gets the assertion error.
-     *
-     * @return the assertion error
-     */
-    public void getAssertionError() {
-        if (null != status && !status) {
-            throw new AssertionError("TestCase: " + getName() + " Failed!\n " + getExceptions());
-        }
-    }
+	/** The run types. */
+	private List<String> runTypes = new ArrayList<String>();
 
-    /**
-     * Gets the status enum.
-     *
-     * @return the status enum
-     */
-    public TestStatus getStatusEnum() {
-        return TestStatus.getStatus(status);
-    }
+	/** The owner. */
+	private String owner = "NA";
 
-    /**
-     * Gets the data value.
-     *
-     * @return the data value
-     */
-    public String getDataValue() {
-        return dataValue;
-    }
+	/**
+	 * Instantiates a new test case dto.
+	 */
+	public TestCaseDto() {
 
-    /**
-     * Sets the data value.
-     *
-     * @param dataValue the data value
-     * @return the test case dto
-     */
-    public TestCaseDto setDataValue(final String dataValue) {
-        this.dataValue = dataValue;
-        return this;
-    }
+	}
 
-    /**
-     * Gets the id.
-     *
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
+	/**
+	 * Adds the test step.
+	 *
+	 * @param testStep
+	 *            the test step
+	 * @return the test case dto
+	 */
+	public TestCaseDto addTestStep(final TestStepDto testStep) {
+		if (null != testStep) {
+			getTestSteps().add(testStep.setId(getTestSteps().size() + 1));
+		}
+		return this;
+	}
 
-    /**
-     * Sets the id.
-     *
-     * @param id the id
-     * @return the test case dto
-     */
-    public TestCaseDto setId(int id) {
-        this.id = id;
-        return this;
-    }
+	/**
+	 * Start.
+	 *
+	 * @return the test case dto
+	 */
+	public TestCaseDto start() {
+		setStatus(null);
+		getRunTime().start();
+		return this;
+	}
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
+	/**
+	 * Stop.
+	 *
+	 * @return the test case dto
+	 */
+	public TestCaseDto stop() {
+		return stop(null);
+	}
 
-    /**
-     * Sets the name.
-     *
-     * @param name the name
-     * @return the test case dto
-     */
-    public TestCaseDto setName(String name) {
-        this.name = name;
-        return this;
-    }
+	/**
+	 * Stop.
+	 *
+	 * @param status
+	 *            the status
+	 * @return the test case dto
+	 */
+	public TestCaseDto stop(final Boolean status) {
+		if (null != status) {
+			setStatus(status);
+		} else {
+			setStatus();
+		}
+		getRunTime().stop();
+		return this;
+	}
 
-    /**
-     * Gets the description.
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return description;
-    }
+	/**
+	 * Sets the status.
+	 *
+	 * @return the test case dto
+	 */
+	public TestCaseDto setStatus() {
+		for (final TestStepDto e : testSteps) {
+			if (null == e.getStatus()) {
 
-    /**
-     * Sets the description.
-     *
-     * @param description the description
-     * @return the test case dto
-     */
-    public TestCaseDto setDescription(String description) {
-        this.description = description;
-        return this;
-    }
+			} else if (e.getStatus() == false) {
+				status = false;
+				return this;
+			} else if (e.getStatus() == true) {
+				status = true;
+			}
+		}
+		return this;
+	}
 
-    /**
-     * Gets the related links.
-     *
-     * @return the related links
-     */
-    public List<String> getRelatedLinks() {
-        return relatedLinks;
-    }
+	/**
+	 * Gets the run time.
+	 *
+	 * @return the run time
+	 */
+	public RunTimeDto getRunTime() {
+		return runTime;
+	}
 
-    /**
-     * Sets the related links.
-     *
-     * @param relatedLinks the related links
-     * @return the test case dto
-     */
-    public TestCaseDto setRelatedLinks(List<String> relatedLinks) {
-        this.relatedLinks = relatedLinks;
-        return this;
-    }
+	/**
+	 * Sets the run time.
+	 *
+	 * @param runTime
+	 *            the run time
+	 * @return the test case dto
+	 */
+	public TestCaseDto setRunTime(final RunTimeDto runTime) {
+		this.runTime = runTime;
+		return this;
+	}
 
-    /**
-     * Gets the related ids.
-     *
-     * @return the related ids
-     */
-    public List<String> getRelatedIds() {
-        return relatedIds;
-    }
+	/**
+	 * Gets the test steps.
+	 *
+	 * @return the test steps
+	 */
+	public List<TestStepDto> getTestSteps() {
+		return testSteps;
+	}
 
-    /**
-     * Sets the related ids.
-     *
-     * @param relatedIds the related ids
-     * @return the test case dto
-     */
-    public TestCaseDto setRelatedIds(List<String> relatedIds) {
-        this.relatedIds = relatedIds;
-        return this;
-    }
+	/**
+	 * Sets the test steps.
+	 *
+	 * @param testSteps
+	 *            the test steps
+	 * @return the test case dto
+	 */
+	public TestCaseDto setTestSteps(final List<TestStepDto> testSteps) {
+		this.testSteps = testSteps;
+		return this;
+	}
 
-    /**
-     * Gets the tags.
-     *
-     * @return the tags
-     */
-    public List<String> getTags() {
-        return tags;
-    }
+	/**
+	 * Gets the status.
+	 *
+	 * @return the status
+	 */
+	public Boolean getStatus() {
+		return status;
+	}
 
-    /**
-     * Sets the tags.
-     *
-     * @param tags the tags
-     * @return the test case dto
-     */
-    public TestCaseDto setTags(List<String> tags) {
-        this.tags = tags;
-        return this;
-    }
+	/**
+	 * Sets the status.
+	 *
+	 * @param status
+	 *            the status
+	 * @return the test case dto
+	 */
+	public TestCaseDto setStatus(final Boolean status) {
+		this.status = status;
+		return this;
+	}
 
-    /**
-     * Gets the known problem.
-     *
-     * @return the known problem
-     */
-    public KnownProblemDto getKnownProblem() {
-        return knownProblem;
-    }
+	/**
+	 * Gets the exceptions.
+	 *
+	 * @return the exceptions
+	 */
+	public String getExceptions() {
+		final StringBuffer sb = new StringBuffer();
+		for (final TestStepDto e : testSteps) {
+			if (null != e.getStatus() && e.getStatus() == false) {
+				sb.append(e.getExceptionMessages());
+			}
+		}
+		return sb.toString();
+	}
 
-    /**
-     * Sets the known problem.
-     *
-     * @param knownProblem the known problem
-     * @return the test case dto
-     */
-    public TestCaseDto setKnownProblem(KnownProblemDto knownProblem) {
-        this.knownProblem = knownProblem;
-        return this;
-    }
+	/**
+	 * Gets the assertion error.
+	 *
+	 */
+	public void getAssertionError() {
+		if (null != status && !status) {
+			throw new AssertionError("TestCase: " + getName() + " Failed!\n " + getExceptions());
+		}
+	}
 
-    /**
-     * Gets the test type.
-     *
-     * @return the test type
-     */
-    public TestType getTestType() {
-        return testType;
-    }
+	/**
+	 * Gets the status enum.
+	 *
+	 * @return the status enum
+	 */
+	public TestStatus getStatusEnum() {
+		return TestStatus.getStatus(status);
+	}
 
-    /**
-     * Sets the test type.
-     *
-     * @param testType the test type
-     * @return the test case dto
-     */
-    public TestCaseDto setTestType(TestType testType) {
-        this.testType = testType;
-        return this;
-    }
+	/**
+	 * Gets the data value.
+	 *
+	 * @return the data value
+	 */
+	public String getDataValue() {
+		return dataValue;
+	}
 
-    /**
-     * Gets the source.
-     *
-     * @return the source
-     */
-    public String getSource() {
-        return source;
-    }
+	/**
+	 * Sets the data value.
+	 *
+	 * @param dataValue
+	 *            the data value
+	 * @return the test case dto
+	 */
+	public TestCaseDto setDataValue(final String dataValue) {
+		this.dataValue = dataValue;
+		return this;
+	}
 
-    /**
-     * Sets the source.
-     *
-     * @param source the source
-     * @return the test case dto
-     */
-    public TestCaseDto setSource(String source) {
-        this.source = source;
-        return this;
-    }
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
 
-    /**
-     * Gets the components.
-     *
-     * @return the components
-     */
-    public List<String> getComponents() {
-        return components;
-    }
+	/**
+	 * Sets the id.
+	 *
+	 * @param id
+	 *            the id
+	 * @return the test case dto
+	 */
+	public TestCaseDto setId(final int id) {
+		this.id = id;
+		return this;
+	}
 
-    /**
-     * Sets the components.
-     *
-     * @param components the components
-     * @return the test case dto
-     */
-    public TestCaseDto setComponents(List<String> components) {
-        this.components = components;
-        return this;
-    }
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Gets the devices.
-     *
-     * @return the devices
-     */
-    public List<String> getDevices() {
-        return devices;
-    }
+	/**
+	 * Sets the name.
+	 *
+	 * @param name
+	 *            the name
+	 * @return the test case dto
+	 */
+	public TestCaseDto setName(final String name) {
+		this.name = name;
+		return this;
+	}
 
-    /**
-     * Sets the devices.
-     *
-     * @param devices the devices
-     * @return the test case dto
-     */
-    public TestCaseDto setDevices(List<String> devices) {
-        this.devices = devices;
-        return this;
-    }
+	/**
+	 * Gets the description.
+	 *
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
 
-    /**
-     * Gets the platforms.
-     *
-     * @return the platforms
-     */
-    public List<String> getPlatforms() {
-        return platforms;
-    }
+	/**
+	 * Sets the description.
+	 *
+	 * @param description
+	 *            the description
+	 * @return the test case dto
+	 */
+	public TestCaseDto setDescription(final String description) {
+		this.description = description;
+		return this;
+	}
 
-    /**
-     * Sets the platforms.
-     *
-     * @param platforms the platforms
-     * @return the test case dto
-     */
-    public TestCaseDto setPlatforms(List<String> platforms) {
-        this.platforms = platforms;
-        return this;
-    }
+	/**
+	 * Gets the related links.
+	 *
+	 * @return the related links
+	 */
+	public List<String> getRelatedLinks() {
+		return relatedLinks;
+	}
 
-    /**
-     * Gets the run types.
-     *
-     * @return the run types
-     */
-    public List<String> getRunTypes() {
-        return runTypes;
-    }
+	/**
+	 * Sets the related links.
+	 *
+	 * @param relatedLinks
+	 *            the related links
+	 * @return the test case dto
+	 */
+	public TestCaseDto setRelatedLinks(final List<String> relatedLinks) {
+		this.relatedLinks = relatedLinks;
+		return this;
+	}
 
-    /**
-     * Sets the run types.
-     *
-     * @param runTypes the run types
-     * @return the test case dto
-     */
-    public TestCaseDto setRunTypes(List<String> runTypes) {
-        this.runTypes = runTypes;
-        return this;
-    }
+	/**
+	 * Gets the related ids.
+	 *
+	 * @return the related ids
+	 */
+	public List<String> getRelatedIds() {
+		return relatedIds;
+	}
 
-    /**
-     * Gets the owner.
-     *
-     * @return the owner
-     */
-    public String getOwner() {
-        return owner;
-    }
+	/**
+	 * Sets the related ids.
+	 *
+	 * @param relatedIds
+	 *            the related ids
+	 * @return the test case dto
+	 */
+	public TestCaseDto setRelatedIds(final List<String> relatedIds) {
+		this.relatedIds = relatedIds;
+		return this;
+	}
 
-    /**
-     * Sets the owner.
-     *
-     * @param owner the owner
-     * @return the test case dto
-     */
-    public TestCaseDto setOwner(String owner) {
-        this.owner = owner;
-        return this;
-    }
+	/**
+	 * Gets the tags.
+	 *
+	 * @return the tags
+	 */
+	public List<String> getTags() {
+		return tags;
+	}
+
+	/**
+	 * Sets the tags.
+	 *
+	 * @param tags
+	 *            the tags
+	 * @return the test case dto
+	 */
+	public TestCaseDto setTags(final List<String> tags) {
+		this.tags = tags;
+		return this;
+	}
+
+	/**
+	 * Gets the known problem.
+	 *
+	 * @return the known problem
+	 */
+	public KnownProblemDto getKnownProblem() {
+		return knownProblem;
+	}
+
+	/**
+	 * Sets the known problem.
+	 *
+	 * @param knownProblem
+	 *            the known problem
+	 * @return the test case dto
+	 */
+	public TestCaseDto setKnownProblem(final KnownProblemDto knownProblem) {
+		this.knownProblem = knownProblem;
+		return this;
+	}
+
+	/**
+	 * Gets the test type.
+	 *
+	 * @return the test type
+	 */
+	public TestType getTestType() {
+		return testType;
+	}
+
+	/**
+	 * Sets the test type.
+	 *
+	 * @param testType
+	 *            the test type
+	 * @return the test case dto
+	 */
+	public TestCaseDto setTestType(final TestType testType) {
+		this.testType = testType;
+		return this;
+	}
+
+	/**
+	 * Gets the source.
+	 *
+	 * @return the source
+	 */
+	public String getSource() {
+		return source;
+	}
+
+	/**
+	 * Sets the source.
+	 *
+	 * @param source
+	 *            the source
+	 * @return the test case dto
+	 */
+	public TestCaseDto setSource(final String source) {
+		this.source = source;
+		return this;
+	}
+
+	/**
+	 * Gets the components.
+	 *
+	 * @return the components
+	 */
+	public List<String> getComponents() {
+		return components;
+	}
+
+	/**
+	 * Sets the components.
+	 *
+	 * @param components
+	 *            the components
+	 * @return the test case dto
+	 */
+	public TestCaseDto setComponents(final List<String> components) {
+		this.components = components;
+		return this;
+	}
+
+	/**
+	 * Gets the devices.
+	 *
+	 * @return the devices
+	 */
+	public List<String> getDevices() {
+		return devices;
+	}
+
+	/**
+	 * Sets the devices.
+	 *
+	 * @param devices
+	 *            the devices
+	 * @return the test case dto
+	 */
+	public TestCaseDto setDevices(final List<String> devices) {
+		this.devices = devices;
+		return this;
+	}
+
+	/**
+	 * Gets the platforms.
+	 *
+	 * @return the platforms
+	 */
+	public List<String> getPlatforms() {
+		return platforms;
+	}
+
+	/**
+	 * Sets the platforms.
+	 *
+	 * @param platforms
+	 *            the platforms
+	 * @return the test case dto
+	 */
+	public TestCaseDto setPlatforms(final List<String> platforms) {
+		this.platforms = platforms;
+		return this;
+	}
+
+	/**
+	 * Gets the run types.
+	 *
+	 * @return the run types
+	 */
+	public List<String> getRunTypes() {
+		return runTypes;
+	}
+
+	/**
+	 * Sets the run types.
+	 *
+	 * @param runTypes
+	 *            the run types
+	 * @return the test case dto
+	 */
+	public TestCaseDto setRunTypes(final List<String> runTypes) {
+		this.runTypes = runTypes;
+		return this;
+	}
+
+	/**
+	 * Gets the owner.
+	 *
+	 * @return the owner
+	 */
+	public String getOwner() {
+		return owner;
+	}
+
+	/**
+	 * Sets the owner.
+	 *
+	 * @param owner
+	 *            the owner
+	 * @return the test case dto
+	 */
+	public TestCaseDto setOwner(final String owner) {
+		this.owner = owner;
+		return this;
+	}
 
 }
