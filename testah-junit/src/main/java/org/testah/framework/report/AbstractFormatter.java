@@ -10,8 +10,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.testah.TS;
-import org.testah.framework.cli.Params;
 import org.testah.client.dto.TestPlanDto;
+import org.testah.framework.cli.Params;
 
 
 /**
