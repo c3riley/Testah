@@ -43,6 +43,7 @@ repositories {
 
 
 dependencies {
+    compile 'com.jcraft:jsch:0.1.53'
     compile 'org.springframework:spring-context:4.2.3.RELEASE'
     compile 'org.springframework:spring-test:4.2.2.RELEASE'
 	compile 'uk.com.robust-it:cloning:1.9.2'

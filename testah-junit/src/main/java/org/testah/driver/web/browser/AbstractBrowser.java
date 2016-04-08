@@ -17,6 +17,7 @@ import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testah.TS;
+import org.testah.client.enums.BrowserType;
 import org.testah.driver.web.element.AbstractWebElementWrapper;
 import org.testah.driver.web.element.WebElementWrapperV1;
 
@@ -30,12 +31,11 @@ public abstract class AbstractBrowser {
 	private DesiredCapabilities desiredCapabilities = null;
 
 	public static AbstractBrowser getDefaultBrowser() {
-		switch (TS.params().getBrowser()) {
-		case PHANTOMJS:
+		if (TS.params().getBrowser() == BrowserType.PHANTOMJS) {
 			return new PhantomJsBrowser();
-		case FIREFOX:
+		} else if (TS.params().getBrowser() == BrowserType.FIREFOX) {
 			return new FirefoxBrowser();
-		default:
+		} else {
 			return new FirefoxBrowser();
 		}
 	}
