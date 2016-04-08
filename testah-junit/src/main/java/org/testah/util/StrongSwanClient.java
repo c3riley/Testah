@@ -75,9 +75,10 @@ public class StrongSwanClient {
 	/**
 	 * Send message.
 	 *
-	 * @param a6rgs
-	 *            the a6rgs
+	 * @param messages
+	 *            the messages
 	 * @throws Exception
+	 *             the exception
 	 */
 	public void sendMessage(final String... messages) throws Exception {
 
