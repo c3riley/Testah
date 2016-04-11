@@ -4,10 +4,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import org.testah.TS;
 
 import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -26,6 +31,9 @@ public class SshUtil {
 
 	/** The max wait time in seconds. */
 	private int maxWaitTimeInSeconds = 10;
+
+	/** The pty type value. */
+	private String ptyTypeValue = "dumb";
 
 	/** The jsch. */
 	private final JSch jsch = new JSch();
@@ -52,17 +60,6 @@ public class SshUtil {
 	/**
 	 * Gets the session.
 	 *
-	 * @return the session
-	 * @throws JSchException
-	 *             the j sch exception
-	 */
-	public Session getSession() throws JSchException {
-		return getSession("root", "52.27.61.154", 22);
-	}
-
-	/**
-	 * Gets the session.
-	 *
 	 * @param username
 	 *            the username
 	 * @param host
@@ -74,13 +71,35 @@ public class SshUtil {
 	 *             the j sch exception
 	 */
 	public Session getSession(final String username, final String host, final int port) throws JSchException {
+		return getSession(username, host, port, null);
+	}
+
+	/**
+	 * Gets the session.
+	 *
+	 * @param username
+	 *            the username
+	 * @param host
+	 *            the host
+	 * @param port
+	 *            the port
+	 * @param password
+	 *            the password
+	 * @return the session
+	 * @throws JSchException
+	 *             the j sch exception
+	 */
+	public Session getSession(final String username, final String host, final int port, final String password)
+			throws JSchException {
 		final Session session = jsch.getSession(username, host, port);
 		session.setServerAliveInterval(120 * 1000);
 		session.setServerAliveCountMax(1000);
 		session.setConfig("TCPKeepAlive", "yes");
 		session.setConfig("GSSAPIAuthentication", "no");
 		session.setConfig("StrictHostKeyChecking", "no");
-		session.connect();
+		if (null != password) {
+			session.setPassword(password);
+		}
 		return session;
 	}
 
@@ -101,6 +120,11 @@ public class SshUtil {
 	 */
 	public String runShell(final Session session, final String... commands)
 			throws JSchException, IOException, InterruptedException {
+
+		if (!session.isConnected()) {
+			session.connect();
+		}
+
 		final Channel channel = session.openChannel("shell");
 		String output = "";
 		try {
@@ -111,8 +135,8 @@ public class SshUtil {
 			channel.setInputStream(System.in);
 			channel.setOutputStream(System.out, true);
 			channel.setOutputStream(baos);
+			((ChannelShell) channel).setPtyType(this.getPtyTypeValue());
 			channel.connect();
-
 			for (final String command : commands) {
 				commander.println(command);
 			}
@@ -134,6 +158,91 @@ public class SshUtil {
 			session.disconnect();
 		}
 		return output;
+	}
+
+	/**
+	 * Run shell enhanced.
+	 *
+	 * @param session
+	 *            the session
+	 * @param commands
+	 *            the commands
+	 * @return the hash map
+	 * @throws JSchException
+	 *             the j sch exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 * @throws InterruptedException
+	 *             the interrupted exception
+	 */
+	public HashMap<Integer, List<String>> runShellEnhanced(final Session session, final String... commands)
+			throws JSchException, IOException, InterruptedException {
+		final HashMap<Integer, List<String>> outputHash = new HashMap<Integer, List<String>>();
+		final List<String> commandList = new ArrayList<String>();
+		int ctr = 0;
+		for (final String command : commands) {
+			commandList.add("echo @START" + ctr + "@T= $( date +%T )");
+			commandList.add(command);
+			commandList.add("echo @END" + ctr + "@T= $( date +%T )");
+			ctr++;
+		}
+
+		final String outputRaw = runShell(session, commandList.toArray(commands));
+
+		if (null != outputRaw) {
+			final List<String> lines = cleanOutput(outputRaw);
+			ctr = 0;
+			for (final String line : lines) {
+				if (line.contains("@START" + ctr + "@")) {
+					outputHash.put(ctr, new ArrayList<String>());
+					outputHash.get(ctr).add(commands[ctr]);
+				} else if (line.contains("@END" + ctr + "@")) {
+					ctr++;
+				} else {
+					outputHash.get(ctr).add(line);
+				}
+			}
+		}
+		return outputHash;
+	}
+
+	/**
+	 * Gets the output lines for command.
+	 *
+	 * @param command
+	 *            the command
+	 * @param outputHash
+	 *            the output hash
+	 * @return the output lines for command
+	 */
+	public List<String> getOutputLinesForCommand(final String command,
+			final HashMap<Integer, List<String>> outputHash) {
+		List<String> lst = new ArrayList<String>();
+		if (null != command && null != outputHash && !outputHash.isEmpty()) {
+			for (final Integer key : outputHash.keySet()) {
+				if (outputHash.get(key).get(0).equals(command)) {
+					lst = outputHash.get(key);
+					lst.remove(0);
+					return lst;
+				}
+			}
+		}
+		return lst;
+	}
+
+	/**
+	 * Clean output.
+	 *
+	 * @param output
+	 *            the output
+	 * @return the list
+	 */
+	public List<String> cleanOutput(String output) {
+		if (null != output) {
+			output = output.replace("\r", "").replace("\t", "");
+			return Arrays.asList(output.split("\n"));
+		}
+		return new ArrayList<String>();
 	}
 
 	/**
@@ -191,6 +300,25 @@ public class SshUtil {
 	 */
 	public void setMaxWaitTimeInSeconds(final int maxWaitTimeInSeconds) {
 		this.maxWaitTimeInSeconds = maxWaitTimeInSeconds;
+	}
+
+	/**
+	 * Gets the pty type value.
+	 *
+	 * @return the pty type value
+	 */
+	public String getPtyTypeValue() {
+		return ptyTypeValue;
+	}
+
+	/**
+	 * Sets the pty type value.
+	 *
+	 * @param ptyTypeValue
+	 *            the new pty type value
+	 */
+	public void setPtyTypeValue(final String ptyTypeValue) {
+		this.ptyTypeValue = ptyTypeValue;
 	}
 
 }

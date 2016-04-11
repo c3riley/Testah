@@ -24,6 +24,12 @@ public class BashUtil {
 	/** The error. */
 	private String error = "";
 
+	/** The bang line. */
+	private String bangLine = "#!/bin/bash";
+
+	/** The bash source. */
+	private String bashSource = "source ~/.bashrc\nsource ~/profile";
+
 	/**
 	 * Instantiates a new bash util.
 	 */
@@ -56,6 +62,8 @@ public class BashUtil {
 				TS.log().debug(getOutput());
 				TS.log().debug(getError());
 			}
+			process.destroy();
+			process.destroyForcibly();
 		} finally {
 			tempScript.delete();
 		}
@@ -76,7 +84,8 @@ public class BashUtil {
 
 		final Writer streamWriter = new OutputStreamWriter(new FileOutputStream(tmpBashScript));
 		final PrintWriter printWriter = new PrintWriter(streamWriter);
-		printWriter.println("#!/bin/bash");
+		printWriter.println(getBangLine());
+		printWriter.println(getBashSource());
 		for (final String command : commands) {
 			printWriter.println(command);
 		}
@@ -140,5 +149,49 @@ public class BashUtil {
 	 */
 	public void setError(final String error) {
 		this.error = error;
+	}
+
+	/**
+	 * Gets the bang line.
+	 *
+	 * @return the bang line
+	 */
+	public String getBangLine() {
+		if (null == bangLine) {
+			bangLine = "";
+		}
+		return bangLine;
+	}
+
+	/**
+	 * Sets the bang line.
+	 *
+	 * @param bangLine
+	 *            the new bang line
+	 */
+	public void setBangLine(final String bangLine) {
+		this.bangLine = bangLine;
+	}
+
+	/**
+	 * Gets the bash source.
+	 *
+	 * @return the bash source
+	 */
+	public String getBashSource() {
+		if (null == bashSource) {
+			bashSource = "";
+		}
+		return bashSource;
+	}
+
+	/**
+	 * Sets the bash source.
+	 *
+	 * @param bashSource
+	 *            the new bash source
+	 */
+	public void setBashSource(final String bashSource) {
+		this.bashSource = bashSource;
 	}
 }
