@@ -53,7 +53,7 @@ public class BashUtil {
 		final File tempScript = createBashFile(commands);
 		try {
 			final ProcessBuilder pb = new ProcessBuilder("bash", tempScript.toString());
-			pb.inheritIO();
+			// pb.inheritIO();
 			final Process process = pb.start();
 			process.waitFor();
 			setOutput(IoUtils.toString(process.getInputStream()));
