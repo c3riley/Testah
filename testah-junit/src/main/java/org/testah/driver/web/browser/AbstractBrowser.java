@@ -284,6 +284,8 @@ public abstract class AbstractBrowser {
 			return new PhantomJsBrowser();
 		} else if (TS.params().getBrowser() == BrowserType.FIREFOX) {
 			return new FirefoxBrowser();
+		} else if (TS.params().getBrowser() == BrowserType.JBROWSER) {
+			return new JBrowserDriverBrowser();
 		} else {
 			return new FirefoxBrowser();
 		}

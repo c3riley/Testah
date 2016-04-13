@@ -12,7 +12,7 @@ public enum BrowserType {
 	FIREFOX(""), /** The chrome. */
 	CHROME(""), /** The ie. */
 	IE(""), /** The phantomjs. */
-	PHANTOMJS("");
+	PHANTOMJS(""), JBROWSER("");
 
 	/** The browser code. */
 	String browserCode;
