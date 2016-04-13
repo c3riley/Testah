@@ -16,7 +16,7 @@ apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 group = 'org.testah'
-version = '0.1.6'
+version = '0.1.7'
 
 buildscript {
     repositories {
@@ -43,7 +43,7 @@ repositories {
 
 
 dependencies {
-	
+	compile 'com.machinepublishers:jbrowserdriver:0.10.5'
 	compile 'org.rauschig:jarchivelib:0.7.1'
 	compile 'postgresql:postgresql:9.1-901-1.jdbc4'
     compile 'com.jcraft:jsch:0.1.53'
