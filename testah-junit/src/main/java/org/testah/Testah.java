@@ -17,6 +17,7 @@ public class Testah {
 	 * @throws InterruptedException
 	 *             the interrupted exception
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public static void main(final String[] args) throws InterruptedException, IOException {
 		final Cli cli = new Cli();

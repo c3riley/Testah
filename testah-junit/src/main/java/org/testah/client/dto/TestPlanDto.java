@@ -508,6 +508,7 @@ public class TestPlanDto {
 	 *
 	 * @param runInfo
 	 *            the new run info
+	 * @return the test plan dto
 	 */
 	public TestPlanDto setRunInfo(final RunInfoDto runInfo) {
 		this.runInfo = runInfo;
