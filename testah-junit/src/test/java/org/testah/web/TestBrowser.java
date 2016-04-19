@@ -164,4 +164,11 @@ public class TestBrowser extends BrowserTestPlan {
 
 	}
 
+	@Test
+	@TestCase(name = "testScreenshot")
+	public void testScreenshot() {
+
+		TS.browser().goTo("http://www.google.com").getHtml();
+	}
+
 }

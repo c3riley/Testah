@@ -104,13 +104,9 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 			 * .contains(description.getMethodName()));
 			 */
 
-			try {
-				if (!getTestFilter().filterTestCase(description.getAnnotation(TestCase.class), name)) {
-					addIgnoredTest(name, "METADATA_FILTER");
-					Assume.assumeTrue("Filtered out, For details use Trace level logging", false);
-				}
-			} catch (final Exception e) {
-				TS.log().warn("Unable to run filtering, groovy must be loaded in the project", e);
+			if (!getTestFilter().filterTestCase(description.getAnnotation(TestCase.class), name)) {
+				addIgnoredTest(name, "METADATA_FILTER");
+				Assume.assumeTrue("Filtered out, For details use Trace level logging", false);
 			}
 
 			final KnownProblem kp = description.getAnnotation(KnownProblem.class);
@@ -145,8 +141,11 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 				final Test testAnnotation = description.getAnnotation(Test.class);
 				if (null != testAnnotation && None.class == testAnnotation.expected()) {
 					if (null != getTestCase()) {
-
 						getTestCase().getAssertionError();
+						if (null == getTestCase().getStatus()) {
+							addIgnoredTest(description.getClassName() + "#" + description.getMethodName(),
+									"NA_STATUS_NO_ASSERTS");
+						}
 					}
 				}
 			} catch (final AssertionError ae) {

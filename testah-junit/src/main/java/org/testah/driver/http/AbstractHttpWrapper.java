@@ -131,7 +131,7 @@ public abstract class AbstractHttpWrapper {
 	private HttpMessageWriterFactory<HttpRequest> requestWriterFactory = null;
 
 	/** The trust all certs. */
-	private boolean trustAllCerts = true;
+	protected boolean trustAllCerts = true;
 
 	/** The conn manager. */
 	private PoolingHttpClientConnectionManager connManager;
@@ -312,6 +312,27 @@ public abstract class AbstractHttpWrapper {
 		}
 	}
 
+	public ResponseDto getResponseDto(final HttpResponse response, final AbstractRequestDto request) {
+		if (null != response) {
+			try {
+				final HttpEntity entity = response.getEntity();
+				final ResponseDto responseDto = new ResponseDto();
+				responseDto.setStatusCode(response.getStatusLine().getStatusCode());
+				responseDto.setStatusText(response.getStatusLine().getReasonPhrase());
+				responseDto.setResponseBytes(EntityUtils.toByteArray(entity));
+				responseDto.setResponseBody(new String(responseDto.getResponseBytes()));
+				if (null != request) {
+					responseDto.setUrl(request.getHttpRequestBase().getURI().toString());
+					responseDto.setHeaders(response.getAllHeaders()).setRequestType(request.getHttpMethod());
+				}
+				return responseDto;
+			} catch (final Exception e) {
+				TS.log().debug(e);
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Gets the request config default.
 	 *
@@ -331,7 +352,6 @@ public abstract class AbstractHttpWrapper {
 	 * @return the abstract http wrapper
 	 */
 	public AbstractHttpWrapper setHttpClient() {
-
 		final HttpClientBuilder hcb = HttpClients.custom();
 
 		if (null != getProxy()) {

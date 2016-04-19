@@ -71,14 +71,14 @@
 		</td></tr>
 		<tr><td class='label'>TestCases Passed</td><td class='value'>$testPlan.getRunInfo().getPass()</td></tr>
 		<tr><td class='label'>TestCases Failed:</td><td class='value'>$testPlan.getRunInfo().getFail()</td></tr>
-		<tr><td class='label'>TestCases Ignored:</td><td class='value'>$testPlan.getRunInfo().getIgnore()</td></tr>
-		<tr><td class='label'>User:</td><td class='value'>$testPlan.getUser()</td></tr>
+		<tr><td class='label'>TestCases Ignored/NA:</td><td class='value'>$testPlan.getRunInfo().getIgnore()</td></tr>
+		<tr><td class='label'>User:</td><td class='value'>$!testPlan.getUser()</td></tr>
 		<tr><td class='label'>Build:</td><td class='value'>
 		#if("$!testPlan.getCiUrl()" != "")
 			<a href='testPlan.getCiUrl()' target='_blank'>View CI</a>
 		#end
 		</td></tr>
-		<tr><td class='label'>Environment:</td><td class='value'>$testPlan.getEnvironment()</td></tr>
+		<tr><td class='label'>Environment:</td><td class='value'>$!testPlan.getEnvironment()</td></tr>
 		<tr><td class='label'>Time</td><td class='value'>$util.toDateString($testPlan.getRunTime().getStartTime()) to $util.toDateString($testPlan.getRunTime().getEndTime())</td></tr>
         <tr><td class='label'>Duration</td><td class='value'>$util.getDurationPretty( $testPlan.getRunTime().getDuration())</td></tr>
 		</table>
@@ -154,6 +154,8 @@
 									<td id='screenshot'>
 									#if("$!stepAction.getSnapShotPath()" != "")
 										<a href='$stepAction.getSnapShotPath()' target='_blank'>View</a>
+										<br />
+										<a href='$stepAction.getHtmlSnapShotPath()' target='_blank'>Html</a>
 									#end
 									</td>
 								</tr>
