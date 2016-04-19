@@ -33,7 +33,7 @@ import org.testah.framework.testPlan.HttpTestPlan;
 import org.testah.framework.testPlan.TestConfiguration;
 
 @ContextHierarchy({ @ContextConfiguration(classes = TestConfiguration.class) })
-@TestPlan
+@TestPlan(description = "test Http")
 public class TestHttp extends HttpTestPlan {
 
 	@TestCase

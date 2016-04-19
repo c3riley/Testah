@@ -1,5 +1,7 @@
 package org.testah;
 
+import java.io.IOException;
+
 import org.testah.framework.cli.Cli;
 
 /**
@@ -14,8 +16,9 @@ public class Testah {
 	 *            the arguments
 	 * @throws InterruptedException
 	 *             the interrupted exception
+	 * @throws IOException
 	 */
-	public static void main(final String[] args) throws InterruptedException {
+	public static void main(final String[] args) throws InterruptedException, IOException {
 		final Cli cli = new Cli();
 		cli.getArgumentParser(args);
 
