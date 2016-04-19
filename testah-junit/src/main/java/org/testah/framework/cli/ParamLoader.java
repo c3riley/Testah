@@ -94,18 +94,23 @@ public class ParamLoader {
 				}
 
 				Object propValue = null;
+				String propName;
 				for (final Field field : Params.class.getDeclaredFields()) {
 					if (field.getName().startsWith("filter")) {
-						propValue = System.getProperty("filter." + filterSchema + "." + field.getName(),
-								System.getenv("filter." + filterSchema + "." + field.getName()));
+						propName = "filter." + filterSchema + "." + field.getName();
+						propValue = System.getProperty(propName, System.getenv(propName));
 						if (null == propValue) {
-							propValue = config.getProperty("filter." + filterSchema + "." + field.getName());
+							propValue = config.getProperty(propName);
+						} else {
+							TS.log().debug("Loaded from system: " + propName + " = " + propValue);
 						}
 					} else {
-						propValue = System.getProperty(fieldPrefix + field.getName(),
-								System.getenv(fieldPrefix + field.getName()));
+						propName = fieldPrefix + field.getName();
+						propValue = System.getProperty(propName, System.getenv(propName));
 						if (null == propValue) {
-							propValue = config.getProperty(fieldPrefix + field.getName());
+							propValue = config.getProperty(propName);
+						} else {
+							TS.log().debug("Loaded from system: " + propName + " = " + propValue);
 						}
 					}
 					accessible = field.isAccessible();

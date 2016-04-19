@@ -10,195 +10,213 @@ import org.testah.framework.testPlan.AbstractTestPlan;
  */
 public class StepAction extends StepActionDto {
 
-    /**
-     * Creates the.
-     *
-     * @return the step action
-     */
-    public static StepAction create() {
-        return new StepAction();
-    }
+	/**
+	 * Creates the.
+	 *
+	 * @return the step action
+	 */
+	public static StepAction create() {
+		return new StepAction();
+	}
 
-    public static StepActionDto add(StepActionDto stepAction) {
-        if (TS.params().isRecordSteps()) {
-            AbstractTestPlan.addStepAction(stepAction);
-        }
-        return stepAction;
-    }
+	public static StepActionDto add(final StepActionDto stepAction) {
+		if (TS.params().isRecordSteps()) {
+			AbstractTestPlan.addStepAction(stepAction);
+		}
+		return stepAction;
+	}
 
-    /**
-     * Adds the.
-     *
-     * @param stepAction
-     *            the step action
-     * @return the step action dto
-     */
-    public static StepActionDto add(StepAction stepAction) {
-        if (TS.params().isRecordSteps()) {
-            AbstractTestPlan.addStepAction(stepAction);
-        }
-        return stepAction;
-    }
+	/**
+	 * Adds the.
+	 *
+	 * @param stepAction
+	 *            the step action
+	 * @return the step action dto
+	 */
+	public static StepActionDto add(final StepAction stepAction) {
+		if (TS.params().isRecordSteps()) {
+			AbstractTestPlan.addStepAction(stepAction);
+		}
+		return stepAction;
+	}
 
-    /**
-     * Adds the.
-     *
-     * @return the step action dto
-     */
-    public StepActionDto add() {
-        if (TS.params().isRecordSteps()) {
-            AbstractTestPlan.addStepAction(this);
-        }
-        return this;
-    }
+	/**
+	 * Adds the.
+	 *
+	 * @return the step action dto
+	 */
+	public StepActionDto add() {
+		if (TS.params().isRecordSteps()) {
+			AbstractTestPlan.addStepAction(this);
+		}
+		return this;
+	}
 
-    /**
-     * Creates the assert result.
-     *
-     * @param message
-     *            the message
-     * @param status
-     *            the status
-     * @param assertMethod
-     *            the assert method
-     * @param expected
-     *            the expected
-     * @param actual
-     *            the actual
-     * @param exception
-     *            the exception
-     * @return the step action
-     */
-    public static StepAction createAssertResult(final String message, final Boolean status, final String assertMethod,
-            final Object expected, final Object actual, final Throwable exception) {
-        final StepAction step = new StepAction();
-        step.setActionName(assertMethod);
-        step.setMessage1(message);
-        step.setStatus(status);
-        step.setMessage2(String.valueOf(expected));
-        step.setMessage3(String.valueOf(actual));
-        step.setException(exception);
-        step.setTestStepActionType(TestStepActionType.ASSERT);
-        if (TS.isBrowser() && !status) {
-            step.setSnapShotPath(TS.browser().takeScreenShot());
-        }
-        TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message
-                + " - expected[" + expected + "] actual[" + actual + "]");
-        TS.log().trace("Exception Related to above Assert\n" + step.getExceptionString());
-        return step;
-    }
+	/**
+	 * Creates the assert result.
+	 *
+	 * @param message
+	 *            the message
+	 * @param status
+	 *            the status
+	 * @param assertMethod
+	 *            the assert method
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @param exception
+	 *            the exception
+	 * @return the step action
+	 */
+	public static StepAction createAssertResult(final String message, final Boolean status, final String assertMethod,
+			final Object expected, final Object actual, final Throwable exception) {
+		final StepAction step = new StepAction();
+		step.setActionName(assertMethod);
+		step.setMessage1(message);
+		step.setStatus(status);
+		step.setMessage2(String.valueOf(expected));
+		step.setMessage3(String.valueOf(actual));
+		step.setException(exception);
+		step.setTestStepActionType(TestStepActionType.ASSERT);
+		if (TS.isBrowser() && !status) {
+			step.setSnapShotPath(TS.browser().takeScreenShot());
+			step.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());
+		}
+		TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message
+				+ " - expected[" + expected + "] actual[" + actual + "]");
+		TS.log().trace("Exception Related to above Assert\n" + step.getExceptionString());
+		return step;
+	}
 
-    /**
-     * Creates the verify result.
-     *
-     * @param message
-     *            the message
-     * @param status
-     *            the status
-     * @param assertMethod
-     *            the assert method
-     * @param expected
-     *            the expected
-     * @param actual
-     *            the actual
-     * @param exception
-     *            the exception
-     * @return the step action
-     */
-    public static StepAction createVerifyResult(final String message, final Boolean status, final String assertMethod,
-            final Object expected, final Object actual, final Throwable exception) {
-        final StepAction step = new StepAction();
-        step.setActionName(assertMethod);
-        step.setMessage1(message + " - " + status);
-        step.setStatus(null);
-        step.setMessage2(String.valueOf(expected));
-        step.setMessage3(String.valueOf(actual));
-        step.setException(null);
-        step.setTestStepActionType(TestStepActionType.VERIFY);
+	/**
+	 * Creates the verify result.
+	 *
+	 * @param message
+	 *            the message
+	 * @param status
+	 *            the status
+	 * @param assertMethod
+	 *            the assert method
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @param exception
+	 *            the exception
+	 * @return the step action
+	 */
+	public static StepAction createVerifyResult(final String message, final Boolean status, final String assertMethod,
+			final Object expected, final Object actual, final Throwable exception) {
+		final StepAction step = new StepAction();
+		step.setActionName(assertMethod);
+		step.setMessage1(message + " - " + status);
+		step.setStatus(null);
+		step.setMessage2(String.valueOf(expected));
+		step.setMessage3(String.valueOf(actual));
+		step.setException(null);
+		step.setTestStepActionType(TestStepActionType.VERIFY);
 
-        TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " + status + " - " + message
-                + " - expected[" + expected + "] actual[" + actual + "]");
-        return step;
-    }
+		TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " + status + " - " + message
+				+ " - expected[" + expected + "] actual[" + actual + "]");
+		return step;
+	}
 
-    /**
-     * Creates the info.
-     *
-     * @param message1
-     *            the message1
-     * @return the step action
-     */
-    public static StepAction createInfo(final String message1) {
-        return createInfo(message1, "", "", false);
-    }
+	/**
+	 * Creates the info.
+	 *
+	 * @param message1
+	 *            the message1
+	 * @return the step action
+	 */
+	public static StepAction createInfo(final String message1) {
+		return createInfo(message1, "", "", false);
+	}
 
-    /**
-     * Creates the info.
-     *
-     * @param message1
-     *            the message1
-     * @param message2
-     *            the message2
-     * @return the step action
-     */
-    public static StepAction createInfo(final String message1, final String message2) {
-        return createInfo(message1, message2, "", false);
-    }
+	/**
+	 * Creates the info.
+	 *
+	 * @param message1
+	 *            the message1
+	 * @param message2
+	 *            the message2
+	 * @return the step action
+	 */
+	public static StepAction createInfo(final String message1, final String message2) {
+		return createInfo(message1, message2, "", false);
+	}
 
-    /**
-     * Creates the info.
-     *
-     * @param message1
-     *            the message1
-     * @param message2
-     *            the message2
-     * @param message3
-     *            the message3
-     * @param autoLog
-     *            the auto log
-     * @return the step action
-     */
-    public static StepAction createInfo(final String message1, final String message2, final String message3,
-            final boolean autoLog) {
-        final StepAction step = new StepAction();
-        step.setMessage1(message1);
-        step.setMessage2(message2);
-        step.setMessage3(message3);
-        step.setTestStepActionType(TestStepActionType.INFO);
-        if (autoLog) {
-            TS.log().debug(TestStepActionType.INFO + " - " + step.getMessage1() + " - " + step.getMessage2());
-        }
-        return step;
-    }
+	/**
+	 * Creates the info.
+	 *
+	 * @param message1
+	 *            the message1
+	 * @param message2
+	 *            the message2
+	 * @param message3
+	 *            the message3
+	 * @param autoLog
+	 *            the auto log
+	 * @return the step action
+	 */
+	public static StepAction createInfo(final String message1, final String message2, final String message3,
+			final boolean autoLog) {
+		return createInfo(message1, message2, message3, autoLog, false);
+	}
 
-    /**
-     * Creates the browser action.
-     *
-     * @param message1
-     *            the message1
-     * @param by
-     *            the by
-     * @return the step action
-     */
-    public static StepAction createBrowserAction(final String message1, final Object by) {
-        return createBrowserAction(message1, by.toString());
-    }
+	public static StepAction createInfo(final String message1, final String message2, final String message3,
+			final boolean autoLog, final boolean takeSnapShot) {
+		final StepAction step = new StepAction();
+		step.setMessage1(message1);
+		step.setMessage2(message2);
+		step.setMessage3(message3);
+		step.setTestStepActionType(TestStepActionType.INFO);
+		if (autoLog) {
+			TS.log().debug(TestStepActionType.INFO + " - " + step.getMessage1() + " - " + step.getMessage2());
+		}
+		if (takeSnapShot) {
+			if (TS.isBrowser()) {
+				step.setSnapShotPath(TS.browser().takeScreenShot());
+				step.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());
+			}
+		}
+		return step;
+	}
 
-    /**
-     * Creates the browser action.
-     *
-     * @param message1
-     *            the message1
-     * @param message2
-     *            the message2
-     * @return the step action
-     */
-    public static StepAction createBrowserAction(final String message1, final String message2) {
-        final StepAction step = new StepAction();
-        step.setMessage1(message1);
-        step.setMessage2(message2);
-        step.setTestStepActionType(TestStepActionType.BROWSER_ACTION);
-        TS.log().debug(TestStepActionType.BROWSER_ACTION + "[" + step.getMessage1() + "] - " + step.getMessage2());
-        return step;
-    }
+	/**
+	 * Creates the browser action.
+	 *
+	 * @param message1
+	 *            the message1
+	 * @param by
+	 *            the by
+	 * @return the step action
+	 */
+	public static StepAction createBrowserAction(final String message1, final Object by) {
+		return createBrowserAction(message1, by.toString());
+	}
+
+	/**
+	 * Creates the browser action.
+	 *
+	 * @param message1
+	 *            the message1
+	 * @param message2
+	 *            the message2
+	 * @return the step action
+	 */
+	public static StepAction createBrowserAction(final String message1, final String message2) {
+		final StepAction step = new StepAction();
+		step.setMessage1(message1);
+		step.setMessage2(message2);
+		step.setTestStepActionType(TestStepActionType.BROWSER_ACTION);
+		TS.log().debug(TestStepActionType.BROWSER_ACTION + "[" + step.getMessage1() + "] - " + step.getMessage2());
+		return step;
+	}
+
+	public StepAction addSnapshot(final StepAction stepAction) {
+		stepAction.setSnapShotPath(TS.browser().takeScreenShot());
+		stepAction.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());
+		return stepAction;
+	}
 }

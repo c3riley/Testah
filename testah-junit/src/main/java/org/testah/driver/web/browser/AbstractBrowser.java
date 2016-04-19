@@ -423,6 +423,7 @@ public abstract class AbstractBrowser {
 				startService();
 				driver = getWebDriver(capabilities);
 			}
+			this.maximize();
 		} catch (final Exception e) {
 			throw new RuntimeException("Issue Stating browser", e);
 		}
@@ -447,13 +448,39 @@ public abstract class AbstractBrowser {
 	 */
 	public abstract AbstractBrowser stopService() throws IOException;
 
+	public String takeHtmlSnapshot() {
+		return takeHtmlSnapshot(TS.params().getOutput());
+	}
+
+	public String takeHtmlSnapshot(final String path) {
+		try {
+			File f = new File(path);
+			if (f.isDirectory()) {
+				f = File.createTempFile("htmlsnapshot_", ".html", f);
+			}
+			FileUtils.writeStringToFile(f, this.getHtml(), "UTF-8");
+			TS.log().info("Html Snapshot file: " + f.getAbsolutePath());
+
+			String replaceAbsolutePath = "";
+			try {
+				replaceAbsolutePath = f.getParentFile().getParentFile().getAbsolutePath() + File.pathSeparator;
+			} catch (final Exception e) {
+				TS.log().trace("issue getting screenshot replace path");
+			}
+			return f.getAbsolutePath().replace(replaceAbsolutePath, "");
+		} catch (final Exception e) {
+			TS.log().error(e);
+		}
+
+		return null;
+	}
+
 	/**
 	 * Take screen shot.
 	 *
 	 * @return the string
 	 */
 	public String takeScreenShot() {
-
 		return takeScreenShot(TS.params().getOutput());
 	}
 
@@ -481,7 +508,13 @@ public abstract class AbstractBrowser {
 				FileUtils.copyFile(sf, f);
 				TS.log().info("Screenshot file: " + f.getAbsolutePath());
 			}
-			return f.getAbsolutePath();
+			String replaceAbsolutePath = "";
+			try {
+				replaceAbsolutePath = f.getParentFile().getParentFile().getAbsolutePath() + File.pathSeparator;
+			} catch (final Exception e) {
+				TS.log().trace("issue getting screenshot replace path");
+			}
+			return f.getAbsolutePath().replace(replaceAbsolutePath, "");
 		} catch (final Exception e) {
 			TS.log().error(e);
 		}
@@ -811,6 +844,10 @@ public abstract class AbstractBrowser {
 	 */
 	public AbstractBrowser switchToWindow(final String pageTitle) {
 		return switchToWindow(pageTitle, true);
+	}
+
+	public String getHtml() {
+		return driver.findElement(By.tagName("html")).getAttribute("outerHTML");
 	}
 
 	/**
