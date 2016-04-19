@@ -2,11 +2,21 @@ package org.testah.framework.cli;
 
 import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.testah.TS;
+import org.testah.client.dto.TestPlanDto;
 import org.testah.client.enums.BrowserType;
+import org.testah.framework.annotations.KnownProblem;
+import org.testah.framework.annotations.TestCase;
+import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.dto.ResultDto;
+import org.testah.framework.dto.TestDtoHelper;
 import org.testah.framework.report.TestPlanReporter;
 import org.testah.runner.TestahJUnitRunner;
 import org.testah.util.Log;
@@ -61,6 +71,7 @@ public class Cli {
 	 * @param args
 	 *            the args
 	 * @return the argument parser
+	 * @throws IOException
 	 */
 	public Cli getArgumentParser(final String[] args) {
 
@@ -75,7 +86,11 @@ public class Cli {
 		run.addArgument("-b", "--browser").setDefault(opt.getBrowser()).type(enumStringType(BrowserType.class))
 				.help("foo help");
 
-		subparsers.addParser("query").help("query help");
+		final Subparser query = subparsers.addParser("query").help("query help");
+		query.addArgument("--file").required(false).action(Arguments.store()).dest("queryResults")
+				.setDefault(Params.getUserDir());
+		query.addArgument("--includeMeta").required(false).action(Arguments.storeTrue()).dest("includeMeta");
+		query.addArgument("--show").required(false).action(Arguments.storeTrue()).dest("showInConsole");
 
 		final Subparser create = subparsers.addParser("create").help("create help");
 		create.addArgument("--prop", "--properties").required(false).action(Arguments.storeTrue()).dest("prop");
@@ -93,20 +108,24 @@ public class Cli {
 				TS.log().debug(Cli.BAR_LONG);
 				final String subProcess = res.getString("subparserName");
 				if (null != res.getString("subparserName")) {
-					if (subProcess.equalsIgnoreCase("run")) {
+					try {
+						if (subProcess.equalsIgnoreCase("run")) {
 
-						processRun();
+							processRun();
 
-					} else if (subProcess.equalsIgnoreCase("query")) {
+						} else if (subProcess.equalsIgnoreCase("query")) {
 
-						processQuery();
+							processQuery();
 
-					} else if (subProcess.equalsIgnoreCase("create")) {
+						} else if (subProcess.equalsIgnoreCase("create")) {
 
-						processCreate();
+							processCreate();
 
-					} else {
-						throw new RuntimeException("Unknown SubParser: " + subProcess);
+						} else {
+							throw new RuntimeException("Unknown SubParser: " + subProcess);
+						}
+					} catch (final Exception e) {
+						throw new RuntimeException(e);
 					}
 				}
 
@@ -190,8 +209,49 @@ public class Cli {
 
 	/**
 	 * Process query.
+	 *
+	 * @throws IOException
 	 */
-	public void processQuery() {
+	public void processQuery() throws IOException {
+		final TestFilter testPlanFilter = new TestFilter();
+		File results = new File(res.getString("queryResults"));
+		if (results.isDirectory()) {
+			results.mkdirs();
+			results = new File(results, "queryResults.json");
+		} else {
+			results.getParentFile().mkdirs();
+		}
+		testPlanFilter.filterTestPlansToRun();
+		Object resultObject = testPlanFilter.getTestClassesMetFilters();
+		if (res.getBoolean("includeMeta")) {
+			final HashMap<String, TestPlanDto> testPlans = new HashMap<String, TestPlanDto>();
+			for (final Class<?> test : testPlanFilter.getTestClassesMetFilters()) {
+				testPlans
+						.put(test.getCanonicalName(),
+								TestDtoHelper
+										.createTestPlanDto(test, test.getAnnotation(TestPlan.class),
+												test.getAnnotation(KnownProblem.class))
+										.setRunTime(null).setRunInfo(null));
+
+				for (final Method method : test.getDeclaredMethods()) {
+					if (null != method.getAnnotation(TestCase.class)) {
+						testPlans.get(test.getCanonicalName())
+								.addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
+										method.getAnnotation(TestCase.class), method.getAnnotation(KnownProblem.class),
+										test.getAnnotation(TestPlan.class)).setRunTime(null));
+					}
+				}
+			}
+			resultObject = testPlans;
+		}
+
+		FileUtils.writeStringToFile(results, TS.util().toJson(resultObject));
+		TS.log().info("Query Results: Found[" + testPlanFilter.getTestClassesMetFilters().size() + "] "
+				+ results.getAbsolutePath());
+
+		if (res.getBoolean("showInConsole")) {
+			TS.log().info(TS.util().toJson(resultObject));
+		}
 
 	}
 
