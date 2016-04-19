@@ -171,6 +171,17 @@ public class TestDtoHelper {
 		return testPlanToFill;
 	}
 
+	/**
+	 * Creates the test plan dto.
+	 *
+	 * @param testPlanClass
+	 *            the test plan class
+	 * @param meta
+	 *            the meta
+	 * @param knownProblemFillFrom
+	 *            the known problem fill from
+	 * @return the test plan dto
+	 */
 	public static TestPlanDto createTestPlanDto(final Class<?> testPlanClass, final TestPlan meta,
 			final KnownProblem knownProblemFillFrom) {
 		TestPlanDto testPlanToFill = new TestPlanDto();
@@ -214,6 +225,21 @@ public class TestDtoHelper {
 		return testCaseToFill;
 	}
 
+	/**
+	 * Creates the test case dto.
+	 *
+	 * @param testPlanClass
+	 *            the test plan class
+	 * @param testCaseMethod
+	 *            the test case method
+	 * @param meta
+	 *            the meta
+	 * @param knownProblemFillFrom
+	 *            the known problem fill from
+	 * @param tpMeta
+	 *            the tp meta
+	 * @return the test case dto
+	 */
 	public static TestCaseDto createTestCaseDto(final String testPlanClass, final String testCaseMethod,
 			final TestCase meta, final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
 		TestCaseDto testCaseToFill = new TestCaseDto();

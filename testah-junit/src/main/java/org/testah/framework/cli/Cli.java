@@ -44,10 +44,15 @@ public class Cli {
 	private final Params opt;
 
 	/** The Constant version. */
-	public static final String version = "0.1.8";
+	public static final String version = "0.1.9";
 
+	/** The Constant BAR_LONG. */
 	public static final String BAR_LONG = "=============================================================================================";
+
+	/** The Constant BAR_SHORT. */
 	public static final String BAR_SHORT = "=========================================";
+
+	/** The Constant BAR_WALL. */
 	public static final String BAR_WALL = "# ";
 
 	/**
@@ -71,7 +76,6 @@ public class Cli {
 	 * @param args
 	 *            the args
 	 * @return the argument parser
-	 * @throws IOException
 	 */
 	public Cli getArgumentParser(final String[] args) {
 
@@ -211,6 +215,7 @@ public class Cli {
 	 * Process query.
 	 *
 	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void processQuery() throws IOException {
 		final TestFilter testPlanFilter = new TestFilter();
@@ -292,6 +297,9 @@ public class Cli {
 		return opt;
 	}
 
+	/**
+	 * Write out testah.
+	 */
 	public static void writeOutTestah() {
 		System.out.println("\n" + Cli.BAR_LONG);
 		System.out.println(
