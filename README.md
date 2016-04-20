@@ -14,6 +14,6 @@ repositories {
 } 
  
 dependencies {
-    compile 'org.testah:testah-junit:0.1.2'
+    compile 'org.testah:testah-junit:0.1.10'
 }
 ```
