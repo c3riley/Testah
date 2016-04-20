@@ -29,7 +29,7 @@ public abstract class AbstractWebElementWrapper {
 	private int timeout = TS.params().getDefaultWaitTime();
 
 	/** The driver. */
-	private final AbstractBrowser driver = null;
+	private AbstractBrowser driver = null;
 
 	/**
 	 * Instantiates a new abstract web element wrapper.
@@ -44,6 +44,7 @@ public abstract class AbstractWebElementWrapper {
 	public AbstractWebElementWrapper(final By by, final WebElement webElement, final AbstractBrowser driver) {
 		this.by = by;
 		this.webElement = webElement;
+		this.driver = driver;
 	}
 
 	/**
@@ -121,6 +122,15 @@ public abstract class AbstractWebElementWrapper {
 	public AbstractWebElementWrapper assertIsSelected() {
 		TS.asserts().isTrue("Expecting Element is Selected", isSelected());
 		return this;
+	}
+
+	public AbstractWebElementWrapper assertIsDisplayed() {
+		TS.asserts().isTrue("Expecting Element is Displayed", isDisplayed());
+		return this;
+	}
+
+	public boolean verifyIsDisplayed() {
+		return TS.verify().isTrue("Expecting Element is Displayed", isDisplayed());
 	}
 
 	/**
@@ -212,6 +222,22 @@ public abstract class AbstractWebElementWrapper {
 		return null;
 	}
 
+	public AbstractWebElementWrapper moveTo() {
+		return moveTo(this);
+	}
+
+	public AbstractWebElementWrapper moveTo(final By elementToMoveTo) {
+		return moveTo(driver.getWebelement(elementToMoveTo));
+	}
+
+	public AbstractWebElementWrapper moveTo(final AbstractWebElementWrapper elementToMoveTo) {
+		if (elementIsOk("moveTo", isAutoReport())) {
+			getActionBuilder().moveToElement(elementToMoveTo.getDriverWebElement()).build().perform();
+			return this;
+		}
+		return null;
+	}
+
 	/**
 	 * Gets the as select list.
 	 *
@@ -292,7 +318,7 @@ public abstract class AbstractWebElementWrapper {
 		for (int i = 1; i <= timeout; i++) {
 			error = "";
 			try {
-				return getListOfWebelementsWrapped(by, webElement.findElements(by));
+				return getListOfWebelementsWrapped(by, webElement.findElements(locator));
 			} catch (final Exception e) {
 				error = e.getMessage();
 			}
@@ -302,7 +328,7 @@ public abstract class AbstractWebElementWrapper {
 			TS.util().pause("getElementsWithIn", i);
 		}
 		if (autoAssert) {
-			TS.asserts().equals("Expected to find WebElements within Element[" + this.by + "] uisng By[" + by
+			TS.asserts().equals("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
 					+ "] - error: " + error, true, false);
 		}
 		return new ArrayList<AbstractWebElementWrapper>();
@@ -469,6 +495,13 @@ public abstract class AbstractWebElementWrapper {
 	public Boolean isSelected() {
 		if (elementIsOk("isSelected", isAutoReport())) {
 			return webElement.isSelected();
+		}
+		return null;
+	}
+
+	public Boolean isDisplayed() {
+		if (elementIsOk("isDisplayed", isAutoReport())) {
+			return webElement.isDisplayed();
 		}
 		return null;
 	}
@@ -682,12 +715,12 @@ public abstract class AbstractWebElementWrapper {
 	 */
 	public AbstractWebElementWrapper waitTillGone(final int timeout) {
 		for (int i = 1; i <= timeout; i++) {
-			if (null == getDriverWebElement()) {
+			if (null == getDriverWebElement() || !isDisplayed()) {
 				return this;
 			}
-			TS.util().pause("waitTillAttributeEquals", i);
+			TS.util().pause("waitTillGone", i);
 		}
-		TS.asserts().isNull("Expected Element[" + by + "] to be gone", getDriverWebElement());
+		TS.asserts().isNull("Expected Element[" + by + "] to be gone or not displayed", getDriverWebElement());
 		return this;
 	}
 

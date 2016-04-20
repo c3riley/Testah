@@ -17,10 +17,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.CookieSpecs;
@@ -39,7 +36,6 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
@@ -69,9 +65,6 @@ import org.testah.framework.testPlan.AbstractTestPlan;
  * The Class AbstractHttpWrapper.
  */
 public abstract class AbstractHttpWrapper {
-
-	/** The default credentials provider. */
-	public CredentialsProvider defaultCredentialsProvider = null;
 
 	/** The default pool size. */
 	private int defaultPoolSize = 100;
@@ -281,8 +274,9 @@ public abstract class AbstractHttpWrapper {
 			}
 
 			if (null != request.getCredentialsProvider()) {
-				context.setCredentialsProvider(defaultCredentialsProvider);
+				context.setCredentialsProvider(request.getCredentialsProvider());
 			}
+
 			final ResponseDto responseDto = new ResponseDto().setStart();
 			if (verbose) {
 				AbstractTestPlan.addStepAction(request.createRequestInfoStep());
@@ -360,11 +354,9 @@ public abstract class AbstractHttpWrapper {
 		if (null != getRequestConfig()) {
 			hcb.setDefaultRequestConfig(getRequestConfig());
 		}
-		if (null != getCredentialsProvider()) {
-			hcb.setDefaultCredentialsProvider(getCredentialsProvider());
-		}
+
 		if (null != getCookieStore()) {
-			hcb.setDefaultCredentialsProvider(getCredentialsProvider());
+			hcb.setDefaultCookieStore(getCookieStore());
 		}
 		if (null != getConnectionManager()) {
 			hcb.setConnectionManager(getConnectionManager());
@@ -393,15 +385,6 @@ public abstract class AbstractHttpWrapper {
 				.setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
 				.setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC)).build();
 		return setRequestConfig(rcb.build());
-	}
-
-	/**
-	 * Gets the credentials provider.
-	 *
-	 * @return the credentials provider
-	 */
-	public CredentialsProvider getCredentialsProvider() {
-		return new BasicCredentialsProvider();
 	}
 
 	/**
@@ -601,38 +584,6 @@ public abstract class AbstractHttpWrapper {
 	}
 
 	/**
-	 * Sets the basic auth credentials.
-	 *
-	 * @param userName
-	 *            the user name
-	 * @param password
-	 *            the password
-	 * @param authScope
-	 *            the auth scope
-	 * @return the abstract http wrapper
-	 */
-	public AbstractHttpWrapper setBasicAuthCredentials(final String userName, final String password,
-			final AuthScope authScope) {
-		defaultCredentialsProvider = new BasicCredentialsProvider();
-		final UsernamePasswordCredentials creds = new UsernamePasswordCredentials(userName, password);
-		defaultCredentialsProvider.setCredentials(authScope, creds);
-		return this;
-	}
-
-	/**
-	 * Sets the basic auth credentials.
-	 *
-	 * @param userName
-	 *            the user name
-	 * @param password
-	 *            the password
-	 * @return the abstract http wrapper
-	 */
-	public AbstractHttpWrapper setBasicAuthCredentials(final String userName, final String password) {
-		return setBasicAuthCredentials(userName, password, AuthScope.ANY);
-	}
-
-	/**
 	 * Sets the allow any certs.
 	 *
 	 * @return the abstract http wrapper
@@ -659,27 +610,6 @@ public abstract class AbstractHttpWrapper {
 	 */
 	public AbstractHttpWrapper setDefaultConnectionTimeout(final int defaultConnectionTimeout) {
 		this.defaultConnectionTimeout = defaultConnectionTimeout;
-		return this;
-	}
-
-	/**
-	 * Gets the default credentials provider.
-	 *
-	 * @return the default credentials provider
-	 */
-	public CredentialsProvider getDefaultCredentialsProvider() {
-		return defaultCredentialsProvider;
-	}
-
-	/**
-	 * Sets the default credentials provider.
-	 *
-	 * @param defaultCredentialsProvider
-	 *            the default credentials provider
-	 * @return the abstract http wrapper
-	 */
-	public AbstractHttpWrapper setDefaultCredentialsProvider(final CredentialsProvider defaultCredentialsProvider) {
-		this.defaultCredentialsProvider = defaultCredentialsProvider;
 		return this;
 	}
 

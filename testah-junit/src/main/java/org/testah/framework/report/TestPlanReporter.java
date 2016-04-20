@@ -42,6 +42,8 @@ public class TestPlanReporter {
 		}
 		try {
 			testPlan.getRunInfo().setIgnore(AbstractTestPlan.getIgnoredTests().size());
+			testPlan.getRunInfo().setTotal(testPlan.getRunInfo().getFail() + testPlan.getRunInfo().getPass()
+					+ testPlan.getRunInfo().getIgnore());
 		} catch (final Exception e) {
 			TS.log().trace(e);
 		}

@@ -39,11 +39,8 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
 		if (null != getRequestConfig()) {
 			hcb.setDefaultRequestConfig(getRequestConfig());
 		}
-		if (null != getCredentialsProvider()) {
-			hcb.setDefaultCredentialsProvider(getCredentialsProvider());
-		}
 		if (null != getCookieStore()) {
-			hcb.setDefaultCredentialsProvider(getCredentialsProvider());
+			hcb.setDefaultCookieStore(getCookieStore());
 		}
 		try {
 			if (null != getConnectionManager()) {
@@ -82,7 +79,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
 			}
 
 			if (null != request.getCredentialsProvider()) {
-				context.setCredentialsProvider(defaultCredentialsProvider);
+				context.setCredentialsProvider(request.getCredentialsProvider());
 			}
 
 			new ResponseDto().setStart();
@@ -195,7 +192,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.Closeable#close()
 	 */
 	public void close() {

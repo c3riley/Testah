@@ -463,7 +463,7 @@ public abstract class AbstractBrowser {
 
 			String replaceAbsolutePath = "";
 			try {
-				replaceAbsolutePath = f.getParentFile().getParentFile().getAbsolutePath() + File.pathSeparator;
+				replaceAbsolutePath = f.getParentFile().getParentFile().getAbsolutePath() + File.separator;
 			} catch (final Exception e) {
 				TS.log().trace("issue getting screenshot replace path");
 			}
@@ -510,7 +510,7 @@ public abstract class AbstractBrowser {
 			}
 			String replaceAbsolutePath = "";
 			try {
-				replaceAbsolutePath = f.getParentFile().getParentFile().getAbsolutePath() + File.pathSeparator;
+				replaceAbsolutePath = f.getParentFile().getParentFile().getAbsolutePath() + File.separator;
 			} catch (final Exception e) {
 				TS.log().trace("issue getting screenshot replace path");
 			}
