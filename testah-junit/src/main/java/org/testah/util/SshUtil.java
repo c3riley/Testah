@@ -23,6 +23,9 @@ import com.jcraft.jsch.Session;
 // http://www.programcreek.com/java-api-examples/com.jcraft.jsch.JSch
 public class SshUtil {
 
+	/** The ignore timeout. */
+	private boolean ignoreTimeout = false;
+
 	/** The session timeout. */
 	private int sessionTimeout = 100000;
 
@@ -35,6 +38,9 @@ public class SshUtil {
 	/** The pty type value. */
 	private String ptyTypeValue = "dumb";
 
+	/** The pem file. */
+	private String pemFile = null;
+
 	/** The jsch. */
 	private final JSch jsch = new JSch();
 
@@ -45,7 +51,7 @@ public class SshUtil {
 	 *             the j sch exception
 	 */
 	public SshUtil() throws JSchException {
-
+		setVerbose(true);
 	}
 
 	/**
@@ -100,6 +106,9 @@ public class SshUtil {
 		if (null != password) {
 			session.setPassword(password);
 		}
+		if (null != getPemFile()) {
+			getJsch().addIdentity(getPemFile());
+		}
 		return session;
 	}
 
@@ -126,7 +135,7 @@ public class SshUtil {
 		}
 
 		final Channel channel = session.openChannel("shell");
-		String output = "";
+		final StringBuffer output = new StringBuffer("");
 		try {
 			final OutputStream inputstream_for_the_channel = channel.getOutputStream();
 			final PrintStream commander = new PrintStream(inputstream_for_the_channel);
@@ -143,21 +152,51 @@ public class SshUtil {
 			commander.println("exit");
 			commander.close();
 
-			for (int ctr = 0; ctr < maxWaitTimeInSeconds; ctr++) {
-				if (channel.isEOF()) {
-					break;
+			if (!isIgnoreTimeout()) {
+				for (int ctr = 0; ctr < maxWaitTimeInSeconds; ctr++) {
+					if (channel.isEOF()) {
+						break;
+					}
+					Thread.sleep(1000);
 				}
-				Thread.sleep(1000);
+				output.append(new String(baos.toByteArray()));
+			} else {
+				final byte[] tmp = new byte[1024];
+				while (true) {
+					while (channel.getInputStream().available() > 0) {
+						final int i = channel.getInputStream().read(tmp, 0, 1024);
+						if (i < 0) {
+							break;
+						}
+						output.append(new String(tmp, 0, i));
+						if (verbose) {
+							TS.log().debug(new String(tmp, 0, i));
+						}
+					}
+					if (verbose) {
+						TS.log().debug("Should be done reading from input stream");
+					}
+					if (channel.isClosed()) {
+						System.out.println("exit-status: " + channel.getExitStatus());
+						break;
+					}
+					try {
+						Thread.sleep(1000);
+					} catch (final Exception ee) {
+					}
+				}
 			}
-			output = new String(baos.toByteArray());
+
 			if (verbose) {
 				TS.log().debug(output);
 			}
 		} finally {
-			channel.disconnect();
+			if (channel.isConnected()) {
+				channel.disconnect();
+			}
 			session.disconnect();
 		}
-		return output;
+		return output.toString();
 	}
 
 	/**
@@ -277,9 +316,11 @@ public class SshUtil {
 	 *
 	 * @param sessionTimeout
 	 *            the new session timeout
+	 * @return the ssh util
 	 */
-	public void setSessionTimeout(final int sessionTimeout) {
+	public SshUtil setSessionTimeout(final int sessionTimeout) {
 		this.sessionTimeout = sessionTimeout;
+		return this;
 	}
 
 	/**
@@ -287,9 +328,12 @@ public class SshUtil {
 	 *
 	 * @param verbose
 	 *            the new verbose
+	 * @return the ssh util
 	 */
-	public void setVerbose(final boolean verbose) {
+	public SshUtil setVerbose(final boolean verbose) {
+		JSch.setLogger(new SshLogger());
 		this.verbose = verbose;
+		return this;
 	}
 
 	/**
@@ -297,9 +341,11 @@ public class SshUtil {
 	 *
 	 * @param maxWaitTimeInSeconds
 	 *            the new max wait time in seconds
+	 * @return the ssh util
 	 */
-	public void setMaxWaitTimeInSeconds(final int maxWaitTimeInSeconds) {
+	public SshUtil setMaxWaitTimeInSeconds(final int maxWaitTimeInSeconds) {
 		this.maxWaitTimeInSeconds = maxWaitTimeInSeconds;
+		return this;
 	}
 
 	/**
@@ -316,9 +362,51 @@ public class SshUtil {
 	 *
 	 * @param ptyTypeValue
 	 *            the new pty type value
+	 * @return the ssh util
 	 */
-	public void setPtyTypeValue(final String ptyTypeValue) {
+	public SshUtil setPtyTypeValue(final String ptyTypeValue) {
 		this.ptyTypeValue = ptyTypeValue;
+		return this;
+	}
+
+	/**
+	 * Checks if is ignore timeout.
+	 *
+	 * @return true, if is ignore timeout
+	 */
+	public boolean isIgnoreTimeout() {
+		return ignoreTimeout;
+	}
+
+	/**
+	 * Sets the ignore timeout.
+	 *
+	 * @param ignoreTimeout
+	 *            the new ignore timeout
+	 */
+	public void setIgnoreTimeout(final boolean ignoreTimeout) {
+		this.ignoreTimeout = ignoreTimeout;
+	}
+
+	/**
+	 * Gets the pem file.
+	 *
+	 * @return the pem file
+	 */
+	public String getPemFile() {
+		return pemFile;
+	}
+
+	/**
+	 * Sets the pem file.
+	 *
+	 * @param pemFile
+	 *            the pem file
+	 * @return the ssh util
+	 */
+	public SshUtil setPemFile(final String pemFile) {
+		this.pemFile = pemFile;
+		return this;
 	}
 
 }
