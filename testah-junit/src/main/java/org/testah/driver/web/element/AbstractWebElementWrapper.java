@@ -499,11 +499,27 @@ public abstract class AbstractWebElementWrapper {
 		return null;
 	}
 
-	public Boolean isDisplayed() {
-		if (elementIsOk("isDisplayed", isAutoReport())) {
+	/**
+	 * Checks if is displayed.
+	 *
+	 * @return the boolean
+	 */
+	public boolean isDisplayed() {
+		return isDisplayed(false);
+	}
+
+	/**
+	 * Checks if is displayed.
+	 *
+	 * @param autoReport
+	 *            the auto report
+	 * @return true, if is displayed
+	 */
+	public boolean isDisplayed(final boolean autoReport) {
+		if (elementIsOk("isDisplayed", autoReport)) {
 			return webElement.isDisplayed();
 		}
-		return null;
+		return false;
 	}
 
 	/**
@@ -714,11 +730,15 @@ public abstract class AbstractWebElementWrapper {
 	 * @return the abstract web element wrapper
 	 */
 	public AbstractWebElementWrapper waitTillGone(final int timeout) {
-		for (int i = 1; i <= timeout; i++) {
-			if (null == getDriverWebElement() || !isDisplayed()) {
-				return this;
+		try {
+			for (int i = 1; i <= timeout; i++) {
+				if (null == getDriverWebElement() || !isDisplayed(false)) {
+					break;
+				}
+				TS.util().pause("waitTillGone", i);
 			}
-			TS.util().pause("waitTillGone", i);
+		} catch (final Exception e) {
+			TS.log().debug(e);
 		}
 		TS.asserts().isNull("Expected Element[" + by + "] to be gone or not displayed", getDriverWebElement());
 		return this;
