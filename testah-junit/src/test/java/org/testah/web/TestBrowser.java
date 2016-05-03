@@ -117,7 +117,7 @@ public class TestBrowser extends BrowserTestPlan {
 	@TestCase
 	@Test
 	public void TestWebElement() {
-		final AbstractWebElementWrapper e = TS.browser().getWebelement(By.id("enclosed-image"));
+		final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("enclosed-image"));
 		TS.asserts().notNull(e);
 		TS.asserts().equals(By.id("enclosed-image"), e.getBy());
 		TS.asserts().notNull(e.getDriverWebElement());

@@ -664,6 +664,10 @@ public abstract class AbstractHttpWrapper {
 		return defaultPoolSize;
 	}
 
+	public AbstractHttpWrapper setCookiesFromBrowser() {
+		return setCookiesFromBrowser(TS.browser().getDriver().manage().getCookies());
+	}
+
 	/**
 	 * Sets the cookies from browser.
 	 *
@@ -676,16 +680,17 @@ public abstract class AbstractHttpWrapper {
 		this.setShareState(false);
 		if (null != browserCookies) {
 			final Iterator<org.openqa.selenium.Cookie> iter = browserCookies.iterator();
+			final CookieStore cookieStore = this.getDefaultCookieStore();
 			while (iter.hasNext()) {
 				final org.openqa.selenium.Cookie c = iter.next();
 				final BasicClientCookie basicClientCookie = new BasicClientCookie(c.getName(), c.getValue());
 				basicClientCookie.setDomain(c.getDomain());
 				basicClientCookie.setExpiryDate(c.getExpiry());
 				basicClientCookie.setPath(c.getPath());
-				this.getCookieStore().addCookie(basicClientCookie);
+				cookieStore.addCookie(basicClientCookie);
 				TS.log().trace("Add cookie " + c.getName() + " = " + c.getValue());
 			}
-			setCookieStore(this.getCookieStore());
+			setCookieStore(cookieStore);
 		}
 		return this;
 	}

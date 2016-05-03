@@ -20,7 +20,7 @@ public class ParamLoader {
 	private PropertiesConfiguration paramsFromProperties = null;
 
 	/** The Constant fieldPrefix. */
-	private static final String fieldPrefix = "param.";
+	private static final String fieldPrefix = "param_";
 
 	/** The path to param prop file. */
 	private final String pathToParamPropFile;
@@ -88,7 +88,7 @@ public class ParamLoader {
 				// getCustomParamProperties
 				final PropertiesConfiguration config = getCustomParamProperties(f);
 
-				String filterSchema = (String) config.getProperty("param.usefilterSchema");
+				String filterSchema = (String) config.getProperty("param_usefilterSchema");
 				if (null == filterSchema || filterSchema.length() == 0) {
 					filterSchema = "NOT_USED";
 				}
