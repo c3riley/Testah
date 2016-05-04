@@ -569,8 +569,10 @@ public class ResponseDto {
 	 *
 	 * @param requestUsed
 	 *            the new request used
+	 * @return the response dto
 	 */
-	public void setRequestUsed(final AbstractRequestDto requestUsed) {
+	public ResponseDto setRequestUsed(final AbstractRequestDto requestUsed) {
 		this.requestUsed = requestUsed;
+		return this;
 	}
 }

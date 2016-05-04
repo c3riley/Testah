@@ -236,6 +236,10 @@ public abstract class AbstractBrowser {
 		return new WebElementWrapperV1(by, getWebElementNative(by, false), this);
 	}
 
+	public AbstractWebElementWrapper getWebElement(final By by, final int waitIterationCount) {
+		return new WebElementWrapperV1(by, getWebElementNative(by, false, waitIterationCount), this);
+	}
+
 	/**
 	 * Gets the webelement no wait.
 	 *
@@ -257,6 +261,14 @@ public abstract class AbstractBrowser {
 	public List<AbstractWebElementWrapper> getWebElements(final By by) {
 		final List<AbstractWebElementWrapper> lst = new ArrayList<AbstractWebElementWrapper>();
 		for (final WebElement e : getWebElementsNative(by, false)) {
+			lst.add(new WebElementWrapperV1(by, e, this));
+		}
+		return lst;
+	}
+
+	public List<AbstractWebElementWrapper> getWebElements(final By by, final int waitIterationCount) {
+		final List<AbstractWebElementWrapper> lst = new ArrayList<AbstractWebElementWrapper>();
+		for (final WebElement e : getWebElementsNative(by, false, waitIterationCount)) {
 			lst.add(new WebElementWrapperV1(by, e, this));
 		}
 		return lst;
@@ -691,6 +703,10 @@ public abstract class AbstractBrowser {
 		return this;
 	}
 
+	private WebElement getWebElementNative(final By by, final boolean noWait) {
+		return getWebElementNative(by, noWait, elementWaitTime);
+	}
+
 	/**
 	 * Gets the web element native.
 	 *
@@ -700,10 +716,10 @@ public abstract class AbstractBrowser {
 	 *            the no wait
 	 * @return the web element native
 	 */
-	private WebElement getWebElementNative(final By by, final boolean noWait) {
+	private WebElement getWebElementNative(final By by, final boolean noWait, final int waitIterationCount) {
 		String error = "";
 		WebElement element = null;
-		for (int i = 1; i <= elementWaitTime; i++) {
+		for (int i = 1; i <= waitIterationCount; i++) {
 			try {
 				element = driver.findElement(by);
 				break;
@@ -719,6 +735,10 @@ public abstract class AbstractBrowser {
 		return element;
 	}
 
+	private List<WebElement> getWebElementsNative(final By by, final boolean noWait) {
+		return getWebElementsNative(by, noWait, elementWaitTime);
+	}
+
 	/**
 	 * Gets the web elements native.
 	 *
@@ -728,10 +748,10 @@ public abstract class AbstractBrowser {
 	 *            the no wait
 	 * @return the web elements native
 	 */
-	private List<WebElement> getWebElementsNative(final By by, final boolean noWait) {
+	private List<WebElement> getWebElementsNative(final By by, final boolean noWait, final int waitIterationCount) {
 		String error = "";
 		List<WebElement> lst = new ArrayList<WebElement>();
-		for (int i = 1; i <= elementWaitTime; i++) {
+		for (int i = 1; i <= waitIterationCount; i++) {
 			error = "";
 			try {
 				lst = driver.findElements(by);

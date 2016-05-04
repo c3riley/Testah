@@ -35,8 +35,9 @@ public abstract class AbstractRequestDto {
 		return httpMethod;
 	}
 
-	public void setHttpMethod(final String httpMethod) {
+	public AbstractRequestDto setHttpMethod(final String httpMethod) {
 		this.httpMethod = httpMethod;
+		return this;
 	}
 
 	public void setUri(final String uri) {

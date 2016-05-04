@@ -61,6 +61,7 @@ import org.testah.driver.http.requests.PutRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
+
 /**
  * The Class AbstractHttpWrapper.
  */
@@ -306,6 +307,15 @@ public abstract class AbstractHttpWrapper {
 		}
 	}
 
+	/**
+	 * Gets the response dto.
+	 *
+	 * @param response
+	 *            the response
+	 * @param request
+	 *            the request
+	 * @return the response dto
+	 */
 	public ResponseDto getResponseDto(final HttpResponse response, final AbstractRequestDto request) {
 		if (null != response) {
 			try {
@@ -664,6 +674,11 @@ public abstract class AbstractHttpWrapper {
 		return defaultPoolSize;
 	}
 
+	/**
+	 * Sets the cookies from browser.
+	 *
+	 * @return the abstract http wrapper
+	 */
 	public AbstractHttpWrapper setCookiesFromBrowser() {
 		return setCookiesFromBrowser(TS.browser().getDriver().manage().getCookies());
 	}
@@ -772,9 +787,11 @@ public abstract class AbstractHttpWrapper {
 	 *
 	 * @param headers
 	 *            the new headers
+	 * @return the abstract http wrapper
 	 */
-	public void setHeaders(final Header[] headers) {
+	public AbstractHttpWrapper setHeaders(final Header[] headers) {
 		this.headers = headers;
+		return this;
 	}
 
 	/**
@@ -984,9 +1001,12 @@ public abstract class AbstractHttpWrapper {
 	 *
 	 * @param responseParserFactory
 	 *            the new response parser factory
+	 * @return the abstract http wrapper
 	 */
-	public void setResponseParserFactory(final HttpMessageParserFactory<HttpResponse> responseParserFactory) {
+	public AbstractHttpWrapper setResponseParserFactory(
+			final HttpMessageParserFactory<HttpResponse> responseParserFactory) {
 		this.responseParserFactory = responseParserFactory;
+		return this;
 	}
 
 	/**
@@ -1003,9 +1023,11 @@ public abstract class AbstractHttpWrapper {
 	 *
 	 * @param dnsResolver
 	 *            the new dns resolver
+	 * @return the abstract http wrapper
 	 */
-	public void setDnsResolver(final DnsResolver dnsResolver) {
+	public AbstractHttpWrapper setDnsResolver(final DnsResolver dnsResolver) {
 		this.dnsResolver = dnsResolver;
+		return this;
 	}
 
 	/**
@@ -1022,9 +1044,12 @@ public abstract class AbstractHttpWrapper {
 	 *
 	 * @param requestWriterFactory
 	 *            the new request writer factory
+	 * @return the abstract http wrapper
 	 */
-	public void setRequestWriterFactory(final HttpMessageWriterFactory<HttpRequest> requestWriterFactory) {
+	public AbstractHttpWrapper setRequestWriterFactory(
+			final HttpMessageWriterFactory<HttpRequest> requestWriterFactory) {
 		this.requestWriterFactory = requestWriterFactory;
+		return this;
 	}
 
 	/**
@@ -1041,9 +1066,11 @@ public abstract class AbstractHttpWrapper {
 	 *
 	 * @param ignoreHttpError
 	 *            the new ignore http error
+	 * @return the abstract http wrapper
 	 */
-	public void setIgnoreHttpError(final boolean ignoreHttpError) {
+	public AbstractHttpWrapper setIgnoreHttpError(final boolean ignoreHttpError) {
 		this.ignoreHttpError = ignoreHttpError;
+		return this;
 	}
 
 	/**
@@ -1060,9 +1087,11 @@ public abstract class AbstractHttpWrapper {
 	 *
 	 * @param trustAllCerts
 	 *            the new trust all certs
+	 * @return the abstract http wrapper
 	 */
-	public void setTrustAllCerts(final boolean trustAllCerts) {
+	public AbstractHttpWrapper setTrustAllCerts(final boolean trustAllCerts) {
 		this.trustAllCerts = trustAllCerts;
+		return this;
 	}
 
 }

@@ -125,11 +125,21 @@ public abstract class AbstractWebElementWrapper {
 		return this;
 	}
 
+	/**
+	 * Assert is displayed.
+	 *
+	 * @return the abstract web element wrapper
+	 */
 	public AbstractWebElementWrapper assertIsDisplayed() {
 		TS.asserts().isTrue("Expecting Element is Displayed", isDisplayed());
 		return this;
 	}
 
+	/**
+	 * Verify is displayed.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean verifyIsDisplayed() {
 		return TS.verify().isTrue("Expecting Element is Displayed", isDisplayed());
 	}
@@ -223,14 +233,33 @@ public abstract class AbstractWebElementWrapper {
 		return null;
 	}
 
+	/**
+	 * Move to.
+	 *
+	 * @return the abstract web element wrapper
+	 */
 	public AbstractWebElementWrapper moveTo() {
 		return moveTo(this);
 	}
 
+	/**
+	 * Move to.
+	 *
+	 * @param elementToMoveTo
+	 *            the element to move to
+	 * @return the abstract web element wrapper
+	 */
 	public AbstractWebElementWrapper moveTo(final By elementToMoveTo) {
 		return moveTo(driver.getWebElement(elementToMoveTo));
 	}
 
+	/**
+	 * Move to.
+	 *
+	 * @param elementToMoveTo
+	 *            the element to move to
+	 * @return the abstract web element wrapper
+	 */
 	public AbstractWebElementWrapper moveTo(final AbstractWebElementWrapper elementToMoveTo) {
 		if (elementIsOk("moveTo", isAutoReport())) {
 			getActionBuilder().moveToElement(elementToMoveTo.getDriverWebElement()).build().perform();
@@ -438,6 +467,10 @@ public abstract class AbstractWebElementWrapper {
 	 */
 	public String getOuterHtml() {
 		return getAttribute("outerHTML");
+	}
+
+	public String getHtml() {
+		return getOuterHtml();
 	}
 
 	/**
@@ -658,7 +691,7 @@ public abstract class AbstractWebElementWrapper {
 	 * @return true, if successful
 	 */
 	public boolean verifyElementWithIn(final By locator) {
-		return (null != getElementWithIn(by, false, false));
+		return (null != getElementWithIn(locator, false, false));
 	}
 
 	/**
@@ -756,6 +789,37 @@ public abstract class AbstractWebElementWrapper {
 			TS.log().debug(e);
 		}
 		TS.asserts().isNull("Expected Element[" + by + "] to be gone or not displayed", getDriverWebElement());
+		return this;
+	}
+
+	/**
+	 * Wait till is displayed.
+	 *
+	 * @return the abstract web element wrapper
+	 */
+	public AbstractWebElementWrapper waitTillIsDisplayed() {
+		return waitTillIsDisplayed(timeout);
+	}
+
+	/**
+	 * Wait till is displayed.
+	 *
+	 * @param timeout
+	 *            the timeout
+	 * @return the abstract web element wrapper
+	 */
+	public AbstractWebElementWrapper waitTillIsDisplayed(final int timeout) {
+		try {
+			for (int i = 1; i <= timeout; i++) {
+				if (null != getDriverWebElement() && isDisplayed(false)) {
+					break;
+				}
+				TS.util().pause("waitTillIsDisplayed", i);
+			}
+		} catch (final Exception e) {
+			TS.log().debug(e);
+		}
+		TS.asserts().isTrue("Expected Element[" + by + "] to be displayed", isDisplayed(false));
 		return this;
 	}
 
