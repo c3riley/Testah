@@ -22,7 +22,8 @@ import org.testah.driver.web.element.AbstractWebElementWrapper;
 import org.testah.driver.web.element.WebElementWrapperV1;
 
 /**
- * The Class AbstractBrowser.
+ * The Class AbstractBrowser wraps Webdriver Api implementation with many
+ * macrotized methods to reduce code in tests.
  */
 public abstract class AbstractBrowser {
 
@@ -70,8 +71,10 @@ public abstract class AbstractBrowser {
 
 	/**
 	 * Close.
+	 *
+	 * @return the abstract browser
 	 */
-	public void close() {
+	public AbstractBrowser close() {
 		if (null != driver) {
 			try {
 				driver.close();
@@ -81,7 +84,7 @@ public abstract class AbstractBrowser {
 				TS.log().warn("issue closing browser", e);
 			}
 		}
-
+		return this;
 	}
 
 	/**
@@ -207,7 +210,7 @@ public abstract class AbstractBrowser {
 	 *            the web element
 	 * @return the webelement
 	 */
-	public AbstractWebElementWrapper getWebelement(final AbstractWebElementWrapper webElement) {
+	public AbstractWebElementWrapper getWebElement(final AbstractWebElementWrapper webElement) {
 		return new WebElementWrapperV1(webElement.getBy(), getWebElementNative(webElement.getBy(), false), this);
 	}
 
@@ -218,7 +221,7 @@ public abstract class AbstractBrowser {
 	 *            the web element
 	 * @return the webelement no wait
 	 */
-	public AbstractWebElementWrapper getWebelementNoWait(final AbstractWebElementWrapper webElement) {
+	public AbstractWebElementWrapper getWebElementNoWait(final AbstractWebElementWrapper webElement) {
 		return new WebElementWrapperV1(webElement.getBy(), getWebElementNative(webElement.getBy(), true), this);
 	}
 
@@ -229,8 +232,12 @@ public abstract class AbstractBrowser {
 	 *            the by
 	 * @return the webelement
 	 */
-	public AbstractWebElementWrapper getWebelement(final By by) {
+	public AbstractWebElementWrapper getWebElement(final By by) {
 		return new WebElementWrapperV1(by, getWebElementNative(by, false), this);
+	}
+
+	public AbstractWebElementWrapper getWebElement(final By by, final int waitIterationCount) {
+		return new WebElementWrapperV1(by, getWebElementNative(by, false, waitIterationCount), this);
 	}
 
 	/**
@@ -240,7 +247,7 @@ public abstract class AbstractBrowser {
 	 *            the by
 	 * @return the webelement no wait
 	 */
-	public AbstractWebElementWrapper getWebelementNoWait(final By by) {
+	public AbstractWebElementWrapper getWebElementNoWait(final By by) {
 		return new WebElementWrapperV1(by, getWebElementNative(by, true), this);
 	}
 
@@ -254,6 +261,14 @@ public abstract class AbstractBrowser {
 	public List<AbstractWebElementWrapper> getWebElements(final By by) {
 		final List<AbstractWebElementWrapper> lst = new ArrayList<AbstractWebElementWrapper>();
 		for (final WebElement e : getWebElementsNative(by, false)) {
+			lst.add(new WebElementWrapperV1(by, e, this));
+		}
+		return lst;
+	}
+
+	public List<AbstractWebElementWrapper> getWebElements(final By by, final int waitIterationCount) {
+		final List<AbstractWebElementWrapper> lst = new ArrayList<AbstractWebElementWrapper>();
+		for (final WebElement e : getWebElementsNative(by, false, waitIterationCount)) {
 			lst.add(new WebElementWrapperV1(by, e, this));
 		}
 		return lst;
@@ -381,9 +396,11 @@ public abstract class AbstractBrowser {
 	 *
 	 * @param driver
 	 *            the new driver
+	 * @return the abstract browser
 	 */
-	public void setDriver(final WebDriver driver) {
+	public AbstractBrowser setDriver(final WebDriver driver) {
 		this.driver = driver;
+		return this;
 	}
 
 	/**
@@ -391,9 +408,11 @@ public abstract class AbstractBrowser {
 	 *
 	 * @param elementWaitTime
 	 *            the new element wait time
+	 * @return the abstract browser
 	 */
-	public void setElementWaitTime(final int elementWaitTime) {
+	public AbstractBrowser setElementWaitTime(final int elementWaitTime) {
 		this.elementWaitTime = elementWaitTime;
+		return this;
 	}
 
 	/**
@@ -448,10 +467,22 @@ public abstract class AbstractBrowser {
 	 */
 	public abstract AbstractBrowser stopService() throws IOException;
 
+	/**
+	 * Take html snapshot.
+	 *
+	 * @return the string
+	 */
 	public String takeHtmlSnapshot() {
 		return takeHtmlSnapshot(TS.params().getOutput());
 	}
 
+	/**
+	 * Take html snapshot.
+	 *
+	 * @param path
+	 *            the path
+	 * @return the string
+	 */
 	public String takeHtmlSnapshot(final String path) {
 		try {
 			File f = new File(path);
@@ -672,6 +703,10 @@ public abstract class AbstractBrowser {
 		return this;
 	}
 
+	private WebElement getWebElementNative(final By by, final boolean noWait) {
+		return getWebElementNative(by, noWait, elementWaitTime);
+	}
+
 	/**
 	 * Gets the web element native.
 	 *
@@ -681,10 +716,10 @@ public abstract class AbstractBrowser {
 	 *            the no wait
 	 * @return the web element native
 	 */
-	private WebElement getWebElementNative(final By by, final boolean noWait) {
+	private WebElement getWebElementNative(final By by, final boolean noWait, final int waitIterationCount) {
 		String error = "";
 		WebElement element = null;
-		for (int i = 1; i <= elementWaitTime; i++) {
+		for (int i = 1; i <= waitIterationCount; i++) {
 			try {
 				element = driver.findElement(by);
 				break;
@@ -700,6 +735,10 @@ public abstract class AbstractBrowser {
 		return element;
 	}
 
+	private List<WebElement> getWebElementsNative(final By by, final boolean noWait) {
+		return getWebElementsNative(by, noWait, elementWaitTime);
+	}
+
 	/**
 	 * Gets the web elements native.
 	 *
@@ -709,10 +748,10 @@ public abstract class AbstractBrowser {
 	 *            the no wait
 	 * @return the web elements native
 	 */
-	private List<WebElement> getWebElementsNative(final By by, final boolean noWait) {
+	private List<WebElement> getWebElementsNative(final By by, final boolean noWait, final int waitIterationCount) {
 		String error = "";
 		List<WebElement> lst = new ArrayList<WebElement>();
-		for (int i = 1; i <= elementWaitTime; i++) {
+		for (int i = 1; i <= waitIterationCount; i++) {
 			error = "";
 			try {
 				lst = driver.findElements(by);
@@ -785,7 +824,7 @@ public abstract class AbstractBrowser {
 	 * @return the text
 	 */
 	public String getText() {
-		return getWebelement(By.tagName("body")).getText();
+		return getWebElement(By.tagName("body")).getText();
 	}
 
 	/**
@@ -846,6 +885,11 @@ public abstract class AbstractBrowser {
 		return switchToWindow(pageTitle, true);
 	}
 
+	/**
+	 * Gets the html.
+	 *
+	 * @return the html
+	 */
 	public String getHtml() {
 		return driver.findElement(By.tagName("html")).getAttribute("outerHTML");
 	}
@@ -878,4 +922,5 @@ public abstract class AbstractBrowser {
 		return this;
 
 	}
+
 }

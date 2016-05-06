@@ -2,6 +2,7 @@ package org.testah.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 import org.testah.TS;
 
 import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -407,6 +409,64 @@ public class SshUtil {
 	public SshUtil setPemFile(final String pemFile) {
 		this.pemFile = pemFile;
 		return this;
+	}
+
+	public String runExec(final Session session, final String command) {
+		try {
+			if (!session.isConnected()) {
+				session.connect();
+			}
+
+			final Channel channel = session.openChannel("exec");
+			if (isVerbose()) {
+				TS.log().info("command: " + command);
+			}
+			((ChannelExec) channel).setCommand(command);
+
+			// channel.setInputStream(System.in);
+			channel.setInputStream(null);
+
+			// channel.setOutputStream(System.out);
+
+			// FileOutputStream fos=new FileOutputStream("/tmp/stderr");
+			// ((ChannelExec)channel).setErrStream(fos);
+			((ChannelExec) channel).setErrStream(System.err);
+
+			final InputStream in = channel.getInputStream();
+
+			channel.connect();
+			final StringBuffer sb = new StringBuffer();
+			final byte[] tmp = new byte[1024];
+			String msg;
+			while (true) {
+				while (in.available() > 0) {
+					final int i = in.read(tmp, 0, 1024);
+					if (i < 0)
+						break;
+					msg = new String(tmp, 0, i);
+					sb.append(msg);
+					if (isVerbose()) {
+						TS.log().info(msg);
+					}
+				}
+				if (channel.isClosed()) {
+					if (in.available() > 0)
+						continue;
+					TS.log().info("exit-status: " + channel.getExitStatus());
+					break;
+				}
+				try {
+					Thread.sleep(1000);
+				} catch (final Exception ee) {
+				}
+			}
+			channel.disconnect();
+			session.disconnect();
+			return sb.toString();
+		} catch (final Exception e) {
+			TS.log().error(e);
+		}
+		return "";
 	}
 
 }

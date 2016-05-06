@@ -12,7 +12,8 @@ import org.testah.driver.web.browser.AbstractBrowser;
 import org.testah.framework.dto.StepAction;
 
 /**
- * The Class AbstractWebElementWrapper.
+ * The Class AbstractWebElementWrapper is designed to wrap Webdriver WebElements
+ * and provide for more macrotized methods and chaining for less code in tests.
  */
 public abstract class AbstractWebElementWrapper {
 
@@ -124,11 +125,21 @@ public abstract class AbstractWebElementWrapper {
 		return this;
 	}
 
+	/**
+	 * Assert is displayed.
+	 *
+	 * @return the abstract web element wrapper
+	 */
 	public AbstractWebElementWrapper assertIsDisplayed() {
 		TS.asserts().isTrue("Expecting Element is Displayed", isDisplayed());
 		return this;
 	}
 
+	/**
+	 * Verify is displayed.
+	 *
+	 * @return true, if successful
+	 */
 	public boolean verifyIsDisplayed() {
 		return TS.verify().isTrue("Expecting Element is Displayed", isDisplayed());
 	}
@@ -222,14 +233,33 @@ public abstract class AbstractWebElementWrapper {
 		return null;
 	}
 
+	/**
+	 * Move to.
+	 *
+	 * @return the abstract web element wrapper
+	 */
 	public AbstractWebElementWrapper moveTo() {
 		return moveTo(this);
 	}
 
+	/**
+	 * Move to.
+	 *
+	 * @param elementToMoveTo
+	 *            the element to move to
+	 * @return the abstract web element wrapper
+	 */
 	public AbstractWebElementWrapper moveTo(final By elementToMoveTo) {
-		return moveTo(driver.getWebelement(elementToMoveTo));
+		return moveTo(driver.getWebElement(elementToMoveTo));
 	}
 
+	/**
+	 * Move to.
+	 *
+	 * @param elementToMoveTo
+	 *            the element to move to
+	 * @return the abstract web element wrapper
+	 */
 	public AbstractWebElementWrapper moveTo(final AbstractWebElementWrapper elementToMoveTo) {
 		if (elementIsOk("moveTo", isAutoReport())) {
 			getActionBuilder().moveToElement(elementToMoveTo.getDriverWebElement()).build().perform();
@@ -297,7 +327,7 @@ public abstract class AbstractWebElementWrapper {
 	 * @return the elements with in
 	 */
 	public List<AbstractWebElementWrapper> getElementsWithIn(final By locator) {
-		return getElementsWithIn(by, false, true);
+		return getElementsWithIn(locator, false, true);
 	}
 
 	/**
@@ -342,7 +372,7 @@ public abstract class AbstractWebElementWrapper {
 	 * @return the elements with in no wait
 	 */
 	public List<AbstractWebElementWrapper> getElementsWithInNoWait(final By locator) {
-		return getElementsWithIn(by, true, true);
+		return getElementsWithIn(locator, true, true);
 	}
 
 	/**
@@ -437,6 +467,10 @@ public abstract class AbstractWebElementWrapper {
 	 */
 	public String getOuterHtml() {
 		return getAttribute("outerHTML");
+	}
+
+	public String getHtml() {
+		return getOuterHtml();
 	}
 
 	/**
@@ -565,7 +599,7 @@ public abstract class AbstractWebElementWrapper {
 	 */
 	public AbstractWebElementWrapper mouseOverAndClick(final By elementToClick) {
 		try {
-			final AbstractWebElementWrapper clickElement = driver.getWebelement(elementToClick);
+			final AbstractWebElementWrapper clickElement = driver.getWebElement(elementToClick);
 			if (clickElement.elementIsOk("mouseOverAndClick", true)) {
 				if (elementIsOk("mouseOver", isAutoReport())) {
 					final Actions builder = new Actions(driver.getDriver());
@@ -646,7 +680,7 @@ public abstract class AbstractWebElementWrapper {
 	 * @return true, if successful
 	 */
 	public boolean verfifyElementsWithIn(final By locator) {
-		return (getElementsWithIn(by, true, false).size() > 0);
+		return (getElementsWithIn(locator, true, false).size() > 0);
 	}
 
 	/**
@@ -657,7 +691,7 @@ public abstract class AbstractWebElementWrapper {
 	 * @return true, if successful
 	 */
 	public boolean verifyElementWithIn(final By locator) {
-		return (null != getElementWithIn(by, false, false));
+		return (null != getElementWithIn(locator, false, false));
 	}
 
 	/**
@@ -714,7 +748,14 @@ public abstract class AbstractWebElementWrapper {
 	}
 
 	/**
-	 * Wait till gone.
+	 * Wait till gone will wait up to the timeout, default value pulled from
+	 * Testah properties, for the element to no longer be found or be displayed.
+	 * Types of usecases where this would be called is if clicking a close
+	 * button, and wait for it to go away before moving forward.
+	 * <p>
+	 * Once timeout is exceeded or the element is not found or not displated an
+	 * assert will be triggered since this methods assumes you want it to no
+	 * longer to be found.
 	 *
 	 * @return the abstract web element wrapper
 	 */
@@ -723,7 +764,14 @@ public abstract class AbstractWebElementWrapper {
 	}
 
 	/**
-	 * Wait till gone.
+	 * Wait till gone will wait up to the timeout for the element to no longer
+	 * be found or be displayed. Types of usecases where this would be called is
+	 * if clicking a close button, and wait for it to go away before moving
+	 * forward.
+	 * <p>
+	 * Once timeout is exceeded or the element is not found or not displated an
+	 * assert will be triggered since this methods assumes you want it to no
+	 * longer to be found.
 	 *
 	 * @param timeout
 	 *            the timeout
@@ -741,6 +789,37 @@ public abstract class AbstractWebElementWrapper {
 			TS.log().debug(e);
 		}
 		TS.asserts().isNull("Expected Element[" + by + "] to be gone or not displayed", getDriverWebElement());
+		return this;
+	}
+
+	/**
+	 * Wait till is displayed.
+	 *
+	 * @return the abstract web element wrapper
+	 */
+	public AbstractWebElementWrapper waitTillIsDisplayed() {
+		return waitTillIsDisplayed(timeout);
+	}
+
+	/**
+	 * Wait till is displayed.
+	 *
+	 * @param timeout
+	 *            the timeout
+	 * @return the abstract web element wrapper
+	 */
+	public AbstractWebElementWrapper waitTillIsDisplayed(final int timeout) {
+		try {
+			for (int i = 1; i <= timeout; i++) {
+				if (null != getDriverWebElement() && isDisplayed(false)) {
+					break;
+				}
+				TS.util().pause("waitTillIsDisplayed", i);
+			}
+		} catch (final Exception e) {
+			TS.log().debug(e);
+		}
+		TS.asserts().isTrue("Expected Element[" + by + "] to be displayed", isDisplayed(false));
 		return this;
 	}
 

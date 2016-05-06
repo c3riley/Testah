@@ -14,10 +14,18 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
+
+/**
+ * The Class GoogleChromeBrowser.
+ */
 public class GoogleChromeBrowser extends AbstractBrowser {
 
+	/** The service. */
 	private ChromeDriverService service = null;
 
+	/* (non-Javadoc)
+	 * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
+	 */
 	public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
 		if (null == service) {
 			return new ChromeDriver(capabilities);
@@ -26,10 +34,16 @@ public class GoogleChromeBrowser extends AbstractBrowser {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
+	 */
 	public AbstractBrowser getDriverBinay() {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.testah.driver.web.browser.AbstractBrowser#startService()
+	 */
 	public AbstractBrowser startService() throws IOException {
 		service = new ChromeDriverService.Builder().usingDriverExecutable(new File(getChromePath())).usingAnyFreePort()
 				.withLogFile(File.createTempFile("googleChromeLog", ".log")).build();
@@ -37,6 +51,9 @@ public class GoogleChromeBrowser extends AbstractBrowser {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities()
+	 */
 	public DesiredCapabilities createCapabilities() {
 		final DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 
@@ -60,6 +77,11 @@ public class GoogleChromeBrowser extends AbstractBrowser {
 		return capabilities;
 	}
 
+	/**
+	 * Gets the chrome path.
+	 *
+	 * @return the chrome path
+	 */
 	private String getChromePath() {
 
 		String binPath = TS.params().getWebDriver_chromeDriverBinary();
@@ -82,6 +104,9 @@ public class GoogleChromeBrowser extends AbstractBrowser {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.testah.driver.web.browser.AbstractBrowser#stopService()
+	 */
 	public AbstractBrowser stopService() throws IOException {
 		if (null != service) {
 			service.stop();

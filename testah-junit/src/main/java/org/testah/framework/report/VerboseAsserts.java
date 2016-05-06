@@ -1,5 +1,7 @@
 package org.testah.framework.report;
 
+import java.util.Set;
+
 import org.hamcrest.Matcher;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -1313,6 +1315,102 @@ public class VerboseAsserts {
 			return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
 		} catch (final AssertionError e) {
 			final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expected, actual, e);
+			if (getThrowExceptionOnFail()) {
+				throw e;
+			}
+			return rtn;
+		}
+	}
+
+	/**
+	 * Checks if is empty.
+	 *
+	 * @param message
+	 *            the message
+	 * @param actual
+	 *            the actual
+	 * @return true, if is empty
+	 */
+	public boolean isEmpty(final String message, final Set<?> actual) {
+		try {
+			Assert.assertNotNull(message, actual);
+			Assert.assertTrue(message + " - Is Empty", actual.isEmpty());
+			return addAssertHistory(message, true, "isEmpty", true, actual);
+		} catch (final AssertionError e) {
+			final boolean rtn = addAssertHistory(message, false, "isEmpty", true, actual, e);
+			if (getThrowExceptionOnFail()) {
+				throw e;
+			}
+			return rtn;
+		}
+	}
+
+	/**
+	 * Checks if is not empty.
+	 *
+	 * @param message
+	 *            the message
+	 * @param actual
+	 *            the actual
+	 * @return true, if is not empty
+	 */
+	public boolean isNotEmpty(final String message, final Set<?> actual) {
+		try {
+			Assert.assertNotNull(message, actual);
+			Assert.assertFalse(message + " - Is Not Empty", actual.isEmpty());
+			return addAssertHistory(message, true, "isNotEmpty", true, actual);
+		} catch (final AssertionError e) {
+			final boolean rtn = addAssertHistory(message, false, "isNotEmpty", true, actual, e);
+			if (getThrowExceptionOnFail()) {
+				throw e;
+			}
+			return rtn;
+		}
+	}
+
+	/**
+	 * Checks if is greater than.
+	 *
+	 * @param message
+	 *            the message
+	 * @param valueToBeGreaterThan
+	 *            the value to be greater than
+	 * @param actual
+	 *            the actual
+	 * @return true, if is greater than
+	 */
+	public boolean isGreaterThan(final String message, final int valueToBeGreaterThan, final int actual) {
+		try {
+			Assert.assertTrue(message + " - actual[" + actual + "] is greaater than " + valueToBeGreaterThan,
+					valueToBeGreaterThan < actual);
+			return addAssertHistory(message, true, "isGreaterThan", true, actual);
+		} catch (final AssertionError e) {
+			final boolean rtn = addAssertHistory(message, false, "isGreaterThan", true, actual, e);
+			if (getThrowExceptionOnFail()) {
+				throw e;
+			}
+			return rtn;
+		}
+	}
+
+	/**
+	 * Checks if is less than.
+	 *
+	 * @param message
+	 *            the message
+	 * @param valueToBeLessThan
+	 *            the value to be less than
+	 * @param actual
+	 *            the actual
+	 * @return true, if is less than
+	 */
+	public boolean isLessThan(final String message, final int valueToBeLessThan, final int actual) {
+		try {
+			Assert.assertTrue(message + " - actual[" + actual + "] is less than " + valueToBeLessThan,
+					valueToBeLessThan > actual);
+			return addAssertHistory(message, true, "isLessThan", true, actual);
+		} catch (final AssertionError e) {
+			final boolean rtn = addAssertHistory(message, false, "isLessThan", true, actual, e);
 			if (getThrowExceptionOnFail()) {
 				throw e;
 			}

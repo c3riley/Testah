@@ -10,18 +10,32 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
+
+/**
+ * The Class PhantomJsBrowser.
+ */
 public class PhantomJsBrowser extends AbstractBrowser {
 
+	/** The service. */
 	private PhantomJSDriverService service = null;
 
+	/* (non-Javadoc)
+	 * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
+	 */
 	public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
 		return new PhantomJSDriver(service, capabilities);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
+	 */
 	public AbstractBrowser getDriverBinay() {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.testah.driver.web.browser.AbstractBrowser#startService()
+	 */
 	public AbstractBrowser startService() throws IOException {
 		service = new PhantomJSDriverService.Builder().usingPhantomJSExecutable(new File(getPhantomJsBinPath()))
 				.usingAnyFreePort().usingCommandLineArguments(new String[] { "--ignore-ssl-errors=true" }).build();
@@ -29,6 +43,9 @@ public class PhantomJsBrowser extends AbstractBrowser {
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities()
+	 */
 	public DesiredCapabilities createCapabilities() {
 		final DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
 
@@ -42,6 +59,11 @@ public class PhantomJsBrowser extends AbstractBrowser {
 		return capabilities;
 	}
 
+	/**
+	 * Gets the phantom js bin path.
+	 *
+	 * @return the phantom js bin path
+	 */
 	private String getPhantomJsBinPath() {
 
 		String binPath = TS.params().getWebDriver_phantomJsDriverBinary();
@@ -64,6 +86,9 @@ public class PhantomJsBrowser extends AbstractBrowser {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.testah.driver.web.browser.AbstractBrowser#stopService()
+	 */
 	public AbstractBrowser stopService() throws IOException {
 		if (null != service) {
 			service.stop();
