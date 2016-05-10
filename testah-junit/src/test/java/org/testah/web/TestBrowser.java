@@ -144,7 +144,7 @@ public class TestBrowser extends BrowserTestPlan {
 	@TestCase(name = "test3")
 	public void testChrome() {
 
-		final AbstractBrowser b = new GoogleChromeBrowser();
+		final AbstractBrowser b = new GoogleChromeBrowser().start();
 		b.start();
 		b.getDriver().get("http://www.google.com");
 		b.goToAndWaitForTitleToChange("http://www.google.com");

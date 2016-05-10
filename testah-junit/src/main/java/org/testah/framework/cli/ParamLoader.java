@@ -97,7 +97,7 @@ public class ParamLoader {
 				String propName;
 				for (final Field field : Params.class.getDeclaredFields()) {
 					if (field.getName().startsWith("filter")) {
-						propName = "filter." + filterSchema + "." + field.getName();
+						propName = "filter_" + filterSchema + "_" + field.getName();
 						propValue = System.getProperty(propName, System.getenv(propName));
 						if (null == propValue) {
 							propValue = config.getProperty(propName);

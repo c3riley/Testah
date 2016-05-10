@@ -61,7 +61,8 @@ public class Params {
 	 * @return true, if is mac
 	 */
 	public static boolean isMac() {
-		if (getOsName().contains("darwin")) {
+		final String os = getOsName();
+		if (os.contains("darwin") || os.contains("mac")) {
 			return true;
 		}
 		return false;
