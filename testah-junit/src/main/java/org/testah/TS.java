@@ -139,7 +139,7 @@ public class TS {
 	 * @return the abstract browser
 	 */
 	public static AbstractBrowser browser() {
-		if (null == _browser) {
+		if (null == _browser || null == _browser.get()) {
 			setBrowser(AbstractBrowser.getDefaultBrowser());
 		}
 		return _browser.get();
@@ -151,7 +151,7 @@ public class TS {
 	 * @return true, if is browser
 	 */
 	public static boolean isBrowser() {
-		return (null != _browser);
+		return (null != _browser && null != _browser.get());
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class TS {
 	public static AbstractBrowser setBrowser(final AbstractBrowser browser) {
 		TS._browser = new ThreadLocal<AbstractBrowser>();
 		TS._browser.set(browser);
-		_browser.get().start();
+		// _browser.get().start();
 		return _browser.get();
 	}
 

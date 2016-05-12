@@ -61,7 +61,6 @@ import org.testah.driver.http.requests.PutRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
-
 /**
  * The Class AbstractHttpWrapper.
  */

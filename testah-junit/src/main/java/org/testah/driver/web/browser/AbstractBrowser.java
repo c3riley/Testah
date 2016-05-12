@@ -296,13 +296,13 @@ public abstract class AbstractBrowser {
 	 */
 	public static AbstractBrowser getDefaultBrowser() {
 		if (TS.params().getBrowser() == BrowserType.PHANTOMJS) {
-			return new PhantomJsBrowser();
+			return new PhantomJsBrowser().start();
 		} else if (TS.params().getBrowser() == BrowserType.FIREFOX) {
-			return new FirefoxBrowser();
+			return new FirefoxBrowser().start();
 		} else if (TS.params().getBrowser() == BrowserType.JBROWSER) {
-			return new JBrowserDriverBrowser();
+			return new JBrowserDriverBrowser().start();
 		} else {
-			return new FirefoxBrowser();
+			return new FirefoxBrowser().start();
 		}
 	}
 

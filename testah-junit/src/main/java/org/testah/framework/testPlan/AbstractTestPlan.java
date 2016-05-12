@@ -213,7 +213,10 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 			if (TS.isBrowser()) {
 
 				if (!TestPlanActor.isResultsInUse()) {
-					TS.browser().close();
+					if (TS.isBrowser()) {
+						TS.browser().close();
+					}
+					TS.setBrowser(null);
 				}
 
 			}

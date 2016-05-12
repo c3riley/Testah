@@ -129,28 +129,28 @@ public class TestFilter {
 				}
 				if (filterByComponent) {
 					filter = filterParams.getFilterByComponent();
-					if (!isFilterCheckOk(meta.tags(), filter)) {
+					if (!isFilterCheckOk(meta.components(), filter)) {
 						TS.log().trace("test[" + test.getName() + "] filtered out by getFilterByComponent");
 						continue;
 					}
 				}
 				if (filterByDevice) {
 					filter = filterParams.getFilterByDevice();
-					if (!isFilterCheckOk(meta.tags(), filter)) {
+					if (!isFilterCheckOk(meta.devices(), filter)) {
 						TS.log().trace("test[" + test.getName() + "] filtered out by getFilterByDevice");
 						continue;
 					}
 				}
 				if (filterByPlatform) {
 					filter = filterParams.getFilterByPlatform();
-					if (!isFilterCheckOk(meta.tags(), filter)) {
+					if (!isFilterCheckOk(meta.platforms(), filter)) {
 						TS.log().trace("test[" + test.getName() + "] filtered out by getFilterByPlatform");
 						continue;
 					}
 				}
 				if (filterByRunType) {
 					filter = filterParams.getFilterByRunType();
-					if (!isFilterCheckOk(meta.tags(), filter)) {
+					if (!isFilterCheckOk(meta.runTypes(), filter)) {
 						TS.log().trace("test[" + test.getName() + "] filtered out by getFilterByRunType");
 						continue;
 					}

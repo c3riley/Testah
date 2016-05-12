@@ -88,49 +88,49 @@ public class TestDtoHelper {
 		if (null != testCaseToFill && null != fillFromTestCase) {
 			testCaseToFill.setId(fillFromTestCase.id());
 
-			if (fillFromTestCase.components().length == 0) {
+			if (null != tpMeta && fillFromTestCase.components().length == 0) {
 				testCaseToFill.setComponents(Arrays.asList(tpMeta.components()));
 			} else {
 				testCaseToFill.setComponents(Arrays.asList(fillFromTestCase.components()));
 			}
 
-			if (fillFromTestCase.relatedLinks().length == 0) {
+			if (null != tpMeta && fillFromTestCase.relatedLinks().length == 0) {
 				testCaseToFill.setRelatedLinks(Arrays.asList(tpMeta.relatedLinks()));
 			} else {
 				testCaseToFill.setRelatedLinks(Arrays.asList(fillFromTestCase.relatedLinks()));
 			}
 
-			if (fillFromTestCase.relatedIds().length == 0) {
+			if (null != tpMeta && fillFromTestCase.relatedIds().length == 0) {
 				testCaseToFill.setRelatedIds(Arrays.asList(tpMeta.relatedIds()));
 			} else {
 				testCaseToFill.setRelatedIds(Arrays.asList(fillFromTestCase.relatedIds()));
 			}
 
-			if (fillFromTestCase.devices().length == 0) {
+			if (null != tpMeta && fillFromTestCase.devices().length == 0) {
 				testCaseToFill.setDevices(Arrays.asList(tpMeta.devices()));
 			} else {
 				testCaseToFill.setDevices(Arrays.asList(fillFromTestCase.devices()));
 			}
 
-			if (fillFromTestCase.platforms().length == 0) {
+			if (null != tpMeta && fillFromTestCase.platforms().length == 0) {
 				testCaseToFill.setPlatforms(Arrays.asList(tpMeta.platforms()));
 			} else {
 				testCaseToFill.setPlatforms(Arrays.asList(fillFromTestCase.platforms()));
 			}
 
-			if (fillFromTestCase.runTypes().length == 0) {
+			if (null != tpMeta && fillFromTestCase.runTypes().length == 0) {
 				testCaseToFill.setRunTypes(Arrays.asList(tpMeta.runTypes()));
 			} else {
 				testCaseToFill.setRunTypes(Arrays.asList(fillFromTestCase.runTypes()));
 			}
 
-			if (fillFromTestCase.tags().length == 0) {
+			if (null != tpMeta && fillFromTestCase.tags().length == 0) {
 				testCaseToFill.setTags(Arrays.asList(tpMeta.tags()));
 			} else {
 				testCaseToFill.setTags(Arrays.asList(fillFromTestCase.tags()));
 			}
 
-			if (fillFromTestCase.testType() == TestType.DEFAULT) {
+			if (null != tpMeta && fillFromTestCase.testType() == TestType.DEFAULT) {
 				testCaseToFill.setTestType(tpMeta.testType());
 			} else {
 				testCaseToFill.setTestType(fillFromTestCase.testType());
@@ -159,7 +159,7 @@ public class TestDtoHelper {
 	public static TestPlanDto createTestPlanDto(final Description desc, final TestPlan meta,
 			final KnownProblem knownProblemFillFrom) {
 		TestPlanDto testPlanToFill = new TestPlanDto();
-		if (null == meta.name() || meta.name().length() == 0) {
+		if (null == meta || null == meta.name() || meta.name().length() == 0) {
 			testPlanToFill.setName(desc.getClassName());
 		} else {
 			testPlanToFill.setName(meta.name());

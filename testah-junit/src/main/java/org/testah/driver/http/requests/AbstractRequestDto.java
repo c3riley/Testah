@@ -2,10 +2,12 @@ package org.testah.driver.http.requests;
 
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.auth.AuthScope;
@@ -116,6 +118,12 @@ public abstract class AbstractRequestDto {
 		credentialsProvider = new BasicCredentialsProvider();
 		final UsernamePasswordCredentials creds = new UsernamePasswordCredentials(userName, password);
 		credentialsProvider.setCredentials(authScope, creds);
+		return this;
+	}
+
+	public AbstractRequestDto addBasicAuth(final String userName, final String password) {
+		final String encoding = Base64.encodeBase64String("test1:test1".getBytes(Charset.forName("UTF-8")));
+		addHeader("Authorization", "Basic " + encoding);
 		return this;
 	}
 
