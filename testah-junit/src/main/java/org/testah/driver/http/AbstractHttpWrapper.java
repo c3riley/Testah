@@ -286,8 +286,10 @@ public abstract class AbstractHttpWrapper {
 				final HttpEntity entity = response.getEntity();
 				responseDto.setEnd().setStatusCode(response.getStatusLine().getStatusCode());
 				responseDto.setStatusText(response.getStatusLine().getReasonPhrase());
-				responseDto.setResponseBytes(EntityUtils.toByteArray(entity));
-				responseDto.setResponseBody(new String(responseDto.getResponseBytes()));
+				if (null != entity) {
+					responseDto.setResponseBytes(EntityUtils.toByteArray(entity));
+					responseDto.setResponseBody(new String(responseDto.getResponseBytes()));
+				}
 				responseDto.setUrl(request.getHttpRequestBase().getURI().toString());
 				responseDto.setHeaders(response.getAllHeaders()).setRequestType(request.getHttpMethod());
 				responseDto.setRequestUsed(request);

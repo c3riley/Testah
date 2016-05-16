@@ -38,7 +38,7 @@ public class TestHttp extends HttpTestPlan {
 
 	@TestCase
 	@Test
-	public void t2() throws ClientProtocolException, IOException {
+	public void testWith2Gets() throws ClientProtocolException, IOException {
 		step("Got to google");
 		final HttpWrapperV1 http = new HttpWrapperV1();
 		http.setHttpClient().doRequestWithAssert(new GetRequestDto("http://www.google.com"));
