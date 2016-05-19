@@ -12,8 +12,8 @@ import org.apache.cxf.helpers.FileUtils;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.reflections.Reflections;
 import org.testah.TS;
+import org.testah.client.dto.TestCaseDto;
 import org.testah.framework.annotations.KnownProblem;
-import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 
 import groovy.lang.GroovyClassLoader;
@@ -181,7 +181,7 @@ public class TestFilter {
 	 *            the test case name
 	 * @return true, if successful
 	 */
-	public boolean filterTestCase(final TestCase meta, final String testCaseName) {
+	public boolean filterTestCase(final TestCaseDto meta, final String testCaseName) {
 		final boolean ok = true;
 		final Params filterParams = TS.params();
 
@@ -217,7 +217,7 @@ public class TestFilter {
 
 			if (filterByUuid) {
 				filter = filterParams.getFilterById();
-				if (!isFilterById(meta.id(), filter)) {
+				if (!isFilterById(meta.getId(), filter)) {
 					TS.log().trace("test[" + testCaseName + "] filtered out by filterByUuid");
 					return false;
 				}
@@ -225,35 +225,35 @@ public class TestFilter {
 
 			if (filterByTag) {
 				filter = filterParams.getFilterByTag();
-				if (!isFilterCheckOk(meta.tags(), filter)) {
+				if (!isFilterCheckOk(meta.getTags(), filter)) {
 					TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByTag");
 					return false;
 				}
 			}
 			if (filterByComponent) {
 				filter = filterParams.getFilterByComponent();
-				if (!isFilterCheckOk(meta.components(), filter)) {
+				if (!isFilterCheckOk(meta.getComponents(), filter)) {
 					TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByComponent");
 					return false;
 				}
 			}
 			if (filterByDevice) {
 				filter = filterParams.getFilterByDevice();
-				if (!isFilterCheckOk(meta.devices(), filter)) {
+				if (!isFilterCheckOk(meta.getDevices(), filter)) {
 					TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByDevice");
 					return false;
 				}
 			}
 			if (filterByPlatform) {
 				filter = filterParams.getFilterByPlatform();
-				if (!isFilterCheckOk(meta.platforms(), filter)) {
+				if (!isFilterCheckOk(meta.getPlatforms(), filter)) {
 					TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByPlatform");
 					return false;
 				}
 			}
 			if (filterByRunType) {
 				filter = filterParams.getFilterByRunType();
-				if (!isFilterCheckOk(meta.runTypes(), filter)) {
+				if (!isFilterCheckOk(meta.getRunTypes(), filter)) {
 					TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByRunType");
 					return false;
 				}
@@ -345,15 +345,9 @@ public class TestFilter {
 	 *            the values
 	 * @return true, if is filter check ok
 	 */
-	private boolean isFilterCheckOk(final String[] ary, final String values) {
+	private boolean isFilterCheckOk(final List<String> lst, final String values) {
 		if (null != values && values.length() > 0) {
 			boolean rtn = false;
-			final List<String> lst;
-			if (null != ary) {
-				lst = Arrays.asList(ary);
-			} else {
-				lst = new ArrayList<String>();
-			}
 			for (final String value : values.split(",")) {
 				if (value.startsWith("~")) {
 					if (lst.contains(value)) {
@@ -367,6 +361,19 @@ public class TestFilter {
 				}
 			}
 			return rtn;
+		}
+		return true; // Filter is Off
+	}
+
+	private boolean isFilterCheckOk(final String[] ary, final String values) {
+		if (null != values && values.length() > 0) {
+			final List<String> lst;
+			if (null != ary) {
+				lst = Arrays.asList(ary);
+			} else {
+				lst = new ArrayList<String>();
+			}
+			return isFilterCheckOk(lst, values);
 		}
 		return true; // Filter is Off
 	}

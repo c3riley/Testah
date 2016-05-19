@@ -104,12 +104,16 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 			 * .contains(description.getMethodName()));
 			 */
 
-			if (!getTestFilter().filterTestCase(description.getAnnotation(TestCase.class), name)) {
+			final KnownProblem kp = description.getAnnotation(KnownProblem.class);
+
+			TestCaseDto test = new TestCaseDto();
+			test = TestDtoHelper.fill(test, description.getAnnotation(TestCase.class), kp,
+					description.getTestClass().getAnnotation(TestPlan.class));
+			if (!getTestFilter().filterTestCase(test, name)) {
 				addIgnoredTest(name, "METADATA_FILTER");
 				Assume.assumeTrue("Filtered out, For details use Trace level logging", false);
 			}
 
-			final KnownProblem kp = description.getAnnotation(KnownProblem.class);
 			if (null != kp) {
 				if (TS.params().getFilterIgnoreKnownProblem()) {
 					addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
