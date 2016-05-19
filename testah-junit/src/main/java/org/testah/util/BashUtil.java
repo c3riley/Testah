@@ -24,6 +24,10 @@ public class BashUtil {
 	/** The error. */
 	private String error = "";
 
+	public static final int DEFAULT_EXIT_VALUE = -999;
+
+	private int exitValue = DEFAULT_EXIT_VALUE;
+
 	/** The bang line. */
 	private String bangLine = "#!/bin/bash";
 
@@ -49,6 +53,7 @@ public class BashUtil {
 	 *             the interrupted exception
 	 */
 	public String executeCommands(final String... commands) throws IOException, InterruptedException {
+		setExitValue(DEFAULT_EXIT_VALUE);
 		final String output = "";
 		final File tempScript = createBashFile(commands);
 		try {
@@ -62,6 +67,7 @@ public class BashUtil {
 				TS.log().debug(getOutput());
 				TS.log().debug(getError());
 			}
+			setExitValue(process.exitValue());
 			process.destroy();
 			process.destroyForcibly();
 		} finally {
@@ -193,5 +199,13 @@ public class BashUtil {
 	 */
 	public void setBashSource(final String bashSource) {
 		this.bashSource = bashSource;
+	}
+
+	public int getExitValue() {
+		return exitValue;
+	}
+
+	public void setExitValue(final int exitValue) {
+		this.exitValue = exitValue;
 	}
 }

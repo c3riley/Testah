@@ -13,165 +13,170 @@ import org.testah.TS;
 import org.testah.client.dto.TestPlanDto;
 import org.testah.framework.cli.Params;
 
-
 /**
  * The Class AbstractFormatter.
  */
 public abstract class AbstractFormatter {
 
-    /** The Constant DEFAULT_PACKAGE. */
-    protected final static String DEFAULT_PACKAGE = "org/testah/templates/";
-    
-    /** The path to template. */
-    protected final String        pathToTemplate;
-    
-    /** The test plan. */
-    protected final TestPlanDto   testPlan;
-    
-    /** The report file. */
-    protected File                reportFile      = null;
+	/** The Constant DEFAULT_PACKAGE. */
+	protected final static String DEFAULT_PACKAGE = "org/testah/templates/";
 
-    /**
-     * Instantiates a new abstract formatter.
-     *
-     * @param testPlan the test plan
-     * @param pathToTemplate the path to template
-     */
-    public AbstractFormatter(final TestPlanDto testPlan, final String pathToTemplate) {
-        this.testPlan = testPlan;
-        this.pathToTemplate = pathToTemplate.replace("//", "/");
-    }
+	/** The path to template. */
+	protected final String pathToTemplate;
 
-    /**
-     * Gets the context base.
-     *
-     * @return the context base
-     */
-    public VelocityContext getContextBase() {
-        VelocityContext context = new VelocityContext();
+	/** The test plan. */
+	protected final TestPlanDto testPlan;
 
-        if (null != testPlan) {
-            context.put("testPlan", testPlan);
-            context.put("util", TS.util());
+	/** The report file. */
+	protected File reportFile = null;
 
-            context = getContext(context);
-        }
+	/**
+	 * Instantiates a new abstract formatter.
+	 *
+	 * @param testPlan
+	 *            the test plan
+	 * @param pathToTemplate
+	 *            the path to template
+	 */
+	public AbstractFormatter(final TestPlanDto testPlan, final String pathToTemplate) {
+		this.testPlan = testPlan;
+		this.pathToTemplate = pathToTemplate.replace("//", "/");
+	}
 
-        return context;
-    }
+	/**
+	 * Gets the context base.
+	 *
+	 * @return the context base
+	 */
+	public VelocityContext getContextBase() {
+		VelocityContext context = new VelocityContext();
 
-    /**
-     * Gets the context.
-     *
-     * @param context the context
-     * @return the context
-     */
-    public abstract VelocityContext getContext(final VelocityContext context);
+		if (null != testPlan) {
+			context.put("testPlan", testPlan);
+			context.put("util", TS.util());
 
-    /**
-     * Gets the report.
-     *
-     * @return the report
-     */
-    public String getReport() {
-        return getReport(getContextBase());
-    }
+			context = getContext(context);
+		}
 
-    /**
-     * Gets the report.
-     *
-     * @param context the context
-     * @return the report
-     */
-    public String getReport(final VelocityContext context) {
+		return context;
+	}
 
-        try {
+	/**
+	 * Gets the context.
+	 *
+	 * @param context
+	 *            the context
+	 * @return the context
+	 */
+	public abstract VelocityContext getContext(final VelocityContext context);
 
-            final VelocityEngine ve = new VelocityEngine();
-            ve.init();
+	/**
+	 * Gets the report.
+	 *
+	 * @return the report
+	 */
+	public String getReport() {
+		return getReport(getContextBase());
+	}
 
-            final InputStream in = this.getClass().getClassLoader().getResourceAsStream(pathToTemplate);
+	/**
+	 * Gets the report.
+	 *
+	 * @param context
+	 *            the context
+	 * @return the report
+	 */
+	public String getReport(final VelocityContext context) {
 
-            final InputStreamReader reader = new InputStreamReader(in);
+		try {
 
-            final StringWriter writer = new StringWriter();
-            ve.evaluate(context, writer, pathToTemplate, reader);
+			final VelocityEngine ve = new VelocityEngine();
+			ve.init();
 
-            return writer.toString();
+			final InputStream in = this.getClass().getClassLoader().getResourceAsStream(pathToTemplate);
 
-        } catch (final Exception e) {
-            TS.log().error(e);
-            throw new RuntimeException("Velocity template", e);
-        }
+			final InputStreamReader reader = new InputStreamReader(in, "UTF-8");
 
-    }
+			final StringWriter writer = new StringWriter();
+			ve.evaluate(context, writer, pathToTemplate, reader);
 
-    /**
-     * Creates the report.
-     *
-     * @return the abstract formatter
-     */
-    public abstract AbstractFormatter createReport();
+			return writer.toString();
 
-    /**
-     * Creates the report.
-     *
-     * @param reportName the report name
-     * @return the abstract formatter
-     */
-    public AbstractFormatter createReport(final String reportName) {
-        try {
-            reportFile = new File(Params.addUserDir(reportName));
-            FileUtils.writeStringToFile(reportFile, getReport());
-        } catch (final IOException e) {
-            TS.log().error("issue creating report: " + reportName, e);
-        }
-        return this;
-    }
+		} catch (final Exception e) {
+			TS.log().error(e);
+			throw new RuntimeException("Velocity template", e);
+		}
 
-    /**
-     * Gets the default package.
-     *
-     * @return the default package
-     */
-    public static String getDefaultPackage() {
-        return DEFAULT_PACKAGE;
-    }
+	}
 
-    /**
-     * Gets the path to template.
-     *
-     * @return the path to template
-     */
-    public String getPathToTemplate() {
-        return pathToTemplate;
-    }
+	/**
+	 * Creates the report.
+	 *
+	 * @return the abstract formatter
+	 */
+	public abstract AbstractFormatter createReport();
 
-    /**
-     * Gets the report file.
-     *
-     * @return the report file
-     */
-    public File getReportFile() {
-        return this.reportFile;
-    }
+	/**
+	 * Creates the report.
+	 *
+	 * @param reportName
+	 *            the report name
+	 * @return the abstract formatter
+	 */
+	public AbstractFormatter createReport(final String reportName) {
+		try {
+			reportFile = new File(Params.addUserDir(reportName));
+			FileUtils.writeStringToFile(reportFile, getReport());
+		} catch (final IOException e) {
+			TS.log().error("issue creating report: " + reportName, e);
+		}
+		return this;
+	}
 
-    /**
-     * Gets the test plan.
-     *
-     * @return the test plan
-     */
-    public TestPlanDto getTestPlan() {
-        return testPlan;
-    }
+	/**
+	 * Gets the default package.
+	 *
+	 * @return the default package
+	 */
+	public static String getDefaultPackage() {
+		return DEFAULT_PACKAGE;
+	}
 
-    /**
-     * Sets the report file.
-     *
-     * @param reportFile the new report file
-     */
-    public void setReportFile(final File reportFile) {
-        this.reportFile = reportFile;
-    }
+	/**
+	 * Gets the path to template.
+	 *
+	 * @return the path to template
+	 */
+	public String getPathToTemplate() {
+		return pathToTemplate;
+	}
+
+	/**
+	 * Gets the report file.
+	 *
+	 * @return the report file
+	 */
+	public File getReportFile() {
+		return this.reportFile;
+	}
+
+	/**
+	 * Gets the test plan.
+	 *
+	 * @return the test plan
+	 */
+	public TestPlanDto getTestPlan() {
+		return testPlan;
+	}
+
+	/**
+	 * Sets the report file.
+	 *
+	 * @param reportFile
+	 *            the new report file
+	 */
+	public void setReportFile(final File reportFile) {
+		this.reportFile = reportFile;
+	}
 
 }

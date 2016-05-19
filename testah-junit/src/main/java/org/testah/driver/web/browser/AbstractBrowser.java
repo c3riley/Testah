@@ -20,6 +20,7 @@ import org.testah.TS;
 import org.testah.client.enums.BrowserType;
 import org.testah.driver.web.element.AbstractWebElementWrapper;
 import org.testah.driver.web.element.WebElementWrapperV1;
+import org.testah.framework.dto.StepAction;
 
 /**
  * The Class AbstractBrowser wraps Webdriver Api implementation with many
@@ -323,7 +324,7 @@ public abstract class AbstractBrowser {
 	 * @return the abstract browser
 	 */
 	public AbstractBrowser goTo(final String uri) {
-		TS.log().info("GoTo: " + uri);
+		StepAction.createInfo("goTo", uri).add();
 		driver.get(uri);
 		return this;
 	}

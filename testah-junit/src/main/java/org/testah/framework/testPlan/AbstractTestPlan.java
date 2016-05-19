@@ -407,7 +407,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 		if (didTestPlanStart() && null != getTestCase()) {
 			stopTestStep();
 			getTestStepThreadLocal().set(testStep.start());
-			TS.log().info("TESTSTEP - " + testStep.getName());
+			TS.log().info("TESTSTEP - " + testStep.getName() + " " + testStep.getDescription());
 		}
 		return getTestStep();
 	}
@@ -433,7 +433,23 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 		if (null == getTestStep()) {
 			return false;
 		}
-		getTestStep().addStepAction(stepAction);
+		if (null != stepAction) {
+			getTestStep().addStepAction(stepAction);
+			final StringBuilder sb = new StringBuilder("StepAction - ");
+			if (null != stepAction.getStatus()) {
+				sb.append("status:" + stepAction.getStatus() + " - ");
+			}
+			if (null != stepAction.getMessage1()) {
+				sb.append(" " + stepAction.getMessage1());
+			}
+			if (null != stepAction.getMessage2()) {
+				sb.append(" " + stepAction.getMessage2());
+			}
+			if (null != stepAction.getMessage3()) {
+				sb.append(" " + stepAction.getMessage3());
+			}
+			TS.log().info(sb.toString());
+		}
 		return true;
 	}
 

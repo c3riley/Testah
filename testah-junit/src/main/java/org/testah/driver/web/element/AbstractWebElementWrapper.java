@@ -666,7 +666,7 @@ public abstract class AbstractWebElementWrapper {
 	 */
 	public AbstractWebElementWrapper typeText(final String value) {
 		if (elementIsOk("typeText", isAutoReport())) {
-			TS.log().debug("By[" + by + "] Type Text: " + value);
+			StepAction.createInfo("typeText", "By[" + by + "] Type Text: " + value).add();
 			webElement.sendKeys(value);
 		}
 		return this;

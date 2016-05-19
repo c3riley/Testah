@@ -225,7 +225,7 @@ public class ParamLoader {
 			try {
 				f.setAccessible(true);
 				if (f.getName().startsWith("filter")) {
-					propName = "filter.DEFAULT." + f.getName();
+					propName = "filter_DEFAULT_" + f.getName();
 				} else {
 					propName = fieldPrefix + f.getName();
 				}
