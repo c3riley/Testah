@@ -54,7 +54,7 @@ public class BashUtil {
 	 */
 	public String executeCommands(final String... commands) throws IOException, InterruptedException {
 		setExitValue(DEFAULT_EXIT_VALUE);
-		final String output = "";
+		setOutput("");
 		final File tempScript = createBashFile(commands);
 		try {
 			final ProcessBuilder pb = new ProcessBuilder("bash", tempScript.toString());
@@ -73,7 +73,7 @@ public class BashUtil {
 		} finally {
 			tempScript.delete();
 		}
-		return output;
+		return getOutput();
 	}
 
 	/**

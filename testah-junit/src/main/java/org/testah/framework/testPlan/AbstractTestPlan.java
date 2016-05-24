@@ -63,13 +63,18 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 	/** The name. */
 	public TestName name = new TestName();
 
+	private boolean assumeTrue = false;
+
 	/** The global timeout. */
 	public TestRule globalTimeout = Timeout.millis(100000L);
+
+	private Description description;
 
 	/** The initialize. */
 	public ExternalResource initialize = new ExternalResource() {
 
 		protected void before() throws Throwable {
+			filterTest(description);
 			initlizeTest();
 		}
 
@@ -92,39 +97,51 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 	public TestWatcher filter = new TestWatcher() {
 
 		public Statement apply(final Statement base, final Description description) {
-			final String name = description.getClassName() + "#" + description.getMethodName();
-
 			/*
-			 * final String onlyRun = System.getProperty("only_run");
-			 * Assume.assumeTrue(onlyRun == null ||
-			 * Arrays.asList(onlyRun.split(","))
-			 * .contains(description.getTestClass().getSimpleName())); final
-			 * String mth = System.getProperty("method"); Assume.assumeTrue(mth
-			 * == null || Arrays.asList(mth.split(","))
-			 * .contains(description.getMethodName()));
+			 * final String name = description.getClassName() + "#" +
+			 * description.getMethodName(); final KnownProblem kp =
+			 * description.getAnnotation(KnownProblem.class);
+			 *
+			 * TestCaseDto test = new TestCaseDto(); test =
+			 * TestDtoHelper.fill(test,
+			 * description.getAnnotation(TestCase.class), kp,
+			 * description.getTestClass().getAnnotation(TestPlan.class)); if
+			 * (!getTestFilter().filterTestCase(test, name)) {
+			 * addIgnoredTest(name, "METADATA_FILTER"); Assume.assumeTrue(
+			 * "Filtered out, For details use Trace level logging", false); }
+			 *
+			 * if (null != kp) { if (TS.params().getFilterIgnoreKnownProblem())
+			 * { addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
+			 * Assume.assumeTrue("Filtered out, KnownProblem found: " +
+			 * kp.description(), false); } }
 			 */
-
-			final KnownProblem kp = description.getAnnotation(KnownProblem.class);
-
-			TestCaseDto test = new TestCaseDto();
-			test = TestDtoHelper.fill(test, description.getAnnotation(TestCase.class), kp,
-					description.getTestClass().getAnnotation(TestPlan.class));
-			if (!getTestFilter().filterTestCase(test, name)) {
-				addIgnoredTest(name, "METADATA_FILTER");
-				Assume.assumeTrue("Filtered out, For details use Trace level logging", false);
-			}
-
-			if (null != kp) {
-				if (TS.params().getFilterIgnoreKnownProblem()) {
-					addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
-					Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description(), false);
-				}
-			}
-
+			setDescription(description);
 			return super.apply(base, description);
 
 		}
 	};
+
+	public void filterTest(final Description description) {
+		final String name = description.getClassName() + "#" + description.getMethodName();
+		final KnownProblem kp = description.getAnnotation(KnownProblem.class);
+		setAssumeTrue(false);
+		TestCaseDto test = new TestCaseDto();
+		test = TestDtoHelper.fill(test, description.getAnnotation(TestCase.class), kp,
+				description.getTestClass().getAnnotation(TestPlan.class));
+		if (!getTestFilter().filterTestCase(test, name)) {
+			addIgnoredTest(name, "METADATA_FILTER");
+			setAssumeTrue(true);
+			Assume.assumeTrue("Filtered out, For details use Trace level logging", false);
+		}
+
+		if (null != kp) {
+			if (TS.params().getFilterIgnoreKnownProblem()) {
+				setAssumeTrue(true);
+				addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
+				Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description(), false);
+			}
+		}
+	}
 
 	/** The watchman2. */
 	public TestWatcher watchman2 = new TestWatcher() {
@@ -138,7 +155,6 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 		}
 
 		protected void succeeded(final Description description) {
-
 			stopTestCase(null);
 			TS.log().info("TESTCASE Status: " + getTestCase().getStatusEnum());
 			try {
@@ -165,7 +181,6 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 		}
 
 		protected void starting(final Description desc) {
-
 			if (!didTestPlanStart()) {
 				TS.log().info("TESTPLAN started:" + desc.getTestClass().getName() + " - thread["
 						+ Thread.currentThread().getId() + "]");
@@ -184,6 +199,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 
 			}
 			TS.log().info(Cli.BAR_LONG);
+
 			TS.log().info(
 					"TESTCASE started:" + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
 			startTestCase(desc, desc.getAnnotation(TestCase.class), desc.getTestClass().getAnnotation(TestPlan.class),
@@ -434,25 +450,40 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 	 * @return true, if successful
 	 */
 	public static boolean addStepAction(final StepActionDto stepAction) {
+		return addStepAction(stepAction, true);
+	}
+
+	/**
+	 * Adds the step action.
+	 *
+	 * @param stepAction
+	 *            the step action
+	 * @param writeToLog
+	 *            the write to log
+	 * @return true, if successful
+	 */
+	public static boolean addStepAction(final StepActionDto stepAction, final boolean writeToLog) {
 		if (null == getTestStep()) {
 			return false;
 		}
 		if (null != stepAction) {
 			getTestStep().addStepAction(stepAction);
-			final StringBuilder sb = new StringBuilder("StepAction - ");
-			if (null != stepAction.getStatus()) {
-				sb.append("status:" + stepAction.getStatus() + " - ");
+			if (writeToLog) {
+				final StringBuilder sb = new StringBuilder("StepAction - ");
+				if (null != stepAction.getStatus()) {
+					sb.append("status:" + stepAction.getStatus() + " - ");
+				}
+				if (null != stepAction.getMessage1()) {
+					sb.append(" " + stepAction.getMessage1());
+				}
+				if (null != stepAction.getMessage2()) {
+					sb.append(" " + stepAction.getMessage2());
+				}
+				if (null != stepAction.getMessage3()) {
+					sb.append(" " + stepAction.getMessage3());
+				}
+				TS.log().info(sb.toString());
 			}
-			if (null != stepAction.getMessage1()) {
-				sb.append(" " + stepAction.getMessage1());
-			}
-			if (null != stepAction.getMessage2()) {
-				sb.append(" " + stepAction.getMessage2());
-			}
-			if (null != stepAction.getMessage3()) {
-				sb.append(" " + stepAction.getMessage3());
-			}
-			TS.log().info(sb.toString());
 		}
 		return true;
 	}
@@ -577,6 +608,22 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 	 */
 	public static void addIgnoredTest(final String testCaseName, final String reason) {
 		getIgnoredTests().put(testCaseName, reason);
+	}
+
+	public boolean isAssumeTrue() {
+		return assumeTrue;
+	}
+
+	public void setAssumeTrue(final boolean assumeTrue) {
+		this.assumeTrue = assumeTrue;
+	}
+
+	public Description getDescription() {
+		return description;
+	}
+
+	public void setDescription(final Description description) {
+		this.description = description;
 	}
 
 }
