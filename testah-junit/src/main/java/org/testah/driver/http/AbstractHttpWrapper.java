@@ -266,6 +266,22 @@ public abstract class AbstractHttpWrapper {
 	 * @return the response dto
 	 */
 	public ResponseDto doRequest(final AbstractRequestDto request, final boolean verbose) {
+		return doRequest(request, verbose, isIgnoreHttpError());
+	}
+
+	/**
+	 * Do request.
+	 *
+	 * @param request
+	 *            the request
+	 * @param verbose
+	 *            the verbose
+	 * @param ignoreHttpError
+	 *            the ignore http error
+	 * @return the response dto
+	 */
+	public ResponseDto doRequest(final AbstractRequestDto request, final boolean verbose,
+			final boolean ignoreHttpError) {
 		try {
 			final HttpClientContext context = HttpClientContext.create();
 			if (null != cookieStore) {
@@ -295,12 +311,12 @@ public abstract class AbstractHttpWrapper {
 				responseDto.setRequestUsed(request);
 			}
 			if (verbose) {
-				AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500));
+				AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500), false);
 			}
 			return responseDto;
 		} catch (final Exception e) {
 			TS.log().error(e);
-			if (!isIgnoreHttpError()) {
+			if (!ignoreHttpError) {
 				TS.asserts().equals("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
 						e.getMessage());
 			}

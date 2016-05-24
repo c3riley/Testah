@@ -15,13 +15,12 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.rauschig.jarchivelib.ArchiveFormat;
 import org.rauschig.jarchivelib.Archiver;
 import org.rauschig.jarchivelib.ArchiverFactory;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.ContextHierarchy;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.driver.http.HttpWrapperV1;
@@ -30,11 +29,15 @@ import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.HttpTestPlan;
-import org.testah.framework.testPlan.TestConfiguration;
 
-@ContextHierarchy({ @ContextConfiguration(classes = TestConfiguration.class) })
+//@ContextHierarchy({ @ContextConfiguration(classes = TestConfiguration.class) })
 @TestPlan(description = "test Http")
 public class TestHttp extends HttpTestPlan {
+
+	@Before
+	public void setup() {
+		TS.http().doPost("http://www.google.com", null);
+	}
 
 	@TestCase
 	@Test
