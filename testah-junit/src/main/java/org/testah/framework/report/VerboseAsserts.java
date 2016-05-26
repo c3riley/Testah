@@ -305,34 +305,12 @@ public class VerboseAsserts {
 	 *            the actual
 	 * @return true, if successful
 	 */
-	public boolean equals(final String message, final double expected, final double actual) {
+	public boolean equalsTo(final String message, final double expected, final double actual) {
 		try {
 			Assert.assertEquals(message, expected, actual);
 			return addAssertHistory(message, true, "assertEquals", expected, actual);
 		} catch (final AssertionError e) {
 			final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
-			if (getThrowExceptionOnFail()) {
-				throw e;
-			}
-			return rtn;
-		}
-	}
-
-	/**
-	 * Equals.
-	 *
-	 * @param expected
-	 *            the expected
-	 * @param actual
-	 *            the actual
-	 * @return true, if successful
-	 */
-	public boolean equals(final long expected, final long actual) {
-		try {
-			Assert.assertEquals(expected, actual);
-			return addAssertHistory("", true, "assertEquals", expected, actual);
-		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
 			if (getThrowExceptionOnFail()) {
 				throw e;
 			}
@@ -351,12 +329,26 @@ public class VerboseAsserts {
 	 *            the actual
 	 * @return true, if successful
 	 */
-	public boolean equals(final String message, final Object[] expected, final Object[] actual) {
+	@Deprecated
+	public boolean equals(final String message, final double expected, final double actual) {
+		return equalsTo(message, expected, actual);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @return true, if successful
+	 */
+	public boolean equalsTo(final long expected, final long actual) {
 		try {
-			Assert.assertEquals(message, expected, actual);
-			return addAssertHistory(message, true, "assertEquals", expected, actual);
+			Assert.assertEquals(expected, actual);
+			return addAssertHistory("", true, "assertEquals", expected, actual);
 		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
+			final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
 			if (getThrowExceptionOnFail()) {
 				throw e;
 			}
@@ -373,7 +365,61 @@ public class VerboseAsserts {
 	 *            the actual
 	 * @return true, if successful
 	 */
-	public boolean equals(final Object expected, final Object actual) {
+	@Deprecated
+	public boolean equals(final long expected, final long actual) {
+		return equalsTo(expected, actual);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param message
+	 *            the message
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @return true, if successful
+	 */
+	public boolean equalsTo(final String message, final Object[] expected, final Object[] actual) {
+		try {
+			Assert.assertEquals(message, expected, actual);
+			return addAssertHistory(message, true, "assertEquals", expected, actual);
+		} catch (final AssertionError e) {
+			final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
+			if (getThrowExceptionOnFail()) {
+				throw e;
+			}
+			return rtn;
+		}
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param message
+	 *            the message
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @return true, if successful
+	 */
+	@Deprecated
+	public boolean equals(final String message, final Object[] expected, final Object[] actual) {
+		return equalsTo(message, expected, actual);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @return true, if successful
+	 */
+	public boolean equalsTo(final Object expected, final Object actual) {
 		try {
 			Assert.assertEquals(expected, actual);
 			return addAssertHistory("", true, "assertEquals", expected, actual);
@@ -384,6 +430,20 @@ public class VerboseAsserts {
 			}
 			return rtn;
 		}
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @return true, if successful
+	 */
+	@Deprecated
+	public boolean equals(final Object expected, final Object actual) {
+		return equalsTo(expected, actual);
 	}
 
 	/**
@@ -407,12 +467,52 @@ public class VerboseAsserts {
 	 *            the actual
 	 * @return true, if successful
 	 */
+	public boolean equalsTo(final Object[] expected, final Object[] actual) {
+		try {
+			Assert.assertEquals(expected, actual);
+			return addAssertHistory("", true, "assertEquals", expected, actual);
+		} catch (final AssertionError e) {
+			final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
+			if (getThrowExceptionOnFail()) {
+				throw e;
+			}
+			return rtn;
+		}
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @return true, if successful
+	 */
+	@Deprecated
 	public boolean equals(final Object[] expected, final Object[] actual) {
+		return equalsTo(expected, actual);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param message
+	 *            the message
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @param arg3
+	 *            the arg3
+	 * @return true, if successful
+	 */
+	public boolean equalsTo(final String message, final double expected, final double actual, final double arg3) {
 		try {
-			Assert.assertEquals(expected, actual);
-			return addAssertHistory("", true, "assertEquals", expected, actual);
+			Assert.assertEquals(message, expected, actual, arg3);
+			return addAssertHistory(message, true, "assertEquals", expected, actual);
 		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
+			final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
 			if (getThrowExceptionOnFail()) {
 				throw e;
 			}
@@ -433,9 +533,25 @@ public class VerboseAsserts {
 	 *            the arg3
 	 * @return true, if successful
 	 */
+	@Deprecated
 	public boolean equals(final String message, final double expected, final double actual, final double arg3) {
+		return equalsTo(message, expected, actual, arg3);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param message
+	 *            the message
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @return true, if successful
+	 */
+	public boolean equalsTo(final String message, final Object expected, final Object actual) {
 		try {
-			Assert.assertEquals(message, expected, actual, arg3);
+			Assert.assertEquals(message, expected, actual);
 			return addAssertHistory(message, true, "assertEquals", expected, actual);
 		} catch (final AssertionError e) {
 			final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
@@ -457,60 +573,110 @@ public class VerboseAsserts {
 	 *            the actual
 	 * @return true, if successful
 	 */
+	@Deprecated
 	public boolean equals(final String message, final Object expected, final Object actual) {
+		return equalsTo(message, expected, actual);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @param delta
+	 *            the delta
+	 * @return true, if successful
+	 */
+	public boolean equalsTo(final float expected, final float actual, final float delta) {
 		try {
-			Assert.assertEquals(message, expected, actual);
+			Assert.assertEquals(expected, actual, delta);
+			return addAssertHistory("", true, "assertEquals", expected, actual);
+		} catch (final AssertionError e) {
+			final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
+			if (getThrowExceptionOnFail()) {
+				throw e;
+			}
+			return rtn;
+		}
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @param delta
+	 *            the delta
+	 * @return true, if successful
+	 */
+	@Deprecated
+	public boolean equals(final float expected, final float actual, final float delta) {
+		return equalsTo(expected, actual, delta);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @param delta
+	 *            the delta
+	 * @return true, if successful
+	 */
+	public boolean equalsTo(final double expected, final double actual, final double delta) {
+		try {
+			Assert.assertEquals(expected, actual, delta);
+			return addAssertHistory("", true, "assertEquals", expected, actual);
+		} catch (final AssertionError e) {
+			final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
+			if (getThrowExceptionOnFail()) {
+				throw e;
+			}
+			return rtn;
+		}
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @param delta
+	 *            the delta
+	 * @return true, if successful
+	 */
+	@Deprecated
+	public boolean equals(final double expected, final double actual, final double delta) {
+		return equalsTo(expected, actual, delta);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param message
+	 *            the message
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @param arg3
+	 *            the arg3
+	 * @return true, if successful
+	 */
+	public boolean equalsTo(final String message, final float expected, final float actual, final float arg3) {
+		try {
+			Assert.assertEquals(message, expected, actual, arg3);
 			return addAssertHistory(message, true, "assertEquals", expected, actual);
 		} catch (final AssertionError e) {
 			final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
-			if (getThrowExceptionOnFail()) {
-				throw e;
-			}
-			return rtn;
-		}
-	}
-
-	/**
-	 * Equals.
-	 *
-	 * @param expected
-	 *            the expected
-	 * @param actual
-	 *            the actual
-	 * @param delta
-	 *            the delta
-	 * @return true, if successful
-	 */
-	public boolean equals(final float expected, final float actual, final float delta) {
-		try {
-			Assert.assertEquals(expected, actual, delta);
-			return addAssertHistory("", true, "assertEquals", expected, actual);
-		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
-			if (getThrowExceptionOnFail()) {
-				throw e;
-			}
-			return rtn;
-		}
-	}
-
-	/**
-	 * Equals.
-	 *
-	 * @param expected
-	 *            the expected
-	 * @param actual
-	 *            the actual
-	 * @param delta
-	 *            the delta
-	 * @return true, if successful
-	 */
-	public boolean equals(final double expected, final double actual, final double delta) {
-		try {
-			Assert.assertEquals(expected, actual, delta);
-			return addAssertHistory("", true, "assertEquals", expected, actual);
-		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
 			if (getThrowExceptionOnFail()) {
 				throw e;
 			}
@@ -531,9 +697,25 @@ public class VerboseAsserts {
 	 *            the arg3
 	 * @return true, if successful
 	 */
+	@Deprecated
 	public boolean equals(final String message, final float expected, final float actual, final float arg3) {
+		return equalsTo(message, expected, actual, arg3);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param message
+	 *            the message
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @return true, if successful
+	 */
+	public boolean equalsTo(final String message, final long expected, final long actual) {
 		try {
-			Assert.assertEquals(message, expected, actual, arg3);
+			Assert.assertEquals(message, expected, actual);
 			return addAssertHistory(message, true, "assertEquals", expected, actual);
 		} catch (final AssertionError e) {
 			final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
@@ -555,12 +737,26 @@ public class VerboseAsserts {
 	 *            the actual
 	 * @return true, if successful
 	 */
+	@Deprecated
 	public boolean equals(final String message, final long expected, final long actual) {
+		return equalsTo(message, expected, actual);
+	}
+
+	/**
+	 * Equals.
+	 *
+	 * @param expected
+	 *            the expected
+	 * @param actual
+	 *            the actual
+	 * @return true, if successful
+	 */
+	public boolean equalsTo(final double expected, final double actual) {
 		try {
-			Assert.assertEquals(message, expected, actual);
-			return addAssertHistory(message, true, "assertEquals", expected, actual);
+			Assert.assertEquals(expected, actual);
+			return addAssertHistory("", true, "assertEquals", expected, actual);
 		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
+			final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
 			if (getThrowExceptionOnFail()) {
 				throw e;
 			}
@@ -577,17 +773,9 @@ public class VerboseAsserts {
 	 *            the actual
 	 * @return true, if successful
 	 */
+	@Deprecated
 	public boolean equals(final double expected, final double actual) {
-		try {
-			Assert.assertEquals(expected, actual);
-			return addAssertHistory("", true, "assertEquals", expected, actual);
-		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
-			if (getThrowExceptionOnFail()) {
-				throw e;
-			}
-			return rtn;
-		}
+		return equalsTo(expected, actual);
 	}
 
 	/**
