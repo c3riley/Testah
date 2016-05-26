@@ -85,7 +85,9 @@ public class StepAction extends StepActionDto {
 		}
 		TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message
 				+ " - expected[" + expected + "] actual[" + actual + "]");
-		TS.log().trace("Exception Related to above Assert\n" + step.getExceptionString());
+		if (null != step.getExceptionString()) {
+			TS.log().trace("Exception Related to above Assert\n" + step.getExceptionString());
+		}
 		return step;
 	}
 
