@@ -208,6 +208,11 @@ public class Params {
 	@Arg(dest = "useHtmlFormatter")
 	private boolean useHtmlFormatter = true;
 
+	/** The use meta formatter. */
+	@Comment(info = "Should the Runner create a meta text file")
+	@Arg(dest = "useMetaFormatter")
+	private boolean useMetaFormatter = true;
+
 	/** The auto open html report. */
 	@Comment(info = "Should the Runner automatically open the Html Report in a browser")
 	@Arg(dest = "autoOpenHtmlReport")
@@ -1027,6 +1032,14 @@ public class Params {
 	 */
 	public void setUpdateMetadata(final boolean updateMetadata) {
 		this.updateMetadata = updateMetadata;
+	}
+
+	public boolean isUseMetaFormatter() {
+		return useMetaFormatter;
+	}
+
+	public void setUseMetaFormatter(final boolean useMetaFormatter) {
+		this.useMetaFormatter = useMetaFormatter;
 	}
 
 }
