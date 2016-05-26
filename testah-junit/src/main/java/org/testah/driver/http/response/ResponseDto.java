@@ -86,7 +86,7 @@ public class ResponseDto {
 	 * @return the response dto
 	 */
 	public ResponseDto assertStatus(final int expectedStatus) {
-		TS.asserts().equals("assertStatus", expectedStatus, statusCode);
+		TS.asserts().equalsTo("assertStatus", expectedStatus, statusCode);
 		return this;
 	}
 

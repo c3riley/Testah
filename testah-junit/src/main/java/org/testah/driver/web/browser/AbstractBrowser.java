@@ -54,7 +54,7 @@ public abstract class AbstractBrowser {
 	 * @return the abstract browser
 	 */
 	public AbstractBrowser assertTitle(final String expectedTitle) {
-		TS.asserts().equals("Assert Web Browser Pagetitle", expectedTitle, getTitle());
+		TS.asserts().equalsTo("Assert Web Browser Pagetitle", expectedTitle, getTitle());
 		return this;
 	}
 
@@ -66,7 +66,7 @@ public abstract class AbstractBrowser {
 	 * @return the abstract browser
 	 */
 	public AbstractBrowser assertUrl(final String expectedUrl) {
-		TS.asserts().equals("Assert Web Browser Pagetitle", expectedUrl, getUrl());
+		TS.asserts().equalsTo("Assert Web Browser Pagetitle", expectedUrl, getUrl());
 		return this;
 	}
 

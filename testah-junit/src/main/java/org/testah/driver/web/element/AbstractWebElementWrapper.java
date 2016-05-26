@@ -71,7 +71,7 @@ public abstract class AbstractWebElementWrapper {
 	 */
 	public AbstractWebElementWrapper assertAttributeValue(final String attributeName,
 			final String attributeExpectedValue) {
-		TS.asserts().equals("assertAttributeValue", attributeExpectedValue, getAttribute(attributeName));
+		TS.asserts().equalsTo("assertAttributeValue", attributeExpectedValue, getAttribute(attributeName));
 		return this;
 	}
 
@@ -358,7 +358,7 @@ public abstract class AbstractWebElementWrapper {
 			TS.util().pause("getElementsWithIn", i);
 		}
 		if (autoAssert) {
-			TS.asserts().equals("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
+			TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
 					+ "] - error: " + error, true, false);
 		}
 		return new ArrayList<AbstractWebElementWrapper>();
@@ -414,7 +414,7 @@ public abstract class AbstractWebElementWrapper {
 			TS.util().pause("getElementWithIn", i);
 		}
 		if (autoAssert) {
-			TS.asserts().equals("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
+			TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
 					+ "] - error: " + error, true, false);
 		}
 		return null;

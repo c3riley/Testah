@@ -44,6 +44,7 @@ public class TestPlanReporter {
 			testPlan.getRunInfo().setIgnore(AbstractTestPlan.getIgnoredTests().size());
 			testPlan.getRunInfo().setTotal(testPlan.getRunInfo().getFail() + testPlan.getRunInfo().getPass()
 					+ testPlan.getRunInfo().getIgnore());
+			testPlan.getRunInfo().getRunTimeProperties().put("builtOn", TS.params().getComputerName());
 		} catch (final Exception e) {
 			TS.log().trace(e);
 		}

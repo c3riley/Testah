@@ -1,6 +1,7 @@
 package org.testah.framework.cli;
 
 import java.io.File;
+import java.util.Map;
 
 import org.apache.logging.log4j.Level;
 import org.testah.client.enums.BrowserType;
@@ -1040,6 +1041,16 @@ public class Params {
 
 	public void setUseMetaFormatter(final boolean useMetaFormatter) {
 		this.useMetaFormatter = useMetaFormatter;
+	}
+
+	public String getComputerName() {
+		final Map<String, String> env = System.getenv();
+		if (env.containsKey("COMPUTERNAME"))
+			return env.get("COMPUTERNAME");
+		else if (env.containsKey("HOSTNAME"))
+			return env.get("HOSTNAME");
+		else
+			return "NA";
 	}
 
 }
