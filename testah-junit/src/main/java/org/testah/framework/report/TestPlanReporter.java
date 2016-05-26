@@ -71,6 +71,10 @@ public class TestPlanReporter {
 			TS.log().info(Cli.BAR_WALL + "Report Html: " + html.getReportFile().getAbsolutePath());
 			openReport(html.getReportFile().getAbsolutePath());
 		}
+		if (TS.params().isUseMetaFormatter()) {
+			final AbstractFormatter meta = new MetaFormatter(testPlan).createReport(filename + ".txt");
+			TS.log().info(Cli.BAR_WALL + "Report Meta: " + meta.getReportFile().getAbsolutePath());
+		}
 		if (null == TS.params().getSendJsonTestDataToService()
 				|| TS.params().getSendJsonTestDataToService().length() > 0) {
 			try {
