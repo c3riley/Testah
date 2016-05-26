@@ -530,7 +530,7 @@ public abstract class AbstractWebElementWrapper {
 		if (elementIsOk("isSelected", isAutoReport())) {
 			return webElement.isSelected();
 		}
-		return null;
+		return false;
 	}
 
 	/**

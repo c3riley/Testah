@@ -592,8 +592,9 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 	 */
 	public static HashMap<String, String> getIgnoredTests() {
 		if (null == ignoredTests) {
-			ignoredTests = new ThreadLocal<HashMap<String, String>>();
-			ignoredTests.set(new HashMap<String, String>());
+			final ThreadLocal<HashMap<String, String>> ignoredTestsTmp = new ThreadLocal<HashMap<String, String>>();
+			ignoredTestsTmp.set(new HashMap<String, String>());
+			ignoredTests = ignoredTestsTmp;
 		}
 		return ignoredTests.get();
 	}

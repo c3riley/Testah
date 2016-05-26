@@ -185,7 +185,7 @@ public class TestDtoHelper {
 	public static TestPlanDto createTestPlanDto(final Class<?> testPlanClass, final TestPlan meta,
 			final KnownProblem knownProblemFillFrom) {
 		TestPlanDto testPlanToFill = new TestPlanDto();
-		if (null == meta.name() || meta.name().length() == 0) {
+		if (null == meta || null == meta.name() || meta.name().length() == 0) {
 			testPlanToFill.setName(testPlanClass.getName());
 		} else {
 			testPlanToFill.setName(meta.name());
@@ -213,7 +213,7 @@ public class TestDtoHelper {
 	public static TestCaseDto createTestCaseDto(final Description desc, final TestCase meta,
 			final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
 		TestCaseDto testCaseToFill = new TestCaseDto();
-		if (null == meta.name() || meta.name().length() == 0) {
+		if (null == meta || null == meta.name() || meta.name().length() == 0) {
 			testCaseToFill.setName(desc.getMethodName());
 		} else {
 			testCaseToFill.setName(meta.name());
@@ -243,7 +243,7 @@ public class TestDtoHelper {
 	public static TestCaseDto createTestCaseDto(final String testPlanClass, final String testCaseMethod,
 			final TestCase meta, final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
 		TestCaseDto testCaseToFill = new TestCaseDto();
-		if (null == meta.name() || meta.name().length() == 0) {
+		if (null == meta || null == meta.name() || meta.name().length() == 0) {
 			testCaseToFill.setName(testCaseMethod);
 		} else {
 			testCaseToFill.setName(meta.name());

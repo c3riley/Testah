@@ -44,7 +44,7 @@ public class Cli {
 	private final Params opt;
 
 	/** The Constant version. */
-	public static final String version = "0.2.8";
+	public static final String version = "0.3.0";
 
 	/** The Constant BAR_LONG. */
 	public static final String BAR_LONG = "=============================================================================================";
@@ -174,9 +174,10 @@ public class Cli {
 		int totalTestCasesFailed = 0;
 		int totalTestCasesPassed = 0;
 		int totalTestCasesIgnored = 0;
-		final int totalTestPlans = results.size();
+		int totalTestPlans = 0;
 
 		if (null != results) {
+			totalTestPlans = results.size();
 			TS.log().info(Cli.BAR_LONG);
 			TS.log().info(Cli.BAR_WALL + "TestPlan Result(s):");
 
@@ -191,11 +192,10 @@ public class Cli {
 					TS.log().error("Testplan is null, for " + result.getJunitResult().getFailures());
 				}
 			}
-		}
-
-		for (final ResultDto result : results) {
-			if (null != result.getTestPlan()) {
-				TestPlanReporter.reportResults(result.getTestPlan());
+			for (final ResultDto result : results) {
+				if (null != result.getTestPlan()) {
+					TestPlanReporter.reportResults(result.getTestPlan());
+				}
 			}
 		}
 

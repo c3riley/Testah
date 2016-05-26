@@ -59,8 +59,7 @@ public class TS {
 	 */
 	public static VerboseAsserts verify() {
 		if (null == _verify) {
-			_verify = new VerboseAsserts();
-			_verify.onlyVerfiy();
+			_verify = new VerboseAsserts().onlyVerfiy();
 		}
 		return _verify;
 	}
@@ -72,8 +71,9 @@ public class TS {
 	 */
 	public static HashMap<String, Object> statefulData() {
 		if (null == _statefulData) {
-			_statefulData = new ThreadLocal<HashMap<String, Object>>();
-			_statefulData.set(new HashMap<String, Object>());
+			final ThreadLocal<HashMap<String, Object>> _statefulDataTmp = new ThreadLocal<HashMap<String, Object>>();
+			_statefulDataTmp.set(new HashMap<String, Object>());
+			_statefulData = _statefulDataTmp;
 		}
 		return _statefulData.get();
 	}
