@@ -34,14 +34,14 @@ public class TestBrowser extends BrowserTestPlan {
 	@Test
 	public void TestPageTitle() {
 
-		TS.asserts().equals(baseTitle, TS.browser().getTitle());
+		TS.asserts().equalsTo(baseTitle, TS.browser().getTitle());
 		TS.browser().assertTitle(baseTitle);
 	}
 
 	@TestCase
 	@Test
 	public void TestPageUtl() {
-		TS.asserts().equals(baseUrl, TS.browser().getUrl());
+		TS.asserts().equalsTo(baseUrl, TS.browser().getUrl());
 		TS.browser().assertUrl(baseUrl);
 	}
 
@@ -64,23 +64,23 @@ public class TestBrowser extends BrowserTestPlan {
 	@Test
 	public void TestGetDriver() {
 		TS.asserts().notNull(TS.browser().getDriver());
-		TS.asserts().equals(baseTitle, TS.browser().getDriver().getTitle());
+		TS.asserts().equalsTo(baseTitle, TS.browser().getDriver().getTitle());
 	}
 
 	@TestCase
 	@Test
 	public void TestGetJavaScriptValue() {
 		final String rtn = TS.browser().getJavaScriptValue("return 'cool';");
-		TS.asserts().equals(rtn, "cool");
+		TS.asserts().equalsTo(rtn, "cool");
 	}
 
 	@TestCase
 	@Test
 	public void TestElementWaitTime() {
 		final int rtn = TS.browser().getElementWaitTime();
-		TS.asserts().equals(10, rtn);
+		TS.asserts().equalsTo(10, rtn);
 		TS.browser().setElementWaitTime(2);
-		TS.asserts().equals(2, TS.browser().getElementWaitTime());
+		TS.asserts().equalsTo(2, TS.browser().getElementWaitTime());
 		TS.browser().setElementWaitTime(10);
 	}
 
@@ -88,7 +88,7 @@ public class TestBrowser extends BrowserTestPlan {
 	@Test
 	public void TestGetCapabilities() {
 		TS.asserts().notNull(TS.browser().getCapabilities());
-		TS.asserts().equals("firefox", TS.browser().getCapabilities().getBrowserName());
+		TS.asserts().equalsTo("firefox", TS.browser().getCapabilities().getBrowserName());
 	}
 
 	@TestCase
@@ -96,11 +96,11 @@ public class TestBrowser extends BrowserTestPlan {
 	public void TestWebElements() {
 		final List<AbstractWebElementWrapper> lst = TS.browser().getWebElements(By.id("enclosed-image"));
 		TS.asserts().notNull(lst);
-		TS.asserts().equals(1, lst.size());
+		TS.asserts().equalsTo(1, lst.size());
 		TS.asserts().notNull(lst.get(0));
-		TS.asserts().equals(By.id("enclosed-image"), lst.get(0).getBy());
+		TS.asserts().equalsTo(By.id("enclosed-image"), lst.get(0).getBy());
 		TS.asserts().notNull(lst.get(0).getDriverWebElement());
-		TS.asserts().equals("https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/icon.gif",
+		TS.asserts().equalsTo("https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/icon.gif",
 				lst.get(0).getAttribute("src"));
 	}
 
@@ -109,9 +109,9 @@ public class TestBrowser extends BrowserTestPlan {
 	public void TestWebElement() {
 		final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("enclosed-image"));
 		TS.asserts().notNull(e);
-		TS.asserts().equals(By.id("enclosed-image"), e.getBy());
+		TS.asserts().equalsTo(By.id("enclosed-image"), e.getBy());
 		TS.asserts().notNull(e.getDriverWebElement());
-		TS.asserts().equals("https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/icon.gif",
+		TS.asserts().equalsTo("https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/icon.gif",
 				e.getAttribute("src"));
 	}
 

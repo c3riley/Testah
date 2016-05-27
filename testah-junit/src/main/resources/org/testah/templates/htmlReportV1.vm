@@ -79,6 +79,7 @@
 			<a href='testPlan.getCiUrl()' target='_blank'>View CI</a>
 		#end
 		</td></tr>
+		<tr><td class='label'>Built On</td><td class='value'>$!testPlan.getRunInfo().getRunTimeProperties().get("builtOn")</td></tr>
 		<tr><td class='label'>Environment:</td><td class='value'>$!testPlan.getEnvironment()</td></tr>
 		<tr><td class='label'>Time</td><td class='value'>$util.toDateString($testPlan.getRunTime().getStartTime()) to $util.toDateString($testPlan.getRunTime().getEndTime())</td></tr>
         <tr><td class='label'>Duration</td><td class='value'>$util.getDurationPretty( $testPlan.getRunTime().getDuration())</td></tr>

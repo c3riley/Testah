@@ -120,7 +120,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
 		} catch (final Exception e) {
 			TS.log().error(e);
 			if (!isIgnoreHttpError()) {
-				TS.asserts().equals("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
+				TS.asserts().equalsTo("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
 						e.getMessage());
 			}
 			return null;
