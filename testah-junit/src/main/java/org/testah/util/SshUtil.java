@@ -19,6 +19,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+
 /**
  * The Class SshUtil.
  */
@@ -383,11 +384,12 @@ public class SshUtil {
 	/**
 	 * Sets the ignore timeout.
 	 *
-	 * @param ignoreTimeout
-	 *            the new ignore timeout
+	 * @param ignoreTimeout            the new ignore timeout
+	 * @return the ssh util
 	 */
-	public void setIgnoreTimeout(final boolean ignoreTimeout) {
+	public SshUtil setIgnoreTimeout(final boolean ignoreTimeout) {
 		this.ignoreTimeout = ignoreTimeout;
+		return this;
 	}
 
 	/**
@@ -411,6 +413,13 @@ public class SshUtil {
 		return this;
 	}
 
+	/**
+	 * Run exec.
+	 *
+	 * @param session the session
+	 * @param command the command
+	 * @return the string
+	 */
 	public String runExec(final Session session, final String command) {
 		try {
 			if (!session.isConnected()) {

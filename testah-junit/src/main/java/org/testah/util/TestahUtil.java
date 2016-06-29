@@ -24,6 +24,7 @@ import org.testah.framework.cli.Params;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+
 /**
  * The Class TestahUtil.
  */
@@ -94,77 +95,80 @@ public class TestahUtil {
 	/**
 	 * Pause.
 	 *
-	 * @param milliseconds
-	 *            the milliseconds
+	 * @param milliseconds            the milliseconds
+	 * @return the testah util
 	 */
-	public void pause(final Long milliseconds) {
+	public TestahUtil pause(final Long milliseconds) {
 		pause(milliseconds, null, null);
+		return this;
 	}
 
 	/**
 	 * Pause.
+	 *
+	 * @return the testah util
 	 */
-	public void pause() {
+	public TestahUtil pause() {
 		pause(TS.params().getDefaultPauseTime(), null, null);
+		return this;
 	}
 
 	/**
 	 * Pause.
 	 *
-	 * @param reasonForPause
-	 *            the reason for pause
+	 * @param reasonForPause            the reason for pause
+	 * @return the testah util
 	 */
-	public void pause(final String reasonForPause) {
+	public TestahUtil pause(final String reasonForPause) {
 		pause(TS.params().getDefaultPauseTime(), reasonForPause, null);
+		return this;
 	}
 
 	/**
 	 * Pause.
 	 *
-	 * @param milliseconds
-	 *            the milliseconds
-	 * @param reasonForPause
-	 *            the reason for pause
+	 * @param milliseconds            the milliseconds
+	 * @param reasonForPause            the reason for pause
+	 * @return the testah util
 	 */
-	public void pause(final Long milliseconds, final String reasonForPause) {
+	public TestahUtil pause(final Long milliseconds, final String reasonForPause) {
 		pause(milliseconds, reasonForPause, null);
+		return this;
 	}
 
 	/**
 	 * Pause.
 	 *
-	 * @param reasonForPause
-	 *            the reason for pause
-	 * @param iteration
-	 *            the iteration
+	 * @param reasonForPause            the reason for pause
+	 * @param iteration            the iteration
+	 * @return the testah util
 	 */
-	public void pause(final String reasonForPause, final Integer iteration) {
+	public TestahUtil pause(final String reasonForPause, final Integer iteration) {
 		pause(TS.params().getDefaultPauseTime(), reasonForPause, iteration);
+		return this;
 	}
 
 	/**
 	 * Pause.
 	 *
-	 * @param reasonForPause
-	 *            the reason for pause
-	 * @param milliseconds
-	 *            the milliseconds
+	 * @param reasonForPause            the reason for pause
+	 * @param milliseconds            the milliseconds
+	 * @return the testah util
 	 */
-	public void pause(final String reasonForPause, final Long milliseconds) {
+	public TestahUtil pause(final String reasonForPause, final Long milliseconds) {
 		pause(milliseconds, reasonForPause, null);
+		return this;
 	}
 
 	/**
 	 * Pause.
 	 *
-	 * @param milliseconds
-	 *            the milliseconds
-	 * @param reasonForPause
-	 *            the reason for pause
-	 * @param iteration
-	 *            the iteration
+	 * @param milliseconds            the milliseconds
+	 * @param reasonForPause            the reason for pause
+	 * @param iteration            the iteration
+	 * @return the testah util
 	 */
-	public void pause(final Long milliseconds, final String reasonForPause, final Integer iteration) {
+	public TestahUtil pause(final Long milliseconds, final String reasonForPause, final Integer iteration) {
 		try {
 			if (null == iteration) {
 				TS.log().debug("pause - " + reasonForPause + " - " + milliseconds + "ms");
@@ -176,6 +180,7 @@ public class TestahUtil {
 		} catch (final Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
+		return this;
 	}
 
 	/**

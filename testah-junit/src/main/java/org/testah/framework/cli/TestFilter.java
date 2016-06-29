@@ -13,6 +13,7 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.reflections.Reflections;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
+import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestPlan;
 
@@ -115,8 +116,8 @@ public class TestFilter {
 					}
 				}
 				if (filterByTestType) {
-					if (!isFilterByTestType(meta)) {
-						TS.log().trace("test[" + test.getName() + "] filtered out by isFilterTestNameStartsWith");
+					if (!isFilterByTestType(meta.testType())) {
+						TS.log().trace("test[" + test.getName() + "] filtered out by isFilterByTestType");
 						continue;
 					}
 				}
@@ -214,6 +215,10 @@ public class TestFilter {
 			if (null == TS.params().getFilterByRunType() || TS.params().getFilterByRunType().length() == 0) {
 				filterByRunType = false;
 			}
+			boolean filterByTestType = true;
+			if (null == TS.params().getFilterByTestType()) {
+				filterByTestType = false;
+			}
 
 			if (filterByUuid) {
 				filter = filterParams.getFilterById();
@@ -255,6 +260,13 @@ public class TestFilter {
 				filter = filterParams.getFilterByRunType();
 				if (!isFilterCheckOk(meta.getRunTypes(), filter)) {
 					TS.log().trace("test[" + testCaseName + "] filtered out by getFilterByRunType");
+					return false;
+				}
+			}
+
+			if (filterByTestType) {
+				if (!isFilterByTestType(meta.getTestType())) {
+					TS.log().trace("test[" + testCaseName + "] filtered out by isFilterByTestType");
 					return false;
 				}
 			}
@@ -303,12 +315,12 @@ public class TestFilter {
 	/**
 	 * Checks if is filter by test type.
 	 *
-	 * @param meta
-	 *            the meta
+	 * @param testType
+	 *            the test type
 	 * @return true, if is filter by test type
 	 */
-	public boolean isFilterByTestType(final TestPlan meta) {
-		if (meta.testType() != TS.params().getFilterByTestType()) {
+	public boolean isFilterByTestType(final TestType testType) {
+		if (testType != TS.params().getFilterByTestType()) {
 			return false;
 		}
 		return true;

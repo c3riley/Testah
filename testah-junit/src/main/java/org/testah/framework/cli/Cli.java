@@ -19,7 +19,6 @@ import org.testah.framework.dto.ResultDto;
 import org.testah.framework.dto.TestDtoHelper;
 import org.testah.framework.report.TestPlanReporter;
 import org.testah.runner.TestahJUnitRunner;
-import org.testah.util.Log;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
@@ -44,7 +43,7 @@ public class Cli {
 	private final Params opt;
 
 	/** The Constant version. */
-	public static final String version = "0.3.3";
+	public static final String version = "0.3.5";
 
 	/** The Constant BAR_LONG. */
 	public static final String BAR_LONG = "=============================================================================================";
@@ -89,6 +88,7 @@ public class Cli {
 		final Subparser run = subparsers.addParser("run").help("run help");
 		run.addArgument("-b", "--browser").setDefault(opt.getBrowser()).type(enumStringType(BrowserType.class))
 				.help("foo help");
+		run.addArgument("-t", "--test").setDefault("").type(String.class).help("Test Class to run");
 
 		final Subparser query = subparsers.addParser("query").help("query help");
 		query.addArgument("--file").required(false).action(Arguments.store()).dest("queryResults")
@@ -134,13 +134,12 @@ public class Cli {
 				}
 
 			} else {
-				TS.setParams(opt);
 				TS.log().debug(Cli.BAR_LONG);
 				TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ "
 						+ ParamLoader.getDefaultPropFilePath() + " ]");
 				TS.log().debug(Cli.BAR_LONG);
 			}
-			Log.setLevel(TS.params().getLevel());
+
 		} catch (final ArgumentParserException e) {
 			parser.handleError(e);
 			System.exit(1);

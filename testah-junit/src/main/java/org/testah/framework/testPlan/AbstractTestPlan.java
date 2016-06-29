@@ -63,11 +63,13 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 	/** The name. */
 	public TestName name = new TestName();
 
+	/** The assume true. */
 	private boolean assumeTrue = false;
 
 	/** The global timeout. */
 	public TestRule globalTimeout = Timeout.millis(100000L);
 
+	/** The description. */
 	private Description description;
 
 	/** The initialize. */
@@ -121,6 +123,12 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 		}
 	};
 
+	/**
+	 * Filter test.
+	 *
+	 * @param description
+	 *            the description
+	 */
 	public void filterTest(final Description description) {
 		final String name = description.getClassName() + "#" + description.getMethodName();
 		final KnownProblem kp = description.getAnnotation(KnownProblem.class);
@@ -551,8 +559,9 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 	 *
 	 * @param value
 	 *            the value
+	 * @return the abstract test plan
 	 */
-	public void dataValue(final String value) {
+	public AbstractTestPlan dataValue(final String value) {
 		if (null == value) {
 			getTestCase().setDataValue("");
 		} else if (value.length() > 255) {
@@ -561,6 +570,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 		} else {
 			getTestCase().setDataValue(value);
 		}
+		return this;
 	}
 
 	/**
@@ -611,20 +621,46 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 		getIgnoredTests().put(testCaseName, reason);
 	}
 
+	/**
+	 * Checks if is assume true.
+	 *
+	 * @return true, if is assume true
+	 */
 	public boolean isAssumeTrue() {
 		return assumeTrue;
 	}
 
-	public void setAssumeTrue(final boolean assumeTrue) {
+	/**
+	 * Sets the assume true.
+	 *
+	 * @param assumeTrue
+	 *            the assume true
+	 * @return the abstract test plan
+	 */
+	public AbstractTestPlan setAssumeTrue(final boolean assumeTrue) {
 		this.assumeTrue = assumeTrue;
+		return this;
 	}
 
+	/**
+	 * Gets the description.
+	 *
+	 * @return the description
+	 */
 	public Description getDescription() {
 		return description;
 	}
 
-	public void setDescription(final Description description) {
+	/**
+	 * Sets the description.
+	 *
+	 * @param description
+	 *            the description
+	 * @return the abstract test plan
+	 */
+	public AbstractTestPlan setDescription(final Description description) {
 		this.description = description;
+		return this;
 	}
 
 }

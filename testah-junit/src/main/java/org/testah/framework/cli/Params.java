@@ -336,9 +336,11 @@ public class Params {
 	 *
 	 * @param numConcurrentThreads
 	 *            the new num concurrent threads
+	 * @return the params
 	 */
-	public void setNumConcurrentThreads(final int numConcurrentThreads) {
+	public Params setNumConcurrentThreads(final int numConcurrentThreads) {
 		this.numConcurrentThreads = numConcurrentThreads;
+		return this;
 	}
 
 	/**
@@ -355,9 +357,11 @@ public class Params {
 	 *
 	 * @param browser
 	 *            the new browser
+	 * @return the params
 	 */
-	public void setBrowser(final BrowserType browser) {
+	public Params setBrowser(final BrowserType browser) {
 		this.browser = browser;
+		return this;
 	}
 
 	/**
@@ -374,9 +378,11 @@ public class Params {
 	 *
 	 * @param envir
 	 *            the new envir
+	 * @return the params
 	 */
-	public void setEnvir(final String envir) {
+	public Params setEnvir(final String envir) {
 		this.envir = envir;
+		return this;
 	}
 
 	/**
@@ -393,9 +399,11 @@ public class Params {
 	 *
 	 * @param level
 	 *            the new level
+	 * @return the params
 	 */
-	public void setLevel(final Level level) {
+	public Params setLevel(final Level level) {
 		this.level = level;
+		return this;
 	}
 
 	/**
@@ -412,9 +420,11 @@ public class Params {
 	 *
 	 * @param defaultWaitTime
 	 *            the new default wait time
+	 * @return the params
 	 */
-	public void setDefaultWaitTime(final int defaultWaitTime) {
+	public Params setDefaultWaitTime(final int defaultWaitTime) {
 		this.defaultWaitTime = defaultWaitTime;
+		return this;
 	}
 
 	/**
@@ -431,9 +441,11 @@ public class Params {
 	 *
 	 * @param defaultPauseTime
 	 *            the new default pause time
+	 * @return the params
 	 */
-	public void setDefaultPauseTime(final Long defaultPauseTime) {
+	public Params setDefaultPauseTime(final Long defaultPauseTime) {
 		this.defaultPauseTime = defaultPauseTime;
+		return this;
 	}
 
 	/**
@@ -450,9 +462,11 @@ public class Params {
 	 *
 	 * @param lookAtInternalTests
 	 *            the new look at internal tests
+	 * @return the params
 	 */
-	public void setLookAtInternalTests(final String lookAtInternalTests) {
+	public Params setLookAtInternalTests(final String lookAtInternalTests) {
 		this.lookAtInternalTests = lookAtInternalTests;
+		return this;
 	}
 
 	/**
@@ -469,9 +483,11 @@ public class Params {
 	 *
 	 * @param lookAtExternalTests
 	 *            the new look at external tests
+	 * @return the params
 	 */
-	public void setLookAtExternalTests(final String lookAtExternalTests) {
+	public Params setLookAtExternalTests(final String lookAtExternalTests) {
 		this.lookAtExternalTests = lookAtExternalTests;
+		return this;
 	}
 
 	/**
@@ -488,9 +504,11 @@ public class Params {
 	 *
 	 * @param recordSteps
 	 *            the new record steps
+	 * @return the params
 	 */
-	public void setRecordSteps(final boolean recordSteps) {
+	public Params setRecordSteps(final boolean recordSteps) {
 		this.recordSteps = recordSteps;
+		return this;
 	}
 
 	/**
@@ -507,9 +525,11 @@ public class Params {
 	 *
 	 * @param throwExceptionOnFail
 	 *            the new throw exception on fail
+	 * @return the params
 	 */
-	public void setThrowExceptionOnFail(final boolean throwExceptionOnFail) {
+	public Params setThrowExceptionOnFail(final boolean throwExceptionOnFail) {
 		this.throwExceptionOnFail = throwExceptionOnFail;
+		return this;
 	}
 
 	/**
@@ -526,9 +546,11 @@ public class Params {
 	 *
 	 * @param useXunitFormatter
 	 *            the new use xunit formatter
+	 * @return the params
 	 */
-	public void setUseXunitFormatter(final boolean useXunitFormatter) {
+	public Params setUseXunitFormatter(final boolean useXunitFormatter) {
 		this.useXunitFormatter = useXunitFormatter;
+		return this;
 	}
 
 	/**
@@ -545,9 +567,11 @@ public class Params {
 	 *
 	 * @param useHtmlFormatter
 	 *            the new use html formatter
+	 * @return the params
 	 */
-	public void setUseHtmlFormatter(final boolean useHtmlFormatter) {
+	public Params setUseHtmlFormatter(final boolean useHtmlFormatter) {
 		this.useHtmlFormatter = useHtmlFormatter;
+		return this;
 	}
 
 	/**
@@ -564,9 +588,11 @@ public class Params {
 	 *
 	 * @param autoOpenHtmlReport
 	 *            the new auto open html report
+	 * @return the params
 	 */
-	public void setAutoOpenHtmlReport(final boolean autoOpenHtmlReport) {
+	public Params setAutoOpenHtmlReport(final boolean autoOpenHtmlReport) {
 		this.autoOpenHtmlReport = autoOpenHtmlReport;
+		return this;
 	}
 
 	/**
@@ -583,9 +609,11 @@ public class Params {
 	 *
 	 * @param runLocation
 	 *            the new run location
+	 * @return the params
 	 */
-	public void setRunLocation(final String runLocation) {
+	public Params setRunLocation(final String runLocation) {
 		this.runLocation = runLocation;
+		return this;
 	}
 
 	/**
@@ -602,9 +630,11 @@ public class Params {
 	 *
 	 * @param runType
 	 *            the new run type
+	 * @return the params
 	 */
-	public void setRunType(final String runType) {
+	public Params setRunType(final String runType) {
 		this.runType = runType;
+		return this;
 	}
 
 	/**
@@ -621,9 +651,11 @@ public class Params {
 	 *
 	 * @param usefilterSchema
 	 *            the new usefilter schema
+	 * @return the params
 	 */
-	public void setUsefilterSchema(final String usefilterSchema) {
+	public Params setUsefilterSchema(final String usefilterSchema) {
 		this.usefilterSchema = usefilterSchema;
+		return this;
 	}
 
 	/**
@@ -640,9 +672,11 @@ public class Params {
 	 *
 	 * @param filterByPlatform
 	 *            the new filter by platform
+	 * @return the params
 	 */
-	public void setFilterByPlatform(final String filterByPlatform) {
+	public Params setFilterByPlatform(final String filterByPlatform) {
 		this.filterByPlatform = filterByPlatform;
+		return this;
 	}
 
 	/**
@@ -659,9 +693,11 @@ public class Params {
 	 *
 	 * @param filterByDevice
 	 *            the new filter by device
+	 * @return the params
 	 */
-	public void setFilterByDevice(final String filterByDevice) {
+	public Params setFilterByDevice(final String filterByDevice) {
 		this.filterByDevice = filterByDevice;
+		return this;
 	}
 
 	/**
@@ -678,9 +714,11 @@ public class Params {
 	 *
 	 * @param filterByComponent
 	 *            the new filter by component
+	 * @return the params
 	 */
-	public void setFilterByComponent(final String filterByComponent) {
+	public Params setFilterByComponent(final String filterByComponent) {
 		this.filterByComponent = filterByComponent;
+		return this;
 	}
 
 	/**
@@ -697,9 +735,11 @@ public class Params {
 	 *
 	 * @param filterByRunType
 	 *            the new filter by run type
+	 * @return the params
 	 */
-	public void setFilterByRunType(final String filterByRunType) {
+	public Params setFilterByRunType(final String filterByRunType) {
 		this.filterByRunType = filterByRunType;
+		return this;
 	}
 
 	/**
@@ -716,9 +756,11 @@ public class Params {
 	 *
 	 * @param filterByTag
 	 *            the new filter by tag
+	 * @return the params
 	 */
-	public void setFilterByTag(final String filterByTag) {
+	public Params setFilterByTag(final String filterByTag) {
 		this.filterByTag = filterByTag;
+		return this;
 	}
 
 	/**
@@ -735,9 +777,11 @@ public class Params {
 	 *
 	 * @param filterByTestPlanNameStartsWith
 	 *            the new filter by test plan name starts with
+	 * @return the params
 	 */
-	public void setFilterByTestPlanNameStartsWith(final String filterByTestPlanNameStartsWith) {
+	public Params setFilterByTestPlanNameStartsWith(final String filterByTestPlanNameStartsWith) {
 		this.filterByTestPlanNameStartsWith = filterByTestPlanNameStartsWith;
+		return this;
 	}
 
 	/**
@@ -754,9 +798,11 @@ public class Params {
 	 *
 	 * @param filterById
 	 *            the new filter by id
+	 * @return the params
 	 */
-	public void setFilterById(final String filterById) {
+	public Params setFilterById(final String filterById) {
 		this.filterById = filterById;
+		return this;
 	}
 
 	/**
@@ -773,9 +819,11 @@ public class Params {
 	 *
 	 * @param filterByTestType
 	 *            the new filter by test type
+	 * @return the params
 	 */
-	public void setFilterByTestType(final TestType filterByTestType) {
+	public Params setFilterByTestType(final TestType filterByTestType) {
 		this.filterByTestType = filterByTestType;
+		return this;
 	}
 
 	/**
@@ -855,9 +903,11 @@ public class Params {
 	 *
 	 * @param output
 	 *            the new output
+	 * @return the params
 	 */
-	public void setOutput(final String output) {
+	public Params setOutput(final String output) {
 		this.output = output;
+		return this;
 	}
 
 	/**
@@ -874,9 +924,11 @@ public class Params {
 	 *
 	 * @param webDriver_userAgentValue
 	 *            the new web driver_user agent value
+	 * @return the params
 	 */
-	public void setWebDriver_userAgentValue(final String webDriver_userAgentValue) {
+	public Params setWebDriver_userAgentValue(final String webDriver_userAgentValue) {
 		this.webDriver_userAgentValue = webDriver_userAgentValue;
+		return this;
 	}
 
 	/**
@@ -884,9 +936,11 @@ public class Params {
 	 *
 	 * @param webDriver_useRemoteDriver
 	 *            the new web driver_use remote driver
+	 * @return the params
 	 */
-	public void setWebDriver_useRemoteDriver(final boolean webDriver_useRemoteDriver) {
+	public Params setWebDriver_useRemoteDriver(final boolean webDriver_useRemoteDriver) {
 		this.webDriver_useRemoteDriver = webDriver_useRemoteDriver;
+		return this;
 	}
 
 	/**
@@ -894,9 +948,11 @@ public class Params {
 	 *
 	 * @param webDriver_defaultRemoteUri
 	 *            the new web driver_default remote uri
+	 * @return the params
 	 */
-	public void setWebDriver_defaultRemoteUri(final String webDriver_defaultRemoteUri) {
+	public Params setWebDriver_defaultRemoteUri(final String webDriver_defaultRemoteUri) {
 		this.webDriver_defaultRemoteUri = webDriver_defaultRemoteUri;
+		return this;
 	}
 
 	/**
@@ -904,9 +960,11 @@ public class Params {
 	 *
 	 * @param webDriver_firefoxDriverBinary
 	 *            the new web driver_firefox driver binary
+	 * @return the params
 	 */
-	public void setWebDriver_firefoxDriverBinary(final String webDriver_firefoxDriverBinary) {
+	public Params setWebDriver_firefoxDriverBinary(final String webDriver_firefoxDriverBinary) {
 		this.webDriver_firefoxDriverBinary = webDriver_firefoxDriverBinary;
+		return this;
 	}
 
 	/**
@@ -914,9 +972,11 @@ public class Params {
 	 *
 	 * @param webDriver_phantomJsDriverBinary
 	 *            the new web driver_phantom js driver binary
+	 * @return the params
 	 */
-	public void setWebDriver_phantomJsDriverBinary(final String webDriver_phantomJsDriverBinary) {
+	public Params setWebDriver_phantomJsDriverBinary(final String webDriver_phantomJsDriverBinary) {
 		this.webDriver_phantomJsDriverBinary = webDriver_phantomJsDriverBinary;
+		return this;
 	}
 
 	/**
@@ -924,9 +984,11 @@ public class Params {
 	 *
 	 * @param webDriver_chromeDriverBinary
 	 *            the new web driver_chrome driver binary
+	 * @return the params
 	 */
-	public void setWebDriver_chromeDriverBinary(final String webDriver_chromeDriverBinary) {
+	public Params setWebDriver_chromeDriverBinary(final String webDriver_chromeDriverBinary) {
 		this.webDriver_chromeDriverBinary = webDriver_chromeDriverBinary;
+		return this;
 	}
 
 	/**
@@ -934,9 +996,11 @@ public class Params {
 	 *
 	 * @param runInfo_versionId
 	 *            the new run info_version id
+	 * @return the params
 	 */
-	public void setRunInfo_versionId(final String runInfo_versionId) {
+	public Params setRunInfo_versionId(final String runInfo_versionId) {
 		this.runInfo_versionId = runInfo_versionId;
+		return this;
 	}
 
 	/**
@@ -944,9 +1008,11 @@ public class Params {
 	 *
 	 * @param runInfo_buildNumber
 	 *            the new run info_build number
+	 * @return the params
 	 */
-	public void setRunInfo_buildNumber(final String runInfo_buildNumber) {
+	public Params setRunInfo_buildNumber(final String runInfo_buildNumber) {
 		this.runInfo_buildNumber = runInfo_buildNumber;
+		return this;
 	}
 
 	/**
@@ -954,9 +1020,11 @@ public class Params {
 	 *
 	 * @param runInfo_runId
 	 *            the new run info_run id
+	 * @return the params
 	 */
-	public void setRunInfo_runId(final String runInfo_runId) {
+	public Params setRunInfo_runId(final String runInfo_runId) {
 		this.runInfo_runId = runInfo_runId;
+		return this;
 	}
 
 	/**
@@ -973,9 +1041,11 @@ public class Params {
 	 *
 	 * @param filterIgnoreKnownProblem
 	 *            the new filter ignore known problem
+	 * @return the params
 	 */
-	public void setFilterIgnoreKnownProblem(final boolean filterIgnoreKnownProblem) {
+	public Params setFilterIgnoreKnownProblem(final boolean filterIgnoreKnownProblem) {
 		this.filterIgnoreKnownProblem = filterIgnoreKnownProblem;
+		return this;
 	}
 
 	/**
@@ -992,9 +1062,11 @@ public class Params {
 	 *
 	 * @param sendJsonTestDataToService
 	 *            the new send json test data to service
+	 * @return the params
 	 */
-	public void setSendJsonTestDataToService(final String sendJsonTestDataToService) {
+	public Params setSendJsonTestDataToService(final String sendJsonTestDataToService) {
 		this.sendJsonTestDataToService = sendJsonTestDataToService;
+		return this;
 	}
 
 	/**
@@ -1011,9 +1083,11 @@ public class Params {
 	 *
 	 * @param addResults
 	 *            the new adds the results
+	 * @return the params
 	 */
-	public void setAddResults(final boolean addResults) {
+	public Params setAddResults(final boolean addResults) {
 		this.addResults = addResults;
+		return this;
 	}
 
 	/**
@@ -1030,19 +1104,39 @@ public class Params {
 	 *
 	 * @param updateMetadata
 	 *            the new update metadata
+	 * @return the params
 	 */
-	public void setUpdateMetadata(final boolean updateMetadata) {
+	public Params setUpdateMetadata(final boolean updateMetadata) {
 		this.updateMetadata = updateMetadata;
+		return this;
 	}
 
+	/**
+	 * Checks if is use meta formatter.
+	 *
+	 * @return true, if is use meta formatter
+	 */
 	public boolean isUseMetaFormatter() {
 		return useMetaFormatter;
 	}
 
-	public void setUseMetaFormatter(final boolean useMetaFormatter) {
+	/**
+	 * Sets the use meta formatter.
+	 *
+	 * @param useMetaFormatter
+	 *            the use meta formatter
+	 * @return the params
+	 */
+	public Params setUseMetaFormatter(final boolean useMetaFormatter) {
 		this.useMetaFormatter = useMetaFormatter;
+		return this;
 	}
 
+	/**
+	 * Gets the computer name.
+	 *
+	 * @return the computer name
+	 */
 	public String getComputerName() {
 		final Map<String, String> env = System.getenv();
 		if (env.containsKey("COMPUTERNAME"))

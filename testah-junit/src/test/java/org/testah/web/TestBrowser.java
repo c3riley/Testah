@@ -28,6 +28,7 @@ public class TestBrowser extends BrowserTestPlan {
 	public void setup() {
 		TS.browser().goTo(baseUrl);
 		TS.util().pause(2000L, "Since using git redirect need to wait a little while");
+
 	}
 
 	@TestCase

@@ -22,7 +22,6 @@ public class Testah {
 	public static void main(final String[] args) throws InterruptedException, IOException {
 		final Cli cli = new Cli();
 		cli.getArgumentParser(args);
-
 	}
 
 }

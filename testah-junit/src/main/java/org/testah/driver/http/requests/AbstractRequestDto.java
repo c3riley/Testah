@@ -17,6 +17,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.openqa.selenium.internal.Base64Encoder;
 import org.testah.TS;
 import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
@@ -42,8 +43,9 @@ public abstract class AbstractRequestDto {
 		return this;
 	}
 
-	public void setUri(final String uri) {
+	public AbstractRequestDto setUri(final String uri) {
 		this.uri = uri;
+		return this;
 	}
 
 	protected AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
@@ -127,6 +129,19 @@ public abstract class AbstractRequestDto {
 		return this;
 	}
 
+	public AbstractRequestDto addBasicAuthHeader(final String userName, final String password) {
+		final String encoding = new Base64Encoder()
+				.encode((userName + ":" + password).getBytes(Charset.forName("ISO-8859-1")));
+		addHeader(new BasicHeader("Authorization", "Basic " + encoding));
+		return this;
+	}
+
+	public AbstractRequestDto addBasicAuthHeaderWithMask(final String userName, final String password) {
+		TS.addMask(userName);
+		TS.addMask(password);
+		return addBasicAuthHeader(userName, password);
+	}
+
 	/**
 	 * Sets the basic auth credentials.
 	 *
@@ -153,12 +168,14 @@ public abstract class AbstractRequestDto {
 		return httpRequestBase;
 	}
 
-	public void setHttpRequestBase(final HttpRequestBase httpRequestBase) {
+	public AbstractRequestDto setHttpRequestBase(final HttpRequestBase httpRequestBase) {
 		this.httpRequestBase = httpRequestBase;
+		return this;
 	}
 
-	public void setHttpEntity(final HttpEntity httpEntity) {
+	public AbstractRequestDto setHttpEntity(final HttpEntity httpEntity) {
 		this.httpEntity = httpEntity;
+		return this;
 	}
 
 	public String getUri() {

@@ -34,6 +34,7 @@ import org.apache.http.conn.ManagedHttpClientConnection;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -50,6 +51,7 @@ import org.apache.http.io.HttpMessageWriterFactory;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.testah.TS;
@@ -125,6 +127,8 @@ public abstract class AbstractHttpWrapper {
 
 	/** The trust all certs. */
 	protected boolean trustAllCerts = true;
+
+	private org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory = null;
 
 	/** The conn manager. */
 	private PoolingHttpClientConnectionManager connManager;
@@ -389,6 +393,7 @@ public abstract class AbstractHttpWrapper {
 			hcb.setConnectionManager(getConnectionManager());
 		}
 		if (trustAllCerts) {
+			hcb.setSSLSocketFactory(getSslSocketFactory());
 			// hcb.setSSLHostnameVerifier(new NoopHostnameVerifier());
 		}
 
@@ -535,20 +540,20 @@ public abstract class AbstractHttpWrapper {
 	 *
 	 * @return the abstract http wrapper
 	 */
-	public AbstractHttpWrapper setSSLContextTrustAll() {
+	public SSLConnectionSocketFactory getDefaultSSLConnectionSocketFactory() {
 		try {
-			/*
-			 * final SSLHostnameVerifier sSLHostnameVerifier = new
-			 * NoopHostnameVerifier();
-			 *
-			 * final TrustStrategy ts = new TrustSelfSignedStrategy(); return
-			 * setSslcontext(SSLContexts.custom().loadTrustMaterial(new
-			 * TrustSelfSignedStrategy()).build());
-			 */
+			final org.apache.http.ssl.SSLContextBuilder contextB = SSLContextBuilder.create();
+
+			contextB.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
+
+			final SSLContext sslContext = contextB.build();
+
+			return new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
-		return this;
+
 	}
 
 	/**
@@ -1109,6 +1114,17 @@ public abstract class AbstractHttpWrapper {
 	public AbstractHttpWrapper setTrustAllCerts(final boolean trustAllCerts) {
 		this.trustAllCerts = trustAllCerts;
 		return this;
+	}
+
+	public org.apache.http.conn.ssl.SSLConnectionSocketFactory getSslSocketFactory() {
+		if (null == sslSocketFactory) {
+			this.sslSocketFactory = getDefaultSSLConnectionSocketFactory();
+		}
+		return sslSocketFactory;
+	}
+
+	public void setSslSocketFactory(final org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory) {
+		this.sslSocketFactory = sslSocketFactory;
 	}
 
 }

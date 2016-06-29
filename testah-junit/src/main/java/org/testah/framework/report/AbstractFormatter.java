@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.testah.TS;
@@ -100,13 +101,22 @@ public abstract class AbstractFormatter {
 			final StringWriter writer = new StringWriter();
 			ve.evaluate(context, writer, pathToTemplate, reader);
 
-			return writer.toString();
+			return maskValuesInReport(writer.toString());
 
 		} catch (final Exception e) {
 			TS.log().error(e);
 			throw new RuntimeException("Velocity template", e);
 		}
 
+	}
+
+	private String maskValuesInReport(final String report) {
+		if (TS.getMaskValues().isEmpty()) {
+			return report;
+		}
+		final int size = TS.getMaskValues().keySet().size();
+		return StringUtils.replaceEach(report, TS.getMaskValues().keySet().toArray(new String[size]),
+				TS.getMaskValues().values().toArray(new String[size]));
 	}
 
 	/**
