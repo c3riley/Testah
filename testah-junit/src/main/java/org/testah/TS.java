@@ -40,6 +40,8 @@ public class TS {
 	/** The _params. */
 	private static Params _params;
 
+	private static final HashMap<String, String> maskValues = new HashMap<String, String>();
+
 	/**
 	 * Asserts.
 	 *
@@ -112,11 +114,26 @@ public class TS {
 	/**
 	 * Params.
 	 *
+	 * @param params
+	 *            the params
+	 * @return the params
+	 */
+	public static Params params(final Params params) {
+		if (null == _params) {
+			_params = params;
+		}
+		return _params;
+	}
+
+	/**
+	 * Params.
+	 *
 	 * @return the params
 	 */
 	public static Params params() {
 		if (null == _params) {
 			_params = new Cli().getArgumentParser(null).getOpt();
+			Log.setLevel(_params.getLevel());
 		}
 		return _params;
 	}
@@ -202,6 +219,14 @@ public class TS {
 	public static void addStepAction(final StepActionDto stepAction) {
 		AbstractTestPlan.addStepAction(stepAction);
 		return;
+	}
+
+	public static HashMap<String, String> getMaskValues() {
+		return maskValues;
+	}
+
+	public static void addMask(final String valueToMask) {
+		maskValues.put(valueToMask, "*masked*");
 	}
 
 }

@@ -20,7 +20,7 @@ public class StepAction extends StepActionDto {
 	}
 
 	public static StepActionDto add(final StepActionDto stepAction) {
-		if (TS.params().isRecordSteps()) {
+		if (null != TS.params() && TS.params().isRecordSteps()) {
 			AbstractTestPlan.addStepAction(stepAction);
 		}
 		return stepAction;
@@ -34,7 +34,7 @@ public class StepAction extends StepActionDto {
 	 * @return the step action dto
 	 */
 	public static StepActionDto add(final StepAction stepAction) {
-		if (TS.params().isRecordSteps()) {
+		if (null != TS.params() && TS.params().isRecordSteps()) {
 			AbstractTestPlan.addStepAction(stepAction);
 		}
 		return stepAction;
@@ -46,7 +46,7 @@ public class StepAction extends StepActionDto {
 	 * @return the step action dto
 	 */
 	public StepActionDto add() {
-		if (TS.params().isRecordSteps()) {
+		if (null != TS.params() && TS.params().isRecordSteps()) {
 			AbstractTestPlan.addStepAction(this);
 		}
 		return this;

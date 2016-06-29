@@ -61,8 +61,9 @@ public class SqlExecutionDto {
 		return durationPretty;
 	}
 
-	public void setDurationPretty(final String durationPretty) {
+	public SqlExecutionDto setDurationPretty(final String durationPretty) {
 		this.durationPretty = durationPretty;
+		return this;
 	}
 
 	public String getSql() {
@@ -73,16 +74,18 @@ public class SqlExecutionDto {
 		return resultCount;
 	}
 
-	public void setResultCount(final Integer resultCount) {
+	public SqlExecutionDto setResultCount(final Integer resultCount) {
 		this.resultCount = resultCount;
+		return this;
 	}
 
 	public Integer getUpdateCount() {
 		return updateCount;
 	}
 
-	public void setUpdateCount(final Integer updateCount) {
+	public SqlExecutionDto setUpdateCount(final Integer updateCount) {
 		this.updateCount = updateCount;
+		return this;
 	}
 
 }

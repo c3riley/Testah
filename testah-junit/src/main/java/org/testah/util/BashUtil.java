@@ -24,8 +24,10 @@ public class BashUtil {
 	/** The error. */
 	private String error = "";
 
+	/** The Constant DEFAULT_EXIT_VALUE. */
 	public static final int DEFAULT_EXIT_VALUE = -999;
 
+	/** The exit value. */
 	private int exitValue = DEFAULT_EXIT_VALUE;
 
 	/** The bang line. */
@@ -114,9 +116,11 @@ public class BashUtil {
 	 *
 	 * @param verbose
 	 *            the new verbose
+	 * @return the bash util
 	 */
-	public void setVerbose(final boolean verbose) {
+	public BashUtil setVerbose(final boolean verbose) {
 		this.verbose = verbose;
+		return this;
 	}
 
 	/**
@@ -133,9 +137,11 @@ public class BashUtil {
 	 *
 	 * @param output
 	 *            the new output
+	 * @return the bash util
 	 */
-	public void setOutput(final String output) {
+	public BashUtil setOutput(final String output) {
 		this.output = output;
+		return this;
 	}
 
 	/**
@@ -152,9 +158,11 @@ public class BashUtil {
 	 *
 	 * @param error
 	 *            the new error
+	 * @return the bash util
 	 */
-	public void setError(final String error) {
+	public BashUtil setError(final String error) {
 		this.error = error;
+		return this;
 	}
 
 	/**
@@ -174,9 +182,11 @@ public class BashUtil {
 	 *
 	 * @param bangLine
 	 *            the new bang line
+	 * @return the bash util
 	 */
-	public void setBangLine(final String bangLine) {
+	public BashUtil setBangLine(final String bangLine) {
 		this.bangLine = bangLine;
+		return this;
 	}
 
 	/**
@@ -196,16 +206,31 @@ public class BashUtil {
 	 *
 	 * @param bashSource
 	 *            the new bash source
+	 * @return the bash util
 	 */
-	public void setBashSource(final String bashSource) {
+	public BashUtil setBashSource(final String bashSource) {
 		this.bashSource = bashSource;
+		return this;
 	}
 
+	/**
+	 * Gets the exit value.
+	 *
+	 * @return the exit value
+	 */
 	public int getExitValue() {
 		return exitValue;
 	}
 
-	public void setExitValue(final int exitValue) {
+	/**
+	 * Sets the exit value.
+	 *
+	 * @param exitValue
+	 *            the exit value
+	 * @return the bash util
+	 */
+	public BashUtil setExitValue(final int exitValue) {
 		this.exitValue = exitValue;
+		return this;
 	}
 }
