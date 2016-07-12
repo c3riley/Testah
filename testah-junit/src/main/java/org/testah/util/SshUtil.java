@@ -19,7 +19,6 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-
 /**
  * The Class SshUtil.
  */
@@ -46,6 +45,9 @@ public class SshUtil {
 
 	/** The jsch. */
 	private final JSch jsch = new JSch();
+
+	private static final int LAST_EXIT_CODE_DEFAULT = -999;
+	private int lastExitCode = LAST_EXIT_CODE_DEFAULT;
 
 	/**
 	 * Instantiates a new ssh util.
@@ -132,7 +134,7 @@ public class SshUtil {
 	 */
 	public String runShell(final Session session, final String... commands)
 			throws JSchException, IOException, InterruptedException {
-
+		this.lastExitCode = LAST_EXIT_CODE_DEFAULT;
 		if (!session.isConnected()) {
 			session.connect();
 		}
@@ -181,6 +183,7 @@ public class SshUtil {
 					}
 					if (channel.isClosed()) {
 						System.out.println("exit-status: " + channel.getExitStatus());
+						this.lastExitCode = channel.getExitStatus();
 						break;
 					}
 					try {
@@ -384,7 +387,8 @@ public class SshUtil {
 	/**
 	 * Sets the ignore timeout.
 	 *
-	 * @param ignoreTimeout            the new ignore timeout
+	 * @param ignoreTimeout
+	 *            the new ignore timeout
 	 * @return the ssh util
 	 */
 	public SshUtil setIgnoreTimeout(final boolean ignoreTimeout) {
@@ -416,8 +420,10 @@ public class SshUtil {
 	/**
 	 * Run exec.
 	 *
-	 * @param session the session
-	 * @param command the command
+	 * @param session
+	 *            the session
+	 * @param command
+	 *            the command
 	 * @return the string
 	 */
 	public String runExec(final Session session, final String command) {
@@ -425,7 +431,7 @@ public class SshUtil {
 			if (!session.isConnected()) {
 				session.connect();
 			}
-
+			this.lastExitCode = LAST_EXIT_CODE_DEFAULT;
 			final Channel channel = session.openChannel("exec");
 			if (isVerbose()) {
 				TS.log().info("command: " + command);
@@ -462,6 +468,7 @@ public class SshUtil {
 					if (in.available() > 0)
 						continue;
 					TS.log().info("exit-status: " + channel.getExitStatus());
+					this.lastExitCode = channel.getExitStatus();
 					break;
 				}
 				try {
@@ -476,6 +483,17 @@ public class SshUtil {
 			TS.log().error(e);
 		}
 		return "";
+	}
+
+	public int getLastExitCode() {
+		if (lastExitCode == LAST_EXIT_CODE_DEFAULT) {
+			TS.log().warn("Exit Code was not set with last action!, so is " + LAST_EXIT_CODE_DEFAULT);
+		}
+		return lastExitCode;
+	}
+
+	public void setLastExitCode(final int lastExitCode) {
+		this.lastExitCode = lastExitCode;
 	}
 
 }
