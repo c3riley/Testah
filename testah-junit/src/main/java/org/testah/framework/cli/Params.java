@@ -113,6 +113,14 @@ public class Params {
 		Params.userDir = userDir;
 	}
 
+	@Comment(info = "Base Url For Jira ex: http://company.jira.com")
+	@Arg(dest = "jiraUrl")
+	private String jiraUrl = "";
+
+	@Comment(info = "Inject Jira Remote Link for Associated Items")
+	@Arg(dest = "useJiraRemoteLink")
+	private boolean useJiraRemoteLink = false;
+
 	/** The num concurrent threads. */
 	@Comment(info = "Number of Concurrent Threads")
 	@Arg(dest = "numConcurrentThreads")
@@ -1145,6 +1153,22 @@ public class Params {
 			return env.get("HOSTNAME");
 		else
 			return "NA";
+	}
+
+	public String getJiraUrl() {
+		return jiraUrl;
+	}
+
+	public void setJiraUrl(final String jiraUrl) {
+		this.jiraUrl = jiraUrl;
+	}
+
+	public boolean isUseJiraRemoteLink() {
+		return useJiraRemoteLink;
+	}
+
+	public void setUseJiraRemoteLink(final boolean useJiraRemoteLink) {
+		this.useJiraRemoteLink = useJiraRemoteLink;
 	}
 
 }

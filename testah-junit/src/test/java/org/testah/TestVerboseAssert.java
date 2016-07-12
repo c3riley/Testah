@@ -2,8 +2,11 @@
 package org.testah;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
@@ -20,6 +23,7 @@ public class TestVerboseAssert extends HttpTestPlan {
 
 	}
 
+	@Ignore
 	@TestCase()
 	@Test
 	public void testDontStoponFirstFail() throws JsonGenerationException, JsonMappingException, IOException {
@@ -28,12 +32,24 @@ public class TestVerboseAssert extends HttpTestPlan {
 		getTestPlan();
 	}
 
+	@Ignore
 	@TestCase()
 	@Test(expected = AssertionError.class)
 	public void testStopOnZFirstFail() throws JsonGenerationException, JsonMappingException, IOException {
 		TS.asserts().setThrowExceptionOnFail(true);
 		TS.asserts().same("", "cool", "cool");
 		TS.asserts().same("", "cool", "cll");
+
+	}
+
+	@TestCase()
+	@Test
+	public void testIsEmpty() throws JsonGenerationException, JsonMappingException, IOException {
+		TS.asserts().isEmpty("", new String[] {});
+		TS.asserts().isEmpty("", new Integer[] {});
+		TS.asserts().isEmpty("", new ArrayList<String>());
+		TS.asserts().isEmpty("", new HashMap<String, String>());
+		TS.asserts().isEmpty("", new HashMap<String, String>().keySet());
 
 	}
 

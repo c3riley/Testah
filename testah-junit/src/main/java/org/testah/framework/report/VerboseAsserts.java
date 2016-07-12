@@ -1,5 +1,8 @@
 package org.testah.framework.report;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.hamcrest.Matcher;
@@ -40,6 +43,65 @@ public class VerboseAsserts {
 	 */
 	public VerboseAsserts(final boolean throwExceptionOnFail) {
 		this.throwExceptionOnFail = throwExceptionOnFail;
+	}
+
+	public boolean startsWith(final String message, final String stringToCheck, final String expectedPrefix) {
+		return this.isTrue(message + " - expected String[" + stringToCheck + "] to startWith " + expectedPrefix,
+				stringToCheck.startsWith(expectedPrefix));
+	}
+
+	public boolean endsWith(final String message, final String stringToCheck, final String expectedSuffix) {
+		return this.isTrue(message + " - expected String[" + stringToCheck + "] to endsWith " + expectedSuffix,
+				stringToCheck.endsWith(expectedSuffix));
+	}
+
+	public boolean contains(final String message, final String stringToCheck, final String expectedValueToContain) {
+		return this.isTrue(message + " - expected String[" + stringToCheck + "] to contain " + expectedValueToContain,
+				stringToCheck.contains(expectedValueToContain));
+	}
+
+	public boolean sizeEquals(final String message, final String objectToCheckSizeOrLenthOf, final int expectedSize) {
+		return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLenthOf
+				+ "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
+	}
+
+	public boolean notEndsWith(final String message, final String stringToCheck, final String expectedSuffix) {
+		return this.isTrue(message + " - expected String[" + stringToCheck + "] to endsWith " + expectedSuffix,
+				stringToCheck.endsWith(expectedSuffix));
+	}
+
+	public boolean notContains(final String message, final String stringToCheck, final String expectedValueToContain) {
+		return this.isTrue(message + " - expected String[" + stringToCheck + "] to contain " + expectedValueToContain,
+				stringToCheck.contains(expectedValueToContain));
+	}
+
+	public boolean notSizeEquals(final String message, final Object objectToCheckSizeOrLenthOf,
+			final int expectedSize) {
+		return this.notEquals(message + " - expected Object[" + objectToCheckSizeOrLenthOf
+				+ "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
+	}
+
+	private int getSize(final Object objectToCheck) {
+		Integer actual = null;
+		if (objectToCheck instanceof String) {
+			actual = ((String) objectToCheck).length();
+		} else if (objectToCheck instanceof Object[]) {
+			actual = ((Object[]) objectToCheck).length;
+		} else if (objectToCheck instanceof ArrayList) {
+			actual = ((ArrayList<?>) objectToCheck).size();
+		} else if (objectToCheck instanceof List) {
+			actual = ((List<?>) objectToCheck).size();
+		} else if (objectToCheck instanceof Set) {
+			actual = ((Set<?>) objectToCheck).size();
+		} else if (objectToCheck instanceof HashMap) {
+			actual = ((HashMap<?, ?>) objectToCheck).size();
+		}
+		if (null != actual) {
+			return actual;
+		} else {
+			throw new RuntimeException("Issue with object to Check for isEmpty Assert, object must be String, "
+					+ "ArrayList, Set, List or HashMap");
+		}
 	}
 
 	// final JsonNode jsonNode=new ObjectMapper().valueToTree(tp);
@@ -1510,49 +1572,38 @@ public class VerboseAsserts {
 		}
 	}
 
-	/**
-	 * Checks if is empty.
-	 *
-	 * @param message
-	 *            the message
-	 * @param actual
-	 *            the actual
-	 * @return true, if is empty
-	 */
-	public boolean isEmpty(final String message, final Set<?> actual) {
-		try {
-			Assert.assertNotNull(message, actual);
-			Assert.assertTrue(message + " - Is Empty", actual.isEmpty());
-			return addAssertHistory(message, true, "isEmpty", true, actual);
-		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory(message, false, "isEmpty", true, actual, e);
-			if (getThrowExceptionOnFail()) {
-				throw e;
-			}
-			return rtn;
-		}
+	public boolean isEmpty(final String message, final Object objectToCheck) {
+		Assert.assertNotNull(message, objectToCheck);
+		final Boolean actual = isEmpty(objectToCheck);
+		return isTrue(message + " - Is Empty[" + objectToCheck + "]", actual);
 	}
 
-	/**
-	 * Checks if is not empty.
-	 *
-	 * @param message
-	 *            the message
-	 * @param actual
-	 *            the actual
-	 * @return true, if is not empty
-	 */
-	public boolean isNotEmpty(final String message, final Set<?> actual) {
-		try {
-			Assert.assertNotNull(message, actual);
-			Assert.assertFalse(message + " - Is Not Empty", actual.isEmpty());
-			return addAssertHistory(message, true, "isNotEmpty", true, actual);
-		} catch (final AssertionError e) {
-			final boolean rtn = addAssertHistory(message, false, "isNotEmpty", true, actual, e);
-			if (getThrowExceptionOnFail()) {
-				throw e;
-			}
-			return rtn;
+	public boolean isNotEmpty(final String message, final Object objectToCheck) {
+		Assert.assertNotNull(message, objectToCheck);
+		final Boolean actual = isEmpty(objectToCheck);
+		return isFalse(message + " - Is Empty", actual);
+	}
+
+	private boolean isEmpty(final Object objectToCheck) {
+		Boolean actual = null;
+		if (objectToCheck instanceof String) {
+			actual = ((String) objectToCheck).length() == 0;
+		} else if (objectToCheck instanceof Object[]) {
+			actual = ((Object[]) objectToCheck).length == 0;
+		} else if (objectToCheck instanceof ArrayList) {
+			actual = ((ArrayList<?>) objectToCheck).isEmpty();
+		} else if (objectToCheck instanceof List) {
+			actual = ((List<?>) objectToCheck).isEmpty();
+		} else if (objectToCheck instanceof Set) {
+			actual = ((Set<?>) objectToCheck).isEmpty();
+		} else if (objectToCheck instanceof HashMap) {
+			actual = ((HashMap<?, ?>) objectToCheck).isEmpty();
+		}
+		if (null != actual) {
+			return actual;
+		} else {
+			throw new RuntimeException("Issue with object to Check for isEmpty Assert, object must be String, "
+					+ "ArrayList, Set, List or HashMap");
 		}
 	}
 
