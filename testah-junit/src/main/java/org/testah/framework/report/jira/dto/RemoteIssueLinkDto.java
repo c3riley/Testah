@@ -13,25 +13,41 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+
+/**
+ * The Class RemoteIssueLinkDto.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({ "globalId", "application", "relationship", "object" })
 public class RemoteIssueLinkDto {
 
+    /** The id. */
     @JsonProperty("id")
     private int id = 0;
+    
+    /** The global id. */
     @JsonProperty("globalId")
     private String globalId;
+    
+    /** The application. */
     @JsonProperty("application")
     private Application application;
+    
+    /** The relationship. */
     @JsonProperty("relationship")
     private String relationship;
+    
+    /** The object. */
     @JsonProperty("object")
     private RemoteIssueLinkObject object;
+    
+    /** The additional properties. */
     @JsonIgnore
     private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
     /**
+     * Gets the global id.
      *
      * @return The globalId
      */
@@ -41,9 +57,10 @@ public class RemoteIssueLinkDto {
     }
 
     /**
+     * Sets the global id.
      *
-     * @param globalId
-     *            The globalId
+     * @param globalId            The globalId
+     * @return the remote issue link dto
      */
     @JsonProperty("globalId")
     public RemoteIssueLinkDto setGlobalId(final String globalId) {
@@ -52,6 +69,7 @@ public class RemoteIssueLinkDto {
     }
 
     /**
+     * Gets the application.
      *
      * @return The application
      */
@@ -61,9 +79,10 @@ public class RemoteIssueLinkDto {
     }
 
     /**
+     * Sets the application.
      *
-     * @param application
-     *            The application
+     * @param application            The application
+     * @return the remote issue link dto
      */
     @JsonProperty("application")
     public RemoteIssueLinkDto setApplication(final Application application) {
@@ -72,6 +91,7 @@ public class RemoteIssueLinkDto {
     }
 
     /**
+     * Gets the relationship.
      *
      * @return The relationship
      */
@@ -81,9 +101,10 @@ public class RemoteIssueLinkDto {
     }
 
     /**
+     * Sets the relationship.
      *
-     * @param relationship
-     *            The relationship
+     * @param relationship            The relationship
+     * @return the remote issue link dto
      */
     @JsonProperty("relationship")
     public RemoteIssueLinkDto setRelationship(final String relationship) {
@@ -92,6 +113,7 @@ public class RemoteIssueLinkDto {
     }
 
     /**
+     * Gets the object.
      *
      * @return The object
      */
@@ -101,9 +123,10 @@ public class RemoteIssueLinkDto {
     }
 
     /**
+     * Sets the object.
      *
-     * @param object
-     *            The object
+     * @param object            The object
+     * @return the remote issue link dto
      */
     @JsonProperty("object")
     public RemoteIssueLinkDto setObject(final RemoteIssueLinkObject object) {
@@ -111,21 +134,44 @@ public class RemoteIssueLinkDto {
         return this;
     }
 
+    /**
+     * Gets the additional properties.
+     *
+     * @return the additional properties
+     */
     @JsonAnyGetter
     public Map<String, java.lang.Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
+    /**
+     * Sets the additional property.
+     *
+     * @param name the name
+     * @param value the value
+     * @return the remote issue link dto
+     */
     @JsonAnySetter
     public RemoteIssueLinkDto setAdditionalProperty(final String name, final java.lang.Object value) {
         this.additionalProperties.put(name, value);
         return this;
     }
 
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets the id.
+     *
+     * @param id the id
+     * @return the remote issue link dto
+     */
     public RemoteIssueLinkDto setId(final int id) {
         this.id = id;
         return this;

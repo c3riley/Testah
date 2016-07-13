@@ -1,12 +1,12 @@
 package org.testah.driver.http.poller;
 
+import java.util.Date;
+
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.testPlan.AbstractTestPlan;
-
-import java.util.Date;
 
 /**
  * The Class HttpPoller.
@@ -45,6 +45,8 @@ public class HttpPoller {
      *            the request
      * @param pollerCheck
      *            the poller check
+     * @param pollingMessage
+     *            the polling message
      * @return the response dto
      */
     public ResponseDto pollRequest(final AbstractRequestDto request, final HttpPollerCheck pollerCheck, final String pollingMessage) {

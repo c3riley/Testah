@@ -13,25 +13,41 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+
+/**
+ * The Class RemoteIssueLinkObject.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({ "url", "title", "summary", "icon", "status" })
 public class RemoteIssueLinkObject {
 
+    /** The url. */
     @JsonProperty("url")
     private String url;
+    
+    /** The title. */
     @JsonProperty("title")
     private String title;
+    
+    /** The summary. */
     @JsonProperty("summary")
     private String summary;
+    
+    /** The icon. */
     @JsonProperty("icon")
     private Icon icon;
+    
+    /** The status. */
     @JsonProperty("status")
     private Status status;
+    
+    /** The additional properties. */
     @JsonIgnore
     private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
     /**
+     * Gets the url.
      *
      * @return The url
      */
@@ -41,9 +57,10 @@ public class RemoteIssueLinkObject {
     }
 
     /**
+     * Sets the url.
      *
-     * @param url
-     *            The url
+     * @param url            The url
+     * @return the remote issue link object
      */
     @JsonProperty("url")
     public RemoteIssueLinkObject setUrl(final String url) {
@@ -52,6 +69,7 @@ public class RemoteIssueLinkObject {
     }
 
     /**
+     * Gets the title.
      *
      * @return The title
      */
@@ -61,9 +79,10 @@ public class RemoteIssueLinkObject {
     }
 
     /**
+     * Sets the title.
      *
-     * @param title
-     *            The title
+     * @param title            The title
+     * @return the remote issue link object
      */
     @JsonProperty("title")
     public RemoteIssueLinkObject setTitle(final String title) {
@@ -72,6 +91,7 @@ public class RemoteIssueLinkObject {
     }
 
     /**
+     * Gets the summary.
      *
      * @return The summary
      */
@@ -81,9 +101,10 @@ public class RemoteIssueLinkObject {
     }
 
     /**
+     * Sets the summary.
      *
-     * @param summary
-     *            The summary
+     * @param summary            The summary
+     * @return the remote issue link object
      */
     @JsonProperty("summary")
     public RemoteIssueLinkObject setSummary(final String summary) {
@@ -92,6 +113,7 @@ public class RemoteIssueLinkObject {
     }
 
     /**
+     * Gets the icon.
      *
      * @return The icon
      */
@@ -101,9 +123,10 @@ public class RemoteIssueLinkObject {
     }
 
     /**
+     * Sets the icon.
      *
-     * @param icon
-     *            The icon
+     * @param icon            The icon
+     * @return the remote issue link object
      */
     @JsonProperty("icon")
     public RemoteIssueLinkObject setIcon(final Icon icon) {
@@ -112,6 +135,7 @@ public class RemoteIssueLinkObject {
     }
 
     /**
+     * Gets the status.
      *
      * @return The status
      */
@@ -121,9 +145,10 @@ public class RemoteIssueLinkObject {
     }
 
     /**
+     * Sets the status.
      *
-     * @param status
-     *            The status
+     * @param status            The status
+     * @return the remote issue link object
      */
     @JsonProperty("status")
     public RemoteIssueLinkObject setStatus(final Status status) {
@@ -131,11 +156,23 @@ public class RemoteIssueLinkObject {
         return this;
     }
 
+    /**
+     * Gets the additional properties.
+     *
+     * @return the additional properties
+     */
     @JsonAnyGetter
     public Map<String, java.lang.Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
+    /**
+     * Sets the additional property.
+     *
+     * @param name the name
+     * @param value the value
+     * @return the remote issue link object
+     */
     @JsonAnySetter
     public RemoteIssueLinkObject setAdditionalProperty(final String name, final java.lang.Object value) {
         this.additionalProperties.put(name, value);

@@ -13,19 +13,28 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+/**
+ * The Class Application.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({ "type", "name" })
 public class Application {
 
+    /** The type. */
     @JsonProperty("type")
     private String type;
+
+    /** The name. */
     @JsonProperty("name")
     private String name;
+
+    /** The additional properties. */
     @JsonIgnore
     private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
     /**
+     * Gets the type.
      *
      * @return The type
      */
@@ -35,10 +44,11 @@ public class Application {
     }
 
     /**
+     * Sets the type.
      *
      * @param type
      *            The type
-     * @return
+     * @return the application
      */
     @JsonProperty("type")
     public Application setType(final String type) {
@@ -47,6 +57,7 @@ public class Application {
     }
 
     /**
+     * Gets the name.
      *
      * @return The name
      */
@@ -56,10 +67,11 @@ public class Application {
     }
 
     /**
+     * Sets the name.
      *
      * @param name
      *            The name
-     * @return
+     * @return the application
      */
     @JsonProperty("name")
     public Application setName(final String name) {
@@ -67,11 +79,25 @@ public class Application {
         return this;
     }
 
+    /**
+     * Gets the additional properties.
+     *
+     * @return the additional properties
+     */
     @JsonAnyGetter
     public Map<String, java.lang.Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
+    /**
+     * Sets the additional property.
+     *
+     * @param name
+     *            the name
+     * @param value
+     *            the value
+     * @return the application
+     */
     @JsonAnySetter
     public Application setAdditionalProperty(final String name, final java.lang.Object value) {
         this.additionalProperties.put(name, value);

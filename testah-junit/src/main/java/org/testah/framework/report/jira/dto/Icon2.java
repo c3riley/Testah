@@ -13,21 +13,33 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+
+/**
+ * The Class Icon2.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
 @JsonPropertyOrder({ "url16x16", "title", "link" })
 public class Icon2 {
 
+    /** The url16x16. */
     @JsonProperty("url16x16")
     private String url16x16;
+    
+    /** The title. */
     @JsonProperty("title")
     private String title;
+    
+    /** The link. */
     @JsonProperty("link")
     private String link;
+    
+    /** The additional properties. */
     @JsonIgnore
     private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
     /**
+     * Gets the url16x16.
      *
      * @return The url16x16
      */
@@ -37,10 +49,10 @@ public class Icon2 {
     }
 
     /**
+     * Sets the url16x16.
      *
-     * @param url16x16
-     *            The url16x16
-     * @return
+     * @param url16x16            The url16x16
+     * @return the icon2
      */
     @JsonProperty("url16x16")
     public Icon2 setUrl16x16(final String url16x16) {
@@ -49,6 +61,7 @@ public class Icon2 {
     }
 
     /**
+     * Gets the title.
      *
      * @return The title
      */
@@ -58,9 +71,10 @@ public class Icon2 {
     }
 
     /**
+     * Sets the title.
      *
-     * @param title
-     *            The title
+     * @param title            The title
+     * @return the icon2
      */
     @JsonProperty("title")
     public Icon2 setTitle(final String title) {
@@ -69,6 +83,7 @@ public class Icon2 {
     }
 
     /**
+     * Gets the link.
      *
      * @return The link
      */
@@ -78,9 +93,10 @@ public class Icon2 {
     }
 
     /**
+     * Sets the link.
      *
-     * @param link
-     *            The link
+     * @param link            The link
+     * @return the icon2
      */
     @JsonProperty("link")
     public Icon2 setLink(final String link) {
@@ -88,11 +104,23 @@ public class Icon2 {
         return this;
     }
 
+    /**
+     * Gets the additional properties.
+     *
+     * @return the additional properties
+     */
     @JsonAnyGetter
     public Map<String, java.lang.Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
+    /**
+     * Sets the additional property.
+     *
+     * @param name the name
+     * @param value the value
+     * @return the icon2
+     */
     @JsonAnySetter
     public Icon2 setAdditionalProperty(final String name, final java.lang.Object value) {
         this.additionalProperties.put(name, value);
