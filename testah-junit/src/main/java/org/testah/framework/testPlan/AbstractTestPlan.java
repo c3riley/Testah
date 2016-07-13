@@ -33,7 +33,6 @@ import org.testah.framework.cli.Cli;
 import org.testah.framework.cli.TestFilter;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.TestDtoHelper;
-import org.testah.framework.report.TestPlanReporter;
 import org.testah.runner.testPlan.TestPlanActor;
 
 /**
@@ -252,7 +251,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 				getTestPlan().stop();
 			}
 			if (!TestPlanActor.isResultsInUse()) {
-				TestPlanReporter.reportResults(getTestPlan());
+				TS.getTestPlanReporter().reportResults(getTestPlan());
 			}
 
 		} catch (final Exception e) {

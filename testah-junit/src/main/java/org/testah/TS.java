@@ -9,6 +9,7 @@ import org.testah.driver.http.HttpWrapperV1;
 import org.testah.driver.web.browser.AbstractBrowser;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.cli.Params;
+import org.testah.framework.report.TestPlanReporter;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.util.Log;
@@ -19,214 +20,227 @@ import org.testah.util.TestahUtil;
  */
 public class TS {
 
-	/** The _stateful data. */
-	private static ThreadLocal<HashMap<String, Object>> _statefulData;
+    /** The _stateful data. */
+    private static ThreadLocal<HashMap<String, Object>> _statefulData;
 
-	/** The _browser. */
-	private static ThreadLocal<AbstractBrowser> _browser;
+    /** The _browser. */
+    private static ThreadLocal<AbstractBrowser> _browser;
 
-	/** The _http. */
-	private static ThreadLocal<AbstractHttpWrapper> _http;
+    /** The _http. */
+    private static ThreadLocal<AbstractHttpWrapper> _http;
 
-	/** The _asserts. */
-	private static VerboseAsserts _asserts;
+    private static TestPlanReporter _testPlanReporter;
 
-	/** The _verify. */
-	private static VerboseAsserts _verify;
+    /** The _asserts. */
+    private static VerboseAsserts _asserts;
 
-	/** The _testah util. */
-	private static TestahUtil _testahUtil;
+    /** The _verify. */
+    private static VerboseAsserts _verify;
 
-	/** The _params. */
-	private static Params _params;
+    /** The _testah util. */
+    private static TestahUtil _testahUtil;
 
-	private static final HashMap<String, String> maskValues = new HashMap<String, String>();
+    /** The _params. */
+    private static Params _params;
 
-	/**
-	 * Asserts.
-	 *
-	 * @return the verbose asserts
-	 */
-	public static VerboseAsserts asserts() {
-		if (null == _asserts) {
-			_asserts = new VerboseAsserts();
-		}
-		return _asserts;
-	}
+    private static final HashMap<String, String> maskValues = new HashMap<String, String>();
 
-	/**
-	 * Verify.
-	 *
-	 * @return the verbose asserts
-	 */
-	public static VerboseAsserts verify() {
-		if (null == _verify) {
-			_verify = new VerboseAsserts().onlyVerfiy();
-		}
-		return _verify;
-	}
+    /**
+     * Asserts.
+     *
+     * @return the verbose asserts
+     */
+    public static VerboseAsserts asserts() {
+        if (null == _asserts) {
+            _asserts = new VerboseAsserts();
+        }
+        return _asserts;
+    }
 
-	/**
-	 * Stateful data.
-	 *
-	 * @return the hash map
-	 */
-	public static HashMap<String, Object> statefulData() {
-		if (null == _statefulData) {
-			final ThreadLocal<HashMap<String, Object>> _statefulDataTmp = new ThreadLocal<HashMap<String, Object>>();
-			_statefulDataTmp.set(new HashMap<String, Object>());
-			_statefulData = _statefulDataTmp;
-		}
-		return _statefulData.get();
-	}
+    /**
+     * Verify.
+     *
+     * @return the verbose asserts
+     */
+    public static VerboseAsserts verify() {
+        if (null == _verify) {
+            _verify = new VerboseAsserts().onlyVerfiy();
+        }
+        return _verify;
+    }
 
-	/**
-	 * Reset stateful data.
-	 *
-	 * @return the hash map
-	 */
-	public static HashMap<String, Object> resetStatefulData() {
-		_statefulData = null;
-		return statefulData();
-	}
+    /**
+     * Stateful data.
+     *
+     * @return the hash map
+     */
+    public static HashMap<String, Object> statefulData() {
+        if (null == _statefulData) {
+            final ThreadLocal<HashMap<String, Object>> _statefulDataTmp = new ThreadLocal<HashMap<String, Object>>();
+            _statefulDataTmp.set(new HashMap<String, Object>());
+            _statefulData = _statefulDataTmp;
+        }
+        return _statefulData.get();
+    }
 
-	/**
-	 * Util.
-	 *
-	 * @return the testah util
-	 */
-	public static TestahUtil util() {
-		if (null == _testahUtil) {
-			_testahUtil = new TestahUtil();
-		}
-		return _testahUtil;
-	}
+    /**
+     * Reset stateful data.
+     *
+     * @return the hash map
+     */
+    public static HashMap<String, Object> resetStatefulData() {
+        _statefulData = null;
+        return statefulData();
+    }
 
-	/**
-	 * Log.
-	 *
-	 * @return the logger
-	 */
-	public static Logger log() {
-		return Log.getLog();
-	}
+    /**
+     * Util.
+     *
+     * @return the testah util
+     */
+    public static TestahUtil util() {
+        if (null == _testahUtil) {
+            _testahUtil = new TestahUtil();
+        }
+        return _testahUtil;
+    }
 
-	/**
-	 * Params.
-	 *
-	 * @param params
-	 *            the params
-	 * @return the params
-	 */
-	public static Params params(final Params params) {
-		if (null == _params) {
-			_params = params;
-		}
-		return _params;
-	}
+    /**
+     * Log.
+     *
+     * @return the logger
+     */
+    public static Logger log() {
+        return Log.getLog();
+    }
 
-	/**
-	 * Params.
-	 *
-	 * @return the params
-	 */
-	public static Params params() {
-		if (null == _params) {
-			_params = new Cli().getArgumentParser(null).getOpt();
-			Log.setLevel(_params.getLevel());
-		}
-		return _params;
-	}
+    /**
+     * Params.
+     *
+     * @param params
+     *            the params
+     * @return the params
+     */
+    public static Params params(final Params params) {
+        if (null == _params) {
+            _params = params;
+        }
+        return _params;
+    }
 
-	/**
-	 * Sets the params.
-	 *
-	 * @param params
-	 *            the params
-	 * @return the params
-	 */
-	public static Params setParams(final Params params) {
-		TS._params = params;
-		return TS._params;
-	}
+    /**
+     * Params.
+     *
+     * @return the params
+     */
+    public static Params params() {
+        if (null == _params) {
+            _params = new Cli().getArgumentParser(null).getOpt();
+            Log.setLevel(_params.getLevel());
+        }
+        return _params;
+    }
 
-	/**
-	 * Browser.
-	 *
-	 * @return the abstract browser
-	 */
-	public static AbstractBrowser browser() {
-		if (null == _browser || null == _browser.get()) {
-			setBrowser(AbstractBrowser.getDefaultBrowser());
-		}
-		return _browser.get();
-	}
+    /**
+     * Sets the params.
+     *
+     * @param params
+     *            the params
+     * @return the params
+     */
+    public static Params setParams(final Params params) {
+        TS._params = params;
+        return TS._params;
+    }
 
-	/**
-	 * Checks if is browser.
-	 *
-	 * @return true, if is browser
-	 */
-	public static boolean isBrowser() {
-		return (null != _browser && null != _browser.get());
-	}
+    /**
+     * Browser.
+     *
+     * @return the abstract browser
+     */
+    public static AbstractBrowser browser() {
+        if (null == _browser || null == _browser.get()) {
+            setBrowser(AbstractBrowser.getDefaultBrowser());
+        }
+        return _browser.get();
+    }
 
-	/**
-	 * Sets the browser.
-	 *
-	 * @param browser
-	 *            the browser
-	 * @return the abstract browser
-	 */
-	public static AbstractBrowser setBrowser(final AbstractBrowser browser) {
-		TS._browser = new ThreadLocal<AbstractBrowser>();
-		TS._browser.set(browser);
-		// _browser.get().start();
-		return _browser.get();
-	}
+    /**
+     * Checks if is browser.
+     *
+     * @return true, if is browser
+     */
+    public static boolean isBrowser() {
+        return (null != _browser && null != _browser.get());
+    }
 
-	/**
-	 * Http.
-	 *
-	 * @return the abstract http wrapper
-	 */
-	public static AbstractHttpWrapper http() {
-		if (null == _http) {
-			TS.setHttp(new HttpWrapperV1());
-		}
-		return _http.get();
-	}
+    /**
+     * Sets the browser.
+     *
+     * @param browser
+     *            the browser
+     * @return the abstract browser
+     */
+    public static AbstractBrowser setBrowser(final AbstractBrowser browser) {
+        TS._browser = new ThreadLocal<AbstractBrowser>();
+        TS._browser.set(browser);
+        // _browser.get().start();
+        return _browser.get();
+    }
 
-	/**
-	 * Sets the http.
-	 *
-	 * @param http
-	 *            the http
-	 * @return the abstract http wrapper
-	 */
-	public static AbstractHttpWrapper setHttp(final AbstractHttpWrapper http) {
-		TS._http = new ThreadLocal<AbstractHttpWrapper>();
-		TS._http.set(http);
-		return TS._http.get();
-	}
+    /**
+     * Http.
+     *
+     * @return the abstract http wrapper
+     */
+    public static AbstractHttpWrapper http() {
+        if (null == _http) {
+            TS.setHttp(new HttpWrapperV1());
+        }
+        return _http.get();
+    }
 
-	/**
-	 * Adds the step action.
-	 *
-	 * @param stepAction
-	 *            the step action
-	 */
-	public static void addStepAction(final StepActionDto stepAction) {
-		AbstractTestPlan.addStepAction(stepAction);
-		return;
-	}
+    /**
+     * Sets the http.
+     *
+     * @param http
+     *            the http
+     * @return the abstract http wrapper
+     */
+    public static AbstractHttpWrapper setHttp(final AbstractHttpWrapper http) {
+        TS._http = new ThreadLocal<AbstractHttpWrapper>();
+        TS._http.set(http);
+        return TS._http.get();
+    }
 
-	public static HashMap<String, String> getMaskValues() {
-		return maskValues;
-	}
+    /**
+     * Adds the step action.
+     *
+     * @param stepAction
+     *            the step action
+     */
+    public static void addStepAction(final StepActionDto stepAction) {
+        AbstractTestPlan.addStepAction(stepAction);
+        return;
+    }
 
-	public static void addMask(final String valueToMask) {
-		maskValues.put(valueToMask, "*masked*");
-	}
+    public static HashMap<String, String> getMaskValues() {
+        return maskValues;
+    }
+
+    public static void addMask(final String valueToMask) {
+        maskValues.put(valueToMask, "*masked*");
+    }
+
+    public static TestPlanReporter getTestPlanReporter() {
+        if (null == _testPlanReporter) {
+            _testPlanReporter = new TestPlanReporter();
+        }
+        return _testPlanReporter;
+    }
+
+    public static void setTestPlanReporter(final TestPlanReporter testPlanReporter) {
+        _testPlanReporter = testPlanReporter;
+    }
 
 }

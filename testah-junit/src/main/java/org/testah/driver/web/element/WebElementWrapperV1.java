@@ -9,18 +9,22 @@ import org.testah.driver.web.browser.AbstractBrowser;
  */
 public class WebElementWrapperV1 extends AbstractWebElementWrapper {
 
-	/**
-	 * Instantiates a new web element wrapper v1.
-	 *
-	 * @param by
-	 *            the by
-	 * @param webElement
-	 *            the web element
-	 * @param driver
-	 *            the driver
-	 */
-	public WebElementWrapperV1(final By by, final WebElement webElement, final AbstractBrowser driver) {
-		super(by, webElement, driver);
-	}
+    /**
+     * Instantiates a new web element wrapper v1.
+     *
+     * @param by
+     *            the by
+     * @param webElement
+     *            the web element
+     * @param driver
+     *            the driver
+     */
+    public WebElementWrapperV1(final By by, final WebElement webElement, final AbstractBrowser driver) {
+        super(by, webElement, driver);
+    }
+
+    protected AbstractWebElementWrapper getSelf() {
+        return this;
+    }
 
 }

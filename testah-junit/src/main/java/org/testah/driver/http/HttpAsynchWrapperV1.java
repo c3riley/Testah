@@ -23,184 +23,188 @@ import org.testah.framework.testPlan.AbstractTestPlan;
  */
 public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeable {
 
-	/** The http asynch client. */
-	private CloseableHttpAsyncClient httpAsynchClient;
+    /** The http asynch client. */
+    private CloseableHttpAsyncClient httpAsynchClient;
 
-	/**
-	 * Sets the http asynch client.
-	 *
-	 * @return the abstract http wrapper
-	 */
-	public AbstractHttpWrapper setHttpAsynchClient() {
-		final HttpAsyncClientBuilder hcb = HttpAsyncClients.custom();
-		if (null != getProxy()) {
-			hcb.setProxy(getProxy());
-		}
-		if (null != getRequestConfig()) {
-			hcb.setDefaultRequestConfig(getRequestConfig());
-		}
-		if (null != getCookieStore()) {
-			hcb.setDefaultCookieStore(getCookieStore());
-		}
-		try {
-			if (null != getConnectionManager()) {
-				final ConnectingIOReactor ioReactor = new DefaultConnectingIOReactor();
-				final PoolingNHttpClientConnectionManager connManager = new PoolingNHttpClientConnectionManager(
-						ioReactor);
-				connManager.setMaxTotal(100);
-				hcb.setConnectionManager(connManager);
-			}
-		} catch (final Exception e) {
-			throw new RuntimeException(e);
-		}
-		hcb.setMaxConnPerRoute(getDefaultMaxPerRoute());
-		hcb.setMaxConnTotal(getDefaultPoolSize());
-		if (isTrustAllCerts()) {
-			// hcb.setSSLHostnameVerifier(new NoopHostnameVerifier());
-		}
-		return setHttpAsyncClient(hcb.build());
-	}
+    /**
+     * Sets the http asynch client.
+     *
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setHttpAsynchClient() {
+        final HttpAsyncClientBuilder hcb = HttpAsyncClients.custom();
+        if (null != getProxy()) {
+            hcb.setProxy(getProxy());
+        }
+        if (null != getRequestConfig()) {
+            hcb.setDefaultRequestConfig(getRequestConfig());
+        }
+        if (null != getCookieStore()) {
+            hcb.setDefaultCookieStore(getCookieStore());
+        }
+        try {
+            if (null != getConnectionManager()) {
+                final ConnectingIOReactor ioReactor = new DefaultConnectingIOReactor();
+                final PoolingNHttpClientConnectionManager connManager = new PoolingNHttpClientConnectionManager(
+                        ioReactor);
+                connManager.setMaxTotal(100);
+                hcb.setConnectionManager(connManager);
+            }
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+        hcb.setMaxConnPerRoute(getDefaultMaxPerRoute());
+        hcb.setMaxConnTotal(getDefaultPoolSize());
+        if (isTrustAllCerts()) {
+            // hcb.setSSLHostnameVerifier(new NoopHostnameVerifier());
+        }
+        return setHttpAsyncClient(hcb.build());
+    }
 
-	/**
-	 * Do request aysnch.
-	 *
-	 * @param request
-	 *            the request
-	 * @param verbose
-	 *            the verbose
-	 * @return the future
-	 */
-	public Future<HttpResponse> doRequestAysnch(final AbstractRequestDto request, final boolean verbose) {
-		try {
-			final HttpClientContext context = HttpClientContext.create();
-			if (null != getCookieStore()) {
-				context.setCookieStore(getCookieStore());
-				context.setRequestConfig(getRequestConfig());
-			}
+    /**
+     * Do request aysnch.
+     *
+     * @param request
+     *            the request
+     * @param verbose
+     *            the verbose
+     * @return the future
+     */
+    public Future<HttpResponse> doRequestAysnch(final AbstractRequestDto request, final boolean verbose) {
+        try {
+            final HttpClientContext context = HttpClientContext.create();
+            if (null != getCookieStore()) {
+                context.setCookieStore(getCookieStore());
+                context.setRequestConfig(getRequestConfig());
+            }
 
-			if (null != request.getCredentialsProvider()) {
-				context.setCredentialsProvider(request.getCredentialsProvider());
-			}
+            if (null != request.getCredentialsProvider()) {
+                context.setCredentialsProvider(request.getCredentialsProvider());
+            }
 
-			new ResponseDto().setStart();
-			if (verbose) {
-				AbstractTestPlan.addStepAction(request.createRequestInfoStep());
-			}
-			try {
-				getHttpAsyncClient().start();
-				final Future<HttpResponse> future = getHttpAsyncClient().execute(request.getHttpRequestBase(), context,
-						new FutureCallback<HttpResponse>() {
+            new ResponseDto().setStart();
+            if (verbose) {
+                AbstractTestPlan.addStepAction(request.createRequestInfoStep());
+            }
+            try {
+                getHttpAsyncClient().start();
+                final Future<HttpResponse> future = getHttpAsyncClient().execute(request.getHttpRequestBase(), context,
+                        new FutureCallback<HttpResponse>() {
 
-							public void completed(final HttpResponse response) {
-								if (verbose) {
-									final ResponseDto responseDto = getResponseDto(response, request);
-									AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500));
-								}
-							}
+                            public void completed(final HttpResponse response) {
+                                if (verbose) {
+                                    final ResponseDto responseDto = getResponseDto(response, request);
+                                    AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500));
+                                }
+                            }
 
-							public void failed(final Exception ex) {
-								if (verbose) {
-									AbstractTestPlan.addStepAction(StepAction.createInfo(
-											"ERROR - Issue with reques" + request.getHttpRequestBase().getRequestLine(),
-											ex.getMessage()));
-								}
-							}
+                            public void failed(final Exception ex) {
+                                if (verbose) {
+                                    AbstractTestPlan.addStepAction(StepAction.createInfo(
+                                            "ERROR - Issue with reques" + request.getHttpRequestBase().getRequestLine(),
+                                            ex.getMessage()));
+                                }
+                            }
 
-							public void cancelled() {
-								if (verbose) {
-									AbstractTestPlan.addStepAction(StepAction.createInfo("Canceled Request",
-											request.getHttpRequestBase().getRequestLine().toString()));
-								}
-							}
-						});
-				return future;
-			} finally {
+                            public void cancelled() {
+                                if (verbose) {
+                                    AbstractTestPlan.addStepAction(StepAction.createInfo("Canceled Request",
+                                            request.getHttpRequestBase().getRequestLine().toString()));
+                                }
+                            }
+                        });
+                return future;
+            } finally {
 
-			}
-		} catch (final Exception e) {
-			TS.log().error(e);
-			if (!isIgnoreHttpError()) {
-				TS.asserts().equalsTo("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
-						e.getMessage());
-			}
-			return null;
-		}
-	}
+            }
+        } catch (final Exception e) {
+            TS.log().error(e);
+            if (!isIgnoreHttpError()) {
+                TS.asserts().equalsTo("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
+                        e.getMessage());
+            }
+            return null;
+        }
+    }
 
-	/**
-	 * Sets the http async client.
-	 *
-	 * @param httpAsynchClient
-	 *            the http asynch client
-	 * @return the http asynch wrapper v1
-	 */
-	public HttpAsynchWrapperV1 setHttpAsyncClient(final CloseableHttpAsyncClient httpAsynchClient) {
-		this.httpAsynchClient = httpAsynchClient;
-		return this;
-	}
+    /**
+     * Sets the http async client.
+     *
+     * @param httpAsynchClient
+     *            the http asynch client
+     * @return the http asynch wrapper v1
+     */
+    public HttpAsynchWrapperV1 setHttpAsyncClient(final CloseableHttpAsyncClient httpAsynchClient) {
+        this.httpAsynchClient = httpAsynchClient;
+        return this;
+    }
 
-	/**
-	 * Gets the http async client.
-	 *
-	 * @return the http async client
-	 */
-	public CloseableHttpAsyncClient getHttpAsyncClient() {
-		if (null == httpAsynchClient) {
-			setHttpAsynchClient();
-		}
-		return httpAsynchClient;
-	}
+    /**
+     * Gets the http async client.
+     *
+     * @return the http async client
+     */
+    public CloseableHttpAsyncClient getHttpAsyncClient() {
+        if (null == httpAsynchClient) {
+            setHttpAsynchClient();
+        }
+        return httpAsynchClient;
+    }
 
-	/**
-	 * Gets the response dto from future.
-	 *
-	 * @param response
-	 *            the response
-	 * @return the response dto from future
-	 * @throws Exception
-	 *             the exception
-	 */
-	public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response) throws Exception {
-		return getResponseDtoFromFuture(response, null);
-	}
+    /**
+     * Gets the response dto from future.
+     *
+     * @param response
+     *            the response
+     * @return the response dto from future
+     * @throws Exception
+     *             the exception
+     */
+    public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response) throws Exception {
+        return getResponseDtoFromFuture(response, null);
+    }
 
-	/**
-	 * Gets the response dto from future.
-	 *
-	 * @param response
-	 *            the response
-	 * @param request
-	 *            the request
-	 * @return the response dto from future
-	 * @throws Exception
-	 *             the exception
-	 */
-	public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response, final AbstractRequestDto request)
-			throws Exception {
-		if (null != response) {
-			try {
-				TS.log().debug("Getting response from future, current done state is: " + response.isDone()
-						+ " will block until done.");
-				final HttpResponse responseFromFuture = response.get();
-				return getResponseDto(responseFromFuture, request);
-			} catch (final Exception e) {
-				TS.log().debug(e);
-			}
-		}
-		return null;
-	}
+    /**
+     * Gets the response dto from future.
+     *
+     * @param response
+     *            the response
+     * @param request
+     *            the request
+     * @return the response dto from future
+     * @throws Exception
+     *             the exception
+     */
+    public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response, final AbstractRequestDto request)
+            throws Exception {
+        if (null != response) {
+            try {
+                TS.log().debug("Getting response from future, current done state is: " + response.isDone()
+                        + " will block until done.");
+                final HttpResponse responseFromFuture = response.get();
+                return getResponseDto(responseFromFuture, request);
+            } catch (final Exception e) {
+                TS.log().debug(e);
+            }
+        }
+        return null;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.io.Closeable#close()
-	 */
-	public void close() {
-		try {
-			getHttpAsyncClient().close();
-		} catch (final Exception e) {
-			TS.log().warn(e);
-		}
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.io.Closeable#close()
+     */
+    public void close() {
+        try {
+            getHttpAsyncClient().close();
+        } catch (final Exception e) {
+            TS.log().warn(e);
+        }
+    }
+
+    protected AbstractHttpWrapper getSelf() {
+        return this;
+    }
 
 }

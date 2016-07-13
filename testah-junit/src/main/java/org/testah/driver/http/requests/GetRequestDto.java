@@ -9,15 +9,19 @@ public class GetRequestDto extends AbstractRequestDto {
         super(new HttpGet(uri), "GET");
     }
 
-    public AbstractRequestDto setPayload(String payload) {
+    public AbstractRequestDto setPayload(final String payload) {
         return this;
     }
 
-    public AbstractRequestDto setPayload(HttpEntity payload) {
+    public AbstractRequestDto setPayload(final HttpEntity payload) {
         return this;
     }
 
-    public AbstractRequestDto setPayload(Object payload) {
+    public AbstractRequestDto setPayload(final Object payload) {
+        return this;
+    }
+
+    protected AbstractRequestDto getSelf() {
         return this;
     }
 
