@@ -126,7 +126,7 @@ public abstract class AbstractRequestDto {
     }
 
     public AbstractRequestDto addBasicAuth(final String userName, final String password) {
-        final String encoding = Base64.encodeBase64String("test1:test1".getBytes(Charset.forName("UTF-8")));
+        final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName("UTF-8")));
         addHeader("Authorization", "Basic " + encoding);
         return getSelf();
     }

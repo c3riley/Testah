@@ -16,13 +16,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 public class JiraReporter {
 
     private final String baseUrl;
+    private final static String apiUrl = "rest/api/latest";
 
     public JiraReporter() {
-        this.baseUrl = TS.params().getJiraUrl();
+        if (TS.params().getJiraUrl().endsWith("/")) {
+            this.baseUrl = TS.params().getJiraUrl() + apiUrl;
+        } else {
+            this.baseUrl = TS.params().getJiraUrl() + "/" + apiUrl;
+        }
     }
 
     public void createOrUpdateTestPlanRemoteLink(final TestPlanDto testPlan, final JiraRemoteLinkBuilder remoteLinkBuilder) {
-        if (TS.params().isUseJira() && TS.params().getJiraApiUrlBase().length() > 0) {
+        if (TS.params().isUseJiraRemoteLink() && TS.params().getJiraUrl().length() > 0) {
             RemoteIssueLinkDto remoteLink;
             if (!testPlan.getRelatedIds().isEmpty()) {
                 for (final String relatedId : testPlan.getRelatedIds()) {

@@ -122,6 +122,14 @@ public class Params {
     @Arg(dest = "useJiraRemoteLink")
     private boolean useJiraRemoteLink = false;
 
+    @Comment(info = "UserName for access to jira, will be added to mask")
+    @Arg(dest = "jiraUserName")
+    private String jiraUserName = "";
+
+    @Comment(info = "Pwd for access to jira, will be added to mask, should be supplied via job or system")
+    @Arg(dest = "jiraPassword")
+    private String jiraPassword = "";
+
     /** The num concurrent threads. */
     @Comment(info = "Number of Concurrent Threads")
     @Arg(dest = "numConcurrentThreads")
@@ -317,22 +325,6 @@ public class Params {
     @Comment(info = "Filter by TestType.  Can supply a comma seperated List.")
     @Arg(dest = "filterByTestType")
     private TestType filterByTestType = TestType.AUTOMATED;
-
-    @Comment(info = "Used the system create remote links in jira if provided in the meta annotation ")
-    @Arg(dest = "useJira")
-    private final boolean useJira = false;
-
-    @Comment(info = "Base Url to the Jira Api, ex: https://company.atlassian.net/rest/api/latest")
-    @Arg(dest = "jiraApiUrlBase")
-    private String jiraApiUrlBase = "";
-
-    @Comment(info = "UserName for access to jira, will be added to mask")
-    @Arg(dest = "jiraUserName")
-    private String jiraUserName = "";
-
-    @Comment(info = "Pwd for access to jira, will be added to mask, should be supplied via job or system")
-    @Arg(dest = "jiraPassword")
-    private String jiraPassword = "";
 
     /**
      * Gets the output.
@@ -1186,18 +1178,6 @@ public class Params {
 
     public void setUseJiraRemoteLink(final boolean useJiraRemoteLink) {
         this.useJiraRemoteLink = useJiraRemoteLink;
-    }
-
-    public String getJiraApiUrlBase() {
-        return jiraApiUrlBase;
-    }
-
-    public void setJiraApiUrlBase(final String jiraApiUrlBase) {
-        this.jiraApiUrlBase = jiraApiUrlBase;
-    }
-
-    public boolean isUseJira() {
-        return useJira;
     }
 
     public String getJiraUserName() {

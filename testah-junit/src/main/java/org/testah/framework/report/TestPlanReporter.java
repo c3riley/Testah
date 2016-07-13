@@ -80,7 +80,7 @@ public class TestPlanReporter {
             final AbstractFormatter meta = new MetaFormatter(testPlan).createReport(filename + ".txt");
             TS.log().info(Cli.BAR_WALL + "Report Meta: " + meta.getReportFile().getAbsolutePath());
         }
-        if (TS.params().isUseJira()) {
+        if (TS.params().isUseJiraRemoteLink()) {
             if (null != this.getJiraRemoteLinkBuilder()) {
                 final JiraReporter jiraReporter = new JiraReporter();
                 jiraReporter.createOrUpdateTestPlanRemoteLink(testPlan, this.getJiraRemoteLinkBuilder());
