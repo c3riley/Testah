@@ -59,7 +59,7 @@ public class JiraReporter {
     public List<RemoteIssueLinkDto> getRemoteLinks(final String issue) {
         GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue +
                 "/remotelink");
-        return TS.http().doRequest(addAuthHeader(get)).getResponse(new TypeReference<List<RemoteIssueLinkDto>>() {
+        return TS.http().doRequest(addAuthHeader(get.withJson())).getResponse(new TypeReference<List<RemoteIssueLinkDto>>() {
         });
     }
 
@@ -74,12 +74,12 @@ public class JiraReporter {
 
     public RemoteIssueLinkDto createRemoteLink(final String issue, final RemoteIssueLinkDto remoteLink) {
         PostRequestDto post = new PostRequestDto(baseUrl + "/issue/" + issue + "/remotelink", remoteLink);
-        return TS.http().doRequest(addAuthHeader(post)).getResponse(RemoteIssueLinkDto.class);
+        return TS.http().doRequest(addAuthHeader(post.withJson())).getResponse(RemoteIssueLinkDto.class);
     }
 
     public ResponseDto updateRemoteLink(final String issue, final int id, final RemoteIssueLinkDto remoteLink) {
         PutRequestDto put = new PutRequestDto(baseUrl + "/issue/" + issue + "/remotelink/" + id, remoteLink);
-        return TS.http().doRequest(addAuthHeader(put));
+        return TS.http().doRequest(addAuthHeader(put.withJson()));
     }
 
 }
