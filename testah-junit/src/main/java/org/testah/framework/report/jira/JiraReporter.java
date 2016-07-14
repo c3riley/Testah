@@ -56,10 +56,10 @@ public class JiraReporter {
                         for (final String relatedId : testCase.getKnownProblem().getLinkedIds()) {
                             remoteLink = getRemoteLinkForGlobalId(relatedId, testCase.getSource());
                             if (null == remoteLink) {
-                                createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
+                                createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
                             } else {
                                 updateRemoteLink(relatedId, remoteLink.getId(),
-                                        remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
+                                        remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
                             }
                         }
                     }
@@ -67,9 +67,9 @@ public class JiraReporter {
                         for (final String relatedId : testCase.getRelatedLinks()) {
                             remoteLink = getRemoteLinkForGlobalId(relatedId, testCase.getSource());
                             if (null == remoteLink) {
-                                createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestPlanResult(testPlan));
+                                createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
                             } else {
-                                updateRemoteLink(relatedId, remoteLink.getId(), remoteLinkBuilder.getRemoteLinkForTestPlanResult(testPlan));
+                                updateRemoteLink(relatedId, remoteLink.getId(), remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
                             }
                         }
                     }

@@ -210,7 +210,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 			TS.log().info(
 					"TESTCASE started:" + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
 			startTestCase(desc, desc.getAnnotation(TestCase.class), desc.getTestClass().getAnnotation(TestPlan.class),
-					desc.getTestClass().getAnnotation(KnownProblem.class));
+					desc.getAnnotation(KnownProblem.class));
 			getTestStep();
 		}
 	};
