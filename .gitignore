@@ -17,7 +17,7 @@ testah.log
 # Gradle
 .gradle
 build/
-.gradle/
+gradle/
 
 # Groovy
 .groovy
