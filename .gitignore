@@ -11,13 +11,16 @@ bin/
 
 # Testah Log Files
 testah.properties
-testah.log
+*.log
 
+# Testah Report Files
+results.*
+testahOutput/
 
 # Gradle
 .gradle
 build/
-gradle/
+#gradle/
 
 # Groovy
 .groovy
