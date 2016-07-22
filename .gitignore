@@ -21,7 +21,6 @@ build/
 # Groovy
 .groovy
 .settings
-gradle/
 
 # eclipse
 .classpath
