@@ -20,7 +20,7 @@ testahOutput/
 # Gradle
 .gradle
 build/
-gradle/
+
 
 # Groovy
 .groovy
