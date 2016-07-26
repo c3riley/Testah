@@ -34,8 +34,8 @@ public class TestFilter {
      * Instantiates a new test filter.
      */
     public TestFilter() {
-        testClasses = new HashSet<Class<?>>();
-        testClassesMetFilters = new ArrayList<Class<?>>();
+        testClasses = new HashSet<>();
+        testClassesMetFilters = new ArrayList<>();
     }
 
     /**
@@ -100,12 +100,12 @@ public class TestFilter {
                     TS.log().trace("test[" + test.getName() + "] filtered out by no TestMeta Annotation");
                     continue;
                 }
-                if (null != test.getAnnotation(KnownProblem.class)) {
+                if (null != test.getAnnotation(KnownProblem.class) && null != filterByIgnoreKnownProblem) {
                     if (filterByIgnoreKnownProblem) {
                         TS.log().trace("test[" + test.getName() + "] filtered out by filterByIgnoreKnownProblem");
                         continue;
                     }
-                } else if (!filterByIgnoreKnownProblem) {
+                } else if (null != filterByIgnoreKnownProblem && !filterByIgnoreKnownProblem) {
                     TS.log().trace("test[" + test.getName() + "] filtered out by filterByIgnoreKnownProblem");
                     continue;
                 }
@@ -399,7 +399,7 @@ public class TestFilter {
             if (null != ary) {
                 lst = Arrays.asList(ary);
             } else {
-                lst = new ArrayList<String>();
+                lst = new ArrayList<>();
             }
             return isFilterCheckOk(lst, values);
         }
@@ -465,7 +465,7 @@ public class TestFilter {
             // final String externalValue = TS.params().getLookAtExternalTests();
 
             if (null != externalValue && externalValue.length() > 0) {
-                final List<File> files = new ArrayList<File>();
+                final List<File> files = new ArrayList<>();
                 final ClassLoader parent = this.getClass().getClassLoader();
                 try (final GroovyClassLoader loader = new GroovyClassLoader(parent)) {
 
