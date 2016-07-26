@@ -42,7 +42,7 @@ public class Cli {
     private final Params opt;
 
     /** The Constant version. */
-    public static final String version = "0.4.3";
+    public static final String version = "0.4.4";
 
     /** The Constant BAR_LONG. */
     public static final String BAR_LONG = "=============================================================================================";
@@ -226,12 +226,14 @@ public class Cli {
             results.mkdirs();
             results = new File(results, "queryResults.json");
         } else {
-            results.getParentFile().mkdirs();
+            if (null != results.getParentFile()) {
+                results.getParentFile().mkdirs();
+            }
         }
         testPlanFilter.filterTestPlansToRun();
         Object resultObject = testPlanFilter.getTestClassesMetFilters();
         if (res.getBoolean("includeMeta")) {
-            final HashMap<String, TestPlanDto> testPlans = new HashMap<String, TestPlanDto>();
+            final HashMap<String, TestPlanDto> testPlans = new HashMap<>();
             for (final Class<?> test : testPlanFilter.getTestClassesMetFilters()) {
                 testPlans
                         .put(test.getCanonicalName(),
