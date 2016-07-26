@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 
 import org.testah.client.enums.TypeOfKnown;
 
-
 /**
  * The Interface KnownProblem.
  */

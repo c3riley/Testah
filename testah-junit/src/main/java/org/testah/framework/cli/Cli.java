@@ -42,7 +42,7 @@ public class Cli {
     private final Params opt;
 
     /** The Constant version. */
-    public static final String version = "0.4.2";
+    public static final String version = "0.4.3";
 
     /** The Constant BAR_LONG. */
     public static final String BAR_LONG = "=============================================================================================";
@@ -106,6 +106,10 @@ public class Cli {
                 res = parser.parseArgs(args);
                 parser.parseArgs(args, opt);
                 TS.setParams(opt);
+                if (null != res.getString("test")) {
+                    TS.params().setLookAtInternalTests("");
+                    TS.params().setLookAtExternalTests(res.getString("test"));
+                }
                 TS.log().debug(Cli.BAR_LONG);
                 TS.log().info(Cli.BAR_WALL + "CLI Inputs - " + res);
                 TS.log().debug(Cli.BAR_LONG);

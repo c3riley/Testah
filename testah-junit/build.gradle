@@ -16,7 +16,7 @@ apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 group = 'org.testah'
-version = '0.4.2'
+version = '0.4.3'
 
 buildscript {
     repositories {

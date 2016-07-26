@@ -1,6 +1,7 @@
 package org.testah.framework.cli;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
@@ -304,7 +305,7 @@ public class Params {
     /** The filter ignore known problem. */
     @Comment(info = "Filter Using The @KnownProblem Annotation.  True means testplan/testcase must not be a known problem. False means must be a known problem. Empty means do not use filter.")
     @Arg(dest = "filterIgnoreKnownProblem")
-    private boolean filterIgnoreKnownProblem = false;
+    private String filterIgnoreKnownProblem = "";
 
     /** The filter by tag. */
     @Comment(info = "Filter using the Tag metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
@@ -325,6 +326,8 @@ public class Params {
     @Comment(info = "Filter by TestType.  Can supply a comma seperated List.")
     @Arg(dest = "filterByTestType")
     private TestType filterByTestType = TestType.AUTOMATED;
+
+    private HashMap<String, String> other = new HashMap<String, String>();
 
     /**
      * Gets the output.
@@ -1049,7 +1052,7 @@ public class Params {
      *
      * @return the filter ignore known problem
      */
-    public boolean getFilterIgnoreKnownProblem() {
+    public String getFilterIgnoreKnownProblem() {
         return filterIgnoreKnownProblem;
     }
 
@@ -1060,7 +1063,7 @@ public class Params {
      *            the new filter ignore known problem
      * @return the params
      */
-    public Params setFilterIgnoreKnownProblem(final boolean filterIgnoreKnownProblem) {
+    public Params setFilterIgnoreKnownProblem(final String filterIgnoreKnownProblem) {
         this.filterIgnoreKnownProblem = filterIgnoreKnownProblem;
         return this;
     }
@@ -1196,6 +1199,14 @@ public class Params {
     public void setJiraPassword(final String jiraPassword) {
         TS.addMask(jiraPassword);
         this.jiraPassword = jiraPassword;
+    }
+
+    public HashMap<String, String> getOther() {
+        return other;
+    }
+
+    public void setOther(final HashMap<String, String> other) {
+        this.other = other;
     }
 
 }
