@@ -51,7 +51,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     private static ThreadLocal<TestStepDto> testStep;
 
     /** The test plan start. */
-    private static ThreadLocal<Boolean> testPlanStart = new ThreadLocal<Boolean>();
+    private static ThreadLocal<Boolean> testPlanStart = new ThreadLocal<>();
 
     /** The test filter. */
     private static TestFilter testFilter = null;
@@ -119,7 +119,8 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         if (!getTestFilter().filterTestCase(test, name)) {
             addIgnoredTest(name, "METADATA_FILTER");
             setAssumeTrue(true);
-            Assume.assumeTrue("Filtered out, For details use Trace level logging", false);
+            Assume.assumeTrue("Filtered out, For details use Trace level logging"
+                    + "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
         }
 
         if (null != TS.params().getFilterIgnoreKnownProblem()) {
@@ -127,12 +128,15 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                 if ("true".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                     setAssumeTrue(true);
                     addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
-                    Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description(), false);
+                    Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description()
+                            + "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
                 }
             } else if ("false".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                 setAssumeTrue(true);
                 addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
-                Assume.assumeTrue("Filtered out, KnownProblem Not found and is required", false);
+                Assume.assumeTrue(
+                        "Filtered out, KnownProblem Not found and is required\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem",
+                        false);
             }
         }
     }
@@ -285,7 +289,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      */
     private static ThreadLocal<TestPlanDto> getTestPlanThreadLocal() {
         if (null == testPlan) {
-            testPlan = new ThreadLocal<TestPlanDto>();
+            testPlan = new ThreadLocal<>();
         }
         return testPlan;
     }
@@ -306,7 +310,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      */
     private static ThreadLocal<TestCaseDto> getTestCaseThreadLocal() {
         if (null == testCase) {
-            testCase = new ThreadLocal<TestCaseDto>();
+            testCase = new ThreadLocal<>();
         }
         return testCase;
     }
@@ -327,7 +331,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      */
     public static TestStepDto getTestStep() {
         if (null == testStep) {
-            testStep = new ThreadLocal<TestStepDto>();
+            testStep = new ThreadLocal<>();
         }
         if (null == testStep.get() && null != getTestCase()) {
             AbstractTestPlan.testStep.set(new TestStepDto("Initial Step", "").start());
@@ -343,7 +347,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      */
     public static ThreadLocal<TestStepDto> getTestStepThreadLocal() {
         if (null == testStep) {
-            testStep = new ThreadLocal<TestStepDto>();
+            testStep = new ThreadLocal<>();
         }
         return testStep;
     }
@@ -588,7 +592,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      */
     public static HashMap<String, String> getIgnoredTests() {
         if (null == ignoredTests) {
-            final ThreadLocal<HashMap<String, String>> ignoredTestsTmp = new ThreadLocal<HashMap<String, String>>();
+            final ThreadLocal<HashMap<String, String>> ignoredTestsTmp = new ThreadLocal<>();
             ignoredTestsTmp.set(new HashMap<String, String>());
             ignoredTests = ignoredTestsTmp;
         }

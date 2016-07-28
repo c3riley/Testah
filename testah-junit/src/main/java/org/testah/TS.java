@@ -43,7 +43,7 @@ public class TS {
     /** The _params. */
     private static Params _params;
 
-    private static final HashMap<String, String> maskValues = new HashMap<String, String>();
+    private static final HashMap<String, String> maskValues = new HashMap<>();
 
     /**
      * Asserts.
@@ -76,7 +76,7 @@ public class TS {
      */
     public static HashMap<String, Object> statefulData() {
         if (null == _statefulData) {
-            final ThreadLocal<HashMap<String, Object>> _statefulDataTmp = new ThreadLocal<HashMap<String, Object>>();
+            final ThreadLocal<HashMap<String, Object>> _statefulDataTmp = new ThreadLocal<>();
             _statefulDataTmp.set(new HashMap<String, Object>());
             _statefulData = _statefulDataTmp;
         }
@@ -182,7 +182,7 @@ public class TS {
      * @return the abstract browser
      */
     public static AbstractBrowser setBrowser(final AbstractBrowser browser) {
-        TS._browser = new ThreadLocal<AbstractBrowser>();
+        TS._browser = new ThreadLocal<>();
         TS._browser.set(browser);
         // _browser.get().start();
         return _browser.get();
@@ -208,7 +208,7 @@ public class TS {
      * @return the abstract http wrapper
      */
     public static AbstractHttpWrapper setHttp(final AbstractHttpWrapper http) {
-        TS._http = new ThreadLocal<AbstractHttpWrapper>();
+        TS._http = new ThreadLocal<>();
         TS._http.set(http);
         return TS._http.get();
     }

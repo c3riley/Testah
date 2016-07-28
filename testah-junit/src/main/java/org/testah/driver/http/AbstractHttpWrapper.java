@@ -301,7 +301,7 @@ public abstract class AbstractHttpWrapper {
 
             final ResponseDto responseDto = new ResponseDto().setStart();
             if (verbose) {
-                AbstractTestPlan.addStepAction(request.createRequestInfoStep());
+                AbstractTestPlan.addStepAction(request.createRequestInfoStep(), false);
             }
             try (final CloseableHttpResponse response = (CloseableHttpResponse) getHttpClient()
                     .execute(request.getHttpRequestBase(), context)) {
