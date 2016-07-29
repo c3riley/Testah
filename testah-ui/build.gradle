@@ -1,0 +1,32 @@
+buildscript {
+	repositories { jcenter() }
+
+	dependencies {
+		classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '1.3.6.RELEASE'
+	}
+}
+
+// Plugin Support
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+apply plugin: 'war'
+
+// Property Values
+version = '0.0.1'
+group = 'org.testah'
+sourceCompatibility = 1.8
+
+war { baseName = 'testah-ui' }
+
+configurations { providedRuntime }
+
+// In this section you declare where to find the dependencies of your project
+repositories { jcenter() }
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+	compile group: 'org.springframework', name: 'spring-web'
+	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+}
