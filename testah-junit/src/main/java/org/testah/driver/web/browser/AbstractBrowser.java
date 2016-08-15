@@ -261,7 +261,7 @@ public abstract class AbstractBrowser {
      * @return the web elements
      */
     public List<AbstractWebElementWrapper> getWebElements(final By by) {
-        final List<AbstractWebElementWrapper> lst = new ArrayList<AbstractWebElementWrapper>();
+        final List<AbstractWebElementWrapper> lst = new ArrayList<>();
         for (final WebElement e : getWebElementsNative(by, false)) {
             lst.add(new WebElementWrapperV1(by, e, this));
         }
@@ -269,7 +269,7 @@ public abstract class AbstractBrowser {
     }
 
     public List<AbstractWebElementWrapper> getWebElements(final By by, final int waitIterationCount) {
-        final List<AbstractWebElementWrapper> lst = new ArrayList<AbstractWebElementWrapper>();
+        final List<AbstractWebElementWrapper> lst = new ArrayList<>();
         for (final WebElement e : getWebElementsNative(by, false, waitIterationCount)) {
             lst.add(new WebElementWrapperV1(by, e, this));
         }
@@ -284,7 +284,7 @@ public abstract class AbstractBrowser {
      * @return the web elements no wait
      */
     public List<AbstractWebElementWrapper> getWebElementsNoWait(final By by) {
-        final List<AbstractWebElementWrapper> lst = new ArrayList<AbstractWebElementWrapper>();
+        final List<AbstractWebElementWrapper> lst = new ArrayList<>();
         for (final WebElement e : getWebElementsNative(by, true)) {
             lst.add(new WebElementWrapperV1(by, e, this));
         }
@@ -627,7 +627,7 @@ public abstract class AbstractBrowser {
      * @return true, if successful
      */
     public boolean verifyTitle(final String expectedTitle) {
-        return TS.verify().equals("Verify Browser Pagetitle", expectedTitle, getTitle());
+        return TS.verify().equalsTo("Verify Browser Pagetitle", expectedTitle, getTitle());
     }
 
     /**
@@ -638,7 +638,7 @@ public abstract class AbstractBrowser {
      * @return true, if successful
      */
     public boolean verifyUrl(final String expectedUrl) {
-        return TS.verify().equals("Verify Browser Pagetitle", expectedUrl, getUrl());
+        return TS.verify().equalsTo("Verify Browser Pagetitle", expectedUrl, getUrl());
     }
 
     /**
@@ -654,7 +654,7 @@ public abstract class AbstractBrowser {
         String title;
         for (int i = 1; i <= timeout; i++) {
             title = getTitle();
-            if (TS.verify().equals(pageTitle, title)) {
+            if (TS.verify().equalsTo(pageTitle, title)) {
                 break;
             }
             TS.util().pause("waitForTitle from [" + pageTitle + "] - current [" + title + "]", i);
@@ -752,7 +752,7 @@ public abstract class AbstractBrowser {
      */
     private List<WebElement> getWebElementsNative(final By by, final boolean noWait, final int waitIterationCount) {
         String error = "";
-        List<WebElement> lst = new ArrayList<WebElement>();
+        List<WebElement> lst = new ArrayList<>();
         for (int i = 1; i <= waitIterationCount; i++) {
             error = "";
             try {
@@ -848,7 +848,7 @@ public abstract class AbstractBrowser {
      * @return the abstract browser
      */
     public AbstractBrowser assertTextIsPresent(final String textExpected) {
-        TS.verify().isTrue("Looking for Text[" + textExpected + "] on Page", isTextPresent(textExpected));
+        TS.asserts().isTrue("Looking for Text[" + textExpected + "] on Page", isTextPresent(textExpected));
         return getSelf();
     }
 
@@ -872,7 +872,7 @@ public abstract class AbstractBrowser {
      * @return the abstract browser
      */
     public AbstractBrowser assertTextIsNotPresent(final String textExpected) {
-        TS.verify().isFalse("Looking for Text[" + textExpected + "] To Not be on Page", isTextPresent(textExpected));
+        TS.asserts().isFalse("Looking for Text[" + textExpected + "] To Not be on Page", isTextPresent(textExpected));
         return getSelf();
     }
 
