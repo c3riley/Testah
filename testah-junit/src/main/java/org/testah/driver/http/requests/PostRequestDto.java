@@ -2,6 +2,7 @@ package org.testah.driver.http.requests;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.testah.TS;
 
@@ -14,6 +15,12 @@ public class PostRequestDto extends AbstractRequestDto {
     public PostRequestDto(final String uri, final String payload) {
         super(new HttpPost(uri), "POST");
         setPayload(payload);
+    }
+
+    public PostRequestDto(final String uri, final byte[] payload) {
+        super(new HttpPost(uri), "POST");
+        setPayload(new ByteArrayEntity(payload));
+        setContentType("application/octet-stream");
     }
 
     public PostRequestDto(final String uri, final Object payload) {

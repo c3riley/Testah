@@ -319,6 +319,9 @@ public abstract class AbstractHttpWrapper {
             if (verbose) {
                 AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500), false);
             }
+            if (request.isAutoAssert() && request.getExpectedStatus() > 0) {
+                responseDto.assertStatus(request.getExpectedStatus());
+            }
             return responseDto;
         } catch (final Exception e) {
             TS.log().error(e);

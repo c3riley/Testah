@@ -2,6 +2,7 @@ package org.testah.driver.http.requests;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.testah.TS;
 
@@ -14,6 +15,12 @@ public class PatchRequestDto extends AbstractRequestDto {
     public PatchRequestDto(final String uri, final String payload) {
         super(new HttpPatch(uri), "PATCH");
         setPayload(payload);
+    }
+
+    public PatchRequestDto(final String uri, final byte[] payload) {
+        super(new HttpPatch(uri), "PATCH");
+        setPayload(new ByteArrayEntity(payload));
+        setContentType("application/octet-stream");
     }
 
     public PatchRequestDto(final String uri, final Object payload) {

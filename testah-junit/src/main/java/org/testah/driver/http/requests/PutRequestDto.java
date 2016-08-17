@@ -2,6 +2,7 @@ package org.testah.driver.http.requests;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.testah.TS;
 
@@ -14,6 +15,12 @@ public class PutRequestDto extends AbstractRequestDto {
     public PutRequestDto(final String uri, final String payload) {
         super(new HttpPut(uri), "PUT");
         setPayload(payload);
+    }
+
+    public PutRequestDto(final String uri, final byte[] payload) {
+        super(new HttpPut(uri), "PUT");
+        setPayload(new ByteArrayEntity(payload));
+        setContentType("application/octet-stream");
     }
 
     public PutRequestDto(final String uri, final Object payload) {

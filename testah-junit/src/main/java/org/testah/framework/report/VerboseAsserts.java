@@ -1,5 +1,6 @@
 package org.testah.framework.report;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,42 +46,126 @@ public class VerboseAsserts {
         this.throwExceptionOnFail = throwExceptionOnFail;
     }
 
+    /**
+     * Starts with.
+     *
+     * @param message
+     *            the message
+     * @param stringToCheck
+     *            the string to check
+     * @param expectedPrefix
+     *            the expected prefix
+     * @return true, if successful
+     */
     public boolean startsWith(final String message, final String stringToCheck, final String expectedPrefix) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to startWith " + expectedPrefix,
                 stringToCheck.startsWith(expectedPrefix));
     }
 
+    /**
+     * Ends with.
+     *
+     * @param message
+     *            the message
+     * @param stringToCheck
+     *            the string to check
+     * @param expectedSuffix
+     *            the expected suffix
+     * @return true, if successful
+     */
     public boolean endsWith(final String message, final String stringToCheck, final String expectedSuffix) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to endsWith " + expectedSuffix,
                 stringToCheck.endsWith(expectedSuffix));
     }
 
+    /**
+     * Contains.
+     *
+     * @param message
+     *            the message
+     * @param stringToCheck
+     *            the string to check
+     * @param expectedValueToContain
+     *            the expected value to contain
+     * @return true, if successful
+     */
     public boolean contains(final String message, final String stringToCheck, final String expectedValueToContain) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to contain " + expectedValueToContain,
                 stringToCheck.contains(expectedValueToContain));
     }
 
+    /**
+     * Size equals.
+     *
+     * @param message
+     *            the message
+     * @param objectToCheckSizeOrLenthOf
+     *            the object to check size or lenth of
+     * @param expectedSize
+     *            the expected size
+     * @return true, if successful
+     */
     public boolean sizeEquals(final String message, final String objectToCheckSizeOrLenthOf, final int expectedSize) {
         return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLenthOf
                 + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
     }
 
+    /**
+     * Not ends with.
+     *
+     * @param message
+     *            the message
+     * @param stringToCheck
+     *            the string to check
+     * @param expectedSuffix
+     *            the expected suffix
+     * @return true, if successful
+     */
     public boolean notEndsWith(final String message, final String stringToCheck, final String expectedSuffix) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to endsWith " + expectedSuffix,
                 stringToCheck.endsWith(expectedSuffix));
     }
 
+    /**
+     * Not contains.
+     *
+     * @param message
+     *            the message
+     * @param stringToCheck
+     *            the string to check
+     * @param expectedValueToContain
+     *            the expected value to contain
+     * @return true, if successful
+     */
     public boolean notContains(final String message, final String stringToCheck, final String expectedValueToContain) {
         return this.isFalse(message + " - expected String[" + stringToCheck + "] to contain " + expectedValueToContain,
                 stringToCheck.contains(expectedValueToContain));
     }
 
+    /**
+     * Not size equals.
+     *
+     * @param message
+     *            the message
+     * @param objectToCheckSizeOrLenthOf
+     *            the object to check size or lenth of
+     * @param expectedSize
+     *            the expected size
+     * @return true, if successful
+     */
     public boolean notSizeEquals(final String message, final Object objectToCheckSizeOrLenthOf,
             final int expectedSize) {
         return this.notEquals(message + " - expected Object[" + objectToCheckSizeOrLenthOf
                 + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
     }
 
+    /**
+     * Gets the size.
+     *
+     * @param objectToCheck
+     *            the object to check
+     * @return the size
+     */
     private int getSize(final Object objectToCheck) {
         Integer actual = null;
         if (objectToCheck instanceof String) {
@@ -487,6 +572,78 @@ public class VerboseAsserts {
             return addAssertHistory("", true, "assertEquals", expected, actual);
         } catch (final AssertionError e) {
             final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
+            if (getThrowExceptionOnFail()) {
+                throw e;
+            }
+            return rtn;
+        }
+    }
+
+    /**
+     * Equals to ignore case.
+     *
+     * @param expected
+     *            the expected
+     * @param actual
+     *            the actual
+     * @return true, if successful
+     */
+    public boolean equalsToIgnoreCase(final String expected, final String actual) {
+        return equalsToIgnoreCase("", expected, actual);
+    }
+
+    /**
+     * Equals to ignore case.
+     *
+     * @param message
+     *            the message
+     * @param expected
+     *            the expected
+     * @param actual
+     *            the actual
+     * @return true, if successful
+     */
+    public boolean equalsToIgnoreCase(final String message, final String expected, final String actual) {
+        try {
+            Assert.assertNotNull(message + " - make sure value is not null for expected", expected);
+            Assert.assertTrue(message, expected.equalsIgnoreCase(actual));
+            return addAssertHistory(message, true, "equalsToIgnoreCase", expected, actual);
+        } catch (final AssertionError e) {
+            final boolean rtn = addAssertHistory(message, false, "equalsToIgnoreCase", expected, actual, e);
+            if (getThrowExceptionOnFail()) {
+                throw e;
+            }
+            return rtn;
+        }
+    }
+
+    /**
+     * Assert file exists.
+     *
+     * @param actual
+     *            the actual
+     * @return true, if successful
+     */
+    public boolean assertFileExists(final File actual) {
+        return assertFileExists("", actual);
+    }
+
+    /**
+     * Assert file exists.
+     *
+     * @param message
+     *            the message
+     * @param actual
+     *            the actual
+     * @return true, if successful
+     */
+    public boolean assertFileExists(final String message, final File actual) {
+        try {
+            Assert.assertNotNull(message + " - File cannot be null", actual);
+            Assert.assertTrue("Checking if file exits[" + actual.getAbsolutePath() + "] - " + message, actual.exists());
+            return addAssertHistory(message, true, "equalsToIgnoreCase", true, actual.exists());
+        } catch (final AssertionError e) {
+            final boolean rtn = addAssertHistory(message, false, "equalsToIgnoreCase", true, false, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
@@ -1572,18 +1729,43 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Checks if is empty.
+     *
+     * @param message
+     *            the message
+     * @param objectToCheck
+     *            the object to check
+     * @return true, if is empty
+     */
     public boolean isEmpty(final String message, final Object objectToCheck) {
         Assert.assertNotNull(message, objectToCheck);
         final Boolean actual = isEmpty(objectToCheck);
         return isTrue(message + " - Is Empty[" + objectToCheck + "]", actual);
     }
 
+    /**
+     * Checks if is not empty.
+     *
+     * @param message
+     *            the message
+     * @param objectToCheck
+     *            the object to check
+     * @return true, if is not empty
+     */
     public boolean isNotEmpty(final String message, final Object objectToCheck) {
         Assert.assertNotNull(message, objectToCheck);
         final Boolean actual = isEmpty(objectToCheck);
         return isFalse(message + " - Is Empty", actual);
     }
 
+    /**
+     * Checks if is empty.
+     *
+     * @param objectToCheck
+     *            the object to check
+     * @return true, if is empty
+     */
     private boolean isEmpty(final Object objectToCheck) {
         Boolean actual = null;
         if (objectToCheck instanceof String) {
