@@ -405,13 +405,12 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      *            the status
      * @return the boolean
      */
-    private static Boolean stopTestCase(final Boolean status) {
+    private static void stopTestCase(final Boolean status) {
         if (null != getTestCase()) {
             stopTestStep();
             getTestPlan().addTestCase(getTestCase().stop(status));
-            return getTestCase().getStatus();
+            getTestCase().getStatus();
         }
-        return null;
     }
 
     /**

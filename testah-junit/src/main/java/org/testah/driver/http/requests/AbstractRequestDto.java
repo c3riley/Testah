@@ -22,18 +22,16 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.openqa.selenium.internal.Base64Encoder;
 import org.testah.TS;
 import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class AbstractRequestDto.
  */
-public abstract class AbstractRequestDto {
+public abstract class AbstractRequestDto<T> {
 
     /** The uri. */
     protected String uri = null;
@@ -64,7 +62,10 @@ public abstract class AbstractRequestDto {
      *
      * @return the self
      */
-    protected abstract AbstractRequestDto getSelf();
+    @SuppressWarnings("unchecked")
+    protected T getSelf() {
+        return (T) this;
+    };
 
     /**
      * Gets the http method.
@@ -82,7 +83,7 @@ public abstract class AbstractRequestDto {
      *            the http method
      * @return the abstract request dto
      */
-    public AbstractRequestDto setHttpMethod(final String httpMethod) {
+    public T setHttpMethod(final String httpMethod) {
         this.httpMethod = httpMethod;
         return getSelf();
     }
@@ -94,7 +95,7 @@ public abstract class AbstractRequestDto {
      *            the uri
      * @return the abstract request dto
      */
-    public AbstractRequestDto setUri(final String uri) {
+    public T setUri(final String uri) {
         this.uri = uri;
         return getSelf();
     }
@@ -117,7 +118,7 @@ public abstract class AbstractRequestDto {
      *
      * @return the abstract request dto
      */
-    public AbstractRequestDto withJson() {
+    public T withJson() {
         addHeader("Content-Type", "application/json");
         return getSelf();
     }
@@ -127,7 +128,7 @@ public abstract class AbstractRequestDto {
      *
      * @return the abstract request dto
      */
-    public AbstractRequestDto withJsonUTF8() {
+    public T withJsonUTF8() {
         addHeader("content-type", "application/json; charset=UTF-8");
         return getSelf();
     }
@@ -137,7 +138,7 @@ public abstract class AbstractRequestDto {
      *
      * @return the abstract request dto
      */
-    public AbstractRequestDto withFormUrlEncoded() {
+    public T withFormUrlEncoded() {
         addHeader("content-type", "application/x-www-form-urlencoded");
         return getSelf();
     }
@@ -151,7 +152,7 @@ public abstract class AbstractRequestDto {
      *            the value
      * @return the abstract request dto
      */
-    public AbstractRequestDto addHeader(final String name, final String value) {
+    public T addHeader(final String name, final String value) {
         addHeader(new BasicHeader(name, value));
         return getSelf();
     }
@@ -163,7 +164,7 @@ public abstract class AbstractRequestDto {
      *            the header
      * @return the abstract request dto
      */
-    public AbstractRequestDto addHeader(final Header header) {
+    public T addHeader(final Header header) {
         if (null == headers) {
             headers = new ArrayList<>();
         }
@@ -199,7 +200,7 @@ public abstract class AbstractRequestDto {
      *            the headers
      * @return the abstract request dto
      */
-    public AbstractRequestDto setHeaders(final List<Header> headers) {
+    public T setHeaders(final List<Header> headers) {
         this.headers = headers;
         return getSelf();
     }
@@ -220,7 +221,7 @@ public abstract class AbstractRequestDto {
      *            the expected status
      * @return the abstract request dto
      */
-    public AbstractRequestDto setExpectedStatus(final int expectedStatus) {
+    public T setExpectedStatus(final int expectedStatus) {
         this.expectedStatus = expectedStatus;
         return getSelf();
     }
@@ -241,7 +242,7 @@ public abstract class AbstractRequestDto {
      *            the credentials provider
      * @return the abstract request dto
      */
-    public AbstractRequestDto setCredentialsProvider(final CredentialsProvider credentialsProvider) {
+    public T setCredentialsProvider(final CredentialsProvider credentialsProvider) {
         this.credentialsProvider = credentialsProvider;
         return getSelf();
     }
@@ -257,7 +258,7 @@ public abstract class AbstractRequestDto {
      *            the auth scope
      * @return the abstract request dto
      */
-    public AbstractRequestDto setBasicAuthCredentials(final String userName, final String password,
+    public T setBasicAuthCredentials(final String userName, final String password,
             final AuthScope authScope) {
         credentialsProvider = new BasicCredentialsProvider();
         final UsernamePasswordCredentials creds = new UsernamePasswordCredentials(userName, password);
@@ -274,7 +275,7 @@ public abstract class AbstractRequestDto {
      *            the password
      * @return the abstract request dto
      */
-    public AbstractRequestDto addBasicAuth(final String userName, final String password) {
+    public T addBasicAuth(final String userName, final String password) {
         final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName("UTF-8")));
         addHeader("Authorization", "Basic " + encoding);
         return getSelf();
@@ -289,9 +290,8 @@ public abstract class AbstractRequestDto {
      *            the password
      * @return the abstract request dto
      */
-    public AbstractRequestDto addBasicAuthHeader(final String userName, final String password) {
-        final String encoding = new Base64Encoder()
-                .encode((userName + ":" + password).getBytes(Charset.forName("ISO-8859-1")));
+    public T addBasicAuthHeader(final String userName, final String password) {
+        final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName("ISO-8859-1")));
         addHeader(new BasicHeader("Authorization", "Basic " + encoding));
         return getSelf();
     }
@@ -305,7 +305,7 @@ public abstract class AbstractRequestDto {
      *            the password
      * @return the abstract request dto
      */
-    public AbstractRequestDto addBasicAuthHeaderWithMask(final String userName, final String password) {
+    public T addBasicAuthHeaderWithMask(final String userName, final String password) {
         TS.addMask(userName);
         TS.addMask(password);
         return addBasicAuthHeader(userName, password);
@@ -320,7 +320,7 @@ public abstract class AbstractRequestDto {
      *            the password
      * @return the abstract http wrapper
      */
-    public AbstractRequestDto setBasicAuthCredentials(final String userName, final String password) {
+    public T setBasicAuthCredentials(final String userName, final String password) {
         return setBasicAuthCredentials(userName, password, AuthScope.ANY);
     }
 
@@ -354,7 +354,7 @@ public abstract class AbstractRequestDto {
      *            the http request base
      * @return the abstract request dto
      */
-    public AbstractRequestDto setHttpRequestBase(final HttpRequestBase httpRequestBase) {
+    public T setHttpRequestBase(final HttpRequestBase httpRequestBase) {
         this.httpRequestBase = httpRequestBase;
         return getSelf();
     }
@@ -366,7 +366,7 @@ public abstract class AbstractRequestDto {
      *            the http entity
      * @return the abstract request dto
      */
-    public AbstractRequestDto setHttpEntity(final HttpEntity httpEntity) {
+    public T setHttpEntity(final HttpEntity httpEntity) {
         this.httpEntity = httpEntity;
         return getSelf();
     }
@@ -387,7 +387,7 @@ public abstract class AbstractRequestDto {
      *            the payload
      * @return the abstract request dto
      */
-    public abstract AbstractRequestDto setPayload(final String payload);
+    public abstract T setPayload(final String payload);
 
     /**
      * Sets the payload.
@@ -396,7 +396,7 @@ public abstract class AbstractRequestDto {
      *            the payload
      * @return the abstract request dto
      */
-    public abstract AbstractRequestDto setPayload(final HttpEntity payload);
+    public abstract T setPayload(final HttpEntity payload);
 
     /**
      * Sets the payload.
@@ -405,7 +405,7 @@ public abstract class AbstractRequestDto {
      *            the payload
      * @return the abstract request dto
      */
-    public abstract AbstractRequestDto setPayload(final Object payload);
+    public abstract T setPayload(final Object payload);
 
     /**
      * Gets the payload string.
@@ -428,7 +428,7 @@ public abstract class AbstractRequestDto {
      *
      * @return the abstract request dto
      */
-    public AbstractRequestDto print() {
+    public T print() {
         TS.log().debug(httpRequestBase.getMethod() + " " + uri);
         return getSelf();
     }
@@ -438,7 +438,7 @@ public abstract class AbstractRequestDto {
      *
      * @return the abstract request dto
      */
-    public AbstractRequestDto printComplete() {
+    public T printComplete() {
         TS.log().debug(Cli.BAR_SHORT);
         TS.log().debug(Cli.BAR_WALL + "Request " + httpMethod);
         TS.log().debug(Cli.BAR_WALL + "URI: " + getUri());
@@ -494,9 +494,11 @@ public abstract class AbstractRequestDto {
      *
      * @param autoAssert
      *            the new auto assert
+     * @return the t
      */
-    public void setAutoAssert(final boolean autoAssert) {
+    public T setAutoAssert(final boolean autoAssert) {
         this.autoAssert = autoAssert;
+        return getSelf();
     }
 
     /**
@@ -506,7 +508,7 @@ public abstract class AbstractRequestDto {
      *            the value
      * @return the abstract request dto
      */
-    public AbstractRequestDto setContentType(final String value) {
+    public T setContentType(final String value) {
         addHeader("content-type", value);
         return getSelf();
     }
@@ -520,10 +522,10 @@ public abstract class AbstractRequestDto {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    public AbstractRequestDto setUploadFile(final String payload) throws IOException {
+    public T setUploadFile(final String payload) throws IOException {
         File file = new File(payload);
         TS.asserts().assertFileExists(file);
-        return setUpload(FileUtils.readFileToString(file).getBytes());
+        return setUpload(FileUtils.readFileToString(file).getBytes(Charset.forName("UTF-8")));
     }
 
     /**
@@ -535,9 +537,9 @@ public abstract class AbstractRequestDto {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    public AbstractRequestDto setUploadFile(final File payload) throws IOException {
+    public T setUploadFile(final File payload) throws IOException {
         TS.asserts().assertFileExists(payload);
-        return setUpload(FileUtils.readFileToString(payload).getBytes());
+        return setUpload(FileUtils.readFileToString(payload).getBytes(Charset.forName("UTF-8")));
     }
 
     /**
@@ -549,10 +551,10 @@ public abstract class AbstractRequestDto {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    public AbstractRequestDto setUploadResourceFile(final String pathToResource) throws IOException {
+    public T setUploadResourceFile(final String pathToResource) throws IOException {
         final String fileContent = TS.util().getResourceAsString(pathToResource);
         TS.asserts().notNull("setUploadResourceFile makue sure value is not null", fileContent);
-        return setUpload(fileContent.getBytes());
+        return setUpload(fileContent.getBytes(Charset.forName("UTF-8")));
     }
 
     /**
@@ -562,7 +564,31 @@ public abstract class AbstractRequestDto {
      *            the payload
      * @return the abstract request dto
      */
-    public AbstractRequestDto setUpload(final byte[] payload) {
+    public T setUpload(final String payload) {
+        return setUpload(payload, "UTF-8");
+    }
+
+    /**
+     * Sets the upload.
+     *
+     * @param payload
+     *            the payload
+     * @param charset
+     *            the charset
+     * @return the abstract request dto
+     */
+    public T setUpload(final String payload, final String charset) {
+        return setUpload(payload.getBytes(Charset.forName(charset)));
+    }
+
+    /**
+     * Sets the upload.
+     *
+     * @param payload
+     *            the payload
+     * @return the abstract request dto
+     */
+    public T setUpload(final byte[] payload) {
         setPayload(new ByteArrayEntity(payload));
         setContentType("application/octet-stream");
         return getSelf();

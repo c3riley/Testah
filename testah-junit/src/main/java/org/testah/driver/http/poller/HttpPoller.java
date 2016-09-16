@@ -34,7 +34,7 @@ public class HttpPoller {
      *            the poller check
      * @return the response dto
      */
-    public ResponseDto pollRequest(final AbstractRequestDto request, final HttpPollerCheck pollerCheck) {
+    public ResponseDto pollRequest(final AbstractRequestDto<?> request, final HttpPollerCheck pollerCheck) {
         return pollRequest(request, pollerCheck, "polling");
     }
 
@@ -49,7 +49,7 @@ public class HttpPoller {
      *            the polling message
      * @return the response dto
      */
-    public ResponseDto pollRequest(final AbstractRequestDto request, final HttpPollerCheck pollerCheck, final String pollingMessage) {
+    public ResponseDto pollRequest(final AbstractRequestDto<?> request, final HttpPollerCheck pollerCheck, final String pollingMessage) {
         ResponseDto response = null;
         if (null != TS.params()) {
             StepAction.createInfo("Running Poller for Http Request ").add();
@@ -73,6 +73,9 @@ public class HttpPoller {
                         pollCheckPassed = true;
                         break;
                     }
+                } catch (Exception e) {
+                    TS.log().warn("Issue found during polling - " + e.getMessage());
+                    throw e;
                 } finally {
                     if (pollCtr == 1) {
                         if (null != TS.params() && response != null) {
@@ -84,6 +87,9 @@ public class HttpPoller {
                 }
                 TS.util().pause(getPollIterationPause(), pollingMessage, pollCtr);
             }
+        } catch (Exception e) {
+            TS.log().warn("Issue found during polling - " + e.getMessage());
+            throw e;
         } finally {
             if (null != response && null != TS.params()) {
                 AbstractTestPlan.addStepAction(response.createResponseInfoStep(false, true, 500), false);

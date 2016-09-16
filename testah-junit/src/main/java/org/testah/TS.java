@@ -24,7 +24,7 @@ public class TS {
     private static ThreadLocal<HashMap<String, Object>> _statefulData;
 
     /** The _browser. */
-    private static ThreadLocal<AbstractBrowser> _browser;
+    private static ThreadLocal<AbstractBrowser<?>> _browser;
 
     /** The _http. */
     private static ThreadLocal<AbstractHttpWrapper> _http;
@@ -158,7 +158,7 @@ public class TS {
      *
      * @return the abstract browser
      */
-    public static AbstractBrowser browser() {
+    public static AbstractBrowser<?> browser() {
         if (null == _browser || null == _browser.get()) {
             setBrowser(AbstractBrowser.getDefaultBrowser());
         }
@@ -181,7 +181,7 @@ public class TS {
      *            the browser
      * @return the abstract browser
      */
-    public static AbstractBrowser setBrowser(final AbstractBrowser browser) {
+    public static AbstractBrowser<?> setBrowser(final AbstractBrowser<?> browser) {
         TS._browser = new ThreadLocal<>();
         TS._browser.set(browser);
         // _browser.get().start();

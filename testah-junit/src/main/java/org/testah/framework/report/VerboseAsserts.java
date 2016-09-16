@@ -1800,13 +1800,14 @@ public class VerboseAsserts {
      *            the actual
      * @return true, if is greater than
      */
-    public boolean isGreaterThan(final String message, final int valueToBeGreaterThan, final int actual) {
+    public boolean isGreaterThan(String message, final int valueToBeGreaterThan, final int actual) {
         try {
-            Assert.assertTrue(message + " - actual[" + actual + "] is greaater than " + valueToBeGreaterThan,
+            message = message + " - actual[" + actual + "] is greaater than " + valueToBeGreaterThan;
+            Assert.assertTrue(message,
                     valueToBeGreaterThan < actual);
-            return addAssertHistory(message, true, "isGreaterThan", true, actual);
+            return addAssertHistory(message, true, "isGreaterThan", valueToBeGreaterThan, actual);
         } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory(message, false, "isGreaterThan", true, actual, e);
+            final boolean rtn = addAssertHistory(message, false, "isGreaterThan", valueToBeGreaterThan, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
@@ -1825,13 +1826,14 @@ public class VerboseAsserts {
      *            the actual
      * @return true, if is less than
      */
-    public boolean isLessThan(final String message, final int valueToBeLessThan, final int actual) {
+    public boolean isLessThan(String message, final int valueToBeLessThan, final int actual) {
         try {
-            Assert.assertTrue(message + " - actual[" + actual + "] is less than " + valueToBeLessThan,
+            message = message + " - actual[" + actual + "] is less than " + valueToBeLessThan;
+            Assert.assertTrue(message,
                     valueToBeLessThan > actual);
-            return addAssertHistory(message, true, "isLessThan", true, actual);
+            return addAssertHistory(message, true, "isLessThan", valueToBeLessThan, actual);
         } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory(message, false, "isLessThan", true, actual, e);
+            final boolean rtn = addAssertHistory(message, false, "isLessThan", valueToBeLessThan, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }

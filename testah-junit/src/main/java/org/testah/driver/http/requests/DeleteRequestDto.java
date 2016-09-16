@@ -3,25 +3,21 @@ package org.testah.driver.http.requests;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpDelete;
 
-public class DeleteRequestDto extends AbstractRequestDto {
+public class DeleteRequestDto extends AbstractRequestDto<DeleteRequestDto> {
 
     public DeleteRequestDto(final String uri) {
         super(new HttpDelete(uri), "DELETE");
     }
 
-    public AbstractRequestDto setPayload(final String payload) {
+    public DeleteRequestDto setPayload(final String payload) {
         return this;
     }
 
-    public AbstractRequestDto setPayload(final HttpEntity payload) {
+    public DeleteRequestDto setPayload(final HttpEntity payload) {
         return this;
     }
 
-    public AbstractRequestDto setPayload(final Object payload) {
-        return this;
-    }
-
-    protected AbstractRequestDto getSelf() {
+    public DeleteRequestDto setPayload(final Object payload) {
         return this;
     }
 

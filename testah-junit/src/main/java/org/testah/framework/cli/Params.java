@@ -178,7 +178,8 @@ public class Params {
     private boolean recordSteps = true;
 
     /** The throw exception on fail. */
-    @Comment(info = "Should the System work as normal JUnit and stop a test case method on first fail, if false will continue to end then check for any fails")
+    @Comment(
+            info = "Should the System work as normal JUnit and stop a test case method on first fail, if false will continue to end then check for any fails")
     @Arg(dest = "throwExceptionOnFail")
     private boolean throwExceptionOnFail = true;
 
@@ -238,7 +239,8 @@ public class Params {
     private boolean autoOpenHtmlReport = true;
 
     /** The send json test data to service. */
-    @Comment(info = "Should the Runner Post info to a service in Json Format. If Uri is supplied it will attempt to send the json info as a List of 1 to many TestPlans")
+    @Comment(
+            info = "Should the Runner Post info to a service in Json Format. If Uri is supplied it will attempt to send the json info as a List of 1 to many TestPlans")
     @Arg(dest = "sendJsonTestDataToService")
     private String sendJsonTestDataToService = "";
 
@@ -253,62 +255,74 @@ public class Params {
     private boolean updateMetadata = true;
 
     /** The run info_version id. */
-    @Comment(info = "[BAR1]Run Info Properties[BAR2]Version Id is a value that can be used to tell what version the test is testing against. Can be passed runtime via -Dtestah.versionId=login-0.0.2")
+    @Comment(
+            info = "[BAR1]Run Info Properties[BAR2]Version Id is a value that can be used to tell what version the test is testing against. Can be passed runtime via -Dtestah.versionId=login-0.0.2")
     @Arg(dest = "runInfo_versionId")
     private String runInfo_versionId = "";
 
     /** The run info_build number. */
-    @Comment(info = "Build Number is a value that can be used to tell what build the test is testing against. Can be passed runtime via -Dtestah.buildNumber=login-0.0.2")
+    @Comment(
+            info = "Build Number is a value that can be used to tell what build the test is testing against. Can be passed runtime via -Dtestah.buildNumber=login-0.0.2")
     @Arg(dest = "runInfo_buildNumber")
     private String runInfo_buildNumber = "";
 
     /** The run info_run id. */
-    @Comment(info = "Run Id is a value that can be used to group many differnt results together. Can be passed runtime via -Dtestah.runId=run23")
+    @Comment(
+            info = "Run Id is a value that can be used to group many differnt results together. Can be passed runtime via -Dtestah.runId=run23")
     @Arg(dest = "runInfo_runId")
     private String runInfo_runId = "";
 
     /** The run location. */
-    @Comment(info = "Run Location is a way to tell where the test ran, can be local machine name, or Jenkins Job Url. Can be passed runtime via -Dtestah.runLocation=local")
+    @Comment(
+            info = "Run Location is a way to tell where the test ran, can be local machine name, or Jenkins Job Url. Can be passed runtime via -Dtestah.runLocation=local")
     @Arg(dest = "runInfo_runLocation")
     private String runLocation = "localhost";
 
     /** The run type. */
-    @Comment(info = "Run Type is a way to tell what type of run the test execution was involed in, smoke, regression, other. Can be passed runtime via -Dtestah.runType=smoke")
+    @Comment(
+            info = "Run Type is a way to tell what type of run the test execution was involed in, smoke, regression, other. Can be passed runtime via -Dtestah.runType=smoke")
     @Arg(dest = "runInfo_runType")
     private String runType = "";
 
     /** The usefilter schema. */
-    @Comment(info = "[BAR1]Filter Properties[BAR2]Filter Schema To Use. Leave empty to not apply fitlers, to use default filter, set value to DEFAULT.  You can also create your own, like REG, or SMOKE")
+    @Comment(
+            info = "[BAR1]Filter Properties[BAR2]Filter Schema To Use. Leave empty to not apply fitlers, to use default filter, set value to DEFAULT.  You can also create your own, like REG, or SMOKE")
     @Arg(dest = "usefilterSchema")
     private String usefilterSchema = "DEFAULT";
 
     /** The filter by platform. */
-    @Comment(info = "Filter using the Platform metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
+    @Comment(
+            info = "Filter using the Platform metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByPlatform")
     private String filterByPlatform = "";
 
     /** The filter by device. */
-    @Comment(info = "Filter using the Device metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
+    @Comment(
+            info = "Filter using the Device metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByDevice")
     private String filterByDevice = "";
 
     /** The filter by component. */
-    @Comment(info = "Filter using the Component metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
+    @Comment(
+            info = "Filter using the Component metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByComponent")
     private String filterByComponent = "";
 
     /** The filter by run type. */
-    @Comment(info = "Filter using the RunType metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
+    @Comment(
+            info = "Filter using the RunType metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByRunType")
     private String filterByRunType = "";
 
     /** The filter ignore known problem. */
-    @Comment(info = "Filter Using The @KnownProblem Annotation.  True means testplan/testcase must not be a known problem. False means must be a known problem. Empty means do not use filter.")
+    @Comment(
+            info = "Filter Using The @KnownProblem Annotation.  True means testplan/testcase must not be a known problem. False means must be a known problem. Empty means do not use filter.")
     @Arg(dest = "filterIgnoreKnownProblem")
     private String filterIgnoreKnownProblem = "";
 
     /** The filter by tag. */
-    @Comment(info = "Filter using the Tag metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
+    @Comment(
+            info = "Filter using the Tag metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByTag")
     private String filterByTag = "";
 
@@ -327,7 +341,7 @@ public class Params {
     @Arg(dest = "filterByTestType")
     private TestType filterByTestType = TestType.AUTOMATED;
 
-    private HashMap<String, String> other = new HashMap<String, String>();
+    private HashMap<String, String> other = new HashMap<>();
 
     /**
      * Gets the output.
@@ -337,7 +351,7 @@ public class Params {
     public String getOutput() {
         if (null == output || output.length() == 0) {
             output = addUserDir("testahOutput");
-            new File(output).mkdirs();
+            TS.log().trace("getOutput mkdirs: " + new File(output).mkdirs());
         }
         return output;
     }
@@ -1207,6 +1221,21 @@ public class Params {
 
     public void setOther(final HashMap<String, String> other) {
         this.other = other;
+    }
+
+    public String getValue(final String key) {
+        String value = System.getProperty(key, System.getenv(key));
+        if (null == value) {
+            value = getOther().get(key);
+        }
+        if (null != value) {
+            value = value.trim();
+            if (value.isEmpty()) {
+                value = null;
+            }
+        }
+        return value;
+
     }
 
 }

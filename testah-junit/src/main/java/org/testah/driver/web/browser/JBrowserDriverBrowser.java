@@ -11,11 +11,11 @@ import com.machinepublishers.jbrowserdriver.Settings;
 /**
  * The Class JBrowserDriverBrowser.
  */
-public class JBrowserDriverBrowser extends AbstractBrowser {
+public class JBrowserDriverBrowser extends AbstractBrowser<JBrowserDriverBrowser> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
      */
     public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
@@ -24,25 +24,25 @@ public class JBrowserDriverBrowser extends AbstractBrowser {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
      */
-    public AbstractBrowser getDriverBinay() {
+    public JBrowserDriverBrowser getDriverBinay() {
         return this;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#startService()
      */
-    public AbstractBrowser startService() {
+    public JBrowserDriverBrowser startService() {
         return this;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities()
      */
     public DesiredCapabilities createCapabilities() {
@@ -60,15 +60,17 @@ public class JBrowserDriverBrowser extends AbstractBrowser {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#stopService()
      */
-    public AbstractBrowser stopService() throws IOException {
+    public JBrowserDriverBrowser stopService() throws IOException {
         return this;
     }
 
-    protected AbstractBrowser getSelf() {
-        return this;
+    @Override
+    public AbstractBrowser<JBrowserDriverBrowser> logBrowerInfo() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

@@ -70,7 +70,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
      *            the verbose
      * @return the future
      */
-    public Future<HttpResponse> doRequestAysnch(final AbstractRequestDto request, final boolean verbose) {
+    public Future<HttpResponse> doRequestAysnch(final AbstractRequestDto<?> request, final boolean verbose) {
         try {
             final HttpClientContext context = HttpClientContext.create();
             if (null != getCookieStore()) {
@@ -175,7 +175,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
      * @throws Exception
      *             the exception
      */
-    public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response, final AbstractRequestDto request)
+    public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response, final AbstractRequestDto<?> request)
             throws Exception {
         if (null != response) {
             try {

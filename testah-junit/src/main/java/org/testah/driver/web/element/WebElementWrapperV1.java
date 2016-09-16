@@ -19,7 +19,7 @@ public class WebElementWrapperV1 extends AbstractWebElementWrapper {
      * @param driver
      *            the driver
      */
-    public WebElementWrapperV1(final By by, final WebElement webElement, final AbstractBrowser driver) {
+    public WebElementWrapperV1(final By by, final WebElement webElement, final AbstractBrowser<?> driver) {
         super(by, webElement, driver);
     }
 

@@ -6,7 +6,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.testah.TS;
 
-public class PutRequestDto extends AbstractRequestDto {
+public class PutRequestDto extends AbstractRequestDto<PutRequestDto> {
 
     public PutRequestDto(final String uri) {
         super(new HttpPut(uri), "PUT");
@@ -25,7 +25,11 @@ public class PutRequestDto extends AbstractRequestDto {
 
     public PutRequestDto(final String uri, final Object payload) {
         super(new HttpPut(uri), "PUT");
-        setPayload(payload);
+        if (payload instanceof byte[]) {
+            this.setUpload((byte[]) payload);
+        } else {
+            setPayload(payload);
+        }
     }
 
     public PutRequestDto(final String uri, final HttpEntity payload) {
@@ -33,7 +37,7 @@ public class PutRequestDto extends AbstractRequestDto {
         setPayload(payload);
     }
 
-    public AbstractRequestDto setPayload(final String payload) {
+    public PutRequestDto setPayload(final String payload) {
         try {
             if (null == payload) {
                 TS.log().warn("Payload is null, setting to empty String");
@@ -46,7 +50,7 @@ public class PutRequestDto extends AbstractRequestDto {
         }
     }
 
-    public AbstractRequestDto setPayload(final Object payload) {
+    public PutRequestDto setPayload(final Object payload) {
         try {
             if (null == payload) {
                 TS.log().warn("Payload is null, setting to empty String");
@@ -59,7 +63,7 @@ public class PutRequestDto extends AbstractRequestDto {
         }
     }
 
-    public AbstractRequestDto setPayload(final HttpEntity payload) {
+    public PutRequestDto setPayload(final HttpEntity payload) {
         try {
             if (null != payload) {
                 httpEntity = payload;
@@ -71,10 +75,6 @@ public class PutRequestDto extends AbstractRequestDto {
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
-        return this;
-    }
-
-    protected AbstractRequestDto getSelf() {
         return this;
     }
 

@@ -42,7 +42,7 @@ public class Cli {
     private final Params opt;
 
     /** The Constant version. */
-    public static final String version = "0.5.2";
+    public static final String version = "0.6.0";
 
     /** The Constant BAR_LONG. */
     public static final String BAR_LONG = "=============================================================================================";
@@ -145,7 +145,7 @@ public class Cli {
 
         } catch (final ArgumentParserException e) {
             parser.handleError(e);
-            System.exit(1);
+            throw new RuntimeException(e);
         }
         return this;
 
@@ -223,11 +223,11 @@ public class Cli {
         final TestFilter testPlanFilter = new TestFilter();
         File results = new File(res.getString("queryResults"));
         if (results.isDirectory()) {
-            results.mkdirs();
+            TS.log().trace("results mkdirs: " + results.mkdirs());
             results = new File(results, "queryResults.json");
         } else {
             if (null != results.getParentFile()) {
-                results.getParentFile().mkdirs();
+                TS.log().trace("results.getParentFile() mkdirs: " + results.getParentFile().mkdirs());
             }
         }
         testPlanFilter.filterTestPlansToRun();

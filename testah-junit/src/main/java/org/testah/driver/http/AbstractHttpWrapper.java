@@ -142,7 +142,7 @@ public abstract class AbstractHttpWrapper {
      *            the request
      * @return the response dto
      */
-    public ResponseDto doRequestWithAssert(final AbstractRequestDto request) {
+    public ResponseDto doRequestWithAssert(final AbstractRequestDto<?> request) {
         return doRequestWithAssert(request, request.getExpectedStatus());
     }
 
@@ -155,7 +155,7 @@ public abstract class AbstractHttpWrapper {
      *            the expected status
      * @return the response dto
      */
-    public ResponseDto doRequestWithAssert(final AbstractRequestDto request, final int expectedStatus) {
+    public ResponseDto doRequestWithAssert(final AbstractRequestDto<?> request, final int expectedStatus) {
         return doRequestWithAssert(request, new ResponseDto(expectedStatus));
     }
 
@@ -242,7 +242,7 @@ public abstract class AbstractHttpWrapper {
      *            the expected
      * @return the response dto
      */
-    public ResponseDto doRequestWithAssert(final AbstractRequestDto request, final ResponseDto expected) {
+    public ResponseDto doRequestWithAssert(final AbstractRequestDto<?> request, final ResponseDto expected) {
         final ResponseDto response = doRequest(request);
         if (TS.asserts().notNull("preformRequestWithAssert actual response is not null", response)
                 && TS.asserts().notNull("preformRequestWithAssert expected response is not null", expected)) {
@@ -258,7 +258,7 @@ public abstract class AbstractHttpWrapper {
      *            the request
      * @return the response dto
      */
-    public ResponseDto doRequest(final AbstractRequestDto request) {
+    public ResponseDto doRequest(final AbstractRequestDto<?> request) {
         return doRequest(request, verbose);
     }
 
@@ -271,7 +271,7 @@ public abstract class AbstractHttpWrapper {
      *            the verbose
      * @return the response dto
      */
-    public ResponseDto doRequest(final AbstractRequestDto request, final boolean verbose) {
+    public ResponseDto doRequest(final AbstractRequestDto<?> request, final boolean verbose) {
         return doRequest(request, verbose, isIgnoreHttpError());
     }
 
@@ -286,7 +286,7 @@ public abstract class AbstractHttpWrapper {
      *            the ignore http error
      * @return the response dto
      */
-    public ResponseDto doRequest(final AbstractRequestDto request, final boolean verbose,
+    public ResponseDto doRequest(final AbstractRequestDto<?> request, final boolean verbose,
             final boolean ignoreHttpError) {
         try {
             final HttpClientContext context = HttpClientContext.create();
@@ -310,7 +310,7 @@ public abstract class AbstractHttpWrapper {
                 responseDto.setStatusText(response.getStatusLine().getReasonPhrase());
                 if (null != entity) {
                     responseDto.setResponseBytes(EntityUtils.toByteArray(entity));
-                    responseDto.setResponseBody(new String(responseDto.getResponseBytes()));
+                    responseDto.setResponseBody(new String(responseDto.getResponseBytes(), "UTF-8"));
                 }
                 responseDto.setUrl(request.getHttpRequestBase().getURI().toString());
                 responseDto.setHeaders(response.getAllHeaders()).setRequestType(request.getHttpMethod());
@@ -342,7 +342,7 @@ public abstract class AbstractHttpWrapper {
      *            the request
      * @return the response dto
      */
-    public ResponseDto getResponseDto(final HttpResponse response, final AbstractRequestDto request) {
+    public ResponseDto getResponseDto(final HttpResponse response, final AbstractRequestDto<?> request) {
         if (null != response) {
             try {
                 final HttpEntity entity = response.getEntity();
@@ -350,7 +350,7 @@ public abstract class AbstractHttpWrapper {
                 responseDto.setStatusCode(response.getStatusLine().getStatusCode());
                 responseDto.setStatusText(response.getStatusLine().getReasonPhrase());
                 responseDto.setResponseBytes(EntityUtils.toByteArray(entity));
-                responseDto.setResponseBody(new String(responseDto.getResponseBytes()));
+                responseDto.setResponseBody(new String(responseDto.getResponseBytes(), "UTF-8"));
                 if (null != request) {
                     responseDto.setUrl(request.getHttpRequestBase().getURI().toString());
                     responseDto.setHeaders(response.getAllHeaders()).setRequestType(request.getHttpMethod());

@@ -6,7 +6,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.testah.TS;
 
-public class PatchRequestDto extends AbstractRequestDto {
+public class PatchRequestDto extends AbstractRequestDto<PatchRequestDto> {
 
     public PatchRequestDto(final String uri) {
         super(new HttpPatch(uri), "PATCH");
@@ -33,7 +33,7 @@ public class PatchRequestDto extends AbstractRequestDto {
         setPayload(payload);
     }
 
-    public AbstractRequestDto setPayload(String payload) {
+    public PatchRequestDto setPayload(String payload) {
         try {
             if (null == payload) {
                 payload = "";
@@ -44,7 +44,7 @@ public class PatchRequestDto extends AbstractRequestDto {
         }
     }
 
-    public AbstractRequestDto setPayload(final Object payload) {
+    public PatchRequestDto setPayload(final Object payload) {
         try {
             if (null == payload) {
                 TS.log().warn("payload was null so setting to empty string");
@@ -57,7 +57,7 @@ public class PatchRequestDto extends AbstractRequestDto {
         }
     }
 
-    public AbstractRequestDto setPayload(final HttpEntity payload) {
+    public PatchRequestDto setPayload(final HttpEntity payload) {
         try {
             if (null != payload) {
                 httpEntity = payload;
@@ -69,10 +69,6 @@ public class PatchRequestDto extends AbstractRequestDto {
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
-        return this;
-    }
-
-    protected AbstractRequestDto getSelf() {
         return this;
     }
 

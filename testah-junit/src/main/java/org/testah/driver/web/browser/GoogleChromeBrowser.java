@@ -17,14 +17,14 @@ import org.testah.framework.cli.Params;
 /**
  * The Class GoogleChromeBrowser.
  */
-public class GoogleChromeBrowser extends AbstractBrowser {
+public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
 
     /** The service. */
     private ChromeDriverService service = null;
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
      */
     public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
@@ -37,19 +37,19 @@ public class GoogleChromeBrowser extends AbstractBrowser {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
      */
-    public AbstractBrowser getDriverBinay() {
+    public GoogleChromeBrowser getDriverBinay() {
         return this;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#startService()
      */
-    public AbstractBrowser startService() throws IOException {
+    public GoogleChromeBrowser startService() throws IOException {
         service = new ChromeDriverService.Builder().usingDriverExecutable(new File(getChromePath())).usingAnyFreePort()
                 .withLogFile(File.createTempFile("googleChromeLog", ".log")).build();
         service.start();
@@ -58,7 +58,7 @@ public class GoogleChromeBrowser extends AbstractBrowser {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities()
      */
     public DesiredCapabilities createCapabilities() {
@@ -68,7 +68,7 @@ public class GoogleChromeBrowser extends AbstractBrowser {
             capabilities.setCapability("user-agent", getUserAgentValue());
         }
 
-        final Map<String, Object> prefs = new HashMap<String, Object>();
+        final Map<String, Object> prefs = new HashMap<>();
         prefs.put("download.directory_upgrade", true);
         prefs.put("profile.default_content_settings.popups", 0);
         prefs.put("download.prompt_for_download", false);
@@ -113,18 +113,20 @@ public class GoogleChromeBrowser extends AbstractBrowser {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#stopService()
      */
-    public AbstractBrowser stopService() throws IOException {
+    public GoogleChromeBrowser stopService() throws IOException {
         if (null != service) {
             service.stop();
         }
         return null;
     }
 
-    protected AbstractBrowser getSelf() {
-        return this;
+    @Override
+    public AbstractBrowser<GoogleChromeBrowser> logBrowerInfo() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

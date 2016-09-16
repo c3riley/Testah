@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
@@ -59,7 +60,9 @@ public class ResponseDto {
     private String requestType = null;
 
     /** The request used. */
-    private AbstractRequestDto requestUsed = null;
+    private AbstractRequestDto<?> requestUsed = null;
+
+    private HashMap<String, String> headerHash = null;
 
     /**
      * Instantiates a new response dto.
@@ -572,7 +575,7 @@ public class ResponseDto {
      *
      * @return the request used
      */
-    public AbstractRequestDto getRequestUsed() {
+    public AbstractRequestDto<?> getRequestUsed() {
         return requestUsed;
     }
 
@@ -583,8 +586,22 @@ public class ResponseDto {
      *            the new request used
      * @return the response dto
      */
-    public ResponseDto setRequestUsed(final AbstractRequestDto requestUsed) {
+    public ResponseDto setRequestUsed(final AbstractRequestDto<?> requestUsed) {
         this.requestUsed = requestUsed;
         return this;
+    }
+
+    public String getHeaderValue(final String name) {
+        return getHeaderHash().get(name);
+    }
+
+    public HashMap<String, String> getHeaderHash() {
+        if (null == headerHash) {
+            this.headerHash = new HashMap<>();
+            for (final Header header : getHeaders()) {
+                headerHash.put(header.getName(), header.getValue());
+            }
+        }
+        return headerHash;
     }
 }

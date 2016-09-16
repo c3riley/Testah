@@ -13,14 +13,14 @@ import org.testah.framework.cli.Params;
 /**
  * The Class PhantomJsBrowser.
  */
-public class PhantomJsBrowser extends AbstractBrowser {
+public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
 
     /** The service. */
     private PhantomJSDriverService service = null;
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
      */
     public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
@@ -29,19 +29,19 @@ public class PhantomJsBrowser extends AbstractBrowser {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
      */
-    public AbstractBrowser getDriverBinay() {
+    public PhantomJsBrowser getDriverBinay() {
         return this;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#startService()
      */
-    public AbstractBrowser startService() throws IOException {
+    public PhantomJsBrowser startService() throws IOException {
         service = new PhantomJSDriverService.Builder().usingPhantomJSExecutable(new File(getPhantomJsBinPath()))
                 .usingAnyFreePort().usingCommandLineArguments(new String[] { "--ignore-ssl-errors=true" }).build();
         service.start();
@@ -50,7 +50,7 @@ public class PhantomJsBrowser extends AbstractBrowser {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities()
      */
     public DesiredCapabilities createCapabilities() {
@@ -95,18 +95,20 @@ public class PhantomJsBrowser extends AbstractBrowser {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.testah.driver.web.browser.AbstractBrowser#stopService()
      */
-    public AbstractBrowser stopService() throws IOException {
+    public PhantomJsBrowser stopService() throws IOException {
         if (null != service) {
             service.stop();
         }
         return null;
     }
 
-    protected AbstractBrowser getSelf() {
-        return this;
+    @Override
+    public AbstractBrowser<PhantomJsBrowser> logBrowerInfo() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

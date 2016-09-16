@@ -6,7 +6,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.testah.TS;
 
-public class PostRequestDto extends AbstractRequestDto {
+public class PostRequestDto extends AbstractRequestDto<PostRequestDto> {
 
     public PostRequestDto(final String uri) {
         super(new HttpPost(uri), "POST");
@@ -33,7 +33,7 @@ public class PostRequestDto extends AbstractRequestDto {
         setPayload(payload);
     }
 
-    public AbstractRequestDto setPayload(String payload) {
+    public PostRequestDto setPayload(String payload) {
         try {
             if (null == payload) {
                 TS.log().warn("Payload cannot be null, setting to empty string");
@@ -45,7 +45,7 @@ public class PostRequestDto extends AbstractRequestDto {
         }
     }
 
-    public AbstractRequestDto setPayload(final Object payload) {
+    public PostRequestDto setPayload(final Object payload) {
         try {
             if (null == payload) {
                 TS.log().warn("Payload cannot be null, setting to empty string");
@@ -58,7 +58,7 @@ public class PostRequestDto extends AbstractRequestDto {
         }
     }
 
-    public AbstractRequestDto setPayload(final HttpEntity payload) {
+    public PostRequestDto setPayload(final HttpEntity payload) {
         try {
             if (null != payload) {
                 httpEntity = payload;
@@ -70,10 +70,6 @@ public class PostRequestDto extends AbstractRequestDto {
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
-        return this;
-    }
-
-    protected AbstractRequestDto getSelf() {
         return this;
     }
 

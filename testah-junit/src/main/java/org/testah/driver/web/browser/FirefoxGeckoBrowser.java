@@ -13,7 +13,9 @@ import org.testah.TS;
 /**
  * The Class FirefoxBrowser.
  */
-public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
+public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
+
+    private final static String DRIVER_PATH_VAR = "webdriver.gecko.driver";
 
     /*
      * (non-Javadoc)
@@ -29,7 +31,7 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
      *
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
      */
-    public FirefoxBrowser getDriverBinay() {
+    public FirefoxGeckoBrowser getDriverBinay() {
         return this;
     }
 
@@ -38,7 +40,7 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
      *
      * @see org.testah.driver.web.browser.AbstractBrowser#startService()
      */
-    public FirefoxBrowser startService() {
+    public FirefoxGeckoBrowser startService() {
         return this;
     }
 
@@ -49,6 +51,10 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
      */
     public DesiredCapabilities createCapabilities() {
         final DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+        final String driverPath = TS.params().getValue(DRIVER_PATH_VAR);
+        if (driverPath != null) {
+            capabilities.setCapability("marionette", true);
+        }
         final FirefoxProfile profile = new FirefoxProfile();
         profile.setAcceptUntrustedCertificates(true);
         if (null != getUserAgentValue()) {
@@ -76,11 +82,11 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
      *
      * @see org.testah.driver.web.browser.AbstractBrowser#stopService()
      */
-    public FirefoxBrowser stopService() throws IOException {
+    public FirefoxGeckoBrowser stopService() throws IOException {
         return this;
     }
 
-    public AbstractBrowser<FirefoxBrowser> logBrowerInfo() {
+    public AbstractBrowser<FirefoxGeckoBrowser> logBrowerInfo() {
         try {
             TS.log().trace("Browser SessionId: " + ((FirefoxDriver) TS.browser().getDriver()).getSessionId().toString());
             TS.util().toJsonPrint(TS.browser().getDriver().manage().getCookies());

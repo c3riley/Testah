@@ -30,8 +30,13 @@ public abstract class AbstractWebElementWrapper {
     private int timeout = TS.params().getDefaultWaitTime();
 
     /** The driver. */
-    private AbstractBrowser driver = null;
+    private AbstractBrowser<?> driver = null;
 
+    /**
+     * Gets the self.
+     *
+     * @return the self
+     */
     protected abstract AbstractWebElementWrapper getSelf();
 
     /**
@@ -44,7 +49,7 @@ public abstract class AbstractWebElementWrapper {
      * @param driver
      *            the driver
      */
-    public AbstractWebElementWrapper(final By by, final WebElement webElement, final AbstractBrowser driver) {
+    public AbstractWebElementWrapper(final By by, final WebElement webElement, final AbstractBrowser<?> driver) {
         this.by = by;
         this.webElement = webElement;
         this.driver = driver;
@@ -191,6 +196,7 @@ public abstract class AbstractWebElementWrapper {
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper click() {
+        waitTillIsDisplayed();
         if (elementIsOk("click", isAutoReport())) {
             StepAction.createBrowserAction("Element Click", by).add();
             webElement.click();
@@ -218,6 +224,7 @@ public abstract class AbstractWebElementWrapper {
             }
             return false;
         }
+        StepAction.createInfo("Doing Activity: " + activity, "Element[" + getBy() + "]");
         return (null != getDriverWebElement());
     }
 
@@ -233,6 +240,51 @@ public abstract class AbstractWebElementWrapper {
             TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
         }
         return null;
+    }
+
+    /**
+     * Drag to and drop on.
+     *
+     * @param by
+     *            the by
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper dragToAndDropOn(final By by) {
+        return dragToAndDropOn(TS.browser().getWebElement(by));
+    }
+
+    /**
+     * Drag to and drop on.
+     *
+     * @param elementToDropOn
+     *            the element to drop on
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper dragToAndDropOn(final AbstractWebElementWrapper elementToDropOn) {
+        try {
+            getActionBuilder().dragAndDrop(this.getDriverWebElement(), elementToDropOn.getDriverWebElement()).build().perform();
+        } catch (final Exception e) {
+            TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
+        }
+        return this;
+    }
+
+    /**
+     * Drag to and drop by.
+     *
+     * @param xOffset
+     *            the x offset
+     * @param yOffset
+     *            the y offset
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper dragToAndDropBy(final int xOffset, final int yOffset) {
+        try {
+            getActionBuilder().dragAndDropBy(this.getDriverWebElement(), xOffset, yOffset);
+        } catch (final Exception e) {
+            TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
+        }
+        return this;
     }
 
     /**
@@ -314,8 +366,10 @@ public abstract class AbstractWebElementWrapper {
      */
     public WebElement getDriverWebElement() {
         try {
-            webElement.isDisplayed(); // check is still working
-        } catch (final Exception e) {
+            if (null != webElement) {
+                webElement.isDisplayed(); // check is still working
+            }
+        } catch (final Throwable e) {
             webElement = null;
         }
         return webElement;
@@ -363,7 +417,7 @@ public abstract class AbstractWebElementWrapper {
             TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
                     + "] - error: " + error, true, false);
         }
-        return new ArrayList<AbstractWebElementWrapper>();
+        return new ArrayList<>();
     }
 
     /**
@@ -444,7 +498,7 @@ public abstract class AbstractWebElementWrapper {
      */
     public List<AbstractWebElementWrapper> getListOfWebelementsWrapped(final By locator,
             final List<WebElement> webElements) {
-        final List<AbstractWebElementWrapper> lst = new ArrayList<AbstractWebElementWrapper>();
+        final List<AbstractWebElementWrapper> lst = new ArrayList<>();
         if (null != webElements) {
             for (final WebElement e : webElements) {
                 lst.add(new WebElementWrapperV1(locator, e, driver));
@@ -471,6 +525,11 @@ public abstract class AbstractWebElementWrapper {
         return getAttribute("outerHTML");
     }
 
+    /**
+     * Gets the html.
+     *
+     * @return the html
+     */
     public String getHtml() {
         return getOuterHtml();
     }
@@ -552,10 +611,13 @@ public abstract class AbstractWebElementWrapper {
      * @return true, if is displayed
      */
     public boolean isDisplayed(final boolean autoReport) {
-        if (elementIsOk("isDisplayed", autoReport)) {
+        if (null == webElement) {
+            StepAction.createInfo("Element is not Displayed as it is not found, element is null");
+            return false;
+        } else {
             return webElement.isDisplayed();
         }
-        return false;
+
     }
 
     /**
@@ -724,7 +786,7 @@ public abstract class AbstractWebElementWrapper {
      * @return true, if successful
      */
     public boolean verifytAttributeValue(final String attributeName, final String attributeExpectedValue) {
-        return TS.verify().equals("verifytAttributeValue", attributeExpectedValue, getAttribute(attributeName));
+        return TS.verify().equalsTo("verifytAttributeValue", attributeExpectedValue, getAttribute(attributeName));
     }
 
     /**
@@ -807,6 +869,9 @@ public abstract class AbstractWebElementWrapper {
     public AbstractWebElementWrapper waitTillIsDisplayed(final int timeout) {
         try {
             for (int i = 1; i <= timeout; i++) {
+                if (null == getDriverWebElement()) {
+                    resetElement();
+                }
                 if (null != getDriverWebElement() && isDisplayed(false)) {
                     break;
                 }
@@ -817,6 +882,86 @@ public abstract class AbstractWebElementWrapper {
         }
         TS.asserts().isTrue("Expected Element[" + by + "] to be displayed", isDisplayed(false));
         return getSelf();
+    }
+
+    /**
+     * Wait till not displayed.
+     *
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper waitTillNotDisplayed() {
+        return waitTillNotDisplayed(timeout);
+    }
+
+    /**
+     * Wait till not displayed.
+     *
+     * @param timeout
+     *            the timeout
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper waitTillNotDisplayed(final int timeout) {
+        try {
+            for (int i = 1; i <= timeout; i++) {
+                if (null == getDriverWebElement()) {
+                    resetElement();
+                }
+                if (null != getDriverWebElement() && !isDisplayed(false)) {
+                    break;
+                }
+                TS.util().pause("waitTillNotDisplayed", i);
+            }
+        } catch (final Exception e) {
+            TS.log().debug(e);
+        }
+        TS.asserts().isFalse("Expected Element[" + by + "] to Not be displayed", isDisplayed(false));
+        return getSelf();
+    }
+
+    /**
+     * Reset element.
+     *
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper resetElement() {
+        try {
+            this.webElement = driver.getWebElementNoWait(getBy()).getDriverWebElement();
+        } catch (Throwable t) {
+            TS.log().warn("Unable to find element[" + by + "] to reset");
+        }
+        return getSelf();
+    }
+
+    /**
+     * Scroll into view.
+     *
+     * @param amountToScrollDownBy
+     *            the amount to scroll down by
+     * @param numberOfIterations
+     *            the number of iterations
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper scrollIntoView(final int amountToScrollDownBy, final int numberOfIterations) {
+        for (int i = 0; i < 10; i++) {
+            try {
+                if (isDisplayed(false)) {
+                    return this;
+                }
+            } catch (Exception e) {
+                TS.log().debug("Had issue going to scroll. Attempt: " + i);
+            }
+            TS.browser().scrollDown(100);
+        }
+        return getSelf();
+    }
+
+    /**
+     * Scroll into view.
+     *
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper scrollIntoView() {
+        return scrollIntoView(100, 10);
     }
 
 }

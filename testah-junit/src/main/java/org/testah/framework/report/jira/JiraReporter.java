@@ -78,7 +78,7 @@ public class JiraReporter {
         }
     }
 
-    private AbstractRequestDto addAuthHeader(final AbstractRequestDto request) {
+    private <T> T addAuthHeader(final AbstractRequestDto<T> request) {
         return request.addBasicAuth(TS.params().getJiraUserName(), TS.params().getJiraPassword());
     }
 

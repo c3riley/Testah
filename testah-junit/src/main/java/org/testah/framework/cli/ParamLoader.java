@@ -100,6 +100,11 @@ public class ParamLoader {
                     filterSchema = "NOT_USED";
                 }
 
+                String key;
+                config.getKeys().forEachRemaining(value -> {
+                    System.setProperty(value, config.getString(value));
+                });
+
                 Object propValue = null;
                 String propName;
                 for (final Field field : Params.class.getDeclaredFields()) {
@@ -153,7 +158,7 @@ public class ParamLoader {
                         try {
                             TS.log().trace(field.getName() + " = " + field.get(params));
                         } catch (final Exception e2) {
-
+                            TS.log().trace(e2);
                         }
                         field.setAccessible(accessible);
                     }

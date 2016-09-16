@@ -283,7 +283,7 @@ public class TestahUtil {
     public File downloadFile(final String urlToUse, final String destination) {
         try {
             final File downloadFileDirectory = new File(Params.addUserDir(destination));
-            downloadFileDirectory.mkdirs();
+            TS.log().trace("downloadFileDirectory mkdirs: " + downloadFileDirectory.mkdirs());
             final File fileDownLoaded = File.createTempFile("download", "", downloadFileDirectory);
             final byte[] fileBytes = TS.http().doGet(urlToUse).getResponseBytes();
             try (FileOutputStream fileOuputStream = new FileOutputStream(
@@ -307,16 +307,16 @@ public class TestahUtil {
      * @return the file
      */
     public File unZip(final File zip, final File destination) {
-        destination.mkdirs();
+        TS.log().trace("destination mkdirs: " + destination.mkdirs());
         try (ZipFile zipFile = new ZipFile(zip)) {
             final Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 final ZipEntry entry = entries.nextElement();
                 final File entryDestination = new File(destination, entry.getName());
                 if (entry.isDirectory()) {
-                    entryDestination.mkdirs();
+                    TS.log().trace("entryDestination mkdirs: " + entryDestination.mkdirs());
                 } else {
-                    entryDestination.getParentFile().mkdirs();
+                    TS.log().trace("getParentFile mkdirs: " + entryDestination.getParentFile().mkdirs());
                     final InputStream in = zipFile.getInputStream(entry);
                     final OutputStream out = new FileOutputStream(entryDestination);
                     IOUtils.copy(in, out);
