@@ -651,4 +651,10 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         this.description = description;
         return this;
     }
+
+    public AbstractTestPlan resetTestCase(final String reasonWhy) {
+        getTestCase().getTestSteps().clear();
+        getTestStepThreadLocal().set(new TestStepDto("Reseting TestCase And Going To Retry", reasonWhy).start());
+        return this;
+    }
 }

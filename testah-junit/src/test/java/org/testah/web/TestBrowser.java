@@ -9,6 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.testah.TS;
+import org.testah.driver.http.requests.GetRequestDto;
 import org.testah.driver.web.browser.AbstractBrowser;
 import org.testah.driver.web.browser.FirefoxGeckoBrowser;
 import org.testah.driver.web.browser.GoogleChromeBrowser;
@@ -28,13 +29,12 @@ public class TestBrowser extends BrowserTestPlan {
     public void setup() {
         TS.browser().goTo(baseUrl);
         TS.util().pause(2000L, "Since using git redirect need to wait a little while");
-
+        new GetRequestDto("").addBasicAuth("", "").withJson();
     }
 
     @TestCase
     @Test
     public void TestPageTitle() {
-
         TS.asserts().equalsTo(baseTitle, TS.browser().getTitle());
         TS.browser().assertTitle(baseTitle);
     }
