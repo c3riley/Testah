@@ -56,7 +56,7 @@ public class TestFilter {
                 filterByUuid = false;
             }
             Boolean filterByIgnoreKnownProblem = null;
-            if (null != TS.params().getFilterIgnoreKnownProblem() && TS.params().getFilterIgnoreKnownProblem().length() == 0) {
+            if (null != TS.params().getFilterIgnoreKnownProblem() && TS.params().getFilterIgnoreKnownProblem().length() > 0) {
                 if ("true".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                     filterByIgnoreKnownProblem = true;
                 } else {
