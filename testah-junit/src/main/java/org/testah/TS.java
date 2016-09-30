@@ -75,7 +75,7 @@ public class TS {
      * @return the hash map
      */
     public static HashMap<String, Object> statefulData() {
-        if (null == _statefulData) {
+        if (null == _statefulData || null == _statefulData.get()) {
             final ThreadLocal<HashMap<String, Object>> _statefulDataTmp = new ThreadLocal<>();
             _statefulDataTmp.set(new HashMap<String, Object>());
             _statefulData = _statefulDataTmp;
@@ -194,7 +194,7 @@ public class TS {
      * @return the abstract http wrapper
      */
     public static AbstractHttpWrapper http() {
-        if (null == _http) {
+        if (null == _http || null == _http.get()) {
             TS.setHttp(new HttpWrapperV1());
         }
         return _http.get();
