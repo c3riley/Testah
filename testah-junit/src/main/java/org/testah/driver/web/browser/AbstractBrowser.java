@@ -335,8 +335,11 @@ public abstract class AbstractBrowser<T> {
      * @return the default browser
      */
     public static AbstractBrowser<?> getDefaultBrowser() {
+        TS.log().trace("Setting default browser: " + TS.params().getBrowser());
         if (TS.params().getBrowser() == BrowserType.PHANTOMJS) {
             return new PhantomJsBrowser().start();
+        } else if (TS.params().getBrowser() == BrowserType.CHROME) {
+            return new GoogleChromeBrowser().start();
         } else if (TS.params().getBrowser() == BrowserType.FIREFOX_GECKO) {
             return new FirefoxGeckoBrowser().start();
         } else if (TS.params().getBrowser() == BrowserType.FIREFOX) {
@@ -344,6 +347,7 @@ public abstract class AbstractBrowser<T> {
         } else if (TS.params().getBrowser() == BrowserType.JBROWSER) {
             return new JBrowserDriverBrowser().start();
         } else {
+            TS.log().debug("No Browser Match Found defaulting to Firefox");
             return new FirefoxGeckoBrowser().start();
         }
     }

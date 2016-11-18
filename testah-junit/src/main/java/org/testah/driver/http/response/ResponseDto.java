@@ -267,6 +267,7 @@ public class ResponseDto {
         try {
             return TS.util().getMap().readTree(responseBody);
         } catch (final Exception e) {
+            TS.log().debug("Issue getting object from body: " + responseBody);
             throw new RuntimeException(e);
         }
     }
@@ -285,6 +286,7 @@ public class ResponseDto {
             TS.log().debug("Gettting Response as " + valueType.getCanonicalName());
             return TS.util().getMap().readValue(responseBody, valueType);
         } catch (final Exception e) {
+            TS.log().debug("Issue getting object from body: " + responseBody);
             throw new RuntimeException(e);
         }
     }
@@ -303,6 +305,7 @@ public class ResponseDto {
             TS.log().debug("Gettting Response as TypeReference: " + valueType.toString());
             return TS.util().getMap().readValue(responseBody, valueType);
         } catch (final Exception e) {
+            TS.log().debug("Issue getting object from body: " + responseBody);
             throw new RuntimeException(e);
         }
     }
