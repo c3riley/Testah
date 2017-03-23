@@ -704,7 +704,7 @@ public class VerboseAsserts {
         try {
             MatcherAssert.assertThat(message, expected, matcher);
         } catch (AssertionError e) {
-            addAssertHistory(message, false, "assertEquals", expected, matcher, e);
+            addAssertHistory(message, false, "assertThat", expected, matcher, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
