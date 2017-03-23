@@ -18,6 +18,7 @@ import org.testah.client.enums.TestStepActionType;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
+import org.testah.framework.dto.base.AbstractDtoBase;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,7 +27,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * The Class ResponseDto.
  */
-public class ResponseDto {
+public class ResponseDto extends AbstractDtoBase<ResponseDto> {
 
     /** The status code. */
     private int statusCode = -1;
@@ -111,8 +112,8 @@ public class ResponseDto {
      */
     public ResponseDto assertResponseBodyContains(final String expectedContents) {
         TS.asserts().notNull("assertResponseBodyContains", responseBody);
-        TS.asserts().isTrue("assertResponseBodyContains responseBody[" + responseBody + "] expected to contain["
-                + expectedContents + "]", responseBody.contains(expectedContents));
+        TS.asserts().isTrue("assertResponseBodyContains responseBody[" + responseBody + "] expected to contain[" +
+                expectedContents + "]", responseBody.contains(expectedContents));
         return this;
     }
 
@@ -191,7 +192,8 @@ public class ResponseDto {
      *             Signals that an I/O exception has occurred.
      */
     public File saveToFile(final File downloadFile) throws IOException {
-        try (FileOutputStream fileOuputStream = new FileOutputStream(downloadFile)) {
+        try (
+                FileOutputStream fileOuputStream = new FileOutputStream(downloadFile)) {
             fileOuputStream.write(this.getResponseBytes());
             return downloadFile;
         }

@@ -27,11 +27,12 @@ import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
+import org.testah.framework.dto.base.AbstractDtoBase;
 
 /**
  * The Class AbstractRequestDto.
  */
-public abstract class AbstractRequestDto<T> {
+public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequestDto<T>> {
 
     /** The uri. */
     protected String uri = null;
@@ -276,7 +277,8 @@ public abstract class AbstractRequestDto<T> {
      * @return the abstract request dto
      */
     public T addBasicAuth(final String userName, final String password) {
-        final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName("UTF-8")));
+        final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName(
+                "UTF-8")));
         addHeader("Authorization", "Basic " + encoding);
         return getSelf();
     }
@@ -291,7 +293,8 @@ public abstract class AbstractRequestDto<T> {
      * @return the abstract request dto
      */
     public T addBasicAuthHeader(final String userName, final String password) {
-        final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName("ISO-8859-1")));
+        final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName(
+                "ISO-8859-1")));
         addHeader(new BasicHeader("Authorization", "Basic " + encoding));
         return getSelf();
     }
@@ -464,8 +467,8 @@ public abstract class AbstractRequestDto<T> {
     public StepActionDto createRequestInfoStep() {
         StepActionDto stepAction = null;
         stepAction = StepAction.createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
-                "Expected Status: " + getExpectedStatus() + " - Headers: "
-                        + (null == headers ? "" : Arrays.toString(headers.toArray())),
+                "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
+                        : Arrays.toString(headers.toArray())),
                 getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         printComplete();
         return stepAction;

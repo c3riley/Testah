@@ -106,8 +106,8 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean sizeEquals(final String message, final String objectToCheckSizeOrLenthOf, final int expectedSize) {
-        return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLenthOf
-                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
+        return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLenthOf +
+                "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
     }
 
     /**
@@ -155,8 +155,8 @@ public class VerboseAsserts {
      */
     public boolean notSizeEquals(final String message, final Object objectToCheckSizeOrLenthOf,
             final int expectedSize) {
-        return this.notEquals(message + " - expected Object[" + objectToCheckSizeOrLenthOf
-                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
+        return this.notEquals(message + " - expected Object[" + objectToCheckSizeOrLenthOf +
+                "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
     }
 
     /**
@@ -184,8 +184,8 @@ public class VerboseAsserts {
         if (null != actual) {
             return actual;
         } else {
-            throw new RuntimeException("Issue with object to Check for isEmpty Assert, object must be String, "
-                    + "ArrayList, Set, List or HashMap");
+            throw new RuntimeException("Issue with object to Check for isEmpty Assert, object must be String, " +
+                    "ArrayList, Set, List or HashMap");
         }
     }
 
@@ -1784,8 +1784,8 @@ public class VerboseAsserts {
         if (null != actual) {
             return actual;
         } else {
-            throw new RuntimeException("Issue with object to Check for isEmpty Assert, object must be String, "
-                    + "ArrayList, Set, List or HashMap");
+            throw new RuntimeException("Issue with object to Check for isEmpty Assert, object must be String, " +
+                    "ArrayList, Set, List or HashMap");
         }
     }
 
@@ -1802,7 +1802,7 @@ public class VerboseAsserts {
      */
     public boolean isGreaterThan(String message, final int valueToBeGreaterThan, final int actual) {
         try {
-            message = message + " - actual[" + actual + "] is greaater than " + valueToBeGreaterThan;
+            message = message + " - actual[" + actual + "] is greater than " + valueToBeGreaterThan;
             Assert.assertTrue(message,
                     valueToBeGreaterThan < actual);
             return addAssertHistory(message, true, "isGreaterThan", valueToBeGreaterThan, actual);
@@ -1842,7 +1842,8 @@ public class VerboseAsserts {
     }
 
     /**
-     * ************************************************************************* ***********.
+     * *************************************************************************
+     * ***********.
      *
      * @return true, if successful
      */

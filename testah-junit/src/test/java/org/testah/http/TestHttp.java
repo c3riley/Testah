@@ -49,7 +49,7 @@ public class TestHttp extends HttpTestPlan {
     @Test
     public void downloadAndUnZip() throws ClientProtocolException, IOException {
         final ResponseDto dto = TS.http().doGet(
-                "https://zgithub.com/c3riley/maven-repository/raw/master/org/testah/testah-junit/0.0.1/testah-junit-0.0.1.jar");
+                "https://github.com/c3riley/maven-repository/raw/master/org/testah/testah-junit/0.0.1/testah-junit-0.0.1.jar");
         final File jar = dto.saveToFile(new File(TS.params().getOutput(), "test.jar"));
         TS.asserts().isTrue(jar.exists());
         final Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.JAR);

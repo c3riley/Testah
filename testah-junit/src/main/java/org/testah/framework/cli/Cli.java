@@ -42,10 +42,11 @@ public class Cli {
     private final Params opt;
 
     /** The Constant version. */
-    public static final String version = "0.6.5";
+    public static final String version = "0.6.6";
 
     /** The Constant BAR_LONG. */
-    public static final String BAR_LONG = "=============================================================================================";
+    public static final String BAR_LONG =
+            "=============================================================================================";
 
     /** The Constant BAR_SHORT. */
     public static final String BAR_SHORT = "=========================================";
@@ -138,8 +139,8 @@ public class Cli {
 
             } else {
                 TS.log().debug(Cli.BAR_LONG);
-                TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ "
-                        + ParamLoader.getDefaultPropFilePath() + " ]");
+                TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ " + ParamLoader
+                        .getDefaultPropFilePath() + " ]");
                 TS.log().debug(Cli.BAR_LONG);
             }
 
@@ -255,8 +256,8 @@ public class Cli {
         }
 
         FileUtils.writeStringToFile(results, TS.util().toJson(resultObject));
-        TS.log().info("Query Results: Found[" + testPlanFilter.getTestClassesMetFilters().size() + "] "
-                + results.getAbsolutePath());
+        TS.log().info("Query Results: Found[" + testPlanFilter.getTestClassesMetFilters().size() + "] " + results
+                .getAbsolutePath());
 
         if (res.getBoolean("showInConsole")) {
             TS.log().info(TS.util().toJson(resultObject));
@@ -320,8 +321,8 @@ public class Cli {
                 "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
         System.out.println(
                 "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
-        System.out.println("=======================================================[Version: " + Cli.version
-                + "]======================");
+        System.out.println("=======================================================[Version: " + Cli.version +
+                "]======================");
 
         System.out.println(Cli.BAR_LONG);
     }
