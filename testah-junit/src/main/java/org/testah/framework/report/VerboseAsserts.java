@@ -1,17 +1,18 @@
 package org.testah.framework.report;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-
 import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 import org.testah.framework.dto.StepAction;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Class VerboseAsserts.
@@ -697,6 +698,21 @@ public class VerboseAsserts {
             }
             return rtn;
         }
+    }
+
+    public void assertThat(final String message, Object expected, Matcher matcher) {
+        try {
+            MatcherAssert.assertThat(message, expected, matcher);
+        } catch (AssertionError e) {
+            addAssertHistory(message, false, "assertThat", expected, matcher, e);
+            if (getThrowExceptionOnFail()) {
+                throw e;
+            }
+        }
+    }
+
+    public void assertThat(Object expected, Matcher matcher) {
+        assertThat("", expected, matcher);
     }
 
     /**
