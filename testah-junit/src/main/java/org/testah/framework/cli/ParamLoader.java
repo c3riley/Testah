@@ -3,6 +3,7 @@ package org.testah.framework.cli;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -10,6 +11,9 @@ import org.apache.commons.configuration.PropertiesConfigurationLayout;
 import org.apache.logging.log4j.Level;
 import org.testah.TS;
 import org.testah.framework.annotations.Comment;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The Class ParamLoader.
@@ -88,7 +92,8 @@ public class ParamLoader {
                 // getCustomParamProperties
                 final PropertiesConfiguration config = getCustomParamProperties(f);
 
-                // Get all params even unknown or added ones and put into a hash for use.
+                // Get all params even unknown or added ones and put into a hash
+                // for use.
                 config.getKeys().forEachRemaining(key -> {
                     if (null != key) {
                         params.getOther().put(key, config.getString(key));
@@ -104,7 +109,7 @@ public class ParamLoader {
                 config.getKeys().forEachRemaining(value -> {
                     System.setProperty(value, config.getString(value));
                 });
-
+                ObjectMapper mapper = new ObjectMapper();
                 Object propValue = null;
                 String propName;
                 for (final Field field : Params.class.getDeclaredFields()) {
@@ -137,6 +142,10 @@ public class ParamLoader {
                                 field.set(params, (Long.parseLong((String) propValue)));
                             } else if (field.getType().isAssignableFrom(boolean.class)) {
                                 field.setBoolean(params, Boolean.parseBoolean((String) propValue));
+                            } else if (field.getType().isAssignableFrom(HashMap.class)) {
+                                field.set(params, mapper.readValue((String) propValue, new TypeReference<HashMap<String,
+                                        String>>() {
+                                }));
                             } else if (field.getType().isAssignableFrom(Boolean.class)) {
                                 TS.log().info(field.getName());
                                 if (0 == propValue.toString().trim().length()) {
@@ -165,8 +174,8 @@ public class ParamLoader {
                 }
 
             } else {
-                TS.log().warn("Issue loading custom properties[" + f.getAbsolutePath()
-                        + "] - was not found, will create one for the next runs use");
+                TS.log().warn("Issue loading custom properties[" + f.getAbsolutePath() +
+                        "] - was not found, will create one for the next runs use");
                 try {
                     paramsFromProperties.save(f);
                 } catch (final Exception e) {
@@ -229,9 +238,9 @@ public class ParamLoader {
         final PropertiesConfiguration defaultConfig = new PropertiesConfiguration();
         final PropertiesConfigurationLayout layout = defaultConfig.getLayout();
         layout.setHeaderComment(
-                Cli.BAR_LONG + "\nTestah Properties - version: " + Cli.version + " - File Created: " + TS.util().now()
-                        + "\nNo values are required. Leaving a key empty will not use the value, turning the property off."
-                        + "\n" + Cli.BAR_LONG);
+                Cli.BAR_LONG + "\nTestah Properties - version: " + Cli.version + " - File Created: " + TS.util().now() +
+                        "\nNo values are required. Leaving a key empty will not use the value, turning the property off." +
+                        "\n" + Cli.BAR_LONG);
         boolean accessible;
         final Params params = new Params();
         Comment comment = null;

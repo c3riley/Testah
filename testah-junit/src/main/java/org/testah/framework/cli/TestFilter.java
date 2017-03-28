@@ -40,59 +40,73 @@ public class TestFilter {
 
     /**
      * Filter test plans to run.
+     *
+     * @return the list
      */
-    public void filterTestPlansToRun() {
+    public List<Class<?>> filterTestPlansToRun() {
         loadCompiledTestClase();
         loadUncompiledTestPlans();
+        return filterTestPlansToRun(getTestClasses(), getTestClassesMetFilters());
+    }
+
+    /**
+     * Filter test plans to run.
+     *
+     * @param testClassesToFilter
+     *            the test classes to filter
+     * @return the list
+     */
+    public List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter) {
+        this.testClassesMetFilters.addAll(filterTestPlansToRun(testClassesToFilter, new ArrayList<>()));
+        return this.testClassesMetFilters;
+    }
+
+    /**
+     * Filter test plans to run.
+     *
+     * @param testClassesToFilter
+     *            the test classes to filter
+     * @param testClassesMetFiltersToUse
+     *            the test classes met filters to use
+     * @return the list
+     */
+    public List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter, final List<Class<
+            ?>> testClassesMetFiltersToUse) {
 
         final Params filterParams = TS.params();
 
-        if (null != testClasses) {
+        if (null != testClassesToFilter) {
+
             TestPlan meta;
             String filter = null;
 
-            boolean filterByUuid = true;
-            if (null == TS.params().getFilterById() || TS.params().getFilterById().length() == 0) {
-                filterByUuid = false;
-            }
+            boolean filterByUuid = isFilterOn(TS.params().getFilterById());
+
             Boolean filterByIgnoreKnownProblem = null;
-            if (null != TS.params().getFilterIgnoreKnownProblem() && TS.params().getFilterIgnoreKnownProblem().length() > 0) {
+            if (isFilterOn(TS.params().getFilterIgnoreKnownProblem())) {
                 if ("true".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                     filterByIgnoreKnownProblem = true;
                 } else {
                     filterByIgnoreKnownProblem = false;
                 }
             }
-            boolean filterByComponent = true;
-            if (null == TS.params().getFilterByComponent() || TS.params().getFilterByComponent().length() == 0) {
-                filterByComponent = false;
-            }
-            boolean filterByDevice = true;
-            if (null == TS.params().getFilterByDevice() || TS.params().getFilterByDevice().length() == 0) {
-                filterByDevice = false;
-            }
-            boolean filterByPlatform = true;
-            if (null == TS.params().getFilterByPlatform() || TS.params().getFilterByPlatform().length() == 0) {
-                filterByPlatform = false;
-            }
-            boolean filterByTag = true;
-            if (null == TS.params().getFilterByTag() || TS.params().getFilterByTag().length() == 0) {
-                filterByTag = false;
-            }
-            boolean filterByRunType = true;
-            if (null == TS.params().getFilterByRunType() || TS.params().getFilterByRunType().length() == 0) {
-                filterByRunType = false;
-            }
+            boolean filterByComponent = isFilterOn(TS.params().getFilterByComponent());
+
+            boolean filterByDevice = isFilterOn(TS.params().getFilterByDevice());
+
+            boolean filterByPlatform = isFilterOn(TS.params().getFilterByPlatform());
+
+            boolean filterByTag = isFilterOn(TS.params().getFilterByTag());
+
+            boolean filterByRunType = isFilterOn(TS.params().getFilterByRunType());
+
             boolean filterByTestType = true;
             if (null == TS.params().getFilterByTestType()) {
                 filterByTestType = false;
             }
-            boolean filterByTestPlanNameStartsWith = true;
-            if (null == TS.params().getFilterByTestPlanNameStartsWith()) {
-                filterByTestPlanNameStartsWith = false;
-            }
+            boolean filterByTestPlanNameStartsWith = isFilterOn(TS.params().getFilterByTestPlanNameStartsWith());
 
-            for (final Class<?> test : testClasses) {
+            for (final Class<?> test : testClassesToFilter) {
 
                 meta = test.getAnnotation(TestPlan.class);
 
@@ -164,20 +178,25 @@ public class TestFilter {
                     }
                 }
 
-                testClassesMetFilters.add(test);
+                testClassesMetFiltersToUse.add(test);
 
             }
             TS.log().info(Cli.BAR_LONG);
-            TS.log().info(Cli.BAR_WALL + "TestPlan Classes To Run: ( " + testClassesMetFilters.size() + " of "
-                    + testClasses.size() + " )");
+            TS.log().info(String.format("%s TestPlan Classes To Run: ( %d of %d )", Cli.BAR_WALL,
+                    testClassesMetFiltersToUse.size(), testClassesToFilter.size()));
             TS.log().info(Cli.BAR_WALL);
-            for (final Class<?> test : testClassesMetFilters) {
+            for (final Class<?> test : testClassesMetFiltersToUse) {
                 TS.log().info(Cli.BAR_WALL + " " + test.getName());
             }
             TS.log().info("#");
             TS.log().info(Cli.BAR_LONG);
         }
+        return testClassesMetFiltersToUse;
 
+    }
+
+    private boolean isFilterOn(final String filterValue) {
+        return (null != filterValue && filterValue.length() > 0);
     }
 
     /**
@@ -197,31 +216,18 @@ public class TestFilter {
 
             String filter = null;
 
-            boolean filterByUuid = true;
-            if (null == TS.params().getFilterById() || TS.params().getFilterById().length() == 0) {
-                filterByUuid = false;
-            }
+            boolean filterByUuid = isFilterOn(TS.params().getFilterById());
 
-            boolean filterByComponent = true;
-            if (null == TS.params().getFilterByComponent() || TS.params().getFilterByComponent().length() == 0) {
-                filterByComponent = false;
-            }
-            boolean filterByDevice = true;
-            if (null == TS.params().getFilterByDevice() || TS.params().getFilterByDevice().length() == 0) {
-                filterByDevice = false;
-            }
-            boolean filterByPlatform = true;
-            if (null == TS.params().getFilterByPlatform() || TS.params().getFilterByPlatform().length() == 0) {
-                filterByPlatform = false;
-            }
-            boolean filterByTag = true;
-            if (null == TS.params().getFilterByTag() || TS.params().getFilterByTag().length() == 0) {
-                filterByTag = false;
-            }
-            boolean filterByRunType = true;
-            if (null == TS.params().getFilterByRunType() || TS.params().getFilterByRunType().length() == 0) {
-                filterByRunType = false;
-            }
+            boolean filterByComponent = isFilterOn(TS.params().getFilterByComponent());
+
+            boolean filterByDevice = isFilterOn(TS.params().getFilterByDevice());
+
+            boolean filterByPlatform = isFilterOn(TS.params().getFilterByPlatform());
+
+            boolean filterByTag = isFilterOn(TS.params().getFilterByTag());
+
+            boolean filterByRunType = isFilterOn(TS.params().getFilterByRunType());
+
             boolean filterByTestType = true;
             if (null == TS.params().getFilterByTestType()) {
                 filterByTestType = false;
@@ -367,15 +373,18 @@ public class TestFilter {
     private boolean isFilterCheckOk(final List<String> lst, final String values) {
         if (null != values && values.length() > 0) {
             boolean rtn = false;
+            String valueToCompare;
             for (final String value : values.split(",")) {
+                valueToCompare = value.trim();
                 if (value.startsWith("~")) {
-                    if (lst.contains(value)) {
+                    String valueToCompareMatch = valueToCompare.replace("~", "");
+                    if (lst.stream().anyMatch(str -> str.equalsIgnoreCase(valueToCompareMatch))) {
                         return false; // Fail Not, failed filter
                     } else {
                         rtn = true; // Passed initially, still a Not could be
                                     // used
                     }
-                } else if (lst.contains(value)) {
+                } else if (lst.contains(valueToCompare)) {
                     rtn = true; // Passed initially, still a Not could be used
                 }
             }
@@ -462,12 +471,14 @@ public class TestFilter {
      */
     public TestFilter loadUncompiledTestPlans(final String externalValue) {
         try {
-            // final String externalValue = TS.params().getLookAtExternalTests();
+            // final String externalValue =
+            // TS.params().getLookAtExternalTests();
 
             if (null != externalValue && externalValue.length() > 0) {
                 final List<File> files = new ArrayList<>();
                 final ClassLoader parent = this.getClass().getClassLoader();
-                try (final GroovyClassLoader loader = new GroovyClassLoader(parent)) {
+                try (
+                        final GroovyClassLoader loader = new GroovyClassLoader(parent)) {
 
                     for (final String path : externalValue.split(",")) {
 
@@ -478,8 +489,9 @@ public class TestFilter {
 
                         if (!externalTests.exists()) {
                             if (loadCompiledTestClase(path) == 0) {
-                                TS.log().error("Param LookAtExternalTests is set to a class/file/directory not found: "
-                                        + externalTests.getAbsolutePath());
+                                TS.log().error(
+                                        "Param LookAtExternalTests is set to a class/file/directory not found: " +
+                                                externalTests.getAbsolutePath());
                             }
                         } else if (externalTests.isDirectory()) {
                             files.addAll(FileUtils.getFilesRecurse(externalTests, "(.?)*\\.groovy"));
@@ -524,9 +536,31 @@ public class TestFilter {
      *
      * @param testClasses
      *            the new test classes
+     * @return the test filter
      */
-    public void setTestClasses(final Set<Class<?>> testClasses) {
+    public TestFilter setTestClasses(final Set<Class<?>> testClasses) {
         this.testClasses = testClasses;
+        return this;
+    }
+
+    /**
+     * Reset test classes met filters.
+     *
+     * @return the test filter
+     */
+    public TestFilter resetTestClassesMetFilters() {
+        testClassesMetFilters.clear();
+        return this;
+    }
+
+    /**
+     * Reset test classes.
+     *
+     * @return the test filter
+     */
+    public TestFilter resetTestClasses() {
+        testClasses.clear();
+        return this;
     }
 
 }
