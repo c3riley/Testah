@@ -7,9 +7,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.rauschig.jarchivelib.ArchiveFormat;
-import org.rauschig.jarchivelib.Archiver;
-import org.rauschig.jarchivelib.ArchiverFactory;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.driver.http.HttpWrapperV1;
@@ -52,8 +49,9 @@ public class TestHttp extends HttpTestPlan {
                 "https://github.com/c3riley/maven-repository/raw/master/org/testah/testah-junit/0.0.1/testah-junit-0.0.1.jar");
         final File jar = dto.saveToFile(new File(TS.params().getOutput(), "test.jar"));
         TS.asserts().isTrue(jar.exists());
-        final Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.JAR);
-        archiver.extract(jar, jar.getParentFile());
+        // final Archiver archiver =
+        // ArchiverFactory.createArchiver(ArchiveFormat.JAR);
+        // archiver.extract(jar, jar.getParentFile());
     }
 
     @Ignore
