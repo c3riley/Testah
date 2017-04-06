@@ -42,7 +42,7 @@ public class Cli {
     private final Params opt;
 
     /** The Constant version. */
-    public static final String version = "0.6.7";
+    public static final String version = "0.6.8";
 
     /** The Constant BAR_LONG. */
     public static final String BAR_LONG =

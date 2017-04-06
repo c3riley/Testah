@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
+import org.springframework.util.StringUtils;
 import org.testah.TS;
 import org.testah.client.enums.BrowserType;
 import org.testah.client.enums.TestType;
@@ -152,7 +153,8 @@ public class Params {
     private Level level = Level.DEBUG;
 
     /** The default wait time. */
-    @Comment(info = "Default Wait time, determines the length of the loop, is not in seconds, works with the default pause time")
+    @Comment(
+            info = "Default Wait time, determines the length of the loop, is not in seconds, works with the default pause time")
     @Arg(dest = "defaultWaitTime")
     private int defaultWaitTime = 10;
 
@@ -162,13 +164,14 @@ public class Params {
     private Long defaultPauseTime = 500L;
 
     /** The look at internal tests. */
-    @Comment(info = "Provide a value for the base level where tests can be found in the project, if empty will not run tests in jar")
+    @Comment(
+            info = "Provide a value for the base level where tests can be found in the project, if empty will not run tests in jar")
     @Arg(dest = "lookAtInternalTests")
     private String lookAtInternalTests = "org.testah";
 
     /** The look at external tests. */
-    @Comment(info = "Provide a path where to look for external uncompiled Test Classes, "
-            + "can be stored as .java or .groovy, can supply a directory or specific file")
+    @Comment(info = "Provide a path where to look for external uncompiled Test Classes, " +
+            "can be stored as .java or .groovy, can supply a directory or specific file")
     @Arg(dest = "lookAtExternalTests")
     private String lookAtExternalTests = "";
 
@@ -184,7 +187,8 @@ public class Params {
     private boolean throwExceptionOnFail = true;
 
     /** The web driver_user agent value. */
-    @Comment(info = "[BAR1]Webdriver properties[BAR2]Override Browser UserAgent property, allows tests to act as mobile device, etc")
+    @Comment(
+            info = "[BAR1]Webdriver properties[BAR2]Override Browser UserAgent property, allows tests to act as mobile device, etc")
     @Arg(dest = "webDriver_userAgentValue")
     private String webDriver_userAgentValue = "";
 
@@ -194,7 +198,8 @@ public class Params {
     private boolean webDriver_useRemoteDriver = false;
 
     /** The web driver_default remote uri. */
-    @Comment(info = "If Use Remote Driver is True, value will be used to connect to a Webdriver Grid, can be local or remote")
+    @Comment(
+            info = "If Use Remote Driver is True, value will be used to connect to a Webdriver Grid, can be local or remote")
     @Arg(dest = "webDriver_defaultRemoteUri")
     private String webDriver_defaultRemoteUri = "http://localhost:4444/wd/hub";
 
@@ -204,17 +209,20 @@ public class Params {
     private String webDriver_firefoxDriverBinary = "";
 
     /** The web driver_phantom js driver binary. */
-    @Comment(info = "Add a path to the Phantomjs Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
+    @Comment(
+            info = "Add a path to the Phantomjs Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
     @Arg(dest = "webDriver_PhantomJsDriverBinary")
     private String webDriver_phantomJsDriverBinary = "";
 
     /** The web driver_chrome driver binary. */
-    @Comment(info = "Add a path to the Chrome Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
+    @Comment(
+            info = "Add a path to the Chrome Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
     @Arg(dest = "webDriver_ChromeDriverBinary")
     private String webDriver_chromeDriverBinary = "";
 
     /** The output. */
-    @Comment(info = "[BAR1]Reporting Properties[BAR2]Folder to write output to, if empty will be {user dir}/testahOutput")
+    @Comment(
+            info = "[BAR1]Reporting Properties[BAR2]Folder to write output to, if empty will be {user dir}/testahOutput")
     @Arg(dest = "output")
     private String output = "";
 
@@ -1224,18 +1232,18 @@ public class Params {
     }
 
     public String getValue(final String key) {
-        String value = System.getProperty(key, System.getenv(key));
-        if (null == value) {
-            value = getOther().get(key);
-        }
-        if (null != value) {
-            value = value.trim();
-            if (value.isEmpty()) {
-                value = null;
+        return getValue(key, getOther().get(key));
+    }
+
+    public String getValue(final String key, final String defaultValue) {
+        String rtnValue = defaultValue;
+        if (!StringUtils.isEmpty(key)) {
+            rtnValue = System.getProperty(key, System.getenv(key));
+            if (null == rtnValue) {
+                rtnValue = defaultValue;
             }
         }
-        return value;
-
+        return rtnValue;
     }
 
 }

@@ -1,18 +1,19 @@
 package org.testah.framework.report;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
+import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
 
 /**
  * The Class VerboseAsserts.
@@ -328,6 +329,13 @@ public class VerboseAsserts {
             }
             return rtn;
         }
+    }
+
+    public void critical(final String message) {
+        TS.log().fatal(Cli.BAR_LONG);
+        TS.log().fatal(String.format("%s Critical Issue Occured and test should be stopped! Message[%s]", Cli.BAR_WALL, message));
+        TS.log().fatal(Cli.BAR_LONG);
+        addAssertHistory(message, false, "critical", null, null, null);
     }
 
     /**
@@ -700,7 +708,8 @@ public class VerboseAsserts {
         }
     }
 
-    public void assertThat(final String message, Object expected, Matcher matcher) {
+    @SuppressWarnings("unchecked")
+    public void assertThat(final String message, final Object expected, final Matcher matcher) {
         try {
             MatcherAssert.assertThat(message, expected, matcher);
         } catch (AssertionError e) {
@@ -711,7 +720,7 @@ public class VerboseAsserts {
         }
     }
 
-    public void assertThat(Object expected, Matcher matcher) {
+    public void assertThat(final Object expected, final Matcher matcher) {
         assertThat("", expected, matcher);
     }
 
@@ -1858,8 +1867,7 @@ public class VerboseAsserts {
     }
 
     /**
-     * *************************************************************************
-     * ***********.
+     * ************************************************************************* ***********.
      *
      * @return true, if successful
      */
