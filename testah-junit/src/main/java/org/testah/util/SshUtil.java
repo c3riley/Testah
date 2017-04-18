@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.testah.TS;
 import org.testah.framework.dto.StepAction;
+import org.testah.util.dto.ShellInfoDto;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -52,7 +53,7 @@ public class SshUtil {
     private final JSch jsch = new JSch();
 
     /** The Constant LAST_EXIT_CODE_DEFAULT. */
-    private static final int LAST_EXIT_CODE_DEFAULT = -999;
+    public static final int LAST_EXIT_CODE_DEFAULT = -999;
 
     /** The last exit code. */
     private int lastExitCode = LAST_EXIT_CODE_DEFAULT;
@@ -128,6 +129,12 @@ public class SshUtil {
         return session;
     }
 
+    public String runShell(final Session session, final String... commands)
+            throws JSchException, IOException, InterruptedException {
+        return runShellRtnInfo(session, commands).getOutput().toString();
+
+    }
+
     /**
      * Run shell.
      *
@@ -143,15 +150,16 @@ public class SshUtil {
      * @throws InterruptedException
      *             the interrupted exception
      */
-    public String runShell(final Session session, final String... commands)
+    public ShellInfoDto runShellRtnInfo(final Session session, final String... commands)
             throws JSchException, IOException, InterruptedException {
+        ShellInfoDto info = new ShellInfoDto();
         this.lastExitCode = LAST_EXIT_CODE_DEFAULT;
         if (!session.isConnected()) {
             session.connect();
         }
 
         final Channel channel = session.openChannel("shell");
-        final StringBuffer output = new StringBuffer("");
+
         try {
             final OutputStream inputstream_for_the_channel = channel.getOutputStream();
             final PrintStream commander = new PrintStream(inputstream_for_the_channel);
@@ -182,7 +190,7 @@ public class SshUtil {
                     }
                     Thread.sleep(1000);
                 }
-                output.append(new String(baos.toByteArray()));
+                info.getOutput().append(new String(baos.toByteArray()));
             } else {
                 final byte[] tmp = new byte[1024];
                 while (true) {
@@ -191,7 +199,7 @@ public class SshUtil {
                         if (i < 0) {
                             break;
                         }
-                        output.append(new String(tmp, 0, i));
+                        info.getOutput().append(new String(tmp, 0, i));
                         if (verbose) {
                             TS.log().debug(new String(tmp, 0, i));
                         }
@@ -200,8 +208,6 @@ public class SshUtil {
                         TS.log().debug("Should be done reading from input stream");
                     }
                     if (channel.isClosed()) {
-                        System.out.println("exit-status: " + channel.getExitStatus());
-                        this.lastExitCode = channel.getExitStatus();
                         break;
                     }
                     try {
@@ -213,15 +219,18 @@ public class SshUtil {
             }
 
             if (verbose) {
-                StepAction.createInfo("Shell Output", output.toString()).add();
+                StepAction.createInfo("Shell Output", TS.util().toJson(info)).add();
             }
         } finally {
+            System.out.println("exit-status: " + channel.getExitStatus());
+            this.lastExitCode = channel.getExitStatus();
+            info.setExitCode(channel.getExitStatus());
             if (channel.isConnected()) {
                 channel.disconnect();
             }
             session.disconnect();
         }
-        return output.toString();
+        return info;
     }
 
     /**
@@ -479,8 +488,9 @@ public class SshUtil {
             while (true) {
                 while (in.available() > 0) {
                     final int i = in.read(tmp, 0, 1024);
-                    if (i < 0)
+                    if (i < 0) {
                         break;
+                    }
                     msg = new String(tmp, 0, i, "UTF-8");
                     sb.append(msg);
                     if (isVerbose()) {
@@ -488,8 +498,9 @@ public class SshUtil {
                     }
                 }
                 if (channel.isClosed()) {
-                    if (in.available() > 0)
+                    if (in.available() > 0) {
                         continue;
+                    }
                     TS.log().info("exit-status: " + channel.getExitStatus());
                     this.lastExitCode = channel.getExitStatus();
                     break;

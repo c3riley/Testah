@@ -231,6 +231,11 @@ public class Params {
     @Arg(dest = "useXunitFormatter")
     private boolean useXunitFormatter = true;
 
+    /** The use json formatter. */
+    @Comment(info = "Should the Runner create a json result file")
+    @Arg(dest = "useXunitFormatter")
+    private boolean useJsonFormatter = true;
+
     /** The use html formatter. */
     @Comment(info = "Should the Runner create a html result file")
     @Arg(dest = "useHtmlFormatter")
@@ -1181,12 +1186,13 @@ public class Params {
      */
     public String getComputerName() {
         final Map<String, String> env = System.getenv();
-        if (env.containsKey("COMPUTERNAME"))
+        if (env.containsKey("COMPUTERNAME")) {
             return env.get("COMPUTERNAME");
-        else if (env.containsKey("HOSTNAME"))
+        } else if (env.containsKey("HOSTNAME")) {
             return env.get("HOSTNAME");
-        else
+        } else {
             return "NA";
+        }
     }
 
     public String getJiraUrl() {
@@ -1244,6 +1250,14 @@ public class Params {
             }
         }
         return rtnValue;
+    }
+
+    public boolean isUseJsonFormatter() {
+        return useJsonFormatter;
+    }
+
+    public void setUseJsonFormatter(final boolean useJsonFormatter) {
+        this.useJsonFormatter = useJsonFormatter;
     }
 
 }

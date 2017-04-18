@@ -46,8 +46,8 @@ public class TestPlanReporter {
         }
         try {
             testPlan.getRunInfo().setIgnore(AbstractTestPlan.getIgnoredTests().size());
-            testPlan.getRunInfo().setTotal(testPlan.getRunInfo().getFail() + testPlan.getRunInfo().getPass()
-                    + testPlan.getRunInfo().getIgnore());
+            testPlan.getRunInfo()
+                    .setTotal(testPlan.getRunInfo().getFail() + testPlan.getRunInfo().getPass() + testPlan.getRunInfo().getIgnore());
             testPlan.getRunInfo().getRunTimeProperties().put("builtOn", TS.params().getComputerName());
         } catch (final Exception e) {
             TS.log().trace(e);
@@ -59,8 +59,8 @@ public class TestPlanReporter {
         final org.testah.client.dto.RunInfoDto ri = testPlan.getRunInfo();
         System.out.println("\n\n\n");
         TS.log().info(Cli.BAR_LONG);
-        TS.log().info(Cli.BAR_WALL + "TestPlan[" + testPlan.getSource() + " (thread:" + Thread.currentThread().getId()
-                + ") Status: " + testPlan.getStatusEnum());
+        TS.log().info(Cli.BAR_WALL + "TestPlan[" + testPlan.getSource() + " (thread:" + Thread.currentThread().getId() + ") Status: " +
+                testPlan.getStatusEnum());
         TS.log().info(Cli.BAR_WALL + "Passed: " + ri.getPass());
         TS.log().info(Cli.BAR_WALL + "Failed: " + ri.getFail());
         TS.log().info(Cli.BAR_WALL + "Ignore/NA/FilteredOut: " + ri.getIgnore());
@@ -68,8 +68,8 @@ public class TestPlanReporter {
         TS.log().info(Cli.BAR_WALL + "Duration: " + TS.util().getDurationPretty(testPlan.getRunTime().getDuration()));
 
         if (TS.params().isUseXunitFormatter()) {
-            TS.log().info(Cli.BAR_WALL + "Report XUnit: "
-                    + new JUnitFormatter(testPlan).createReport(filename + ".xml").getReportFile().getAbsolutePath());
+            TS.log().info(Cli.BAR_WALL + "Report XUnit: " +
+                    new JUnitFormatter(testPlan).createReport(filename + ".xml").getReportFile().getAbsolutePath());
         }
         if (TS.params().isUseHtmlFormatter()) {
             final AbstractFormatter html = new HtmlFormatter(testPlan).createReport(filename + ".html");
@@ -80,17 +80,20 @@ public class TestPlanReporter {
             final AbstractFormatter meta = new MetaFormatter(testPlan).createReport(filename + ".txt");
             TS.log().info(Cli.BAR_WALL + "Report Meta: " + meta.getReportFile().getAbsolutePath());
         }
+        if (TS.params().isUseJsonFormatter()) {
+            final AbstractFormatter json = new JsonFormatter(testPlan).createReport(filename + ".json");
+            TS.log().info(Cli.BAR_WALL + "Report Json: " + json.getReportFile().getAbsolutePath());
+        }
         if (TS.params().isUseJiraRemoteLink()) {
             if (null != this.getJiraRemoteLinkBuilder()) {
                 final JiraReporter jiraReporter = new JiraReporter();
                 jiraReporter.createOrUpdateTestPlanRemoteLink(testPlan, this.getJiraRemoteLinkBuilder());
             } else {
-                TS.log().warn("Use Jira is On, but JiraRemoteLinkBuilder is not set, can set ex: "
-                        + "TS.getTestPlanReporter().setJiraRemoteLinkBuilder(jiraRemoteLinkBuilder);");
+                TS.log().warn("Use Jira is On, but JiraRemoteLinkBuilder is not set, can set ex: " +
+                        "TS.getTestPlanReporter().setJiraRemoteLinkBuilder(jiraRemoteLinkBuilder);");
             }
         }
-        if (null == TS.params().getSendJsonTestDataToService()
-                || TS.params().getSendJsonTestDataToService().length() > 0) {
+        if (null == TS.params().getSendJsonTestDataToService() || TS.params().getSendJsonTestDataToService().length() > 0) {
             try {
                 final ObjectMapper map = new ObjectMapper();
                 map.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
