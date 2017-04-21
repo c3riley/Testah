@@ -243,4 +243,20 @@ public class TS {
         _testPlanReporter = testPlanReporter;
     }
 
+    public static void tearDown() {
+        cleanUpThreadLocal(_browser);
+        cleanUpThreadLocal(_statefulData);
+        cleanUpThreadLocal(_http);
+    }
+
+    private static void cleanUpThreadLocal(final ThreadLocal<?> threadLocal) {
+        try {
+            if (null != threadLocal) {
+                threadLocal.remove();
+            }
+        } catch (final Exception e) {
+            TS.log().warn("Trying to remove thread local", e);
+        }
+    }
+
 }
