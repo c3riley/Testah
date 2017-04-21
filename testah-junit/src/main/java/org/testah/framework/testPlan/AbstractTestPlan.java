@@ -119,8 +119,8 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         if (!getTestFilter().filterTestCase(test, name)) {
             addIgnoredTest(name, "METADATA_FILTER");
             setAssumeTrue(true);
-            Assume.assumeTrue("Filtered out, For details use Trace level logging"
-                    + "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
+            Assume.assumeTrue("Filtered out, For details use Trace level logging" +
+                    "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
         }
 
         if (null != TS.params().getFilterIgnoreKnownProblem()) {
@@ -128,8 +128,8 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                 if ("true".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                     setAssumeTrue(true);
                     addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
-                    Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description()
-                            + "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
+                    Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description() +
+                            "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
                 }
             } else if ("false".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                 setAssumeTrue(true);
@@ -174,14 +174,12 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         }
 
         protected void finished(final Description desc) {
-            TS.log().info("TESTCASE Complete: " + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId()
-                    + "]");
+            TS.log().info("TESTCASE Complete: " + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
         }
 
         protected void starting(final Description desc) {
             if (!didTestPlanStart()) {
-                TS.log().info("TESTPLAN started:" + desc.getTestClass().getName() + " - thread["
-                        + Thread.currentThread().getId() + "]");
+                TS.log().info("TESTPLAN started:" + desc.getTestClass().getName() + " - thread[" + Thread.currentThread().getId() + "]");
                 final TestPlan testPlan = desc.getTestClass().getAnnotation(TestPlan.class);
                 if (null == desc.getTestClass().getAnnotation(TestPlan.class)) {
                     TS.log().warn("Missing @TestPlan annotation!");
@@ -245,8 +243,25 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                 TS.getTestPlanReporter().reportResults(getTestPlan());
             }
 
+            cleanUpThreadLocal(testPlan);
+            cleanUpThreadLocal(testCase);
+            cleanUpThreadLocal(testStep);
+            cleanUpThreadLocal(testPlanStart);
+            cleanUpThreadLocal(ignoredTests);
+            TS.tearDown();
+
         } catch (final Exception e) {
             TS.log().error("after testplan", e);
+        }
+    }
+
+    private static void cleanUpThreadLocal(final ThreadLocal<?> threadLocal) {
+        try {
+            if (null != threadLocal) {
+                threadLocal.remove();
+            }
+        } catch (final Exception e) {
+            TS.log().warn("Trying to remove thread local", e);
         }
     }
 
@@ -590,7 +605,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      * @return the ignored tests
      */
     public static HashMap<String, String> getIgnoredTests() {
-        if (null == ignoredTests) {
+        if (null == ignoredTests || null == ignoredTests.get()) {
             final ThreadLocal<HashMap<String, String>> ignoredTestsTmp = new ThreadLocal<>();
             ignoredTestsTmp.set(new HashMap<String, String>());
             ignoredTests = ignoredTestsTmp;
