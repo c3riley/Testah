@@ -11,508 +11,513 @@ import org.testah.client.enums.TestType;
  */
 public class TestPlanDto {
 
-	/** The run time. */
-	private RunTimeDto runTime = new RunTimeDto();
+    /** The run time. */
+    private RunTimeDto runTime = new RunTimeDto();
 
-	/** The test cases. */
-	private List<TestCaseDto> testCases = new ArrayList<TestCaseDto>();
+    /** The test cases. */
+    private List<TestCaseDto> testCases = new ArrayList<TestCaseDto>();
 
-	/** The status. */
-	private Boolean status = null;
+    /** The status. */
+    private Boolean status = null;
 
-	/** The run info. */
-	private RunInfoDto runInfo = new RunInfoDto();
+    private TestStatus statusEnum = null;
 
-	/** The id. */
-	private int id = -1;
+    /** The run info. */
+    private RunInfoDto runInfo = new RunInfoDto();
 
-	/** The name. */
-	private String name = "";
+    /** The id. */
+    private int id = -1;
 
-	/** The description. */
-	private String description = "";
+    /** The name. */
+    private String name = "";
 
-	/** The related links. */
-	private List<String> relatedLinks = new ArrayList<String>();
+    /** The description. */
+    private String description = "";
 
-	/** The related ids. */
-	private List<String> relatedIds = new ArrayList<String>();
+    /** The related links. */
+    private List<String> relatedLinks = new ArrayList<String>();
 
-	/** The tags. */
-	private List<String> tags = new ArrayList<String>();
+    /** The related ids. */
+    private List<String> relatedIds = new ArrayList<String>();
 
-	/** The known problem. */
-	private KnownProblemDto knownProblem = null;
+    /** The tags. */
+    private List<String> tags = new ArrayList<String>();
 
-	/** The test type. */
-	private TestType testType;
+    /** The known problem. */
+    private KnownProblemDto knownProblem = null;
 
-	/** The source. */
-	private String source = null;
+    /** The test type. */
+    private TestType testType;
 
-	/** The components. */
-	private List<String> components = new ArrayList<String>();
+    /** The source. */
+    private String source = null;
 
-	/** The devices. */
-	private List<String> devices = new ArrayList<String>();
+    /** The components. */
+    private List<String> components = new ArrayList<String>();
 
-	/** The platforms. */
-	private List<String> platforms = new ArrayList<String>();
+    /** The devices. */
+    private List<String> devices = new ArrayList<String>();
 
-	/** The run types. */
-	private List<String> runTypes = new ArrayList<String>();
+    /** The platforms. */
+    private List<String> platforms = new ArrayList<String>();
 
-	/** The owner. */
-	private String owner = "NA";
+    /** The run types. */
+    private List<String> runTypes = new ArrayList<String>();
 
-	/**
-	 * Instantiates a new test plan dto.
-	 */
-	public TestPlanDto() {
+    /** The owner. */
+    private String owner = "NA";
 
-	}
+    /**
+     * Instantiates a new test plan dto.
+     */
+    public TestPlanDto() {
 
-	/**
-	 * Adds the test case.
-	 *
-	 * @param testCase
-	 *            the test case
-	 * @return the test plan dto
-	 */
-	public TestPlanDto addTestCase(final TestCaseDto testCase) {
-		if (null != testCase) {
-			getTestCases().add(testCase);
-		}
-		return this;
-	}
+    }
 
-	/**
-	 * Start.
-	 *
-	 * @return the test plan dto
-	 */
-	public TestPlanDto start() {
-		setStatus(null);
-		getRunTime().start();
-		return this;
-	}
+    /**
+     * Adds the test case.
+     *
+     * @param testCase
+     *            the test case
+     * @return the test plan dto
+     */
+    public TestPlanDto addTestCase(final TestCaseDto testCase) {
+        if (null != testCase) {
+            getTestCases().add(testCase);
+        }
+        return this;
+    }
 
-	/**
-	 * Stop.
-	 *
-	 * @return the test plan dto
-	 */
-	public TestPlanDto stop() {
-		setStatus();
-		getRunTime().stop();
-		runInfo.recalc(this);
-		return this;
-	}
+    /**
+     * Start.
+     *
+     * @return the test plan dto
+     */
+    public TestPlanDto start() {
+        setStatus(null);
+        getRunTime().start();
+        return this;
+    }
 
-	/**
-	 * Gets the run info.
-	 *
-	 * @return the run info
-	 */
-	public RunInfoDto getRunInfo() {
-		return runInfo;
-	}
+    /**
+     * Stop.
+     *
+     * @return the test plan dto
+     */
+    public TestPlanDto stop() {
+        setStatus();
+        getRunTime().stop();
+        runInfo.recalc(this);
+        return this;
+    }
 
-	/**
-	 * Sets the status.
-	 *
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setStatus() {
-		for (final TestCaseDto e : testCases) {
-			if (null == e.getStatus()) {
+    /**
+     * Gets the run info.
+     *
+     * @return the run info
+     */
+    public RunInfoDto getRunInfo() {
+        return runInfo;
+    }
 
-			} else if (e.getStatus() == false) {
-				status = false;
-				return this;
-			} else if (e.getStatus() == true) {
-				status = true;
-			}
-		}
-		return this;
-	}
+    /**
+     * Sets the status.
+     *
+     * @return the test plan dto
+     */
+    public TestPlanDto setStatus() {
+        for (final TestCaseDto e : testCases) {
+            if (null == e.getStatus()) {
 
-	/**
-	 * Gets the run time.
-	 *
-	 * @return the run time
-	 */
-	public RunTimeDto getRunTime() {
-		return runTime;
-	}
+            } else if (e.getStatus() == false) {
+                status = false;
+                return this;
+            } else if (e.getStatus() == true) {
+                status = true;
+            }
+        }
+        return this;
+    }
 
-	/**
-	 * Sets the run time.
-	 *
-	 * @param runTime
-	 *            the run time
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setRunTime(final RunTimeDto runTime) {
-		this.runTime = runTime;
-		return this;
-	}
+    /**
+     * Gets the run time.
+     *
+     * @return the run time
+     */
+    public RunTimeDto getRunTime() {
+        return runTime;
+    }
 
-	/**
-	 * Gets the status.
-	 *
-	 * @return the status
-	 */
-	public Boolean getStatus() {
-		return status;
-	}
+    /**
+     * Sets the run time.
+     *
+     * @param runTime
+     *            the run time
+     * @return the test plan dto
+     */
+    public TestPlanDto setRunTime(final RunTimeDto runTime) {
+        this.runTime = runTime;
+        return this;
+    }
 
-	/**
-	 * Sets the status.
-	 *
-	 * @param status
-	 *            the status
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setStatus(final Boolean status) {
-		this.status = status;
-		return this;
-	}
+    /**
+     * Gets the status.
+     *
+     * @return the status
+     */
+    public Boolean getStatus() {
+        return status;
+    }
 
-	/**
-	 * Gets the test cases.
-	 *
-	 * @return the test cases
-	 */
-	public List<TestCaseDto> getTestCases() {
-		return testCases;
-	}
+    /**
+     * Sets the status.
+     *
+     * @param status
+     *            the status
+     * @return the test plan dto
+     */
+    public TestPlanDto setStatus(final Boolean status) {
+        this.status = status;
+        return this;
+    }
 
-	/**
-	 * Sets the test cases.
-	 *
-	 * @param testCases
-	 *            the test cases
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setTestCases(final List<TestCaseDto> testCases) {
-		this.testCases = testCases;
-		return this;
-	}
+    /**
+     * Gets the test cases.
+     *
+     * @return the test cases
+     */
+    public List<TestCaseDto> getTestCases() {
+        return testCases;
+    }
 
-	/**
-	 * Gets the status enum.
-	 *
-	 * @return the status enum
-	 */
-	public TestStatus getStatusEnum() {
-		return TestStatus.getStatus(status);
-	}
+    /**
+     * Sets the test cases.
+     *
+     * @param testCases
+     *            the test cases
+     * @return the test plan dto
+     */
+    public TestPlanDto setTestCases(final List<TestCaseDto> testCases) {
+        this.testCases = testCases;
+        return this;
+    }
 
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+    public TestStatus getStatusEnum() {
+        if (null == statusEnum) {
+            this.statusEnum = TestStatus.getStatus(status);
+        }
+        return this.statusEnum;
+    }
 
-	/**
-	 * Sets the name.
-	 *
-	 * @param name
-	 *            the name
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setName(final String name) {
-		this.name = name;
-		return this;
-	}
+    public TestPlanDto setStatusEnum(final TestStatus statusEnum) {
+        this.statusEnum = statusEnum;
+        return this;
+    }
 
-	/**
-	 * Gets the description.
-	 *
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * Sets the description.
-	 *
-	 * @param description
-	 *            the description
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setDescription(final String description) {
-		this.description = description;
-		return this;
-	}
+    /**
+     * Sets the name.
+     *
+     * @param name
+     *            the name
+     * @return the test plan dto
+     */
+    public TestPlanDto setName(final String name) {
+        this.name = name;
+        return this;
+    }
 
-	/**
-	 * Gets the related links.
-	 *
-	 * @return the related links
-	 */
-	public List<String> getRelatedLinks() {
-		return relatedLinks;
-	}
+    /**
+     * Gets the description.
+     *
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * Sets the related links.
-	 *
-	 * @param relatedLinks
-	 *            the related links
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setRelatedLinks(final List<String> relatedLinks) {
-		this.relatedLinks = relatedLinks;
-		return this;
-	}
+    /**
+     * Sets the description.
+     *
+     * @param description
+     *            the description
+     * @return the test plan dto
+     */
+    public TestPlanDto setDescription(final String description) {
+        this.description = description;
+        return this;
+    }
 
-	/**
-	 * Gets the related ids.
-	 *
-	 * @return the related ids
-	 */
-	public List<String> getRelatedIds() {
-		return relatedIds;
-	}
+    /**
+     * Gets the related links.
+     *
+     * @return the related links
+     */
+    public List<String> getRelatedLinks() {
+        return relatedLinks;
+    }
 
-	/**
-	 * Sets the related ids.
-	 *
-	 * @param relatedIds
-	 *            the related ids
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setRelatedIds(final List<String> relatedIds) {
-		this.relatedIds = relatedIds;
-		return this;
-	}
+    /**
+     * Sets the related links.
+     *
+     * @param relatedLinks
+     *            the related links
+     * @return the test plan dto
+     */
+    public TestPlanDto setRelatedLinks(final List<String> relatedLinks) {
+        this.relatedLinks = relatedLinks;
+        return this;
+    }
 
-	/**
-	 * Gets the tags.
-	 *
-	 * @return the tags
-	 */
-	public List<String> getTags() {
-		return tags;
-	}
+    /**
+     * Gets the related ids.
+     *
+     * @return the related ids
+     */
+    public List<String> getRelatedIds() {
+        return relatedIds;
+    }
 
-	/**
-	 * Sets the tags.
-	 *
-	 * @param tags
-	 *            the tags
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setTags(final List<String> tags) {
-		this.tags = tags;
-		return this;
-	}
+    /**
+     * Sets the related ids.
+     *
+     * @param relatedIds
+     *            the related ids
+     * @return the test plan dto
+     */
+    public TestPlanDto setRelatedIds(final List<String> relatedIds) {
+        this.relatedIds = relatedIds;
+        return this;
+    }
 
-	/**
-	 * Gets the known problem.
-	 *
-	 * @return the known problem
-	 */
-	public KnownProblemDto getKnownProblem() {
-		return knownProblem;
-	}
+    /**
+     * Gets the tags.
+     *
+     * @return the tags
+     */
+    public List<String> getTags() {
+        return tags;
+    }
 
-	/**
-	 * Gets the test type.
-	 *
-	 * @return the test type
-	 */
-	public TestType getTestType() {
-		return testType;
-	}
+    /**
+     * Sets the tags.
+     *
+     * @param tags
+     *            the tags
+     * @return the test plan dto
+     */
+    public TestPlanDto setTags(final List<String> tags) {
+        this.tags = tags;
+        return this;
+    }
 
-	/**
-	 * Sets the test type.
-	 *
-	 * @param testType
-	 *            the test type
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setTestType(final TestType testType) {
-		this.testType = testType;
-		return this;
-	}
+    /**
+     * Gets the known problem.
+     *
+     * @return the known problem
+     */
+    public KnownProblemDto getKnownProblem() {
+        return knownProblem;
+    }
 
-	/**
-	 * Gets the source.
-	 *
-	 * @return the source
-	 */
-	public String getSource() {
-		return source;
-	}
+    /**
+     * Gets the test type.
+     *
+     * @return the test type
+     */
+    public TestType getTestType() {
+        return testType;
+    }
 
-	/**
-	 * Sets the source.
-	 *
-	 * @param source
-	 *            the source
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setSource(final String source) {
-		this.source = source;
-		return this;
-	}
+    /**
+     * Sets the test type.
+     *
+     * @param testType
+     *            the test type
+     * @return the test plan dto
+     */
+    public TestPlanDto setTestType(final TestType testType) {
+        this.testType = testType;
+        return this;
+    }
 
-	/**
-	 * Gets the components.
-	 *
-	 * @return the components
-	 */
-	public List<String> getComponents() {
-		return components;
-	}
+    /**
+     * Gets the source.
+     *
+     * @return the source
+     */
+    public String getSource() {
+        return source;
+    }
 
-	/**
-	 * Sets the components.
-	 *
-	 * @param components
-	 *            the components
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setComponents(final List<String> components) {
-		this.components = components;
-		return this;
-	}
+    /**
+     * Sets the source.
+     *
+     * @param source
+     *            the source
+     * @return the test plan dto
+     */
+    public TestPlanDto setSource(final String source) {
+        this.source = source;
+        return this;
+    }
 
-	/**
-	 * Gets the devices.
-	 *
-	 * @return the devices
-	 */
-	public List<String> getDevices() {
-		return devices;
-	}
+    /**
+     * Gets the components.
+     *
+     * @return the components
+     */
+    public List<String> getComponents() {
+        return components;
+    }
 
-	/**
-	 * Sets the devices.
-	 *
-	 * @param devices
-	 *            the devices
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setDevices(final List<String> devices) {
-		this.devices = devices;
-		return this;
-	}
+    /**
+     * Sets the components.
+     *
+     * @param components
+     *            the components
+     * @return the test plan dto
+     */
+    public TestPlanDto setComponents(final List<String> components) {
+        this.components = components;
+        return this;
+    }
 
-	/**
-	 * Gets the platforms.
-	 *
-	 * @return the platforms
-	 */
-	public List<String> getPlatforms() {
-		return platforms;
-	}
+    /**
+     * Gets the devices.
+     *
+     * @return the devices
+     */
+    public List<String> getDevices() {
+        return devices;
+    }
 
-	/**
-	 * Sets the platforms.
-	 *
-	 * @param platforms
-	 *            the platforms
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setPlatforms(final List<String> platforms) {
-		this.platforms = platforms;
-		return this;
-	}
+    /**
+     * Sets the devices.
+     *
+     * @param devices
+     *            the devices
+     * @return the test plan dto
+     */
+    public TestPlanDto setDevices(final List<String> devices) {
+        this.devices = devices;
+        return this;
+    }
 
-	/**
-	 * Gets the run types.
-	 *
-	 * @return the run types
-	 */
-	public List<String> getRunTypes() {
-		return runTypes;
-	}
+    /**
+     * Gets the platforms.
+     *
+     * @return the platforms
+     */
+    public List<String> getPlatforms() {
+        return platforms;
+    }
 
-	/**
-	 * Sets the run types.
-	 *
-	 * @param runTypes
-	 *            the run types
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setRunTypes(final List<String> runTypes) {
-		this.runTypes = runTypes;
-		return this;
-	}
+    /**
+     * Sets the platforms.
+     *
+     * @param platforms
+     *            the platforms
+     * @return the test plan dto
+     */
+    public TestPlanDto setPlatforms(final List<String> platforms) {
+        this.platforms = platforms;
+        return this;
+    }
 
-	/**
-	 * Gets the owner.
-	 *
-	 * @return the owner
-	 */
-	public String getOwner() {
-		return owner;
-	}
+    /**
+     * Gets the run types.
+     *
+     * @return the run types
+     */
+    public List<String> getRunTypes() {
+        return runTypes;
+    }
 
-	/**
-	 * Sets the owner.
-	 *
-	 * @param owner
-	 *            the owner
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setOwner(final String owner) {
-		this.owner = owner;
-		return this;
-	}
+    /**
+     * Sets the run types.
+     *
+     * @param runTypes
+     *            the run types
+     * @return the test plan dto
+     */
+    public TestPlanDto setRunTypes(final List<String> runTypes) {
+        this.runTypes = runTypes;
+        return this;
+    }
 
-	/**
-	 * Sets the known problem.
-	 *
-	 * @param knownProblem
-	 *            the known problem
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setKnownProblem(final KnownProblemDto knownProblem) {
-		this.knownProblem = knownProblem;
-		return this;
-	}
+    /**
+     * Gets the owner.
+     *
+     * @return the owner
+     */
+    public String getOwner() {
+        return owner;
+    }
 
-	/**
-	 * Gets the id.
-	 *
-	 * @return the id
-	 */
-	public Integer getId() {
-		return id;
-	}
+    /**
+     * Sets the owner.
+     *
+     * @param owner
+     *            the owner
+     * @return the test plan dto
+     */
+    public TestPlanDto setOwner(final String owner) {
+        this.owner = owner;
+        return this;
+    }
 
-	/**
-	 * Sets the id.
-	 *
-	 * @param id
-	 *            the id
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setId(final int id) {
-		this.id = id;
-		return this;
-	}
+    /**
+     * Sets the known problem.
+     *
+     * @param knownProblem
+     *            the known problem
+     * @return the test plan dto
+     */
+    public TestPlanDto setKnownProblem(final KnownProblemDto knownProblem) {
+        this.knownProblem = knownProblem;
+        return this;
+    }
 
-	/**
-	 * Sets the run info.
-	 *
-	 * @param runInfo
-	 *            the new run info
-	 * @return the test plan dto
-	 */
-	public TestPlanDto setRunInfo(final RunInfoDto runInfo) {
-		this.runInfo = runInfo;
-		return this;
-	}
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * Sets the id.
+     *
+     * @param id
+     *            the id
+     * @return the test plan dto
+     */
+    public TestPlanDto setId(final int id) {
+        this.id = id;
+        return this;
+    }
+
+    /**
+     * Sets the run info.
+     *
+     * @param runInfo
+     *            the new run info
+     * @return the test plan dto
+     */
+    public TestPlanDto setRunInfo(final RunInfoDto runInfo) {
+        this.runInfo = runInfo;
+        return this;
+    }
 
 }

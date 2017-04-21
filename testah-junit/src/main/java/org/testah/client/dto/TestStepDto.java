@@ -19,6 +19,8 @@ public class TestStepDto {
     /** The status. */
     private Boolean status = null;
 
+    private TestStatus statusEnum = null;
+
     /** The id. */
     private int id = 0;
 
@@ -27,6 +29,8 @@ public class TestStepDto {
 
     /** The description. */
     private String description = "";
+
+    private String exceptionMessage = null;
 
     /**
      * Instantiates a new test step dto.
@@ -151,18 +155,26 @@ public class TestStepDto {
      * @return the exception messages
      */
     public String getExceptionMessages() {
-        try {
-            final StringBuffer sb = new StringBuffer("Step: " + this.getName() + "\n ");
-            for (final StepActionDto a : getStepActions()) {
-                if (null != a.getException()) {
-                    sb.append(a.getException().getMessage() + "\n ");
-                    sb.append(a.getException() + "\n ");
+        if (null == this.exceptionMessage) {
+            try {
+                final StringBuffer sb = new StringBuffer("Step: " + this.getName() + "\n ");
+                for (final StepActionDto a : getStepActions()) {
+                    if (null != a.getException()) {
+                        sb.append(a.getException().getMessage() + "\n ");
+                        sb.append(a.getException() + "\n ");
+                    }
                 }
+                this.exceptionMessage = sb.toString();
+            } catch (final Exception e) {
+                this.exceptionMessage = null;
             }
-            return sb.toString();
-        } catch (final Exception e) {
-            return null;
         }
+        return this.exceptionMessage;
+    }
+
+    public TestStepDto setExceptionMessages(final String exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
+        return this;
     }
 
     /**
@@ -225,7 +237,15 @@ public class TestStepDto {
      * @return the status enum
      */
     public TestStatus getStatusEnum() {
-        return TestStatus.getStatus(status);
+        if (null == statusEnum) {
+            this.statusEnum = TestStatus.getStatus(status);
+        }
+        return this.statusEnum;
+    }
+
+    public TestStepDto setStatusEnum(final TestStatus statusEnum) {
+        this.statusEnum = statusEnum;
+        return this;
     }
 
     /**

@@ -31,8 +31,7 @@ public class AbstractDtoBaseTest {
     @Test
     public void testToString() {
         TestAbstractDtoBaseDto dto1 = new TestAbstractDtoBaseDto();
-        assertThat(dto1.toString(), containsString("org.testah.framework.dto.base.TestAbstractDtoBaseDto@"));
-        assertThat(dto1.toString(), containsString("[value=<null>,allowUnknown=true,additionalProperties={}]"));
+        assertThat(dto1.toString(), containsString("{\"value\":null}"));
     }
 
     @Test
