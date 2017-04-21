@@ -1,6 +1,7 @@
 package org.testah.framework;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.framework.annotations.TestCase;
@@ -15,6 +16,7 @@ public class TestFailingInBeforeMethod extends HttpTestPlan {
         throw new RuntimeException("Failed in Before");
     }
 
+    @Ignore
     @TestCase
     @Test
     public void test() {

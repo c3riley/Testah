@@ -1,9 +1,12 @@
 package org.testah.framework.cli;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Properties;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -69,6 +72,9 @@ public class ParamLoader {
             return params;
         }
         try {
+
+            injectLocalProperties();
+
             paramsFromProperties = getDefaultParamProperties();
 
             final File f = new File(pathToParamPropFile);
@@ -182,15 +188,32 @@ public class ParamLoader {
                     TS.log().warn("Issue saving custom Propfile[" + f.getAbsolutePath() + "]", e);
                 }
             }
-        } catch (
-
-        final ConfigurationException e)
-
-        {
+        } catch (final ConfigurationException e) {
             TS.log().warn("Issues with testah.properties");
         }
-        return params;
 
+        return params;
+    }
+
+    public void injectLocalProperties() {
+        injectLocalProperties(new File(Params.addUserDir("local.properties")));
+    }
+
+    public void injectLocalProperties(final File localPropFile) {
+        try {
+            if (localPropFile.exists()) {
+                try (
+                        final InputStream stream = new FileInputStream(localPropFile)) {
+                    final Properties properties = new Properties();
+                    properties.load(stream);
+                    properties.stringPropertyNames().stream().forEach(name -> {
+                        System.setProperty(name, properties.getProperty(name));
+                    });
+                }
+            }
+        } catch (Throwable e) {
+            TS.log().warn("Problem Occured Loading local properties file", e);
+        }
     }
 
     /**

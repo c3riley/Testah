@@ -1,11 +1,14 @@
 package org.testah.framework.dto.base;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
@@ -16,8 +19,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public abstract class AbstractDtoBase<T> {
 
+    @JsonIgnore
     public static final String MSG_UNKNOWN_JSON_PROP_FOUND = "@@@ Found Unknown Json Field @@@";
+    @JsonIgnore
     private boolean allowUnknown = true;
+    @JsonIgnore
+    private ToStringStyle toStringStyle = ToStringStyle.JSON_STYLE;
+    @JsonIgnore
+    private List<String> toStringListOfFieldsToExclude = null;
 
     public AbstractDtoBase() {
 
@@ -27,10 +36,12 @@ public abstract class AbstractDtoBase<T> {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @SuppressWarnings("unchecked")
+    @JsonIgnore
     private T getSelf() {
         return (T) this;
     }
 
+    @JsonIgnore
     public String toJson() {
         return TS.util().toJson(getSelf());
     }
@@ -53,7 +64,13 @@ public abstract class AbstractDtoBase<T> {
     }
 
     public String toString() {
-        return ReflectionToStringBuilder.toString(this);
+        return toString(ToStringStyle.JSON_STYLE);
+    }
+
+    public String toString(final ToStringStyle style) {
+        ReflectionToStringBuilder toStringBuilder = new ReflectionToStringBuilder(this, style);
+        toStringBuilder.setExcludeFieldNames(getToStringListOfFieldsToExclude().stream().toArray(String[]::new));
+        return toStringBuilder.toString();
     }
 
     public boolean equals(final Object obj) {
@@ -81,11 +98,13 @@ public abstract class AbstractDtoBase<T> {
         return assertEquals(((AbstractDtoBase<?>) actual).toJson());
     }
 
+    @JsonIgnore
     public AbstractDtoBase<T> assertEquals(final String actualJson) throws JSONException {
         JSONAssert.assertEquals(this.toJson(), actualJson, true);
         return this;
     }
 
+    @JsonIgnore
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -111,6 +130,33 @@ public abstract class AbstractDtoBase<T> {
     protected T setAllowUnknown(final boolean allowUnknown) {
         this.allowUnknown = allowUnknown;
         return getSelf();
+    }
+
+    @JsonIgnore
+    public ToStringStyle getToStringStyle() {
+        return toStringStyle;
+    }
+
+    @JsonIgnore
+    public void setToStringStyle(final ToStringStyle toStringStyle) {
+        this.toStringStyle = toStringStyle;
+    }
+
+    @JsonIgnore
+    public List<String> getToStringListOfFieldsToExclude() {
+        if (null == toStringListOfFieldsToExclude) {
+            toStringListOfFieldsToExclude = new ArrayList<String>();
+            toStringListOfFieldsToExclude.add("toStringStyle");
+            toStringListOfFieldsToExclude.add("toStringListOfFieldsToExclude");
+            toStringListOfFieldsToExclude.add("allowUnknown");
+            toStringListOfFieldsToExclude.add("additionalProperties");
+        }
+        return toStringListOfFieldsToExclude;
+    }
+
+    @JsonIgnore
+    public void setToStringListOfFieldsToExclude(final List<String> toStringListOfFieldsToExclude) {
+        this.toStringListOfFieldsToExclude = toStringListOfFieldsToExclude;
     }
 
 }

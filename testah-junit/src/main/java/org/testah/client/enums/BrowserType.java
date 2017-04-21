@@ -3,6 +3,8 @@ package org.testah.client.enums;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * The Enum BrowserType.
  */
@@ -10,14 +12,15 @@ public enum BrowserType {
 
     /** The firefox. */
     FIREFOX_GECKO(""),
-    /** The chrome. */
-    FIREFOX(""),
-    /** The chrome. */
-    CHROME(""),
-    /** The ie. */
-    IE(""),
-    /** The phantomjs. */
-    PHANTOMJS(""), JBROWSER("");
+        /** The chrome. */
+        FIREFOX(""),
+        /** The chrome. */
+        CHROME(""),
+        /** The ie. */
+        IE(""),
+        /** The phantomjs. */
+        PHANTOMJS(""),
+        JBROWSER("");
 
     /** The browser code. */
     String browserCode;
@@ -75,6 +78,12 @@ public enum BrowserType {
      */
     public String getBrowserCode() {
         return browserCode;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+        return this.name();
     }
 
 }
