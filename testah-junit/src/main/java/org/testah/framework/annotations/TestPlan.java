@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 
 import org.testah.client.enums.TestType;
 
-
 /**
  * The Interface TestPlan.
  */
@@ -99,5 +98,12 @@ public @interface TestPlan {
      * @return the string[]
      */
     String[] runTypes() default {};
+
+    /**
+     * Owner.
+     *
+     * @return the string
+     */
+    String owner() default "";
 
 }
