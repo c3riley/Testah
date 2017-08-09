@@ -111,11 +111,11 @@ public class ParamLoader {
                     filterSchema = "NOT_USED";
                 }
 
-                String key;
                 config.getKeys().forEachRemaining(value -> {
-                    System.setProperty(value, config.getString(value));
+                    // System Props Trumps property file if found, else use property file value
+                    System.setProperty(value, System.getProperty(value, config.getString(value)));
                 });
-                ObjectMapper mapper = new ObjectMapper();
+                final ObjectMapper mapper = new ObjectMapper();
                 Object propValue = null;
                 String propName;
                 for (final Field field : Params.class.getDeclaredFields()) {
@@ -149,9 +149,9 @@ public class ParamLoader {
                             } else if (field.getType().isAssignableFrom(boolean.class)) {
                                 field.setBoolean(params, Boolean.parseBoolean((String) propValue));
                             } else if (field.getType().isAssignableFrom(HashMap.class)) {
-                                field.set(params, mapper.readValue((String) propValue, new TypeReference<HashMap<String,
-                                        String>>() {
-                                }));
+                                field.set(params, mapper.readValue((String) propValue,
+                                        new TypeReference<HashMap<String, String>>() {
+                                        }));
                             } else if (field.getType().isAssignableFrom(Boolean.class)) {
                                 TS.log().info(field.getName());
                                 if (0 == propValue.toString().trim().length()) {
@@ -180,8 +180,8 @@ public class ParamLoader {
                 }
 
             } else {
-                TS.log().warn("Issue loading custom properties[" + f.getAbsolutePath() +
-                        "] - was not found, will create one for the next runs use");
+                TS.log().warn("Issue loading custom properties[" + f.getAbsolutePath()
+                        + "] - was not found, will create one for the next runs use");
                 try {
                     paramsFromProperties.save(f);
                 } catch (final Exception e) {
@@ -202,8 +202,7 @@ public class ParamLoader {
     public void injectLocalProperties(final File localPropFile) {
         try {
             if (localPropFile.exists()) {
-                try (
-                        final InputStream stream = new FileInputStream(localPropFile)) {
+                try (final InputStream stream = new FileInputStream(localPropFile)) {
                     final Properties properties = new Properties();
                     properties.load(stream);
                     properties.stringPropertyNames().stream().forEach(name -> {
@@ -211,7 +210,7 @@ public class ParamLoader {
                     });
                 }
             }
-        } catch (Throwable e) {
+        } catch (final Throwable e) {
             TS.log().warn("Problem Occured Loading local properties file", e);
         }
     }
@@ -260,10 +259,10 @@ public class ParamLoader {
     public PropertiesConfiguration getDefaultParamProperties() {
         final PropertiesConfiguration defaultConfig = new PropertiesConfiguration();
         final PropertiesConfigurationLayout layout = defaultConfig.getLayout();
-        layout.setHeaderComment(
-                Cli.BAR_LONG + "\nTestah Properties - version: " + Cli.version + " - File Created: " + TS.util().now() +
-                        "\nNo values are required. Leaving a key empty will not use the value, turning the property off." +
-                        "\n" + Cli.BAR_LONG);
+        layout.setHeaderComment(Cli.BAR_LONG + "\nTestah Properties - version: " + Cli.version + " - File Created: "
+                + TS.util().now()
+                + "\nNo values are required. Leaving a key empty will not use the value, turning the property off."
+                + "\n" + Cli.BAR_LONG);
         boolean accessible;
         final Params params = new Params();
         Comment comment = null;
