@@ -39,20 +39,23 @@ public class Cli {
     private final ParamLoader paramLoader;
 
     /** The opt. */
-    private final Params opt;
+    private Params opt;
 
     /** The Constant version. */
-    public static final String version = "0.6.12";
+    public static final String version = "0.7.0";
 
     /** The Constant BAR_LONG. */
-    public static final String BAR_LONG =
-            "=============================================================================================";
+    public static final String BAR_LONG = "=============================================================================================";
 
     /** The Constant BAR_SHORT. */
     public static final String BAR_SHORT = "=========================================";
 
     /** The Constant BAR_WALL. */
     public static final String BAR_WALL = "# ";
+
+    private TestFilter testPlanFilter;
+
+    private boolean underTest = false;
 
     /**
      * Instantiates a new cli.
@@ -67,6 +70,11 @@ public class Cli {
         this.paramLoader = new ParamLoader(propFilePath);
         this.opt = new ParamLoader(propFilePath).loadParamValues();
 
+    }
+
+    public Subparser addOptions(final Subparser sub) {
+
+        return sub;
     }
 
     /**
@@ -88,13 +96,22 @@ public class Cli {
         final Subparser run = subparsers.addParser("run").help("run help");
         run.addArgument("-b", "--browser").setDefault(opt.getBrowser()).type(enumStringType(BrowserType.class))
                 .help("foo help");
-        run.addArgument("-t", "--test").setDefault("").type(String.class).help("Test Class to run");
+        run.addArgument("-t", "--test").setDefault("").type(String.class)
+                .help("Deprecated - Same as --lookAtExternalTests");
+        run.addArgument("-i", "--lookAtInternalTests").setDefault(opt.getLookAtInternalTests()).type(String.class)
+                .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
+        run.addArgument("-e", "--lookAtExternalTests").setDefault(opt.getLookAtExternalTests()).type(String.class).help(
+                "lookAtExternalTests is a path to a test file, java or groovy, or a comma seperated like, regex, for directory path");
 
         final Subparser query = subparsers.addParser("query").help("query help");
         query.addArgument("--file").required(false).action(Arguments.store()).dest("queryResults")
                 .setDefault(Params.getUserDir());
         query.addArgument("--includeMeta").required(false).action(Arguments.storeTrue()).dest("includeMeta");
         query.addArgument("--show").required(false).action(Arguments.storeTrue()).dest("showInConsole");
+        query.addArgument("-i", "--lookAtInternalTests").setDefault(opt.getLookAtInternalTests()).type(String.class)
+                .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
+        query.addArgument("-e", "--lookAtExternalTests").setDefault(opt.getLookAtExternalTests()).type(String.class)
+                .help("lookAtExternalTests is a path to a test file, java or groovy, or a comma seperated like, regex, for directory path");
 
         final Subparser create = subparsers.addParser("create").help("create help");
         create.addArgument("--prop", "--properties").required(false).action(Arguments.storeTrue()).dest("prop");
@@ -107,10 +124,14 @@ public class Cli {
                 res = parser.parseArgs(args);
                 parser.parseArgs(args, opt);
                 TS.setParams(opt);
-                if (null != res.getString("test")) {
-                    TS.params().setLookAtInternalTests("");
-                    TS.params().setLookAtExternalTests(res.getString("test"));
+                String externalTest = res.getString("test");
+                if (null == externalTest || externalTest.length() == 0) {
+                    externalTest = res.getString("lookAtExternalTests");
                 }
+
+                TS.params().setLookAtInternalTests(res.getString("lookAtInternalTests"));
+                TS.params().setLookAtExternalTests(externalTest);
+
                 TS.log().debug(Cli.BAR_LONG);
                 TS.log().info(Cli.BAR_WALL + "CLI Inputs - " + res);
                 TS.log().debug(Cli.BAR_LONG);
@@ -139,8 +160,8 @@ public class Cli {
 
             } else {
                 TS.log().debug(Cli.BAR_LONG);
-                TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ " + ParamLoader
-                        .getDefaultPropFilePath() + " ]");
+                TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ "
+                        + ParamLoader.getDefaultPropFilePath() + " ]");
                 TS.log().debug(Cli.BAR_LONG);
             }
 
@@ -166,12 +187,15 @@ public class Cli {
      */
     public void processRun() {
 
-        final TestFilter testPlanFilter = new TestFilter();
-        testPlanFilter.filterTestPlansToRun();
+        this.setTestPlanFilter(new TestFilter());
+        getTestPlanFilter().filterTestPlansToRun();
 
         final TestahJUnitRunner junitRunner = new TestahJUnitRunner();
+        if (isUnderTest()) {
+            return;
+        }
         final List<ResultDto> results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
-                testPlanFilter.getTestClassesMetFilters());
+                getTestPlanFilter().getTestClassesMetFilters());
 
         int totalTestCases = 0;
         int totalTestCasesFailed = 0;
@@ -221,7 +245,7 @@ public class Cli {
      *             Signals that an I/O exception has occurred.
      */
     public void processQuery() throws IOException {
-        final TestFilter testPlanFilter = new TestFilter();
+        this.setTestPlanFilter(new TestFilter());
         File results = new File(res.getString("queryResults"));
         if (results.isDirectory()) {
             TS.log().trace("results mkdirs: " + results.mkdirs());
@@ -231,11 +255,11 @@ public class Cli {
                 TS.log().trace("results.getParentFile() mkdirs: " + results.getParentFile().mkdirs());
             }
         }
-        testPlanFilter.filterTestPlansToRun();
+        getTestPlanFilter().filterTestPlansToRun();
         Object resultObject = testPlanFilter.getTestClassesMetFilters();
         if (res.getBoolean("includeMeta")) {
             final HashMap<String, TestPlanDto> testPlans = new HashMap<>();
-            for (final Class<?> test : testPlanFilter.getTestClassesMetFilters()) {
+            for (final Class<?> test : getTestPlanFilter().getTestClassesMetFilters()) {
                 testPlans
                         .put(test.getCanonicalName(),
                                 TestDtoHelper
@@ -256,8 +280,8 @@ public class Cli {
         }
 
         FileUtils.writeStringToFile(results, TS.util().toJson(resultObject));
-        TS.log().info("Query Results: Found[" + testPlanFilter.getTestClassesMetFilters().size() + "] " + results
-                .getAbsolutePath());
+        TS.log().info("Query Results: Found[" + getTestPlanFilter().getTestClassesMetFilters().size() + "] "
+                + results.getAbsolutePath());
 
         if (res.getBoolean("showInConsole")) {
             TS.log().info(TS.util().toJson(resultObject));
@@ -279,9 +303,11 @@ public class Cli {
      *
      * @param res
      *            the new res
+     * @return the cli
      */
-    public void setRes(final Namespace res) {
+    public Cli setRes(final Namespace res) {
         this.res = res;
+        return this;
     }
 
     /**
@@ -300,6 +326,20 @@ public class Cli {
      */
     public Params getOpt() {
         return opt;
+    }
+
+    public Cli setOpt(final Params opt) {
+        this.opt = opt;
+        return this;
+    }
+
+    public TestFilter getTestPlanFilter() {
+        return testPlanFilter;
+    }
+
+    public Cli setTestPlanFilter(final TestFilter testPlanFilter) {
+        this.testPlanFilter = testPlanFilter;
+        return this;
     }
 
     /**
@@ -321,9 +361,18 @@ public class Cli {
                 "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
         System.out.println(
                 "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
-        System.out.println("=======================================================[Version: " + Cli.version +
-                "]======================");
+        System.out.println("=======================================================[Version: " + Cli.version
+                + "]======================");
 
         System.out.println(Cli.BAR_LONG);
+    }
+
+    public boolean isUnderTest() {
+        return underTest;
+    }
+
+    public Cli setUnderTest(final boolean underTest) {
+        this.underTest = underTest;
+        return this;
     }
 }
