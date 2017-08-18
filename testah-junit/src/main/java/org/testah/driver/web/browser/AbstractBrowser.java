@@ -23,24 +23,25 @@ import org.testah.driver.web.element.WebElementWrapperV1;
 import org.testah.framework.dto.StepAction;
 
 /**
- * The Class AbstractBrowser wraps Webdriver Api implementation with many macrotized methods to reduce code in tests.
+ * The Class AbstractBrowser wraps Webdriver Api implementation with many
+ * macrotized methods to reduce code in tests.
  */
 public abstract class AbstractBrowser<T> {
 
     /** The driver. */
-    private WebDriver driver;
+    private WebDriver           driver;
 
     /** The element wait time. */
-    private int elementWaitTime = 10;
+    private int                 elementWaitTime     = 10;
 
     /** The remote uri. */
-    private final String remoteUri = TS.params().getWebDriver_defaultRemoteUri();
+    private final String        remoteUri           = TS.params().getWebDriver_defaultRemoteUri();
 
     /** The remote. */
-    private final boolean remote = TS.params().isWebDriver_useRemoteDriver();
+    private final boolean       remote              = TS.params().isWebDriver_useRemoteDriver();
 
     /** The user agent value. */
-    private String userAgentValue = TS.params().getWebDriver_userAgentValue();
+    private String              userAgentValue      = TS.params().getWebDriver_userAgentValue();
 
     /** The desired capabilities. */
     private DesiredCapabilities desiredCapabilities = null;
@@ -90,7 +91,8 @@ public abstract class AbstractBrowser<T> {
                 driver.close();
                 driver = null;
                 stopService();
-            } catch (final Exception e) {
+            }
+            catch (final Exception e) {
                 TS.log().warn("issue closing browser", e);
             }
         }
@@ -163,7 +165,8 @@ public abstract class AbstractBrowser<T> {
     public WebDriver getRemoteDriver(final DesiredCapabilities capabilities) {
         try {
             return new RemoteWebDriver(new URL(remoteUri), capabilities);
-        } catch (final Exception e) {
+        }
+        catch (final Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -338,17 +341,19 @@ public abstract class AbstractBrowser<T> {
         TS.log().trace("Setting default browser: " + TS.params().getBrowser());
         if (TS.params().getBrowser() == BrowserType.PHANTOMJS) {
             return new PhantomJsBrowser().start();
-        } else if (TS.params().getBrowser() == BrowserType.CHROME) {
+        }
+        else if (TS.params().getBrowser() == BrowserType.CHROME) {
             return new GoogleChromeBrowser().start();
-        } else if (TS.params().getBrowser() == BrowserType.FIREFOX_GECKO) {
-            return new FirefoxGeckoBrowser().start();
-        } else if (TS.params().getBrowser() == BrowserType.FIREFOX) {
+        }
+        else if (TS.params().getBrowser() == BrowserType.FIREFOX) {
             return new FirefoxBrowser().start();
-        } else if (TS.params().getBrowser() == BrowserType.JBROWSER) {
+        }
+        else if (TS.params().getBrowser() == BrowserType.JBROWSER) {
             return new JBrowserDriverBrowser().start();
-        } else {
+        }
+        else {
             TS.log().debug("No Browser Match Found defaulting to Firefox");
-            return new FirefoxGeckoBrowser().start();
+            return new FirefoxBrowser().start();
         }
     }
 
@@ -358,7 +363,7 @@ public abstract class AbstractBrowser<T> {
      * @return the firefox browser
      */
     public static AbstractBrowser<?> getFirefoxBrowser() {
-        return new FirefoxGeckoBrowser().start();
+        return new FirefoxBrowser().start();
     }
 
     /**
@@ -483,13 +488,15 @@ public abstract class AbstractBrowser<T> {
 
             if (remote) {
                 driver = getRemoteDriver(capabilities);
-            } else {
+            }
+            else {
                 getDriverBinay();
                 startService();
                 driver = getWebDriver(capabilities);
             }
             this.maximize();
-        } catch (final Exception e) {
+        }
+        catch (final Exception e) {
             throw new RuntimeException("Issue Stating browser", e);
         }
         return getSelf();
@@ -541,11 +548,13 @@ public abstract class AbstractBrowser<T> {
             String replaceAbsolutePath = "";
             try {
                 replaceAbsolutePath = f.getParentFile().getParentFile().getAbsolutePath() + File.separator;
-            } catch (final Exception e) {
+            }
+            catch (final Exception e) {
                 TS.log().trace("issue getting screenshot replace path");
             }
             return f.getAbsolutePath().replace(replaceAbsolutePath, "");
-        } catch (final Exception e) {
+        }
+        catch (final Exception e) {
             TS.log().error(e);
         }
 
@@ -580,7 +589,8 @@ public abstract class AbstractBrowser<T> {
                 final File s = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.FILE);
                 FileUtils.copyFile(s, f);
                 TS.log().info("Screenshot file: " + f.getAbsolutePath());
-            } else {
+            }
+            else {
                 final File sf = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
                 FileUtils.copyFile(sf, f);
                 TS.log().info("Screenshot file: " + f.getAbsolutePath());
@@ -588,11 +598,13 @@ public abstract class AbstractBrowser<T> {
             String replaceAbsolutePath = "";
             try {
                 replaceAbsolutePath = f.getParentFile().getParentFile().getAbsolutePath() + File.separator;
-            } catch (final Exception e) {
+            }
+            catch (final Exception e) {
                 TS.log().trace("issue getting screenshot replace path");
             }
             return f.getAbsolutePath().replace(replaceAbsolutePath, "");
-        } catch (final Exception e) {
+        }
+        catch (final Exception e) {
             TS.log().error(e);
         }
 
@@ -611,7 +623,8 @@ public abstract class AbstractBrowser<T> {
             if (null != getDriver().findElement(by)) {
                 return true;
             }
-        } catch (final Exception e) {
+        }
+        catch (final Exception e) {
             TS.log().trace("Element is Not present " + by);
         }
         return false;
@@ -810,7 +823,8 @@ public abstract class AbstractBrowser<T> {
             try {
                 element = driver.findElement(by);
                 break;
-            } catch (final Exception e) {
+            }
+            catch (final Exception e) {
                 error = e.getMessage();
             }
             if (noWait) {
@@ -857,7 +871,8 @@ public abstract class AbstractBrowser<T> {
                     TS.log().trace("List of Elements is empty");
                     break;
                 }
-            } catch (final Exception e) {
+            }
+            catch (final Exception e) {
                 error = e.getMessage();
             }
             if (noWait) {
@@ -878,7 +893,8 @@ public abstract class AbstractBrowser<T> {
     public AbstractBrowser<T> maximize() {
         try {
             driver.manage().window().maximize();
-        } catch (final Exception e) {
+        }
+        catch (final Exception e) {
             TS.log().warn("Issue with maximize", e);
         }
         return getSelf();

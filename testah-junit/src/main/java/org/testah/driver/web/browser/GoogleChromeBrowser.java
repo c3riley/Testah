@@ -14,6 +14,8 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
+import io.github.bonigarcia.wdm.ChromeDriverManager;
+
 /**
  * The Class GoogleChromeBrowser.
  */
@@ -25,12 +27,15 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     /*
      * (non-Javadoc)
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
+     * @see
+     * org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.
+     * selenium.remote.DesiredCapabilities)
      */
     public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
         if (null == service) {
             return new ChromeDriver(capabilities);
-        } else {
+        }
+        else {
             return new ChromeDriver(service, capabilities);
         }
     }
@@ -41,6 +46,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
      */
     public GoogleChromeBrowser getDriverBinay() {
+        ChromeDriverManager.getInstance().setup();
         return this;
     }
 
@@ -97,17 +103,20 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
                 String urlSource = "http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip";
                 if (Params.isWindows()) {
                     urlSource = "http://chromedriver.storage.googleapis.com/2.21/chromedriver_win32.zip";
-                } else if (Params.isMac()) {
+                }
+                else if (Params.isMac()) {
                     urlSource = "http://chromedriver.storage.googleapis.com/2.21/chromedriver_mac32.zip";
                 }
                 final File zip = TS.util().downloadFile(urlSource, "drivers");
                 final File dest = TS.util().unZip(zip, new File(zip.getParentFile(), "chrome"));
                 binPath = dest.getAbsolutePath();
             }
-        } catch (final Exception e) {
+        }
+        catch (final Exception e) {
             TS.log().warn(e);
         }
-        return binPath;
+        // return binPath;
+        return ChromeDriverManager.getInstance().getBinaryPath();
 
     }
 
