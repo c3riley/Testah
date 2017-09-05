@@ -1,15 +1,11 @@
 
 package org.testah.web;
 
-import java.io.File;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.testah.TS;
-import org.testah.driver.http.requests.GetRequestDto;
 import org.testah.driver.web.browser.AbstractBrowser;
 import org.testah.driver.web.browser.FirefoxGeckoBrowser;
 import org.testah.driver.web.browser.GoogleChromeBrowser;
@@ -19,22 +15,25 @@ import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.BrowserTestPlan;
 
+import java.io.File;
+import java.util.List;
+
 @TestPlan
 public class TestBrowser extends BrowserTestPlan {
 
-    private final String baseUrl = "http://htmlpreview.github.io/?https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/clicks.html";
-    private final String baseTitle = "clicks";
+    private final String baseUrl = "http://www.google.com/";
+    private final String baseTitle = "Google";
 
     @Before
     public void setup() {
         TS.browser().goTo(baseUrl);
-        TS.util().pause(2000L, "Since using git redirect need to wait a little while");
-        new GetRequestDto("").addBasicAuth("", "").withJson();
     }
 
     @TestCase
     @Test
     public void TestPageTitle() {
+        TS.browser().getWebElement(By.name("q"),30).waitTillIsDisplayed();
+        TS.browser().waitForTitle(baseTitle, 20);
         TS.asserts().equalsTo(baseTitle, TS.browser().getTitle());
         TS.browser().assertTitle(baseTitle);
     }
@@ -50,7 +49,7 @@ public class TestBrowser extends BrowserTestPlan {
     @Test
     public void TestScreenShot() {
         final String screenshot = TS.browser().takeScreenShot();
-        final File f = new File(screenshot);
+        final File f = new File(TS.params().getOutput(),screenshot);
         TS.asserts().notNull(f);
         step("step 2");
         TS.asserts().isTrue(f.exists());
@@ -95,24 +94,24 @@ public class TestBrowser extends BrowserTestPlan {
     @TestCase
     @Test
     public void TestWebElements() {
-        final List<AbstractWebElementWrapper> lst = TS.browser().getWebElements(By.id("enclosed-image"));
+        final List<AbstractWebElementWrapper> lst = TS.browser().getWebElements(By.id("hplogo"));
         TS.asserts().notNull(lst);
         TS.asserts().equalsTo(1, lst.size());
         TS.asserts().notNull(lst.get(0));
-        TS.asserts().equalsTo(By.id("enclosed-image"), lst.get(0).getBy());
+        TS.asserts().equalsTo(By.id("hplogo"), lst.get(0).getBy());
         TS.asserts().notNull(lst.get(0).getDriverWebElement());
-        TS.asserts().equalsTo("https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/icon.gif",
+        TS.asserts().notNull("src value is not null",
                 lst.get(0).getAttribute("src"));
     }
 
     @TestCase
     @Test
     public void TestWebElement() {
-        final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("enclosed-image"));
+        final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("hplogo"));
         TS.asserts().notNull(e);
-        TS.asserts().equalsTo(By.id("enclosed-image"), e.getBy());
+        TS.asserts().equalsTo(By.id("hplogo"), e.getBy());
         TS.asserts().notNull(e.getDriverWebElement());
-        TS.asserts().equalsTo("https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/icon.gif",
+        TS.asserts().notNull("src value is not null",
                 e.getAttribute("src"));
     }
 

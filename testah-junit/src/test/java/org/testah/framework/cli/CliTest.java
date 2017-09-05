@@ -1,12 +1,12 @@
 package org.testah.framework.cli;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-
-import java.io.File;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+
+import static org.hamcrest.CoreMatchers.equalTo;
 
 public class CliTest {
 
@@ -22,8 +22,8 @@ public class CliTest {
         final Cli cli = new Cli();
         cli.setUnderTest(true);
         cli.getArgumentParser(args);
-        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(40));
-        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(36));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(50));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(46));
     }
 
     @Test
@@ -34,8 +34,8 @@ public class CliTest {
         final Cli cli = new Cli();
         cli.setUnderTest(true);
         cli.getArgumentParser(args);
-        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(40));
-        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(36));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(50));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(46));
     }
 
     @Test
@@ -44,8 +44,8 @@ public class CliTest {
         final String[] args = { "query" };
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
-        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(40));
-        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(36));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(50));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(46));
     }
 
     @Test
@@ -55,8 +55,8 @@ public class CliTest {
         final String[] args = { "query" };
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
-        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(36));
-        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(40));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(46));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(50));
     }
 
     @Test
@@ -66,5 +66,7 @@ public class CliTest {
         cli.getArgumentParser(args);
         Assert.assertTrue(new File("testah.properties").exists());
     }
+
+
 
 }

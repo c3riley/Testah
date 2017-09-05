@@ -1,11 +1,5 @@
 package org.testah.driver.web.browser;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -21,6 +15,12 @@ import org.testah.client.enums.BrowserType;
 import org.testah.driver.web.element.AbstractWebElementWrapper;
 import org.testah.driver.web.element.WebElementWrapperV1;
 import org.testah.framework.dto.StepAction;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class AbstractBrowser wraps Webdriver Api implementation with many macrotized methods to reduce code in tests.
@@ -513,6 +513,23 @@ public abstract class AbstractBrowser<T> {
      */
     public abstract T stopService() throws IOException;
 
+
+    public File getScreenshotDir(final String directoryPath) {
+        File screenshotDir = new File(directoryPath, "screenshots");
+        TS.log().trace("screenshotDir.mkdir " + screenshotDir.mkdirs());
+        return screenshotDir;
+    }
+
+    public String getScreenshotPathToUse(final File screenshot, final String directoryPath) {
+        String replaceAbsolutePath = "";
+        try {
+            replaceAbsolutePath = screenshot.getParentFile().getParentFile().getAbsolutePath() + File.separator;
+        } catch (final Exception e) {
+            TS.log().trace("issue getting screenshot replace path");
+        }
+        return screenshot.getAbsolutePath().replace(replaceAbsolutePath, "");
+    }
+
     /**
      * Take html snapshot.
      *
@@ -531,20 +548,13 @@ public abstract class AbstractBrowser<T> {
      */
     public String takeHtmlSnapshot(final String path) {
         try {
-            File f = new File(path);
+            File f = getScreenshotDir(path);
             if (f.isDirectory()) {
                 f = File.createTempFile("htmlsnapshot_", ".html", f);
             }
             FileUtils.writeStringToFile(f, this.getHtml(), "UTF-8");
             TS.log().info("Html Snapshot file: " + f.getAbsolutePath());
-
-            String replaceAbsolutePath = "";
-            try {
-                replaceAbsolutePath = f.getParentFile().getParentFile().getAbsolutePath() + File.separator;
-            } catch (final Exception e) {
-                TS.log().trace("issue getting screenshot replace path");
-            }
-            return f.getAbsolutePath().replace(replaceAbsolutePath, "");
+            return getScreenshotPathToUse(f, path);
         } catch (final Exception e) {
             TS.log().error(e);
         }
@@ -558,7 +568,7 @@ public abstract class AbstractBrowser<T> {
      * @return the string
      */
     public String takeScreenShot() {
-        return takeScreenShot(TS.params().getOutput());
+       return takeScreenShot(TS.params().getOutput());
     }
 
     /**
@@ -571,7 +581,8 @@ public abstract class AbstractBrowser<T> {
     public String takeScreenShot(final String path) {
         try {
             final String version = driver.toString().toLowerCase();
-            File f = new File(path);
+            File f = getScreenshotDir(path);
+            f.mkdirs();
             if (f.isDirectory()) {
                 f = File.createTempFile("screenshot_", ".png", f);
             }
@@ -585,13 +596,7 @@ public abstract class AbstractBrowser<T> {
                 FileUtils.copyFile(sf, f);
                 TS.log().info("Screenshot file: " + f.getAbsolutePath());
             }
-            String replaceAbsolutePath = "";
-            try {
-                replaceAbsolutePath = f.getParentFile().getParentFile().getAbsolutePath() + File.separator;
-            } catch (final Exception e) {
-                TS.log().trace("issue getting screenshot replace path");
-            }
-            return f.getAbsolutePath().replace(replaceAbsolutePath, "");
+            return getScreenshotPathToUse(f, path);
         } catch (final Exception e) {
             TS.log().error(e);
         }

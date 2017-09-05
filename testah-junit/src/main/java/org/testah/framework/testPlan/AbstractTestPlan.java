@@ -1,8 +1,5 @@
 package org.testah.framework.testPlan;
 
-import java.lang.reflect.Method;
-import java.util.HashMap;
-
 import org.junit.AfterClass;
 import org.junit.Assume;
 import org.junit.BeforeClass;
@@ -18,6 +15,7 @@ import org.junit.rules.TestWatcher;
 import org.junit.rules.Timeout;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.slf4j.MDC;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -33,7 +31,11 @@ import org.testah.framework.cli.Cli;
 import org.testah.framework.cli.TestFilter;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.TestDtoHelper;
+import org.testah.runner.TestahJUnitRunner;
 import org.testah.runner.testPlan.TestPlanActor;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
 
 /**
  * The Class AbstractTestPlan.
@@ -42,13 +44,13 @@ import org.testah.runner.testPlan.TestPlanActor;
 public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests {
 
     /** The test plan. */
-    private static ThreadLocal<TestPlanDto> testPlan;
+    private static ThreadLocal<TestPlanDto> testPlan = new ThreadLocal<>();;
 
     /** The test case. */
-    private static ThreadLocal<TestCaseDto> testCase;
+    private static ThreadLocal<TestCaseDto> testCase = new ThreadLocal<>();;
 
     /** The test step. */
-    private static ThreadLocal<TestStepDto> testStep;
+    private static ThreadLocal<TestStepDto> testStep = new ThreadLocal<>();;
 
     /** The test plan start. */
     private static ThreadLocal<Boolean> testPlanStart = new ThreadLocal<>();
@@ -192,7 +194,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                         addIgnoredTest(desc.getClassName() + "#" + m.getName(), "JUNIT_IGNORE");
                     }
                 }
-
+                MDC.put("logFileName", "" +Thread.currentThread().getId());
             }
             TS.log().info(Cli.BAR_LONG);
 
@@ -226,33 +228,38 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     @AfterClass
     public static void tearDownAbstractTestPlan() {
         try {
-            if (TS.isBrowser()) {
-
-                if (!TestPlanActor.isResultsInUse()) {
-                    if (TS.isBrowser()) {
-                        TS.browser().close();
-                    }
-                    TS.setBrowser(null);
-                }
-
-            }
             if (null != getTestPlan()) {
                 getTestPlan().stop();
             }
             if (!TestPlanActor.isResultsInUse()) {
                 TS.getTestPlanReporter().reportResults(getTestPlan());
             }
+            if(!TestahJUnitRunner.isInUse()) {
+                cleanUpTestplanThreadLocal();
+            }
 
-            cleanUpThreadLocal(testPlan);
-            cleanUpThreadLocal(testCase);
-            cleanUpThreadLocal(testStep);
-            cleanUpThreadLocal(testPlanStart);
-            cleanUpThreadLocal(ignoredTests);
-            TS.tearDown();
-
+            if (!TestPlanActor.isResultsInUse()) {
+                tearDownTestah();
+            }
         } catch (final Exception e) {
             TS.log().error("after testplan", e);
         }
+    }
+
+    public static void tearDownTestah() {
+        if (TS.isBrowser()) {
+            TS.browser().close();
+        }
+        TS.setBrowser(null);
+        TS.tearDown();
+    }
+
+    public static void cleanUpTestplanThreadLocal() {
+        cleanUpThreadLocal(testPlan);
+        cleanUpThreadLocal(testCase);
+        cleanUpThreadLocal(testStep);
+        cleanUpThreadLocal(testPlanStart);
+        cleanUpThreadLocal(ignoredTests);
     }
 
     private static void cleanUpThreadLocal(final ThreadLocal<?> threadLocal) {
@@ -345,14 +352,19 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      * @return the test step
      */
     public static TestStepDto getTestStep() {
-        if (null == testStep) {
-            testStep = new ThreadLocal<>();
-        }
-        if (null == testStep.get() && null != getTestCase()) {
+
+        if (null == getTestStepTreadLocal().get() && null != getTestCase()) {
             AbstractTestPlan.testStep.set(new TestStepDto("Initial Step", "").start());
             TS.log().info("TESTSTEP - " + AbstractTestPlan.testStep.get().getName());
         }
-        return testStep.get();
+        return getTestStepTreadLocal().get();
+    }
+
+    public static ThreadLocal<TestStepDto> getTestStepTreadLocal() {
+        if (null == testStep) {
+            testStep = new ThreadLocal<>();
+        }
+        return testStep;
     }
 
     /**
@@ -450,7 +462,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     private static void stopTestStep() {
         if (null != getTestStep()) {
             getTestCase().addTestStep(getTestStep().stop());
-            testStep = null;
+            testStep.set(null);
         }
     }
 
@@ -605,10 +617,14 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      * @return the ignored tests
      */
     public static HashMap<String, String> getIgnoredTests() {
-        if (null == ignoredTests || null == ignoredTests.get()) {
-            final ThreadLocal<HashMap<String, String>> ignoredTestsTmp = new ThreadLocal<>();
+        final ThreadLocal<HashMap<String, String>> ignoredTestsTmp;
+        if (null == ignoredTests) {
+            ignoredTestsTmp = new ThreadLocal<>();
             ignoredTestsTmp.set(new HashMap<String, String>());
             ignoredTests = ignoredTestsTmp;
+        }
+        if (null == ignoredTests.get()) {
+            ignoredTests.set(new HashMap<String, String>());
         }
         return ignoredTests.get();
     }
@@ -671,5 +687,13 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         getTestCase().getTestSteps().clear();
         getTestStepThreadLocal().set(new TestStepDto("Reseting TestCase And Going To Retry", reasonWhy).start());
         return this;
+    }
+
+    public static void setUpThreadLocals() {
+         testPlan = new ThreadLocal<TestPlanDto>();
+         testCase = new ThreadLocal<TestCaseDto>();
+         testStep = new ThreadLocal<TestStepDto>();
+         testPlanStart = new ThreadLocal<Boolean>();
+         ignoredTests = new ThreadLocal<HashMap<String, String>>();
     }
 }

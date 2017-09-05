@@ -1,10 +1,9 @@
 package org.testah.runner.testPlan;
 
+import akka.actor.UntypedActor;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.testah.framework.dto.ResultDto;
-
-import akka.actor.UntypedActor;
 
 public class TestPlanWorker extends UntypedActor {
 

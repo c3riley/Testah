@@ -1,13 +1,7 @@
 package org.testah.framework.cli;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Properties;
-
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.PropertiesConfigurationLayout;
@@ -15,8 +9,13 @@ import org.apache.logging.log4j.Level;
 import org.testah.TS;
 import org.testah.framework.annotations.Comment;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Properties;
 
 /**
  * The Class ParamLoader.
@@ -191,7 +190,7 @@ public class ParamLoader {
         } catch (final ConfigurationException e) {
             TS.log().warn("Issues with testah.properties");
         }
-
+        params.mkOutput();
         return params;
     }
 
