@@ -18,7 +18,7 @@ public class CliTest {
     @Test
     public void testCliRun() {
         System.setProperty("param_lookAtInternalTests", "org.testah");
-        final String[] args = { "run" };
+        final String[] args = {"run"};
         final Cli cli = new Cli();
         cli.setUnderTest(true);
         cli.getArgumentParser(args);
@@ -30,7 +30,7 @@ public class CliTest {
     public void testCliRunWithExternal() {
         System.setProperty("param_lookAtInternalTests", "org.testah");
         System.setProperty("param_lookAtExternalTests", "test.groovy");
-        final String[] args = { "run" };
+        final String[] args = {"run"};
         final Cli cli = new Cli();
         cli.setUnderTest(true);
         cli.getArgumentParser(args);
@@ -41,7 +41,7 @@ public class CliTest {
     @Test
     public void testCliQuery() {
         System.setProperty("param_lookAtInternalTests", "org.testah");
-        final String[] args = { "query" };
+        final String[] args = {"query"};
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
         Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(51));
@@ -52,7 +52,7 @@ public class CliTest {
     public void testCliQueryWithExternal() {
         System.setProperty("param_lookAtInternalTests", "org.testah");
         System.setProperty("param_lookAtExternalTests", "test.groovy");
-        final String[] args = { "query" };
+        final String[] args = {"query"};
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
         Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(47));
@@ -61,12 +61,10 @@ public class CliTest {
 
     @Test
     public void testCliCreate() {
-        final String[] args = { "create" };
+        final String[] args = {"create"};
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
         Assert.assertTrue(new File("testah.properties").exists());
     }
-
-
 
 }

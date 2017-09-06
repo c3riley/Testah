@@ -7,25 +7,36 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum TestStatus {
 
-    /** The passed. */
+    /**
+     * The passed.
+     */
     PASSED(true),
-        /** The failed. */
-        FAILED(false),
-        /** The na. */
-        NA(null),
-        /** The ignore. */
-        IGNORE(null),
-        /** The critical. */
-        CRITICAL(false);
+    /**
+     * The failed.
+     */
+    FAILED(false),
+    /**
+     * The na.
+     */
+    NA(null),
+    /**
+     * The ignore.
+     */
+    IGNORE(null),
+    /**
+     * The critical.
+     */
+    CRITICAL(false);
 
-    /** The status. */
+    /**
+     * The status.
+     */
     private final Boolean status;
 
     /**
      * Instantiates a new test status.
      *
-     * @param status
-     *            the status
+     * @param status the status
      */
     TestStatus(final Boolean status) {
         this.status = status;
@@ -34,8 +45,7 @@ public enum TestStatus {
     /**
      * Gets the status.
      *
-     * @param statusValue
-     *            the status value
+     * @param statusValue the status value
      * @return the status
      */
     public static TestStatus getStatus(final Boolean statusValue) {

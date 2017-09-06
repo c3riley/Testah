@@ -1,37 +1,43 @@
 package org.testah.driver.http.poller;
 
-import java.util.Date;
-
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
+import java.util.Date;
+
 /**
  * The Class HttpPoller.
  */
 public class HttpPoller {
 
-    /** The max poll iteration. */
+    /**
+     * The max poll iteration.
+     */
     private int maxPollIteration = 5000;
 
-    /** The poll iteration pause. */
+    /**
+     * The poll iteration pause.
+     */
     private Long pollIterationPause = 2000L;
 
-    /** The status assert. */
+    /**
+     * The status assert.
+     */
     private boolean statusAssert = true;
 
-    /** The write to log. */
+    /**
+     * The write to log.
+     */
     private boolean writeToLog = true;
 
     /**
      * Poll request.
      *
-     * @param request
-     *            the request
-     * @param pollerCheck
-     *            the poller check
+     * @param request     the request
+     * @param pollerCheck the poller check
      * @return the response dto
      */
     public ResponseDto pollRequest(final AbstractRequestDto<?> request, final HttpPollerCheck pollerCheck) {
@@ -41,12 +47,9 @@ public class HttpPoller {
     /**
      * Poll request.
      *
-     * @param request
-     *            the request
-     * @param pollerCheck
-     *            the poller check
-     * @param pollingMessage
-     *            the polling message
+     * @param request        the request
+     * @param pollerCheck    the poller check
+     * @param pollingMessage the polling message
      * @return the response dto
      */
     public ResponseDto pollRequest(final AbstractRequestDto<?> request, final HttpPollerCheck pollerCheck, final String pollingMessage) {
@@ -118,8 +121,7 @@ public class HttpPoller {
     /**
      * Sets the max poll iteration.
      *
-     * @param maxPollIteration
-     *            the max poll iteration
+     * @param maxPollIteration the max poll iteration
      * @return the http poller
      */
     public HttpPoller setMaxPollIteration(final int maxPollIteration) {
@@ -139,8 +141,7 @@ public class HttpPoller {
     /**
      * Sets the poll iteration pause.
      *
-     * @param pollIterationPause
-     *            the poll iteration pause
+     * @param pollIterationPause the poll iteration pause
      * @return the http poller
      */
     public HttpPoller setPollIterationPause(final Long pollIterationPause) {
@@ -160,8 +161,7 @@ public class HttpPoller {
     /**
      * Sets the status assert.
      *
-     * @param statusAssert
-     *            the status assert
+     * @param statusAssert the status assert
      * @return the http poller
      */
     public HttpPoller setStatusAssert(final boolean statusAssert) {
@@ -181,8 +181,7 @@ public class HttpPoller {
     /**
      * Sets the write to log.
      *
-     * @param writeToLog
-     *            the write to log
+     * @param writeToLog the write to log
      * @return the http poller
      */
     public HttpPoller setWriteToLog(final boolean writeToLog) {

@@ -1,12 +1,5 @@
 package org.testah.driver.web.browser;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
@@ -15,12 +8,20 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The Class GoogleChromeBrowser.
  */
 public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
 
-    /** The service. */
+    /**
+     * The service.
+     */
     private ChromeDriverService service = null;
 
     /*
@@ -98,7 +99,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
                 File downloadDestinationDir = TS.util().getDownloadDestinationDirectory("drivers");
                 File unZipDestination = new File(downloadDestinationDir, "chrome");
                 File webDriverExecutable = findWebriverExecutable(unZipDestination);
-                if(null == webDriverExecutable) {
+                if (null == webDriverExecutable) {
                     String urlSource = "https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip";
                     if (Params.isWindows()) {
                         urlSource = "https://chromedriver.storage.googleapis.com/2.32/chromedriver_win32.zip";
@@ -109,14 +110,13 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
                     TS.util().unZip(zip, unZipDestination);
                     cleanupDownloads(downloadDestinationDir);
                     webDriverExecutable = findWebriverExecutable(unZipDestination);
-                }
-                else {
+                } else {
                     TS.log().info("WebDriver executable already downloaded : " + webDriverExecutable.getAbsolutePath());
                 }
                 webDriverExecutable.setExecutable(true);
                 binPath = webDriverExecutable.getAbsolutePath();
                 TS.params().setWebDriver_chromeDriverBinary(binPath);
-           }
+            }
         } catch (final Exception e) {
             TS.log().warn(e);
         }
@@ -139,7 +139,9 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
                         (d, s) -> {
                             return d.exists() && d.isDirectory() && s.toLowerCase().contains("download");
                         })).
-                filter(f -> {return f.isFile();}).
+                filter(f -> {
+                    return f.isFile();
+                }).
                 forEach(file -> file.delete());
     }
 

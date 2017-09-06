@@ -1,9 +1,6 @@
 package org.testah.framework.cli;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-
+import com.google.common.collect.ImmutableSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +10,9 @@ import org.testah.client.dto.TestCaseDto;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 
 public class TestFilterTagTest {
 
@@ -65,7 +64,7 @@ public class TestFilterTagTest {
     }
 
     private void testFilterMyTag(final int expectedTest1, final int expectedTest2, final int expectedTest3,
-            final int expectedTest4, final Class<?>... classesToAdd) {
+                                 final int expectedTest4, final Class<?>... classesToAdd) {
         TestFilter filter = new TestFilter();
         Set<Class<?>> classes = ImmutableSet.copyOf(Arrays.asList(classesToAdd));
 
@@ -102,50 +101,68 @@ class TestPlanWithTagDefault {
 class TestPlanWithTagEmpty {
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 }
 
-@TestPlan(tags = { "" })
+@TestPlan(tags = {""})
 class TestPlanWithTagEmptyString {
 
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 
 }
 
-@TestPlan(tags = { "TEST_Tag" })
+@TestPlan(tags = {"TEST_Tag"})
 class TestPlanWithTag {
     @TestCase()
     public void test1() {
-    };
+    }
 
-    @TestCase(tags = { "TEST_Tag" })
+    ;
+
+    @TestCase(tags = {"TEST_Tag"})
     public void test2() {
-    };
+    }
+
+    ;
 
 }
 
-@TestPlan(tags = { "TEST_Tag", "TEST_Tag1", "TEST_Tag2", "TEST_Tag3" })
+@TestPlan(tags = {"TEST_Tag", "TEST_Tag1", "TEST_Tag2", "TEST_Tag3"})
 class TestPlanWithManyTags {
     @TestCase(tags = {})
     public void test1() {
-    };
+    }
 
-    @TestCase(tags = { "" })
+    ;
+
+    @TestCase(tags = {""})
     public void test2() {
-    };
+    }
 
-    @TestCase(tags = { "TEST_Tag" })
+    ;
+
+    @TestCase(tags = {"TEST_Tag"})
     public void test3() {
-    };
+    }
 
-    @TestCase(tags = { "TEST_Tag", "TEST_Tag1", "TEST_Tag2", "TEST_Tag3" })
+    ;
+
+    @TestCase(tags = {"TEST_Tag", "TEST_Tag1", "TEST_Tag2", "TEST_Tag3"})
     public void test4() {
-    };
+    }
+
+    ;
 
     @TestCase()
     public void test5() {
-    };
+    }
+
+    ;
 
 }

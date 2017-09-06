@@ -1,20 +1,19 @@
 package org.testah.framework.annotations;
 
+import org.testah.client.enums.TestType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.testah.client.enums.TestType;
-
-
 /**
  * The Interface TestCase.
  */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD })
+@Target({ElementType.METHOD})
 public @interface TestCase {
 
     /**
@@ -24,7 +23,7 @@ public @interface TestCase {
      */
     int id()
 
-    default -1;
+            default -1;
 
     /**
      * Name.
@@ -33,7 +32,7 @@ public @interface TestCase {
      */
     String name()
 
-    default "";
+            default "";
 
     /**
      * Description.
@@ -42,7 +41,7 @@ public @interface TestCase {
      */
     String description()
 
-    default "";
+            default "";
 
     /**
      * Related links.

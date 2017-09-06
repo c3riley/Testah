@@ -21,40 +21,61 @@ import java.util.HashMap;
 import java.util.List;
 
 // TODO: Auto-generated Javadoc
+
 /**
  * The Class SshUtil.
  */
 // http://www.programcreek.com/java-api-examples/com.jcraft.jsch.JSch
 public class SshUtil {
 
-    /** The Constant mergeStreams. */
+    /**
+     * The Constant mergeStreams.
+     */
     private static final String mergeStreams = " 2>&1";
 
-    /** The ignore timeout. */
+    /**
+     * The ignore timeout.
+     */
     private boolean ignoreTimeout = false;
 
-    /** The session timeout. */
+    /**
+     * The session timeout.
+     */
     private int sessionTimeout = 100000;
 
-    /** The verbose. */
+    /**
+     * The verbose.
+     */
     private boolean verbose = true;
 
-    /** The max wait time in seconds. */
+    /**
+     * The max wait time in seconds.
+     */
     private int maxWaitTimeInSeconds = 10;
 
-    /** The pty type value. */
+    /**
+     * The pty type value.
+     */
     private String ptyTypeValue = "dumb";
 
-    /** The pem file. */
+    /**
+     * The pem file.
+     */
     private String pemFile = null;
 
-    /** The jsch. */
+    /**
+     * The jsch.
+     */
     private final JSch jsch = new JSch();
 
-    /** The Constant LAST_EXIT_CODE_DEFAULT. */
+    /**
+     * The Constant LAST_EXIT_CODE_DEFAULT.
+     */
     public static final int LAST_EXIT_CODE_DEFAULT = -999;
 
-    /** The last exit code. */
+    /**
+     * The last exit code.
+     */
     private int lastExitCode = LAST_EXIT_CODE_DEFAULT;
 
     private boolean autoAddMergeFields = false;
@@ -62,8 +83,7 @@ public class SshUtil {
     /**
      * Instantiates a new ssh util.
      *
-     * @throws JSchException
-     *             the j sch exception
+     * @throws JSchException the j sch exception
      */
     public SshUtil() throws JSchException {
         setVerbose(true);
@@ -81,15 +101,11 @@ public class SshUtil {
     /**
      * Gets the session.
      *
-     * @param username
-     *            the username
-     * @param host
-     *            the host
-     * @param port
-     *            the port
+     * @param username the username
+     * @param host     the host
+     * @param port     the port
      * @return the session
-     * @throws JSchException
-     *             the j sch exception
+     * @throws JSchException the j sch exception
      */
     public Session getSession(final String username, final String host, final int port) throws JSchException {
         return getSession(username, host, port, null);
@@ -98,17 +114,12 @@ public class SshUtil {
     /**
      * Gets the session.
      *
-     * @param username
-     *            the username
-     * @param host
-     *            the host
-     * @param port
-     *            the port
-     * @param password
-     *            the password
+     * @param username the username
+     * @param host     the host
+     * @param port     the port
+     * @param password the password
      * @return the session
-     * @throws JSchException
-     *             the j sch exception
+     * @throws JSchException the j sch exception
      */
     public Session getSession(final String username, final String host, final int port, final String password)
             throws JSchException {
@@ -137,17 +148,12 @@ public class SshUtil {
     /**
      * Run shell.
      *
-     * @param session
-     *            the session
-     * @param commands
-     *            the commands
+     * @param session  the session
+     * @param commands the commands
      * @return the string
-     * @throws JSchException
-     *             the j sch exception
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws JSchException        the j sch exception
+     * @throws IOException          Signals that an I/O exception has occurred.
+     * @throws InterruptedException the interrupted exception
      */
     public ShellInfoDto runShellRtnInfo(final Session session, final String... commands)
             throws JSchException, IOException, InterruptedException {
@@ -235,17 +241,12 @@ public class SshUtil {
     /**
      * Run shell enhanced.
      *
-     * @param session
-     *            the session
-     * @param commands
-     *            the commands
+     * @param session  the session
+     * @param commands the commands
      * @return the hash map
-     * @throws JSchException
-     *             the j sch exception
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     * @throws InterruptedException
-     *             the interrupted exception
+     * @throws JSchException        the j sch exception
+     * @throws IOException          Signals that an I/O exception has occurred.
+     * @throws InterruptedException the interrupted exception
      */
     public HashMap<Integer, List<String>> runShellEnhanced(final Session session, final String... commands)
             throws JSchException, IOException, InterruptedException {
@@ -281,17 +282,15 @@ public class SshUtil {
     /**
      * Gets the output lines for command.
      *
-     * @param command
-     *            the command
-     * @param outputHash
-     *            the output hash
+     * @param command    the command
+     * @param outputHash the output hash
      * @return the output lines for command
      */
     public List<String> getOutputLinesForCommand(final String command,
-            final HashMap<Integer, List<String>> outputHash) {
+                                                 final HashMap<Integer, List<String>> outputHash) {
         final List<String> lst = new ArrayList<>();
         if (null != command && null != outputHash && !outputHash.isEmpty()) {
-            outputHash.forEach((key,value) -> {
+            outputHash.forEach((key, value) -> {
                 if (value.get(0).equals(command)) {
                     lst.addAll(value);
                     lst.remove(0);
@@ -304,8 +303,7 @@ public class SshUtil {
     /**
      * Clean output.
      *
-     * @param output
-     *            the output
+     * @param output the output
      * @return the list
      */
     public List<String> cleanOutput(String output) {
@@ -346,8 +344,7 @@ public class SshUtil {
     /**
      * Sets the session timeout.
      *
-     * @param sessionTimeout
-     *            the new session timeout
+     * @param sessionTimeout the new session timeout
      * @return the ssh util
      */
     public SshUtil setSessionTimeout(final int sessionTimeout) {
@@ -358,8 +355,7 @@ public class SshUtil {
     /**
      * Sets the verbose.
      *
-     * @param verbose
-     *            the new verbose
+     * @param verbose the new verbose
      * @return the ssh util
      */
     public SshUtil setVerbose(final boolean verbose) {
@@ -371,8 +367,7 @@ public class SshUtil {
     /**
      * Sets the max wait time in seconds.
      *
-     * @param maxWaitTimeInSeconds
-     *            the new max wait time in seconds
+     * @param maxWaitTimeInSeconds the new max wait time in seconds
      * @return the ssh util
      */
     public SshUtil setMaxWaitTimeInSeconds(final int maxWaitTimeInSeconds) {
@@ -392,8 +387,7 @@ public class SshUtil {
     /**
      * Sets the pty type value.
      *
-     * @param ptyTypeValue
-     *            the new pty type value
+     * @param ptyTypeValue the new pty type value
      * @return the ssh util
      */
     public SshUtil setPtyTypeValue(final String ptyTypeValue) {
@@ -413,8 +407,7 @@ public class SshUtil {
     /**
      * Sets the ignore timeout.
      *
-     * @param ignoreTimeout
-     *            the new ignore timeout
+     * @param ignoreTimeout the new ignore timeout
      * @return the ssh util
      */
     public SshUtil setIgnoreTimeout(final boolean ignoreTimeout) {
@@ -434,8 +427,7 @@ public class SshUtil {
     /**
      * Sets the pem file.
      *
-     * @param pemFile
-     *            the pem file
+     * @param pemFile the pem file
      * @return the ssh util
      */
     public SshUtil setPemFile(final String pemFile) {
@@ -446,10 +438,8 @@ public class SshUtil {
     /**
      * Run exec.
      *
-     * @param session
-     *            the session
-     * @param command
-     *            the command
+     * @param session the session
+     * @param command the command
      * @return the string
      */
     public String runExec(final Session session, final String command) {
@@ -532,8 +522,7 @@ public class SshUtil {
     /**
      * Sets the last exit code.
      *
-     * @param lastExitCode
-     *            the new last exit code
+     * @param lastExitCode the new last exit code
      */
     public void setLastExitCode(final int lastExitCode) {
         this.lastExitCode = lastExitCode;

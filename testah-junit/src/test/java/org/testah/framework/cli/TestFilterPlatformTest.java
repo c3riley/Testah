@@ -1,9 +1,6 @@
 package org.testah.framework.cli;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-
+import com.google.common.collect.ImmutableSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +10,9 @@ import org.testah.client.dto.TestCaseDto;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 
 public class TestFilterPlatformTest {
 
@@ -65,7 +64,7 @@ public class TestFilterPlatformTest {
     }
 
     private void testFilterMyPlatform(final int expectedTest1, final int expectedTest2, final int expectedTest3,
-            final int expectedTest4, final Class<?>... classesToAdd) {
+                                      final int expectedTest4, final Class<?>... classesToAdd) {
         TestFilter filter = new TestFilter();
         Set<Class<?>> classes = ImmutableSet.copyOf(Arrays.asList(classesToAdd));
 
@@ -102,50 +101,68 @@ class TestPlanWithPlatformDefault {
 class TestPlanWithPlatformEmpty {
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 }
 
-@TestPlan(platforms = { "" })
+@TestPlan(platforms = {""})
 class TestPlanWithPlatformEmptyString {
 
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 
 }
 
-@TestPlan(platforms = { "TEST_Platform" })
+@TestPlan(platforms = {"TEST_Platform"})
 class TestPlanWithPlatform {
     @TestCase()
     public void test1() {
-    };
+    }
 
-    @TestCase(platforms = { "TEST_Platform" })
+    ;
+
+    @TestCase(platforms = {"TEST_Platform"})
     public void test2() {
-    };
+    }
+
+    ;
 
 }
 
-@TestPlan(platforms = { "TEST_Platform", "TEST_Platform1", "TEST_Platform2", "TEST_Platform3" })
+@TestPlan(platforms = {"TEST_Platform", "TEST_Platform1", "TEST_Platform2", "TEST_Platform3"})
 class TestPlanWithManyPlatforms {
     @TestCase(platforms = {})
     public void test1() {
-    };
+    }
 
-    @TestCase(platforms = { "" })
+    ;
+
+    @TestCase(platforms = {""})
     public void test2() {
-    };
+    }
 
-    @TestCase(platforms = { "TEST_Platform" })
+    ;
+
+    @TestCase(platforms = {"TEST_Platform"})
     public void test3() {
-    };
+    }
 
-    @TestCase(platforms = { "TEST_Platform", "TEST_Platform1", "TEST_Platform2", "TEST_Platform3" })
+    ;
+
+    @TestCase(platforms = {"TEST_Platform", "TEST_Platform1", "TEST_Platform2", "TEST_Platform3"})
     public void test4() {
-    };
+    }
+
+    ;
 
     @TestCase()
     public void test5() {
-    };
+    }
+
+    ;
 
 }

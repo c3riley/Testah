@@ -9,18 +9,18 @@ import java.io.File;
 /**
  * The Class AbstractFormatter.
  */
-public abstract class AbstractTestPlanFormatter extends AbstractFormatter{
+public abstract class AbstractTestPlanFormatter extends AbstractFormatter {
 
-    /** The test plan. */
+    /**
+     * The test plan.
+     */
     protected final TestPlanDto testPlan;
 
     /**
      * Instantiates a new abstract formatter.
      *
-     * @param testPlan
-     *            the test plan
-     * @param pathToTemplate
-     *            the path to template
+     * @param testPlan       the test plan
+     * @param pathToTemplate the path to template
      */
     public AbstractTestPlanFormatter(final TestPlanDto testPlan, final String pathToTemplate) {
         super(pathToTemplate);
@@ -49,8 +49,7 @@ public abstract class AbstractTestPlanFormatter extends AbstractFormatter{
     /**
      * Gets the context.
      *
-     * @param context
-     *            the context
+     * @param context the context
      * @return the context
      */
     public abstract VelocityContext getContext(final VelocityContext context);
@@ -80,8 +79,7 @@ public abstract class AbstractTestPlanFormatter extends AbstractFormatter{
     /**
      * Sets the report file.
      *
-     * @param reportFile
-     *            the new report file
+     * @param reportFile the new report file
      */
     public void setReportFile(final File reportFile) {
         this.reportFile = reportFile;

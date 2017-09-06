@@ -1,8 +1,5 @@
 package org.testah.http;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -15,6 +12,9 @@ import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.HttpTestPlan;
+
+import java.io.File;
+import java.io.IOException;
 
 @TestPlan(description = "test Http")
 public class TestHttp extends HttpTestPlan {

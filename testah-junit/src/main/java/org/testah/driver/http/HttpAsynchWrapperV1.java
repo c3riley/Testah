@@ -1,8 +1,5 @@
 package org.testah.driver.http;
 
-import java.io.Closeable;
-import java.util.concurrent.Future;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.concurrent.FutureCallback;
@@ -18,12 +15,17 @@ import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
+import java.io.Closeable;
+import java.util.concurrent.Future;
+
 /**
  * The Class HttpAsynchWrapperV1.
  */
 public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeable {
 
-    /** The http asynch client. */
+    /**
+     * The http asynch client.
+     */
     private CloseableHttpAsyncClient httpAsynchClient;
 
     /**
@@ -64,10 +66,8 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
     /**
      * Do request aysnch.
      *
-     * @param request
-     *            the request
-     * @param verbose
-     *            the verbose
+     * @param request the request
+     * @param verbose the verbose
      * @return the future
      */
     public Future<HttpResponse> doRequestAysnch(final AbstractRequestDto<?> request, final boolean verbose) {
@@ -130,8 +130,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
     /**
      * Sets the http async client.
      *
-     * @param httpAsynchClient
-     *            the http asynch client
+     * @param httpAsynchClient the http asynch client
      * @return the http asynch wrapper v1
      */
     public HttpAsynchWrapperV1 setHttpAsyncClient(final CloseableHttpAsyncClient httpAsynchClient) {
@@ -154,11 +153,9 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
     /**
      * Gets the response dto from future.
      *
-     * @param response
-     *            the response
+     * @param response the response
      * @return the response dto from future
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response) throws Exception {
         return getResponseDtoFromFuture(response, null);
@@ -167,13 +164,10 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
     /**
      * Gets the response dto from future.
      *
-     * @param response
-     *            the response
-     * @param request
-     *            the request
+     * @param response the response
+     * @param request  the request
      * @return the response dto from future
-     * @throws Exception
-     *             the exception
+     * @throws Exception the exception
      */
     public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response, final AbstractRequestDto<?> request)
             throws Exception {

@@ -22,13 +22,19 @@ import java.util.Properties;
  */
 public class ParamLoader {
 
-    /** The params from properties. */
+    /**
+     * The params from properties.
+     */
     private PropertiesConfiguration paramsFromProperties = null;
 
-    /** The Constant fieldPrefix. */
+    /**
+     * The Constant fieldPrefix.
+     */
     private static final String fieldPrefix = "param_";
 
-    /** The path to param prop file. */
+    /**
+     * The path to param prop file.
+     */
     private final String pathToParamPropFile;
 
     /**
@@ -50,8 +56,7 @@ public class ParamLoader {
     /**
      * Instantiates a new param loader.
      *
-     * @param pathToParamPropFile
-     *            the path to param prop file
+     * @param pathToParamPropFile the path to param prop file
      */
     public ParamLoader(final String pathToParamPropFile) {
         this.pathToParamPropFile = pathToParamPropFile;
@@ -62,7 +67,7 @@ public class ParamLoader {
      *
      * @return the params
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Params loadParamValues() {
 
         final Params params = new Params();
@@ -240,11 +245,9 @@ public class ParamLoader {
     /**
      * Gets the custom param properties.
      *
-     * @param customPropfile
-     *            the custom propfile
+     * @param customPropfile the custom propfile
      * @return the custom param properties
-     * @throws ConfigurationException
-     *             the configuration exception
+     * @throws ConfigurationException the configuration exception
      */
     public PropertiesConfiguration getCustomParamProperties(final File customPropfile) throws ConfigurationException {
         return new PropertiesConfiguration(customPropfile);

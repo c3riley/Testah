@@ -40,40 +40,62 @@ import java.util.HashMap;
 /**
  * The Class AbstractTestPlan.
  */
-@ContextHierarchy({ @ContextConfiguration(classes = TestConfiguration.class) })
+@ContextHierarchy({@ContextConfiguration(classes = TestConfiguration.class)})
 public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests {
 
-    /** The test plan. */
+    /**
+     * The test plan.
+     */
     private static ThreadLocal<TestPlanDto> testPlan = new ThreadLocal<>();
 
-    /** The test case. */
+    /**
+     * The test case.
+     */
     private static ThreadLocal<TestCaseDto> testCase = new ThreadLocal<>();
 
-    /** The test step. */
+    /**
+     * The test step.
+     */
     private static ThreadLocal<TestStepDto> testStep = new ThreadLocal<>();
 
-    /** The test plan start. */
+    /**
+     * The test plan start.
+     */
     private static ThreadLocal<Boolean> testPlanStart = new ThreadLocal<>();
 
-    /** The test filter. */
+    /**
+     * The test filter.
+     */
     private static TestFilter testFilter = null;
 
-    /** The ignored tests. */
+    /**
+     * The ignored tests.
+     */
     private static ThreadLocal<HashMap<String, String>> ignoredTests = null;
 
-    /** The name. */
+    /**
+     * The name.
+     */
     public TestName name = new TestName();
 
-    /** The assume true. */
+    /**
+     * The assume true.
+     */
     private boolean assumeTrue = false;
 
-    /** The global timeout. */
+    /**
+     * The global timeout.
+     */
     public TestRule globalTimeout = Timeout.millis(100000L);
 
-    /** The description. */
+    /**
+     * The description.
+     */
     private Description description;
 
-    /** The initialize. */
+    /**
+     * The initialize.
+     */
     public ExternalResource initialize = new ExternalResource() {
 
         protected void before() throws Throwable {
@@ -83,7 +105,9 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 
         protected void after() {
             tearDownTest();
-        };
+        }
+
+        ;
     };
 
     /**
@@ -96,7 +120,9 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      */
     public abstract void tearDownTest();
 
-    /** The filter. */
+    /**
+     * The filter.
+     */
     public TestWatcher filter = new TestWatcher() {
 
         public Statement apply(final Statement base, final Description description) {
@@ -108,8 +134,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Filter test.
      *
-     * @param description
-     *            the description
+     * @param description the description
      */
     public void filterTest(final Description description) {
         final String name = description.getClassName() + "#" + description.getMethodName();
@@ -143,7 +168,9 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         }
     }
 
-    /** The watchman2. */
+    /**
+     * The watchman2.
+     */
     public TestWatcher watchman2 = new TestWatcher() {
 
         protected void failed(final Throwable e, final Description description) {
@@ -194,7 +221,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                         addIgnoredTest(desc.getClassName() + "#" + m.getName(), "JUNIT_IGNORE");
                     }
                 }
-                MDC.put("logFileName", "" +Thread.currentThread().getId());
+                MDC.put("logFileName", "" + Thread.currentThread().getId());
             }
             TS.log().info(Cli.BAR_LONG);
 
@@ -206,7 +233,9 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         }
     };
 
-    /** The chain. */
+    /**
+     * The chain.
+     */
     @Rule
     public TestRule chain = RuleChain.outerRule(watchman2).around(initialize).around(name).around(filter);
 
@@ -234,7 +263,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
             if (!TestPlanActor.isResultsInUse()) {
                 TS.getTestPlanReporter().reportResults(getTestPlan());
             }
-            if(!TestahJUnitRunner.isInUse()) {
+            if (!TestahJUnitRunner.isInUse()) {
                 cleanUpTestplanThreadLocal();
             }
 
@@ -297,8 +326,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Sets the test plan start.
      *
-     * @param testPlanStart
-     *            the new test plan start
+     * @param testPlanStart the new test plan start
      */
     private static void setTestPlanStart(final boolean testPlanStart) {
         AbstractTestPlan.testPlanStart.set(testPlanStart);
@@ -382,12 +410,9 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Start test plan.
      *
-     * @param desc
-     *            the desc
-     * @param testPlan
-     *            the test plan
-     * @param knowProblem
-     *            the know problem
+     * @param desc        the desc
+     * @param testPlan    the test plan
+     * @param knowProblem the know problem
      * @return the test plan dto
      */
     private TestPlanDto startTestPlan(final Description desc, final TestPlan testPlan, final KnownProblem knowProblem) {
@@ -406,18 +431,14 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Start test case.
      *
-     * @param desc
-     *            the desc
-     * @param testCase
-     *            the test case
-     * @param testPlan
-     *            the test plan
-     * @param knowProblem
-     *            the know problem
+     * @param desc        the desc
+     * @param testCase    the test case
+     * @param testPlan    the test plan
+     * @param knowProblem the know problem
      * @return the test case dto
      */
     private TestCaseDto startTestCase(final Description desc, final TestCase testCase, final TestPlan testPlan,
-            final KnownProblem knowProblem) {
+                                      final KnownProblem knowProblem) {
         if (didTestPlanStart()) {
             getTestCaseThreadLocal()
                     .set(TestDtoHelper.createTestCaseDto(desc, testCase, knowProblem, testPlan).start());
@@ -428,8 +449,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Stop test case.
      *
-     * @param status
-     *            the status
+     * @param status the status
      * @return the boolean
      */
     private static void stopTestCase(final Boolean status) {
@@ -443,8 +463,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Start test step.
      *
-     * @param testStep
-     *            the test step
+     * @param testStep the test step
      * @return the test step dto
      */
     public static TestStepDto startTestStep(final TestStepDto testStep) {
@@ -469,8 +488,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Adds the step action.
      *
-     * @param stepAction
-     *            the step action
+     * @param stepAction the step action
      * @return true, if successful
      */
     public static boolean addStepAction(final StepActionDto stepAction) {
@@ -480,10 +498,8 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Adds the step action.
      *
-     * @param stepAction
-     *            the step action
-     * @param writeToLog
-     *            the write to log
+     * @param stepAction the step action
+     * @param writeToLog the write to log
      * @return true, if successful
      */
     public static boolean addStepAction(final StepActionDto stepAction, final boolean writeToLog) {
@@ -524,8 +540,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Step.
      *
-     * @param name
-     *            the name
+     * @param name the name
      * @return the test step dto
      */
     public TestStepDto step(final String name) {
@@ -537,10 +552,8 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Step.
      *
-     * @param name
-     *            the name
-     * @param description
-     *            the description
+     * @param name        the name
+     * @param description the description
      * @return the test step dto
      */
     public TestStepDto step(final String name, final String description) {
@@ -562,8 +575,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Step action info.
      *
-     * @param message1
-     *            the message1
+     * @param message1 the message1
      * @return the step action dto
      */
     public StepActionDto stepActionInfo(final String message1) {
@@ -573,8 +585,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Data value.
      *
-     * @param value
-     *            the value
+     * @param value the value
      * @return the abstract test plan
      */
     public AbstractTestPlan dataValue(final String value) {
@@ -604,8 +615,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Sets the test filter.
      *
-     * @param testFilter
-     *            the new test filter
+     * @param testFilter the new test filter
      */
     public static void setTestFilter(final TestFilter testFilter) {
         AbstractTestPlan.testFilter = testFilter;
@@ -632,10 +642,8 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Adds the ignored test.
      *
-     * @param testCaseName
-     *            the test case name
-     * @param reason
-     *            the reason
+     * @param testCaseName the test case name
+     * @param reason       the reason
      */
     public static void addIgnoredTest(final String testCaseName, final String reason) {
         getIgnoredTests().put(testCaseName, reason);
@@ -653,8 +661,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Sets the assume true.
      *
-     * @param assumeTrue
-     *            the assume true
+     * @param assumeTrue the assume true
      * @return the abstract test plan
      */
     public AbstractTestPlan setAssumeTrue(final boolean assumeTrue) {
@@ -674,8 +681,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * Sets the description.
      *
-     * @param description
-     *            the description
+     * @param description the description
      * @return the abstract test plan
      */
     public AbstractTestPlan setDescription(final Description description) {
@@ -690,10 +696,10 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     }
 
     public static void setUpThreadLocals() {
-         testPlan = new ThreadLocal<TestPlanDto>();
-         testCase = new ThreadLocal<TestCaseDto>();
-         testStep = new ThreadLocal<TestStepDto>();
-         testPlanStart = new ThreadLocal<Boolean>();
-         ignoredTests = new ThreadLocal<HashMap<String, String>>();
+        testPlan = new ThreadLocal<TestPlanDto>();
+        testCase = new ThreadLocal<TestCaseDto>();
+        testStep = new ThreadLocal<TestStepDto>();
+        testPlanStart = new ThreadLocal<Boolean>();
+        ignoredTests = new ThreadLocal<HashMap<String, String>>();
     }
 }

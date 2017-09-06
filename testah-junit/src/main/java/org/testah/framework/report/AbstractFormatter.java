@@ -18,20 +18,25 @@ import java.io.StringWriter;
  */
 public abstract class AbstractFormatter {
 
-    /** The Constant DEFAULT_PACKAGE. */
+    /**
+     * The Constant DEFAULT_PACKAGE.
+     */
     protected final static String DEFAULT_PACKAGE = "org/testah/templates/";
 
-    /** The path to template. */
+    /**
+     * The path to template.
+     */
     protected final String pathToTemplate;
 
-    /** The report file. */
+    /**
+     * The report file.
+     */
     protected File reportFile = null;
 
     /**
      * Instantiates a new abstract formatter.
      *
-     * @param pathToTemplate
-     *            the path to template
+     * @param pathToTemplate the path to template
      */
     public AbstractFormatter(final String pathToTemplate) {
         if (null != pathToTemplate) {
@@ -51,8 +56,7 @@ public abstract class AbstractFormatter {
     /**
      * Gets the context.
      *
-     * @param context
-     *            the context
+     * @param context the context
      * @return the context
      */
     public abstract VelocityContext getContext(final VelocityContext context);
@@ -68,12 +72,10 @@ public abstract class AbstractFormatter {
 
     public abstract String getBaseReportObject();
 
-
     /**
      * Gets the report.
      *
-     * @param context
-     *            the context
+     * @param context the context
      * @return the report
      */
     public String getReport(final VelocityContext context) {
@@ -118,19 +120,15 @@ public abstract class AbstractFormatter {
      */
     public abstract AbstractFormatter createReport();
 
-
     public AbstractFormatter createReport(final String reportName) {
         return createReport(reportName, Params.getUserDir());
     }
 
-
-
     /**
      * Creates the report.
      *
-     * @param reportName
-     *            the report name
-     * @param directory directory to write the report to
+     * @param reportName the report name
+     * @param directory  directory to write the report to
      * @return the abstract formatter
      */
     public AbstractFormatter createReport(final String reportName, final String directory) {
@@ -173,8 +171,7 @@ public abstract class AbstractFormatter {
     /**
      * Sets the report file.
      *
-     * @param reportFile
-     *            the new report file
+     * @param reportFile the new report file
      */
     public void setReportFile(final File reportFile) {
         this.reportFile = reportFile;

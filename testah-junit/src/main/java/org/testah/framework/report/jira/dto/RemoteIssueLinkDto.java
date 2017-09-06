@@ -1,10 +1,4 @@
-
 package org.testah.framework.report.jira.dto;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Generated;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -13,36 +7,51 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.annotation.Generated;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class RemoteIssueLinkDto.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
-@JsonPropertyOrder({ "globalId", "application", "relationship", "object" })
+@JsonPropertyOrder({"globalId", "application", "relationship", "object"})
 public class RemoteIssueLinkDto {
 
-    /** The id. */
+    /**
+     * The id.
+     */
     @JsonProperty("id")
     private int id = 0;
-    
-    /** The global id. */
+
+    /**
+     * The global id.
+     */
     @JsonProperty("globalId")
     private String globalId;
-    
-    /** The application. */
+
+    /**
+     * The application.
+     */
     @JsonProperty("application")
     private Application application;
-    
-    /** The relationship. */
+
+    /**
+     * The relationship.
+     */
     @JsonProperty("relationship")
     private String relationship;
-    
-    /** The object. */
+
+    /**
+     * The object.
+     */
     @JsonProperty("object")
     private RemoteIssueLinkObject object;
-    
-    /** The additional properties. */
+
+    /**
+     * The additional properties.
+     */
     @JsonIgnore
     private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
@@ -59,7 +68,7 @@ public class RemoteIssueLinkDto {
     /**
      * Sets the global id.
      *
-     * @param globalId            The globalId
+     * @param globalId The globalId
      * @return the remote issue link dto
      */
     @JsonProperty("globalId")
@@ -81,7 +90,7 @@ public class RemoteIssueLinkDto {
     /**
      * Sets the application.
      *
-     * @param application            The application
+     * @param application The application
      * @return the remote issue link dto
      */
     @JsonProperty("application")
@@ -103,7 +112,7 @@ public class RemoteIssueLinkDto {
     /**
      * Sets the relationship.
      *
-     * @param relationship            The relationship
+     * @param relationship The relationship
      * @return the remote issue link dto
      */
     @JsonProperty("relationship")
@@ -125,7 +134,7 @@ public class RemoteIssueLinkDto {
     /**
      * Sets the object.
      *
-     * @param object            The object
+     * @param object The object
      * @return the remote issue link dto
      */
     @JsonProperty("object")
@@ -147,7 +156,7 @@ public class RemoteIssueLinkDto {
     /**
      * Sets the additional property.
      *
-     * @param name the name
+     * @param name  the name
      * @param value the value
      * @return the remote issue link dto
      */

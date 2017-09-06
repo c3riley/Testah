@@ -1,13 +1,6 @@
 package org.testah.framework.cli;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import groovy.lang.GroovyClassLoader;
 import org.apache.cxf.helpers.FileUtils;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.reflections.Reflections;
@@ -17,17 +10,27 @@ import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestPlan;
 
-import groovy.lang.GroovyClassLoader;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Class TestFilter.
  */
 public class TestFilter {
 
-    /** The test classes. */
+    /**
+     * The test classes.
+     */
     private Set<Class<?>> testClasses;
 
-    /** The test classes met filters. */
+    /**
+     * The test classes met filters.
+     */
     private final List<Class<?>> testClassesMetFilters;
 
     /**
@@ -52,8 +55,7 @@ public class TestFilter {
     /**
      * Filter test plans to run.
      *
-     * @param testClassesToFilter
-     *            the test classes to filter
+     * @param testClassesToFilter the test classes to filter
      * @return the list
      */
     public List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter) {
@@ -64,10 +66,8 @@ public class TestFilter {
     /**
      * Filter test plans to run.
      *
-     * @param testClassesToFilter
-     *            the test classes to filter
-     * @param testClassesMetFiltersToUse
-     *            the test classes met filters to use
+     * @param testClassesToFilter        the test classes to filter
+     * @param testClassesMetFiltersToUse the test classes met filters to use
      * @return the list
      */
     public List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter, final List<Class<
@@ -203,10 +203,8 @@ public class TestFilter {
     /**
      * Filter test case.
      *
-     * @param meta
-     *            the meta
-     * @param testCaseName
-     *            the test case name
+     * @param meta         the meta
+     * @param testCaseName the test case name
      * @return true, if successful
      */
     public boolean filterTestCase(final TestCaseDto meta, final String testCaseName) {
@@ -302,8 +300,7 @@ public class TestFilter {
     /**
      * Checks if is filter test name starts with.
      *
-     * @param test
-     *            the test
+     * @param test the test
      * @return true, if is filter test name starts with
      */
     public boolean isFilterTestNameStartsWith(final Class<?> test) {
@@ -313,10 +310,8 @@ public class TestFilter {
     /**
      * Checks if is filter test name starts with.
      *
-     * @param test
-     *            the test
-     * @param startsWith
-     *            the starts with
+     * @param test       the test
+     * @param startsWith the starts with
      * @return true, if is filter test name starts with
      */
     public boolean isFilterTestNameStartsWith(final Class<?> test, final String startsWith) {
@@ -329,8 +324,7 @@ public class TestFilter {
     /**
      * Checks if is filter by test type.
      *
-     * @param testType
-     *            the test type
+     * @param testType the test type
      * @return true, if is filter by test type
      */
     public boolean isFilterByTestType(final TestType testType) {
@@ -343,10 +337,8 @@ public class TestFilter {
     /**
      * Checks if is filter by id.
      *
-     * @param id
-     *            the id
-     * @param values
-     *            the values
+     * @param id     the id
+     * @param values the values
      * @return true, if is filter by id
      */
     public boolean isFilterById(final int id, final String values) {
@@ -365,10 +357,8 @@ public class TestFilter {
     /**
      * Checks if is filter check ok.
      *
-     * @param lst
-     *            the lst
-     * @param values
-     *            the values
+     * @param lst    the lst
+     * @param values the values
      * @return true, if is filter check ok
      */
     private boolean isFilterCheckOk(final List<String> lst, final String values) {
@@ -383,7 +373,7 @@ public class TestFilter {
                         return false; // Fail Not, failed filter
                     } else {
                         rtn = true; // Passed initially, still a Not could be
-                                    // used
+                        // used
                     }
                 } else if (lst.contains(valueToCompare)) {
                     rtn = true; // Passed initially, still a Not could be used
@@ -397,10 +387,8 @@ public class TestFilter {
     /**
      * Checks if is filter check ok.
      *
-     * @param ary
-     *            the ary
-     * @param values
-     *            the values
+     * @param ary    the ary
+     * @param values the values
      * @return true, if is filter check ok
      */
     private boolean isFilterCheckOk(final String[] ary, final String values) {
@@ -429,8 +417,7 @@ public class TestFilter {
     /**
      * Load compiled test clase.
      *
-     * @param internalClass
-     *            the internal class
+     * @param internalClass the internal class
      * @return the int
      */
     public int loadCompiledTestClase(final String internalClass) {
@@ -455,8 +442,7 @@ public class TestFilter {
     /**
      * Load test plans.
      *
-     * @param testValue
-     *            the test value
+     * @param testValue the test value
      * @return the test filter
      */
     public TestFilter loadTestPlans(final String testValue) {
@@ -466,8 +452,7 @@ public class TestFilter {
     /**
      * Load uncompiled test plans.
      *
-     * @param externalValue
-     *            the external value
+     * @param externalValue the external value
      * @return the test filter
      */
     public TestFilter loadUncompiledTestPlans(final String externalValue) {
@@ -535,8 +520,7 @@ public class TestFilter {
     /**
      * Sets the test classes.
      *
-     * @param testClasses
-     *            the new test classes
+     * @param testClasses the new test classes
      * @return the test filter
      */
     public TestFilter setTestClasses(final Set<Class<?>> testClasses) {

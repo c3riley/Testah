@@ -27,22 +27,34 @@ import java.util.List;
  */
 public abstract class AbstractBrowser<T> {
 
-    /** The driver. */
+    /**
+     * The driver.
+     */
     private WebDriver driver;
 
-    /** The element wait time. */
+    /**
+     * The element wait time.
+     */
     private int elementWaitTime = 10;
 
-    /** The remote uri. */
+    /**
+     * The remote uri.
+     */
     private final String remoteUri = TS.params().getWebDriver_defaultRemoteUri();
 
-    /** The remote. */
+    /**
+     * The remote.
+     */
     private final boolean remote = TS.params().isWebDriver_useRemoteDriver();
 
-    /** The user agent value. */
+    /**
+     * The user agent value.
+     */
     private String userAgentValue = TS.params().getWebDriver_userAgentValue();
 
-    /** The desired capabilities. */
+    /**
+     * The desired capabilities.
+     */
     private DesiredCapabilities desiredCapabilities = null;
 
     /**
@@ -53,13 +65,14 @@ public abstract class AbstractBrowser<T> {
     @SuppressWarnings("unchecked")
     protected AbstractBrowser<T> getSelf() {
         return this;
-    };
+    }
+
+    ;
 
     /**
      * Assert title.
      *
-     * @param expectedTitle
-     *            the expected title
+     * @param expectedTitle the expected title
      * @return the abstract browser
      */
     public AbstractBrowser<T> assertTitle(final String expectedTitle) {
@@ -70,8 +83,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Assert url.
      *
-     * @param expectedUrl
-     *            the expected url
+     * @param expectedUrl the expected url
      * @return the abstract browser
      */
     public AbstractBrowser<T> assertUrl(final String expectedUrl) {
@@ -144,8 +156,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the java script value.
      *
-     * @param javaScript
-     *            the java script
+     * @param javaScript the java script
      * @return the java script value
      */
     public String getJavaScriptValue(final String javaScript) {
@@ -156,8 +167,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the remote driver.
      *
-     * @param capabilities
-     *            the capabilities
+     * @param capabilities the capabilities
      * @return the remote driver
      */
     public WebDriver getRemoteDriver(final DesiredCapabilities capabilities) {
@@ -207,8 +217,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Sets the user agent value.
      *
-     * @param userAgentValue
-     *            the user agent value
+     * @param userAgentValue the user agent value
      * @return the abstract browser
      */
     public AbstractBrowser<T> setUserAgentValue(final String userAgentValue) {
@@ -219,8 +228,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the web driver.
      *
-     * @param capabilities
-     *            the capabilities
+     * @param capabilities the capabilities
      * @return the web driver
      */
     public abstract WebDriver getWebDriver(final DesiredCapabilities capabilities);
@@ -228,8 +236,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the webelement.
      *
-     * @param webElement
-     *            the web element
+     * @param webElement the web element
      * @return the webelement
      */
     public AbstractWebElementWrapper getWebElement(final AbstractWebElementWrapper webElement) {
@@ -239,8 +246,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the webelement no wait.
      *
-     * @param webElement
-     *            the web element
+     * @param webElement the web element
      * @return the webelement no wait
      */
     public AbstractWebElementWrapper getWebElementNoWait(final AbstractWebElementWrapper webElement) {
@@ -250,8 +256,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the webelement.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return the webelement
      */
     public AbstractWebElementWrapper getWebElement(final By by) {
@@ -261,10 +266,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the web element.
      *
-     * @param by
-     *            the by
-     * @param waitIterationCount
-     *            the wait iteration count
+     * @param by                 the by
+     * @param waitIterationCount the wait iteration count
      * @return the web element
      */
     public AbstractWebElementWrapper getWebElement(final By by, final int waitIterationCount) {
@@ -274,8 +277,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the webelement no wait.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return the webelement no wait
      */
     public AbstractWebElementWrapper getWebElementNoWait(final By by) {
@@ -285,8 +287,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the web elements.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return the web elements
      */
     public List<AbstractWebElementWrapper> getWebElements(final By by) {
@@ -300,10 +301,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the web elements.
      *
-     * @param by
-     *            the by
-     * @param waitIterationCount
-     *            the wait iteration count
+     * @param by                 the by
+     * @param waitIterationCount the wait iteration count
      * @return the web elements
      */
     public List<AbstractWebElementWrapper> getWebElements(final By by, final int waitIterationCount) {
@@ -317,8 +316,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the web elements no wait.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return the web elements no wait
      */
     public List<AbstractWebElementWrapper> getWebElementsNoWait(final By by) {
@@ -364,8 +362,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Go to.
      *
-     * @param uri
-     *            the uri
+     * @param uri the uri
      * @return the abstract browser
      */
     public AbstractBrowser<T> goTo(final String uri) {
@@ -377,10 +374,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Go to and wait for title.
      *
-     * @param uri
-     *            the uri
-     * @param title
-     *            the title
+     * @param uri   the uri
+     * @param title the title
      * @return the abstract browser
      */
     public AbstractBrowser<T> goToAndWaitForTitle(final String uri, final String title) {
@@ -392,8 +387,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Go to and wait for title to change.
      *
-     * @param uri
-     *            the uri
+     * @param uri the uri
      * @return the abstract browser
      */
     public AbstractBrowser<T> goToAndWaitForTitleToChange(final String uri) {
@@ -416,8 +410,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Run java script.
      *
-     * @param javaSript
-     *            the java sript
+     * @param javaSript the java sript
      * @return the abstract browser
      */
     public AbstractBrowser<T> runJavaScript(final String javaSript) {
@@ -428,8 +421,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Sets the capabilities.
      *
-     * @param desiredCapabilities
-     *            the desired capabilities
+     * @param desiredCapabilities the desired capabilities
      * @return the abstract browser
      */
     public AbstractBrowser<T> setCapabilities(final DesiredCapabilities desiredCapabilities) {
@@ -440,8 +432,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Sets the driver.
      *
-     * @param driver
-     *            the new driver
+     * @param driver the new driver
      * @return the abstract browser
      */
     public AbstractBrowser<T> setDriver(final WebDriver driver) {
@@ -452,8 +443,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Sets the element wait time.
      *
-     * @param elementWaitTime
-     *            the new element wait time
+     * @param elementWaitTime the new element wait time
      * @return the abstract browser
      */
     public AbstractBrowser<T> setElementWaitTime(final int elementWaitTime) {
@@ -473,8 +463,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Start.
      *
-     * @param remote
-     *            the remote
+     * @param remote the remote
      * @return the abstract browser
      */
     public AbstractBrowser<T> start(final boolean remote) {
@@ -499,8 +488,7 @@ public abstract class AbstractBrowser<T> {
      * Start service.
      *
      * @return the abstract browser
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public abstract T startService() throws IOException;
 
@@ -508,11 +496,9 @@ public abstract class AbstractBrowser<T> {
      * Stop service.
      *
      * @return the abstract browser
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public abstract T stopService() throws IOException;
-
 
     public File getScreenshotDir(final String directoryPath) {
         File screenshotDir = new File(directoryPath, "screenshots");
@@ -542,8 +528,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Take html snapshot.
      *
-     * @param path
-     *            the path
+     * @param path the path
      * @return the string
      */
     public String takeHtmlSnapshot(final String path) {
@@ -568,14 +553,13 @@ public abstract class AbstractBrowser<T> {
      * @return the string
      */
     public String takeScreenShot() {
-       return takeScreenShot(TS.params().getOutput());
+        return takeScreenShot(TS.params().getOutput());
     }
 
     /**
      * Take screen shot.
      *
-     * @param path
-     *            the path
+     * @param path the path
      * @return the string
      */
     public String takeScreenShot(final String path) {
@@ -607,8 +591,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Checks if is element present.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return true, if is element present
      */
     private boolean isElementPresent(final By by) {
@@ -625,8 +608,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Verify element is present.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return true, if successful
      */
     public boolean verifyElementIsPresent(final By by) {
@@ -636,8 +618,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Wait till element is present.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return true, if successful
      */
     public boolean waitTillElementIsPresent(final By by) {
@@ -647,10 +628,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Wait till element is present.
      *
-     * @param by
-     *            the by
-     * @param secondsToWait
-     *            the seconds to wait
+     * @param by            the by
+     * @param secondsToWait the seconds to wait
      * @return true, if successful
      */
     public boolean waitTillElementIsPresent(final By by, final int secondsToWait) {
@@ -666,8 +645,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Assert element is present.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return the abstract browser
      */
     public AbstractBrowser<T> assertElementIsPresent(final By by) {
@@ -678,8 +656,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Verify element is not present.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return true, if successful
      */
     public boolean verifyElementIsNotPresent(final By by) {
@@ -689,8 +666,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Assert element is not present.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return the abstract browser
      */
     public AbstractBrowser<T> assertElementIsNotPresent(final By by) {
@@ -701,8 +677,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Verify title.
      *
-     * @param expectedTitle
-     *            the expected title
+     * @param expectedTitle the expected title
      * @return true, if successful
      */
     public boolean verifyTitle(final String expectedTitle) {
@@ -712,8 +687,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Verify url.
      *
-     * @param expectedUrl
-     *            the expected url
+     * @param expectedUrl the expected url
      * @return true, if successful
      */
     public boolean verifyUrl(final String expectedUrl) {
@@ -723,10 +697,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Wait for title.
      *
-     * @param pageTitle
-     *            the page title
-     * @param timeout
-     *            the timeout
+     * @param pageTitle the page title
+     * @param timeout   the timeout
      * @return the abstract browser
      */
     public AbstractBrowser<T> waitForTitle(final String pageTitle, final int timeout) {
@@ -744,10 +716,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Wait for title to change.
      *
-     * @param pageTitleToChange
-     *            the page title to change
-     * @param timeout
-     *            the timeout
+     * @param pageTitleToChange the page title to change
+     * @param timeout           the timeout
      * @return the abstract browser
      */
     public AbstractBrowser<T> waitForTitleToChange(final String pageTitleToChange, final int timeout) {
@@ -765,10 +735,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Wait for url to change.
      *
-     * @param pageUrlToChange
-     *            the page url to change
-     * @param timeout
-     *            the timeout
+     * @param pageUrlToChange the page url to change
+     * @param timeout         the timeout
      * @return the abstract browser
      */
     public AbstractBrowser<T> waitForUrlToChange(final String pageUrlToChange, final int timeout) {
@@ -787,10 +755,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the web element native.
      *
-     * @param by
-     *            the by
-     * @param noWait
-     *            the no wait
+     * @param by     the by
+     * @param noWait the no wait
      * @return the web element native
      */
     private WebElement getWebElementNative(final By by, final boolean noWait) {
@@ -800,12 +766,9 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the web element native.
      *
-     * @param by
-     *            the by
-     * @param noWait
-     *            the no wait
-     * @param waitIterationCount
-     *            the wait iteration count
+     * @param by                 the by
+     * @param noWait             the no wait
+     * @param waitIterationCount the wait iteration count
      * @return the web element native
      */
     private WebElement getWebElementNative(final By by, final boolean noWait, final int waitIterationCount) {
@@ -830,10 +793,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the web elements native.
      *
-     * @param by
-     *            the by
-     * @param noWait
-     *            the no wait
+     * @param by     the by
+     * @param noWait the no wait
      * @return the web elements native
      */
     private List<WebElement> getWebElementsNative(final By by, final boolean noWait) {
@@ -843,12 +804,9 @@ public abstract class AbstractBrowser<T> {
     /**
      * Gets the web elements native.
      *
-     * @param by
-     *            the by
-     * @param noWait
-     *            the no wait
-     * @param waitIterationCount
-     *            the wait iteration count
+     * @param by                 the by
+     * @param noWait             the no wait
+     * @param waitIterationCount the wait iteration count
      * @return the web elements native
      */
     private List<WebElement> getWebElementsNative(final By by, final boolean noWait, final int waitIterationCount) {
@@ -912,8 +870,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Checks if is text present.
      *
-     * @param textExpected
-     *            the text expected
+     * @param textExpected the text expected
      * @return true, if is text present
      */
     private boolean isTextPresent(final String textExpected) {
@@ -936,8 +893,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Verify text is present.
      *
-     * @param textExpected
-     *            the text expected
+     * @param textExpected the text expected
      * @return true, if successful
      */
     public boolean verifyTextIsPresent(final String textExpected) {
@@ -947,8 +903,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Wait till text is present.
      *
-     * @param textExpected
-     *            the text expected
+     * @param textExpected the text expected
      * @return true, if successful
      */
     public boolean waitTillTextIsPresent(final String textExpected) {
@@ -958,10 +913,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Wait till text is present.
      *
-     * @param textExpected
-     *            the text expected
-     * @param secondsToWait
-     *            the seconds to wait
+     * @param textExpected  the text expected
+     * @param secondsToWait the seconds to wait
      * @return true, if successful
      */
     public boolean waitTillTextIsPresent(final String textExpected, final int secondsToWait) {
@@ -977,8 +930,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Assert text is present.
      *
-     * @param textExpected
-     *            the text expected
+     * @param textExpected the text expected
      * @return the abstract browser
      */
     public AbstractBrowser<T> assertTextIsPresent(final String textExpected) {
@@ -989,8 +941,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Verify text is not present.
      *
-     * @param textExpected
-     *            the text expected
+     * @param textExpected the text expected
      * @return true, if successful
      */
     public boolean verifyTextIsNotPresent(final String textExpected) {
@@ -1001,8 +952,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Assert text is not present.
      *
-     * @param textExpected
-     *            the text expected
+     * @param textExpected the text expected
      * @return the abstract browser
      */
     public AbstractBrowser<T> assertTextIsNotPresent(final String textExpected) {
@@ -1013,8 +963,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Switch to window.
      *
-     * @param pageTitle
-     *            the page title
+     * @param pageTitle the page title
      * @return the abstract browser
      */
     public AbstractBrowser<T> switchToWindow(final String pageTitle) {
@@ -1033,10 +982,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Switch to window.
      *
-     * @param pageTitle
-     *            the page title
-     * @param autoReport
-     *            the auto report
+     * @param pageTitle  the page title
+     * @param autoReport the auto report
      * @return the abstract browser
      */
     public AbstractBrowser<T> switchToWindow(final String pageTitle, final boolean autoReport) {
@@ -1062,8 +1009,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * Scroll down.
      *
-     * @param scrollDownBy
-     *            the scroll down by
+     * @param scrollDownBy the scroll down by
      * @return the abstract browser
      */
     public AbstractBrowser<T> scrollDown(final int scrollDownBy) {
@@ -1074,10 +1020,8 @@ public abstract class AbstractBrowser<T> {
     /**
      * Scroll.
      *
-     * @param x
-     *            the x
-     * @param y
-     *            the y
+     * @param x the x
+     * @param y the y
      * @return the abstract browser
      */
     public AbstractBrowser<T> scroll(final int x, final int y) {

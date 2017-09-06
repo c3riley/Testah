@@ -1,9 +1,6 @@
 package org.testah.framework.cli;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
-
+import com.google.common.collect.ImmutableSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,7 +12,9 @@ import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.HttpTestPlan;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Set;
 
 @TestPlan
 public class TestFilterTestTypeTest extends HttpTestPlan {
@@ -119,21 +118,27 @@ class TestPlanWithTestTypeDefault {
 class TestPlanWithTestTypeEmpty {
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 }
 
 @TestPlan(testType = TestType.RETIRE)
 class TestPlanWithTestTypeRetire {
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 }
 
 @TestPlan(testType = TestType.MANUAL)
 class TestPlanWithTestTypeManual {
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 }
 
 @TestPlan(testType = TestType.PENDING)
@@ -141,7 +146,9 @@ class TestPlanWithTestTypeEmptyString {
 
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 
 }
 
@@ -149,11 +156,15 @@ class TestPlanWithTestTypeEmptyString {
 class TestPlanWithTestType {
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 
     @TestCase(testType = TestType.AUTOMATED)
     public void test2() {
-    };
+    }
+
+    ;
 
 }
 
@@ -161,26 +172,38 @@ class TestPlanWithTestType {
 class TestPlanWithManyTestTypes {
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 
     @TestCase(testType = TestType.AUTOMATED)
     public void test2() {
-    };
+    }
+
+    ;
 
     @TestCase(testType = TestType.PENDING)
     public void test3() {
-    };
+    }
+
+    ;
 
     @TestCase(testType = TestType.MANUAL)
     public void test4() {
-    };
+    }
+
+    ;
 
     @TestCase(testType = TestType.RETIRE)
     public void test5() {
-    };
+    }
+
+    ;
 
     @TestCase(testType = TestType.DEFAULT)
     public void test6() {
-    };
+    }
+
+    ;
 
 }

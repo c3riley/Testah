@@ -4,42 +4,61 @@ import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.util.HashMap;
 
-
 /**
  * The Class RunInfoDto.
  */
-public class RunInfoDto extends AbstractDtoBase<RunInfoDto>{
+public class RunInfoDto extends AbstractDtoBase<RunInfoDto> {
 
-    /** The run id. */
-    private String                  runId             = null;
-    
-    /** The run type. */
-    private String                  runType           = null;
-    
-    /** The version id. */
-    private String                  versionId         = null;
-    
-    /** The run location. */
-    private String                  runLocation       = null;
-    
-    /** The build number. */
-    private String                  buildNumber       = null;
-    
-    /** The pass. */
-    private int                     pass              = 0;
-    
-    /** The fail. */
-    private int                     fail              = 0;
-    
-    /** The ignore. */
-    private int                     ignore            = 0;
-    
-    /** The total. */
-    private int                     total             = 0;
+    /**
+     * The run id.
+     */
+    private String runId = null;
 
-    private HashMap<String,String> reportFilePaths = new HashMap<String, String> ();
-    
-    /** The run time properties. */
+    /**
+     * The run type.
+     */
+    private String runType = null;
+
+    /**
+     * The version id.
+     */
+    private String versionId = null;
+
+    /**
+     * The run location.
+     */
+    private String runLocation = null;
+
+    /**
+     * The build number.
+     */
+    private String buildNumber = null;
+
+    /**
+     * The pass.
+     */
+    private int pass = 0;
+
+    /**
+     * The fail.
+     */
+    private int fail = 0;
+
+    /**
+     * The ignore.
+     */
+    private int ignore = 0;
+
+    /**
+     * The total.
+     */
+    private int total = 0;
+
+    private HashMap<String, String> reportFilePaths = new HashMap<String, String>();
+
+    /**
+     * The run time properties.
+     */
     private HashMap<String, String> runTimeProperties = new HashMap<String, String>();
 
     /**
@@ -274,9 +293,9 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto>{
     }
 
     /**
-     *  add report path by report type
+     * add report path by report type
      *
-     * @param reportType runtype report string [html,json,xml,txt]
+     * @param reportType     runtype report string [html,json,xml,txt]
      * @param reportFilePath report file path
      * @return run info object
      */
