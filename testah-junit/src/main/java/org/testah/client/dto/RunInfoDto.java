@@ -1,12 +1,14 @@
 package org.testah.client.dto;
 
+import org.testah.framework.dto.base.AbstractDtoBase;
+
 import java.util.HashMap;
 
 
 /**
  * The Class RunInfoDto.
  */
-public class RunInfoDto {
+public class RunInfoDto extends AbstractDtoBase<RunInfoDto>{
 
     /** The run id. */
     private String                  runId             = null;
@@ -34,6 +36,8 @@ public class RunInfoDto {
     
     /** The total. */
     private int                     total             = 0;
+
+    private HashMap<String,String> reportFilePaths = new HashMap<String, String> ();
     
     /** The run time properties. */
     private HashMap<String, String> runTimeProperties = new HashMap<String, String>();
@@ -249,4 +253,34 @@ public class RunInfoDto {
         this.runTimeProperties = runTimeProperties;
     }
 
+    /**
+     * Gets the Report Path.
+     *
+     * @return reportFilePath the Report File Path
+     */
+    public HashMap<String, String> getReportFilePath() {
+        return reportFilePaths;
+    }
+
+    /**
+     * Sets the Report Path.
+     *
+     * @param reportFilePaths the Report File Path
+     */
+    public RunInfoDto setReportFilePath(final HashMap<String, String> reportFilePaths) {
+        this.reportFilePaths = reportFilePaths;
+        return this;
+    }
+
+    /**
+     *  add report path by report type
+     *
+     * @param reportFilePath
+     * @param reportType
+     * @return run info object
+     */
+    public RunInfoDto addReportFilePath(final String reportType, final String reportFilePath) {
+        reportFilePaths.put(reportType, reportFilePath);
+        return this;
+    }
 }

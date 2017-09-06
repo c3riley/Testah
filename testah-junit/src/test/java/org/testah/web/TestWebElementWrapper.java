@@ -23,6 +23,12 @@ public class TestWebElementWrapper extends BrowserTestPlan {
 
 	}
 
+	@TestCase
+	@Test
+	public void happy() {
+		TS.asserts().isTrue(true);
+	}
+
 	@Ignore
 	@TestCase
 	@Test

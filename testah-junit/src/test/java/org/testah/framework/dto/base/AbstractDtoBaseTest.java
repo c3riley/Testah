@@ -1,10 +1,10 @@
 package org.testah.framework.dto.base;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 public class AbstractDtoBaseTest {
 
@@ -31,6 +31,7 @@ public class AbstractDtoBaseTest {
     @Test
     public void testToString() {
         TestAbstractDtoBaseDto dto1 = new TestAbstractDtoBaseDto();
+
         assertThat(dto1.toString(), containsString("{\"value\":null}"));
     }
 

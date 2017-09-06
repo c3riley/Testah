@@ -1,7 +1,10 @@
 package org.testah.runner;
 
-import java.util.List;
-
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
+import akka.actor.UntypedActor;
+import akka.actor.UntypedActorFactory;
 import org.testah.TS;
 import org.testah.driver.http.AbstractHttpWrapper;
 import org.testah.driver.http.HttpWrapperV1;
@@ -10,11 +13,7 @@ import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.httpLoad.HttpActor;
 import org.testah.runner.httpLoad.HttpAkkaStats;
 
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Props;
-import akka.actor.UntypedActor;
-import akka.actor.UntypedActorFactory;
+import java.util.List;
 
 /**
  * The Class HttpAkkaRunner.

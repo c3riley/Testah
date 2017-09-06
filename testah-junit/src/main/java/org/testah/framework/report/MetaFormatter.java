@@ -6,7 +6,7 @@ import org.testah.client.dto.TestPlanDto;
 /**
  * The Class HtmlFormatter.
  */
-public class MetaFormatter extends AbstractFormatter {
+public class MetaFormatter extends AbstractTestPlanFormatter {
 
 	/**
 	 * Instantiates a new html formatter.

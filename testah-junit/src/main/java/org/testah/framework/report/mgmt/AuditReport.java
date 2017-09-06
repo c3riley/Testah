@@ -1,12 +1,5 @@
 package org.testah.framework.report.mgmt;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,6 +22,13 @@ import org.testah.framework.cli.Params;
 import org.testah.framework.cli.TestFilter;
 import org.testah.framework.dto.TestDtoHelper;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
 public class AuditReport {
 
     private String filePathAndName;
@@ -38,6 +38,7 @@ public class AuditReport {
     private final XSSFWorkbook workbook;
 
     public AuditReport() throws IOException, InterruptedException {
+        this.filePathAndName = Params.addUserDir("AutomationAudit.xlsx");
         File report = new File(filePathAndName);
         if (report.exists()) {
             TS.log().info("Delete old report: " + report.delete());
@@ -46,7 +47,6 @@ public class AuditReport {
         this.headerCellStyle = createHeaderCellStyle();
         this.bodyCellStyle = createBodyCellStyle();
         this.xBodyCellStyle = createXBodyCellStyle();
-        this.filePathAndName = Params.addUserDir("AutomationAudit.xlsx");
     }
 
     public static void main(final String[] args) throws IOException, InterruptedException {
@@ -247,9 +247,7 @@ public class AuditReport {
             testCaseSheet.autoSizeColumn(column);
         }
 
-        try {
-
-            FileOutputStream outputStream = new FileOutputStream(filePathAndName);
+        try(FileOutputStream outputStream = new FileOutputStream(filePathAndName)) {
             workbook.write(outputStream);
             workbook.close();
         } catch (Exception e) {

@@ -1,15 +1,5 @@
 package org.testah.driver.http.requests;
 
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
-import static org.apache.http.HttpStatus.SC_OK;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
@@ -19,6 +9,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
@@ -28,6 +19,16 @@ import org.testah.client.enums.TestStepActionType;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.base.AbstractDtoBase;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+import static org.apache.http.HttpStatus.SC_OK;
 
 /**
  * The Class AbstractRequestDto.
@@ -48,6 +49,9 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
 
     /** The http request base. */
     protected HttpRequestBase httpRequestBase = null;
+
+    /** The http request class. */
+    protected Class httpRequestClass = null;
 
     /** The http entity. */
     protected HttpEntity httpEntity = null;
@@ -109,7 +113,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @param httpMethod
      *            the http method
      */
-    protected AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
+    protected <E> AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
         this.httpRequestBase = httpRequestBase;
         this.httpMethod = httpMethod;
     }
@@ -383,32 +387,51 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         return httpRequestBase.getURI().toString();
     }
 
-    /**
-     * Sets the payload.
-     *
-     * @param payload
-     *            the payload
-     * @return the abstract request dto
-     */
-    public abstract T setPayload(final String payload);
+    public T setPayload(String payload) {
+        try {
+            if (null == payload) {
+                payload = "";
+            }
+            return setPayload(new StringEntity(payload));
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    /**
-     * Sets the payload.
-     *
-     * @param payload
-     *            the payload
-     * @return the abstract request dto
-     */
-    public abstract T setPayload(final HttpEntity payload);
+    public T setPayload(final Object payload) {
+        try {
+            if (null == payload) {
+                TS.log().warn("payload was null so setting to empty string");
+                return setPayload(new StringEntity(""));
+            } else {
+                return setPayload(new StringEntity(TS.util().toJson(payload)));
+            }
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    /**
-     * Sets the payload.
-     *
-     * @param payload
-     *            the payload
-     * @return the abstract request dto
-     */
-    public abstract T setPayload(final Object payload);
+    public T setPayload(final HttpEntity payload) {
+        try {
+            if (null != payload) {
+                httpEntity = payload;
+                setEntity(payload);
+            } else {
+                TS.log().warn("payload was null so setting to empty string");
+                setEntity(new StringEntity(""));
+            }
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+        return getSelf();
+    }
+
+    protected abstract T setEntity(final HttpEntity payload);
+
+    public T setPayload(final byte[] payload) {
+        setContentType("application/octet-stream");
+        return setPayload(new ByteArrayEntity(payload));
+    }
 
     /**
      * Gets the payload string.

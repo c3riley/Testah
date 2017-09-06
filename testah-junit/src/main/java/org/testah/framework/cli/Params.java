@@ -1,9 +1,6 @@
 package org.testah.framework.cli;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
+import net.sourceforge.argparse4j.annotation.Arg;
 import org.apache.logging.log4j.Level;
 import org.springframework.util.StringUtils;
 import org.testah.TS;
@@ -11,7 +8,9 @@ import org.testah.client.enums.BrowserType;
 import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.Comment;
 
-import net.sourceforge.argparse4j.annotation.Arg;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class Params.
@@ -362,10 +361,6 @@ public class Params {
      * @return the output
      */
     public String getOutput() {
-        if (null == output || output.length() == 0) {
-            output = addUserDir("testahOutput");
-            TS.log().trace("getOutput mkdirs: " + new File(output).mkdirs());
-        }
         return output;
     }
 
@@ -953,7 +948,30 @@ public class Params {
      * @return the params
      */
     public Params setOutput(final String output) {
-        this.output = output;
+        if(null!=output) {
+            File outputFile = new File(output.replace("{user dir}", Params.getUserDir()));
+            if (!outputFile.exists()) {
+                TS.log().trace("getOutput mkdirs: " + outputFile.mkdirs());
+            }
+            this.output = outputFile.getAbsolutePath();
+        } else {
+            this.output = output;
+        }
+        return this;
+    }
+
+    public Params mkOutput() {
+
+        if (null == output || output.length() == 0) {
+            output = addUserDir("testahOutput");
+            TS.log().trace("getOutput mkdirs: " + new File(output).mkdirs());
+        } else {
+            File outputFile = new File(output.replace("{user dir}", Params.getUserDir()));
+            if (!outputFile.exists()) {
+                TS.log().trace("getOutput mkdirs: " + outputFile.mkdirs());
+            }
+            this.output = outputFile.getAbsolutePath();
+        }
         return this;
     }
 

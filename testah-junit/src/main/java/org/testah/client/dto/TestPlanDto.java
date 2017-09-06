@@ -1,15 +1,16 @@
 package org.testah.client.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestType;
+import org.testah.framework.dto.base.AbstractDtoBase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class TestPlanDto.
  */
-public class TestPlanDto {
+public class TestPlanDto extends AbstractDtoBase<TestPlanDto>{
 
     /** The run time. */
     private RunTimeDto runTime = new RunTimeDto();

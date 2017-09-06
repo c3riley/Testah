@@ -1,18 +1,17 @@
 package org.testah.framework.report;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.testah.TS;
-import org.testah.client.dto.TestPlanDto;
 import org.testah.framework.cli.Params;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 
 /**
  * The Class AbstractFormatter.
@@ -25,22 +24,16 @@ public abstract class AbstractFormatter {
     /** The path to template. */
     protected final String pathToTemplate;
 
-    /** The test plan. */
-    protected final TestPlanDto testPlan;
-
     /** The report file. */
     protected File reportFile = null;
 
     /**
      * Instantiates a new abstract formatter.
      *
-     * @param testPlan
-     *            the test plan
      * @param pathToTemplate
      *            the path to template
      */
-    public AbstractFormatter(final TestPlanDto testPlan, final String pathToTemplate) {
-        this.testPlan = testPlan;
+    public AbstractFormatter(final String pathToTemplate) {
         if (null != pathToTemplate) {
             this.pathToTemplate = pathToTemplate.replace("//", "/");
         } else {
@@ -53,18 +46,7 @@ public abstract class AbstractFormatter {
      *
      * @return the context base
      */
-    public VelocityContext getContextBase() {
-        VelocityContext context = new VelocityContext();
-
-        if (null != testPlan) {
-            context.put("testPlan", testPlan);
-            context.put("util", TS.util());
-
-            context = getContext(context);
-        }
-
-        return context;
-    }
+    public abstract VelocityContext getContextBase();
 
     /**
      * Gets the context.
@@ -84,6 +66,9 @@ public abstract class AbstractFormatter {
         return getReport(getContextBase());
     }
 
+    public abstract String getBaseReportObject();
+
+
     /**
      * Gets the report.
      *
@@ -94,7 +79,7 @@ public abstract class AbstractFormatter {
     public String getReport(final VelocityContext context) {
         if (null == context || null == pathToTemplate) {
             TS.log().trace("No report context so returing json for testplan info");
-            return TS.util().toJson(testPlan);
+            return TS.util().toJson(getBaseReportObject());
         }
         try {
 
@@ -133,16 +118,24 @@ public abstract class AbstractFormatter {
      */
     public abstract AbstractFormatter createReport();
 
+
+    public AbstractFormatter createReport(final String reportName) {
+        return createReport(reportName, Params.getUserDir());
+    }
+
+
+
     /**
      * Creates the report.
      *
      * @param reportName
      *            the report name
+     * @param directory directory to write the report to
      * @return the abstract formatter
      */
-    public AbstractFormatter createReport(final String reportName) {
+    public AbstractFormatter createReport(final String reportName, final String directory) {
         try {
-            reportFile = new File(Params.addUserDir(reportName));
+            reportFile = new File(directory, reportName);
             FileUtils.writeStringToFile(reportFile, getReport());
         } catch (final IOException e) {
             TS.log().error("issue creating report: " + reportName, e);
@@ -175,15 +168,6 @@ public abstract class AbstractFormatter {
      */
     public File getReportFile() {
         return this.reportFile;
-    }
-
-    /**
-     * Gets the test plan.
-     *
-     * @return the test plan
-     */
-    public TestPlanDto getTestPlan() {
-        return testPlan;
     }
 
     /**

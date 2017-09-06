@@ -5,7 +5,7 @@
 			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level - %-25C{1} - %msg%n" />
 		</Console>
 		<File name="LogFile" fileName="testah.log" immediateFlush="false"
-			append="false">
+			  append="false">
 			<PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} %-5level - %-25C{1} - %msg%n" />
 		</File>
 	</Appenders>
