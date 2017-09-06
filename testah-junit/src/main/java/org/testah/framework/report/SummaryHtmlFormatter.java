@@ -25,15 +25,24 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
      * @see org.testah.framework.report.AbstractFormatter#getContext(org.apache.velocity.VelocityContext)
      */
     public VelocityContext getContext(final VelocityContext context) {
+
         final HashMap<String, Integer> counts = new HashMap<String, Integer>();
         counts.put("P", 0);
         counts.put("F", 0);
         counts.put("I", 0);
         getResults().forEach(result -> {
-            result.getTestPlan().getRunInfo().recalc(result.getTestPlan());
-            counts.put("P", counts.get("P") + result.getTestPlan().getRunInfo().getPass());
-            counts.put("F", counts.get("F") + result.getTestPlan().getRunInfo().getFail());
-            counts.put("I", counts.get("I") + result.getTestPlan().getRunInfo().getIgnore());
+            if(null != result.getTestPlan()) {
+                result.getTestPlan().getRunInfo().recalc(result.getTestPlan());
+                counts.put("P", counts.get("P") + result.getTestPlan().getRunInfo().getPass());
+                counts.put("F", counts.get("F") + result.getTestPlan().getRunInfo().getFail());
+                counts.put("I", counts.get("I") + result.getTestPlan().getRunInfo().getIgnore());
+            } else {
+                int pass =  result.getJunitResult().getRunCount() -
+                        (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
+                counts.put("P", counts.get("P") + pass);
+                counts.put("F", counts.get("F") + result.getJunitResult().getFailureCount());
+                counts.put("I", counts.get("I") + result.getJunitResult().getIgnoreCount());
+            }
         });
 
         context.put("GoogleChart",

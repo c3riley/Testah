@@ -6,13 +6,11 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 //apply plugin: 'findbugs'
 //apply plugin: 'checkstyle'
-
-
 //apply plugin: 'org.jenkins-ci.jpi'
 
 sourceCompatibility = 1.8
 group = 'org.testah'
-version = '0.8.2'
+version = '0.8.3'
 
 buildscript {
     repositories {
@@ -27,7 +25,7 @@ buildscript {
 
 uploadArchives {
 	repositories.mavenDeployer {
-		repository(url: "file:///Users/criley/_repo/maven-repository")
+		repository(url: "file://${System.getenv('MAVEN_REPO_TO_USE')}")
 	}
 }
 
@@ -36,7 +34,6 @@ repositories {
     mavenCentral()
     jcenter()
 }
-
 
 dependencies {
 	compile 'com.machinepublishers:jbrowserdriver:0.10.5'

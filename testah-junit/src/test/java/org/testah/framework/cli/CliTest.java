@@ -22,8 +22,8 @@ public class CliTest {
         final Cli cli = new Cli();
         cli.setUnderTest(true);
         cli.getArgumentParser(args);
-        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(50));
-        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(46));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(51));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(47));
     }
 
     @Test
@@ -34,8 +34,8 @@ public class CliTest {
         final Cli cli = new Cli();
         cli.setUnderTest(true);
         cli.getArgumentParser(args);
-        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(50));
-        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(46));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(51));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(47));
     }
 
     @Test
@@ -44,8 +44,8 @@ public class CliTest {
         final String[] args = { "query" };
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
-        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(50));
-        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(46));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(51));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(47));
     }
 
     @Test
@@ -55,8 +55,8 @@ public class CliTest {
         final String[] args = { "query" };
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
-        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(46));
-        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(50));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), equalTo(47));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(51));
     }
 
     @Test

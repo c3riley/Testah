@@ -16,6 +16,9 @@ public class ResultDto {
     /** The test plan. */
     private TestPlanDto testPlan    = null;
 
+    /** The class Name. */
+    private String className = null;
+
     /**
      * Instantiates a new result dto.
      */
@@ -83,5 +86,15 @@ public class ResultDto {
     public void setTestPlan(final TestPlanDto testPlan) {
         this.testPlan = testPlan;
     }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public ResultDto setClassName(final String className) {
+        this.className = className;
+        return this;
+    }
+
 
 }

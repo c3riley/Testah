@@ -39,6 +39,9 @@ public class TestPlanReporter {
      *
      * @param testPlan
      *            the test plan
+     * @param autoOpenReport  should report get opened in default browser
+     * @param outputDir output directory to use
+     * @return TestPlanDto returned with recaled info
      */
     public TestPlanDto reportResults(final TestPlanDto testPlan, final boolean autoOpenReport, final String outputDir) {
         String filename = "results";

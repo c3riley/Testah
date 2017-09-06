@@ -266,6 +266,7 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto>{
      * Sets the Report Path.
      *
      * @param reportFilePaths the Report File Path
+     * @return return this to allow chaining
      */
     public RunInfoDto setReportFilePath(final HashMap<String, String> reportFilePaths) {
         this.reportFilePaths = reportFilePaths;
@@ -275,8 +276,8 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto>{
     /**
      *  add report path by report type
      *
-     * @param reportFilePath
-     * @param reportType
+     * @param reportType runtype report string [html,json,xml,txt]
+     * @param reportFilePath report file path
      * @return run info object
      */
     public RunInfoDto addReportFilePath(final String reportType, final String reportFilePath) {

@@ -113,7 +113,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @param httpMethod
      *            the http method
      */
-    protected <E> AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
+    protected AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
         this.httpRequestBase = httpRequestBase;
         this.httpMethod = httpMethod;
     }

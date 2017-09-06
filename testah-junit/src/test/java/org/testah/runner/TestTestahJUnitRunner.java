@@ -86,7 +86,7 @@ public class TestTestahJUnitRunner {
 			final String[] args = {"run"};
 			final Cli cli = new Cli();
 			cli.getArgumentParser(args);
-			Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(10));
+			Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), equalTo(11));
 		}finally{
 			System.getProperties().remove("param_lookAtInternalTests");
 			System.getProperties().remove("param_numConcurrentThreads");

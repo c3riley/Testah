@@ -1,5 +1,16 @@
 package org.testah.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.joda.time.Duration;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+import org.joda.time.format.PeriodFormat;
+import org.testah.TS;
+import org.testah.framework.cli.Params;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,18 +23,6 @@ import java.util.Enumeration;
 import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.joda.time.Duration;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
-import org.joda.time.format.PeriodFormat;
-import org.testah.TS;
-import org.testah.framework.cli.Params;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * The Class TestahUtil.
@@ -274,7 +273,7 @@ public class TestahUtil {
     /**
      * Create File reference to parent directory of a file download.
      * @param relativePath to download parent directory.
-     * @return
+     * @return return file for download
      */
     public File getDownloadDestinationDirectory(String relativePath) {
         return new File(Params.addUserDir(relativePath));
@@ -311,7 +310,7 @@ public class TestahUtil {
     /**
      * Create File reference to parent directory of a file download.
      * @param relativePath to download parent directory.
-     * @return
+     * @return Unzip directory File
      */
     public File getUnZipDestinationDirectory(String relativePath) {
         return new File(Params.addUserDir(relativePath));
