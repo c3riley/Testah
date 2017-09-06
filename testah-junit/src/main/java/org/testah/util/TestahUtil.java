@@ -272,6 +272,15 @@ public class TestahUtil {
     }
 
     /**
+     * Create File reference to parent directory of a file download.
+     * @param relativePath to download parent directory.
+     * @return
+     */
+    public File getDownloadDestinationDirectory(String relativePath) {
+        return new File(Params.addUserDir(relativePath));
+    }
+
+    /**
      * Download file.
      *
      * @param urlToUse
@@ -281,13 +290,16 @@ public class TestahUtil {
      * @return the file
      */
     public File downloadFile(final String urlToUse, final String destination) {
+        final File downloadFileDirectory = getDownloadDestinationDirectory(destination);
+        return downloadFile(urlToUse, downloadFileDirectory);
+    }
+
+    public File downloadFile(final String urlToUse, final File destinationDir) {
         try {
-            final File downloadFileDirectory = new File(Params.addUserDir(destination));
-            TS.log().trace("downloadFileDirectory mkdirs: " + downloadFileDirectory.mkdirs());
-            final File fileDownLoaded = File.createTempFile("download", "", downloadFileDirectory);
+            TS.log().trace("downloadFileDirectory mkdirs: " + destinationDir.mkdirs());
+            final File fileDownLoaded = File.createTempFile("download", "", destinationDir);
             final byte[] fileBytes = TS.http().doGet(urlToUse).getResponseBytes();
-            try (FileOutputStream fileOuputStream = new FileOutputStream(
-                    File.createTempFile("download", "", downloadFileDirectory))) {
+            try (FileOutputStream fileOuputStream = new FileOutputStream(fileDownLoaded)) {
                 fileOuputStream.write(fileBytes);
             }
             return fileDownLoaded;
@@ -295,6 +307,14 @@ public class TestahUtil {
             TS.log().warn(e);
         }
         return null;
+    }
+    /**
+     * Create File reference to parent directory of a file download.
+     * @param relativePath to download parent directory.
+     * @return
+     */
+    public File getUnZipDestinationDirectory(String relativePath) {
+        return new File(Params.addUserDir(relativePath));
     }
 
     /**
