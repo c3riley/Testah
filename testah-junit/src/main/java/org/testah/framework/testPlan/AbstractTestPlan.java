@@ -44,13 +44,13 @@ import java.util.HashMap;
 public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests {
 
     /** The test plan. */
-    private static ThreadLocal<TestPlanDto> testPlan = new ThreadLocal<>();;
+    private static ThreadLocal<TestPlanDto> testPlan = new ThreadLocal<>();
 
     /** The test case. */
-    private static ThreadLocal<TestCaseDto> testCase = new ThreadLocal<>();;
+    private static ThreadLocal<TestCaseDto> testCase = new ThreadLocal<>();
 
     /** The test step. */
-    private static ThreadLocal<TestStepDto> testStep = new ThreadLocal<>();;
+    private static ThreadLocal<TestStepDto> testStep = new ThreadLocal<>();
 
     /** The test plan start. */
     private static ThreadLocal<Boolean> testPlanStart = new ThreadLocal<>();

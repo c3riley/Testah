@@ -130,6 +130,7 @@ public abstract class AbstractFormatter {
      *
      * @param reportName
      *            the report name
+     * @param directory directory to write the report to
      * @return the abstract formatter
      */
     public AbstractFormatter createReport(final String reportName, final String directory) {

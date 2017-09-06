@@ -5,6 +5,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
 //apply plugin: 'findbugs'
+//apply plugin: 'checkstyle'
 
 
 //apply plugin: 'org.jenkins-ci.jpi'

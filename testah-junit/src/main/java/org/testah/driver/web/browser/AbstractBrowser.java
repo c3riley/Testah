@@ -582,7 +582,7 @@ public abstract class AbstractBrowser<T> {
         try {
             final String version = driver.toString().toLowerCase();
             File f = getScreenshotDir(path);
-            f.mkdirs();
+            TS.log().trace("screenshotDir.mkdir " + f.mkdirs());
             if (f.isDirectory()) {
                 f = File.createTempFile("screenshot_", ".png", f);
             }

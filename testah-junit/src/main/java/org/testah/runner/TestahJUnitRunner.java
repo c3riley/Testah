@@ -44,7 +44,7 @@ public class TestahJUnitRunner {
      * @param jUnitTestPlanClasses the j unit test plan classes
      * @return the list
      */
-    public List<ResultDto> runTests(final int numConcurrent, final Set<Class<?>> jUnitTestPlanClasses) {
+    private List<ResultDto> runTests(final int numConcurrent, final Set<Class<?>> jUnitTestPlanClasses) {
         try {
             if (null == jUnitTestPlanClasses || jUnitTestPlanClasses.size() == 0) {
                 TS.log().warn("No TestPlans Found to Run!");
@@ -84,7 +84,7 @@ public class TestahJUnitRunner {
         return inUse;
     }
 
-    public static void setInUse(final boolean inUse) {
+    private static void setInUse(final boolean inUse) {
         TestahJUnitRunner.inUse = inUse;
     }
 }

@@ -228,11 +228,11 @@ public class Cli {
                     TS.getTestPlanReporter().reportResults(result.getTestPlan(), false, this.opt.getOutput());
                 }
             }
-        }
 
-        for (final ResultDto result : results) {
-            if (null != result.getTestPlan()) {
-                System.out.println("" + result.getTestPlan().getRunInfo().getReportFilePath().get("html"));
+            for (final ResultDto result : results) {
+                if (null != result.getTestPlan()) {
+                    System.out.println("" + result.getTestPlan().getRunInfo().getReportFilePath().get("html"));
+                }
             }
         }
 
