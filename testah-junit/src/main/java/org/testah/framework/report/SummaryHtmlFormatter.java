@@ -1,6 +1,7 @@
 package org.testah.framework.report;
 
 import org.apache.velocity.VelocityContext;
+import org.testah.client.enums.TestStatus;
 import org.testah.framework.dto.ResultDto;
 
 import java.util.HashMap;
@@ -25,19 +26,28 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
      * @see org.testah.framework.report.AbstractFormatter#getContext(org.apache.velocity.VelocityContext)
      */
     public VelocityContext getContext(final VelocityContext context) {
-        final HashMap<String, Integer> counts = new HashMap<String, Integer>();
-        counts.put("P", 0);
-        counts.put("F", 0);
-        counts.put("I", 0);
+
+        final HashMap<TestStatus, Integer> counts = new HashMap<TestStatus, Integer>();
+        counts.put(TestStatus.PASSED, 0);
+        counts.put(TestStatus.FAILED, 0);
+        counts.put(TestStatus.IGNORE, 0);
         getResults().forEach(result -> {
-            result.getTestPlan().getRunInfo().recalc(result.getTestPlan());
-            counts.put("P", counts.get("P") + result.getTestPlan().getRunInfo().getPass());
-            counts.put("F", counts.get("F") + result.getTestPlan().getRunInfo().getFail());
-            counts.put("I", counts.get("I") + result.getTestPlan().getRunInfo().getIgnore());
+            if (null != result.getTestPlan()) {
+                result.getTestPlan().getRunInfo().recalc(result.getTestPlan());
+                counts.put(TestStatus.PASSED, counts.get(TestStatus.PASSED) + result.getTestPlan().getRunInfo().getPass());
+                counts.put(TestStatus.FAILED, counts.get(TestStatus.FAILED) + result.getTestPlan().getRunInfo().getFail());
+                counts.put(TestStatus.IGNORE, counts.get(TestStatus.IGNORE) + result.getTestPlan().getRunInfo().getIgnore());
+            } else {
+                int pass = result.getJunitResult().getRunCount() -
+                        (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
+                counts.put(TestStatus.PASSED, counts.get(TestStatus.PASSED) + pass);
+                counts.put(TestStatus.FAILED, counts.get(TestStatus.FAILED) + result.getJunitResult().getFailureCount());
+                counts.put(TestStatus.IGNORE, counts.get(TestStatus.IGNORE) + result.getJunitResult().getIgnoreCount());
+            }
         });
 
         context.put("GoogleChart",
-                getGoogleChart(counts.get("F"), counts.get("P"), counts.get("I")));
+                getGoogleChart(counts.get(TestStatus.FAILED), counts.get(TestStatus.PASSED), counts.get(TestStatus.IGNORE)));
 
         return context;
     }

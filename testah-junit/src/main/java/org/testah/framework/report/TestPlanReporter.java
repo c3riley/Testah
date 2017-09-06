@@ -24,21 +24,22 @@ public class TestPlanReporter {
 
     private JiraRemoteLinkBuilder jiraRemoteLinkBuilder = null;
 
-
     /**
      * Report results.
      *
-     * @param testPlan
-     *            the test plan
+     * @param testPlan the test plan
      */
     public void reportResults(final TestPlanDto testPlan) {
         reportResults(testPlan, TS.params().isAutoOpenHtmlReport(), TS.params().getOutput());
     }
+
     /**
      * Report results.
      *
-     * @param testPlan
-     *            the test plan
+     * @param testPlan       the test plan
+     * @param autoOpenReport should report get opened in default browser
+     * @param outputDir      output directory to use
+     * @return TestPlanDto returned with recaled info
      */
     public TestPlanDto reportResults(final TestPlanDto testPlan, final boolean autoOpenReport, final String outputDir) {
         String filename = "results";
@@ -90,7 +91,7 @@ public class TestPlanReporter {
             reportFile = new HtmlFormatter(testPlan).createReport(filename + "." + reportType, outputDir).getReportFile();
             testPlan.getRunInfo().addReportFilePath(reportType, reportFile.getAbsolutePath());
             TS.log().info(Cli.BAR_WALL + "Report Html: " + reportFile.getAbsolutePath());
-            if(autoOpenReport) {
+            if (autoOpenReport) {
                 openReport(reportFile.getAbsolutePath());
             }
         }
@@ -156,8 +157,7 @@ public class TestPlanReporter {
     /**
      * Open report.
      *
-     * @param pathToReport
-     *            the path to report
+     * @param pathToReport the path to report
      */
     public void openReport(final String pathToReport) {
         if (TS.params().isAutoOpenHtmlReport()) {

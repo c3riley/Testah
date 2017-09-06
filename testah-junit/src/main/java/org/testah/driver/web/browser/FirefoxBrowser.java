@@ -1,14 +1,14 @@
 package org.testah.driver.web.browser;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testah.TS;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * The Class FirefoxBrowser.

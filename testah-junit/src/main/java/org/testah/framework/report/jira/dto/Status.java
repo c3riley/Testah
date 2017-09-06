@@ -1,10 +1,4 @@
-
 package org.testah.framework.report.jira.dto;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Generated;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -13,24 +7,33 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.annotation.Generated;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class Status.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
-@JsonPropertyOrder({ "resolved", "icon" })
+@JsonPropertyOrder({"resolved", "icon"})
 public class Status {
 
-    /** The resolved. */
+    /**
+     * The resolved.
+     */
     @JsonProperty("resolved")
     private Boolean resolved;
-    
-    /** The icon. */
+
+    /**
+     * The icon.
+     */
     @JsonProperty("icon")
     private Icon2 icon;
-    
-    /** The additional properties. */
+
+    /**
+     * The additional properties.
+     */
     @JsonIgnore
     private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
@@ -47,7 +50,7 @@ public class Status {
     /**
      * Sets the resolved.
      *
-     * @param resolved            The resolved
+     * @param resolved The resolved
      * @return the status
      */
     @JsonProperty("resolved")
@@ -69,7 +72,7 @@ public class Status {
     /**
      * Sets the icon.
      *
-     * @param icon            The icon
+     * @param icon The icon
      * @return the status
      */
     @JsonProperty("icon")
@@ -91,7 +94,7 @@ public class Status {
     /**
      * Sets the additional property.
      *
-     * @param name the name
+     * @param name  the name
      * @param value the value
      * @return the status
      */

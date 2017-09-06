@@ -1,15 +1,15 @@
 package org.testah.util;
 
+import org.newsclub.net.unix.AFUNIXSocket;
+import org.newsclub.net.unix.AFUNIXSocketAddress;
+import org.newsclub.net.unix.AFUNIXSocketException;
+import org.testah.TS;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-
-import org.newsclub.net.unix.AFUNIXSocket;
-import org.newsclub.net.unix.AFUNIXSocketAddress;
-import org.newsclub.net.unix.AFUNIXSocketException;
-import org.testah.TS;
 
 /**
  * The Class StrongSwanClient.
@@ -17,7 +17,9 @@ import org.testah.TS;
 // https://github.com/strongswan/strongswan/blob/master/src/libcharon/plugins/vici/ruby/lib/vici.rb
 public class StrongSwanClient {
 
-    /** The socket full path. */
+    /**
+     * The socket full path.
+     */
     private String socketFullPath = "/tmp/socketname";
 
     /**
@@ -30,8 +32,7 @@ public class StrongSwanClient {
     /**
      * Instantiates a new strong swan client.
      *
-     * @param socketFullPath
-     *            the socket full path
+     * @param socketFullPath the socket full path
      */
     public StrongSwanClient(final String socketFullPath) {
         this.setSocketFullPath(socketFullPath);
@@ -42,25 +43,36 @@ public class StrongSwanClient {
      */
     public static enum Message {
 
-        /** The section start. */
+        /**
+         * The section start.
+         */
         SECTION_START(1),
-        /** The section end. */
+        /**
+         * The section end.
+         */
         SECTION_END(2),
-        /** The list start. */
+        /**
+         * The list start.
+         */
         LIST_START(4),
-        /** The list item. */
+        /**
+         * The list item.
+         */
         LIST_ITEM(5),
-        /** The list end. */
+        /**
+         * The list end.
+         */
         LIST_END(6);
 
-        /** The value. */
+        /**
+         * The value.
+         */
         private final int value;
 
         /**
          * Instantiates a new message.
          *
-         * @param value
-         *            the value
+         * @param value the value
          */
         Message(final int value) {
             this.value = value;
@@ -80,10 +92,8 @@ public class StrongSwanClient {
     /**
      * Send message.
      *
-     * @param messages
-     *            the messages
-     * @throws Exception
-     *             the exception
+     * @param messages the messages
+     * @throws Exception the exception
      */
     public void sendMessage(final String... messages) throws Exception {
 
@@ -129,8 +139,7 @@ public class StrongSwanClient {
     /**
      * Sets the socket full path.
      *
-     * @param socketFullPath
-     *            the new socket full path
+     * @param socketFullPath the new socket full path
      */
     public void setSocketFullPath(final String socketFullPath) {
         this.socketFullPath = socketFullPath;

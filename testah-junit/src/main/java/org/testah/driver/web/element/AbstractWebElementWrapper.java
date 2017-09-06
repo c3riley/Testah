@@ -1,8 +1,5 @@
 package org.testah.driver.web.element;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -11,25 +8,38 @@ import org.testah.TS;
 import org.testah.driver.web.browser.AbstractBrowser;
 import org.testah.framework.dto.StepAction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The Class AbstractWebElementWrapper is designed to wrap Webdriver WebElements and provide for more macrotized methods and chaining for less
  * code in tests.
  */
 public abstract class AbstractWebElementWrapper {
 
-    /** The by. */
+    /**
+     * The by.
+     */
     private final By by;
 
-    /** The web element. */
+    /**
+     * The web element.
+     */
     private WebElement webElement;
 
-    /** The auto report. */
+    /**
+     * The auto report.
+     */
     private boolean autoReport = true;
 
-    /** The timeout. */
+    /**
+     * The timeout.
+     */
     private int timeout = TS.params().getDefaultWaitTime();
 
-    /** The driver. */
+    /**
+     * The driver.
+     */
     private AbstractBrowser<?> driver = null;
 
     /**
@@ -42,12 +52,9 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Instantiates a new abstract web element wrapper.
      *
-     * @param by
-     *            the by
-     * @param webElement
-     *            the web element
-     * @param driver
-     *            the driver
+     * @param by         the by
+     * @param webElement the web element
+     * @param driver     the driver
      */
     public AbstractWebElementWrapper(final By by, final WebElement webElement, final AbstractBrowser<?> driver) {
         this.by = by;
@@ -58,8 +65,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Assert attribute exists.
      *
-     * @param attributeName
-     *            the attribute name
+     * @param attributeName the attribute name
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper assertAttributeExists(final String attributeName) {
@@ -70,14 +76,12 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Assert attribute value.
      *
-     * @param attributeName
-     *            the attribute name
-     * @param attributeExpectedValue
-     *            the attribute expected value
+     * @param attributeName          the attribute name
+     * @param attributeExpectedValue the attribute expected value
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper assertAttributeValue(final String attributeName,
-            final String attributeExpectedValue) {
+                                                          final String attributeExpectedValue) {
         TS.asserts().equalsTo("assertAttributeValue", attributeExpectedValue, getAttribute(attributeName));
         return getSelf();
     }
@@ -164,8 +168,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Assert type text.
      *
-     * @param value
-     *            the value
+     * @param value the value
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper assertTypeText(final String value) {
@@ -207,10 +210,8 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Element is ok.
      *
-     * @param activity
-     *            the activity
-     * @param autoReport
-     *            the auto report
+     * @param activity   the activity
+     * @param autoReport the auto report
      * @return true, if successful
      */
     public boolean elementIsOk(final String activity, final boolean autoReport) {
@@ -245,8 +246,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Drag to and drop on.
      *
-     * @param by
-     *            the by
+     * @param by the by
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper dragToAndDropOn(final By by) {
@@ -256,8 +256,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Drag to and drop on.
      *
-     * @param elementToDropOn
-     *            the element to drop on
+     * @param elementToDropOn the element to drop on
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper dragToAndDropOn(final AbstractWebElementWrapper elementToDropOn) {
@@ -272,10 +271,8 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Drag to and drop by.
      *
-     * @param xOffset
-     *            the x offset
-     * @param yOffset
-     *            the y offset
+     * @param xOffset the x offset
+     * @param yOffset the y offset
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper dragToAndDropBy(final int xOffset, final int yOffset) {
@@ -299,8 +296,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Move to.
      *
-     * @param elementToMoveTo
-     *            the element to move to
+     * @param elementToMoveTo the element to move to
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper moveTo(final By elementToMoveTo) {
@@ -310,8 +306,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Move to.
      *
-     * @param elementToMoveTo
-     *            the element to move to
+     * @param elementToMoveTo the element to move to
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper moveTo(final AbstractWebElementWrapper elementToMoveTo) {
@@ -337,8 +332,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Gets the attribute.
      *
-     * @param attributeName
-     *            the attribute name
+     * @param attributeName the attribute name
      * @return the attribute
      */
     public String getAttribute(final String attributeName) {
@@ -378,8 +372,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Gets the elements with in.
      *
-     * @param locator
-     *            the locator
+     * @param locator the locator
      * @return the elements with in
      */
     public List<AbstractWebElementWrapper> getElementsWithIn(final By locator) {
@@ -389,16 +382,13 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Gets the elements with in.
      *
-     * @param locator
-     *            the locator
-     * @param noWait
-     *            the no wait
-     * @param autoAssert
-     *            the auto assert
+     * @param locator    the locator
+     * @param noWait     the no wait
+     * @param autoAssert the auto assert
      * @return the elements with in
      */
     public List<AbstractWebElementWrapper> getElementsWithIn(final By locator, final boolean noWait,
-            final boolean autoAssert) {
+                                                             final boolean autoAssert) {
         assertFound();
         String error = "";
         for (int i = 1; i <= timeout; i++) {
@@ -423,8 +413,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Gets the elements with in no wait.
      *
-     * @param locator
-     *            the locator
+     * @param locator the locator
      * @return the elements with in no wait
      */
     public List<AbstractWebElementWrapper> getElementsWithInNoWait(final By locator) {
@@ -434,8 +423,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Gets the element with in.
      *
-     * @param locator
-     *            the locator
+     * @param locator the locator
      * @return the element with in
      */
     public AbstractWebElementWrapper getElementWithIn(final By locator) {
@@ -445,16 +433,13 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Gets the element with in.
      *
-     * @param locator
-     *            the locator
-     * @param noWait
-     *            the no wait
-     * @param autoAssert
-     *            the auto assert
+     * @param locator    the locator
+     * @param noWait     the no wait
+     * @param autoAssert the auto assert
      * @return the element with in
      */
     public AbstractWebElementWrapper getElementWithIn(final By locator, final boolean noWait,
-            final boolean autoAssert) {
+                                                      final boolean autoAssert) {
         assertFound();
         String error = "";
         for (int i = 1; i <= timeout; i++) {
@@ -479,8 +464,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Gets the element with in no wait.
      *
-     * @param locator
-     *            the locator
+     * @param locator the locator
      * @return the element with in no wait
      */
     public AbstractWebElementWrapper getElementWithInNoWait(final By locator) {
@@ -490,14 +474,12 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Gets the list of webelements wrapped.
      *
-     * @param locator
-     *            the locator
-     * @param webElements
-     *            the web elements
+     * @param locator     the locator
+     * @param webElements the web elements
      * @return the list of webelements wrapped
      */
     public List<AbstractWebElementWrapper> getListOfWebelementsWrapped(final By locator,
-            final List<WebElement> webElements) {
+                                                                       final List<WebElement> webElements) {
         final List<AbstractWebElementWrapper> lst = new ArrayList<>();
         if (null != webElements) {
             for (final WebElement e : webElements) {
@@ -606,8 +588,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Checks if is displayed.
      *
-     * @param autoReport
-     *            the auto report
+     * @param autoReport the auto report
      * @return true, if is displayed
      */
     public boolean isDisplayed(final boolean autoReport) {
@@ -657,8 +638,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Mouse over and click.
      *
-     * @param elementToClick
-     *            the element to click
+     * @param elementToClick the element to click
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper mouseOverAndClick(final By elementToClick) {
@@ -688,8 +668,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Pause.
      *
-     * @param milliseconds
-     *            the milliseconds
+     * @param milliseconds the milliseconds
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper pause(final Long milliseconds) {
@@ -700,8 +679,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Sets the auto report.
      *
-     * @param autoReport
-     *            the auto report
+     * @param autoReport the auto report
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper setAutoReport(final boolean autoReport) {
@@ -712,8 +690,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Sets the timeout.
      *
-     * @param timeout
-     *            the timeout
+     * @param timeout the timeout
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper setTimeout(final int timeout) {
@@ -724,8 +701,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Type text.
      *
-     * @param value
-     *            the value
+     * @param value the value
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper typeText(final String value) {
@@ -739,8 +715,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Verfify elements with in.
      *
-     * @param locator
-     *            the locator
+     * @param locator the locator
      * @return true, if successful
      */
     public boolean verfifyElementsWithIn(final By locator) {
@@ -750,8 +725,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Verify element with in.
      *
-     * @param locator
-     *            the locator
+     * @param locator the locator
      * @return true, if successful
      */
     public boolean verifyElementWithIn(final By locator) {
@@ -779,10 +753,8 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Verifyt attribute value.
      *
-     * @param attributeName
-     *            the attribute name
-     * @param attributeExpectedValue
-     *            the attribute expected value
+     * @param attributeName          the attribute name
+     * @param attributeExpectedValue the attribute expected value
      * @return true, if successful
      */
     public boolean verifytAttributeValue(final String attributeName, final String attributeExpectedValue) {
@@ -792,16 +764,13 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Wait till attribute equals.
      *
-     * @param attributeName
-     *            the attribute name
-     * @param value
-     *            the value
-     * @param timeout
-     *            the timeout
+     * @param attributeName the attribute name
+     * @param value         the value
+     * @param timeout       the timeout
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper waitTillAttributeEquals(final String attributeName, final String value,
-            final int timeout) {
+                                                             final int timeout) {
         for (int i = 1; i <= timeout; i++) {
             if (verifytAttributeValue(attributeName, value)) {
                 break;
@@ -831,8 +800,7 @@ public abstract class AbstractWebElementWrapper {
      * Once timeout is exceeded or the element is not found or not displated an assert will be triggered since this methods assumes you want it
      * to no longer to be found.
      *
-     * @param timeout
-     *            the timeout
+     * @param timeout the timeout
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper waitTillGone(final int timeout) {
@@ -862,8 +830,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Wait till is displayed.
      *
-     * @param timeout
-     *            the timeout
+     * @param timeout the timeout
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper waitTillIsDisplayed(final int timeout) {
@@ -896,8 +863,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Wait till not displayed.
      *
-     * @param timeout
-     *            the timeout
+     * @param timeout the timeout
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper waitTillNotDisplayed(final int timeout) {
@@ -935,10 +901,8 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Scroll into view.
      *
-     * @param amountToScrollDownBy
-     *            the amount to scroll down by
-     * @param numberOfIterations
-     *            the number of iterations
+     * @param amountToScrollDownBy the amount to scroll down by
+     * @param numberOfIterations   the number of iterations
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper scrollIntoView(final int amountToScrollDownBy, final int numberOfIterations) {

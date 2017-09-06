@@ -1,8 +1,5 @@
 package org.testah.driver.web.browser;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
@@ -10,12 +7,17 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * The Class PhantomJsBrowser.
  */
 public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
 
-    /** The service. */
+    /**
+     * The service.
+     */
     private PhantomJSDriverService service = null;
 
     /*
@@ -43,7 +45,7 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
      */
     public PhantomJsBrowser startService() throws IOException {
         service = new PhantomJSDriverService.Builder().usingPhantomJSExecutable(new File(getPhantomJsBinPath()))
-                .usingAnyFreePort().usingCommandLineArguments(new String[] { "--ignore-ssl-errors=true" }).build();
+                .usingAnyFreePort().usingCommandLineArguments(new String[]{"--ignore-ssl-errors=true"}).build();
         service.start();
         return this;
     }

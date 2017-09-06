@@ -1,9 +1,6 @@
 package org.testah.framework.cli;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-
+import com.google.common.collect.ImmutableSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +10,9 @@ import org.testah.client.dto.TestCaseDto;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 
 public class TestFilterRunTypeTest {
 
@@ -65,7 +64,7 @@ public class TestFilterRunTypeTest {
     }
 
     private void testFilterMyRunType(final int expectedTest1, final int expectedTest2, final int expectedTest3,
-            final int expectedTest4, final Class<?>... classesToAdd) {
+                                     final int expectedTest4, final Class<?>... classesToAdd) {
         TestFilter filter = new TestFilter();
         Set<Class<?>> classes = ImmutableSet.copyOf(Arrays.asList(classesToAdd));
 
@@ -102,50 +101,68 @@ class TestPlanWithRunTypeDefault {
 class TestPlanWithRunTypeEmpty {
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 }
 
-@TestPlan(runTypes = { "" })
+@TestPlan(runTypes = {""})
 class TestPlanWithRunTypeEmptyString {
 
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 
 }
 
-@TestPlan(runTypes = { "TEST_RunType" })
+@TestPlan(runTypes = {"TEST_RunType"})
 class TestPlanWithRunType {
     @TestCase()
     public void test1() {
-    };
+    }
 
-    @TestCase(runTypes = { "TEST_RunType" })
+    ;
+
+    @TestCase(runTypes = {"TEST_RunType"})
     public void test2() {
-    };
+    }
+
+    ;
 
 }
 
-@TestPlan(runTypes = { "TEST_RunType", "TEST_RunType1", "TEST_RunType2", "TEST_RunType3" })
+@TestPlan(runTypes = {"TEST_RunType", "TEST_RunType1", "TEST_RunType2", "TEST_RunType3"})
 class TestPlanWithManyRunTypes {
     @TestCase(runTypes = {})
     public void test1() {
-    };
+    }
 
-    @TestCase(runTypes = { "" })
+    ;
+
+    @TestCase(runTypes = {""})
     public void test2() {
-    };
+    }
 
-    @TestCase(runTypes = { "TEST_RunType" })
+    ;
+
+    @TestCase(runTypes = {"TEST_RunType"})
     public void test3() {
-    };
+    }
 
-    @TestCase(runTypes = { "TEST_RunType", "TEST_RunType1", "TEST_RunType2", "TEST_RunType3" })
+    ;
+
+    @TestCase(runTypes = {"TEST_RunType", "TEST_RunType1", "TEST_RunType2", "TEST_RunType3"})
     public void test4() {
-    };
+    }
+
+    ;
 
     @TestCase()
     public void test5() {
-    };
+    }
+
+    ;
 
 }

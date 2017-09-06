@@ -29,8 +29,7 @@ public class StepAction extends StepActionDto {
     /**
      * Adds the.
      *
-     * @param stepAction
-     *            the step action
+     * @param stepAction the step action
      * @return the step action dto
      */
     public static StepActionDto add(final StepAction stepAction) {
@@ -55,22 +54,16 @@ public class StepAction extends StepActionDto {
     /**
      * Creates the assert result.
      *
-     * @param message
-     *            the message
-     * @param status
-     *            the status
-     * @param assertMethod
-     *            the assert method
-     * @param expected
-     *            the expected
-     * @param actual
-     *            the actual
-     * @param exception
-     *            the exception
+     * @param message      the message
+     * @param status       the status
+     * @param assertMethod the assert method
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param exception    the exception
      * @return the step action
      */
     public static StepAction createAssertResult(final String message, final Boolean status, final String assertMethod,
-            final Object expected, final Object actual, final Throwable exception) {
+                                                final Object expected, final Object actual, final Throwable exception) {
         final StepAction step = new StepAction();
         step.setActionName(assertMethod);
         step.setMessage1(message);
@@ -94,22 +87,16 @@ public class StepAction extends StepActionDto {
     /**
      * Creates the verify result.
      *
-     * @param message
-     *            the message
-     * @param status
-     *            the status
-     * @param assertMethod
-     *            the assert method
-     * @param expected
-     *            the expected
-     * @param actual
-     *            the actual
-     * @param exception
-     *            the exception
+     * @param message      the message
+     * @param status       the status
+     * @param assertMethod the assert method
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param exception    the exception
      * @return the step action
      */
     public static StepAction createVerifyResult(final String message, final Boolean status, final String assertMethod,
-            final Object expected, final Object actual, final Throwable exception) {
+                                                final Object expected, final Object actual, final Throwable exception) {
         final StepAction step = new StepAction();
         step.setActionName(assertMethod);
         step.setMessage1(message + " - " + status);
@@ -127,8 +114,7 @@ public class StepAction extends StepActionDto {
     /**
      * Creates the info.
      *
-     * @param message1
-     *            the message1
+     * @param message1 the message1
      * @return the step action
      */
     public static StepAction createInfo(final String message1) {
@@ -138,10 +124,8 @@ public class StepAction extends StepActionDto {
     /**
      * Creates the info.
      *
-     * @param message1
-     *            the message1
-     * @param message2
-     *            the message2
+     * @param message1 the message1
+     * @param message2 the message2
      * @return the step action
      */
     public static StepAction createInfo(final String message1, final String message2) {
@@ -151,23 +135,19 @@ public class StepAction extends StepActionDto {
     /**
      * Creates the info.
      *
-     * @param message1
-     *            the message1
-     * @param message2
-     *            the message2
-     * @param message3
-     *            the message3
-     * @param autoLog
-     *            the auto log
+     * @param message1 the message1
+     * @param message2 the message2
+     * @param message3 the message3
+     * @param autoLog  the auto log
      * @return the step action
      */
     public static StepAction createInfo(final String message1, final String message2, final String message3,
-            final boolean autoLog) {
+                                        final boolean autoLog) {
         return createInfo(message1, message2, message3, autoLog, false);
     }
 
     public static StepAction createInfo(final String message1, final String message2, final String message3,
-            final boolean autoLog, final boolean takeSnapShot) {
+                                        final boolean autoLog, final boolean takeSnapShot) {
         final StepAction step = new StepAction();
         step.setMessage1(message1);
         step.setMessage2(message2);
@@ -188,10 +168,8 @@ public class StepAction extends StepActionDto {
     /**
      * Creates the browser action.
      *
-     * @param message1
-     *            the message1
-     * @param by
-     *            the by
+     * @param message1 the message1
+     * @param by       the by
      * @return the step action
      */
     public static StepAction createBrowserAction(final String message1, final Object by) {
@@ -209,10 +187,8 @@ public class StepAction extends StepActionDto {
     /**
      * Creates the browser action.
      *
-     * @param message1
-     *            the message1
-     * @param message2
-     *            the message2
+     * @param message1 the message1
+     * @param message2 the message2
      * @return the step action
      */
     public static StepAction createBrowserAction(final String message1, final String message2) {

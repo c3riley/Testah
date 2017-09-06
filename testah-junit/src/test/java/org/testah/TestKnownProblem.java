@@ -1,4 +1,3 @@
-
 package org.testah;
 
 import org.junit.Assert;
@@ -9,13 +8,13 @@ import org.testah.framework.annotations.KnownProblem;
 @KnownProblem(description = "test")
 public class TestKnownProblem {
 
-	@SuppressWarnings("deprecation")
-	@Test
-	public void testKnownProblemTestPlan() {
-		final KnownProblem k = this.getClass().getAnnotation(KnownProblem.class);
-		Assert.assertEquals("test", k.description());
-		Assert.assertEquals(new String[] {}, k.linkedIds());
-		Assert.assertEquals(TypeOfKnown.DEFECT, k.typeOfKnown());
-	}
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testKnownProblemTestPlan() {
+        final KnownProblem k = this.getClass().getAnnotation(KnownProblem.class);
+        Assert.assertEquals("test", k.description());
+        Assert.assertEquals(new String[]{}, k.linkedIds());
+        Assert.assertEquals(TypeOfKnown.DEFECT, k.typeOfKnown());
+    }
 
 }

@@ -7,32 +7,45 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum TypeOfKnown {
 
-    /** The flaky. */
+    /**
+     * The flaky.
+     */
     FLAKY("Test has issues causing it to fail sometimes requires investigation"),
 
-        /** The refactor required. */
-        REFACTOR_REQUIRED("Automation related issues, requires code to be refactored"),
+    /**
+     * The refactor required.
+     */
+    REFACTOR_REQUIRED("Automation related issues, requires code to be refactored"),
 
-        /** The defect. */
-        DEFECT("Application Under Test Defect results in fail"),
+    /**
+     * The defect.
+     */
+    DEFECT("Application Under Test Defect results in fail"),
 
-        /** The app changed. */
-        APP_CHANGED("Application Under Test has changed causes test to fail and need refactor"),
+    /**
+     * The app changed.
+     */
+    APP_CHANGED("Application Under Test has changed causes test to fail and need refactor"),
 
-        /** The envir. */
-        ENVIR("Issue with the Testing enviroment"),
+    /**
+     * The envir.
+     */
+    ENVIR("Issue with the Testing enviroment"),
 
-        /** The other. */
-        OTHER("Other type of issue see related linked ids");
+    /**
+     * The other.
+     */
+    OTHER("Other type of issue see related linked ids");
 
-    /** The description. */
+    /**
+     * The description.
+     */
     final String description;
 
     /**
      * Instantiates a new type of known.
      *
-     * @param description
-     *            the description
+     * @param description the description
      */
     TypeOfKnown(final String description) {
         this.description = description;

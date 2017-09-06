@@ -247,7 +247,7 @@ public class AuditReport {
             testCaseSheet.autoSizeColumn(column);
         }
 
-        try(FileOutputStream outputStream = new FileOutputStream(filePathAndName)) {
+        try (FileOutputStream outputStream = new FileOutputStream(filePathAndName)) {
             workbook.write(outputStream);
             workbook.close();
         } catch (Exception e) {

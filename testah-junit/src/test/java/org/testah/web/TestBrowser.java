@@ -1,4 +1,3 @@
-
 package org.testah.web;
 
 import org.junit.Before;
@@ -32,7 +31,7 @@ public class TestBrowser extends BrowserTestPlan {
     @TestCase
     @Test
     public void TestPageTitle() {
-        TS.browser().getWebElement(By.name("q"),30).waitTillIsDisplayed();
+        TS.browser().getWebElement(By.name("q"), 30).waitTillIsDisplayed();
         TS.browser().waitForTitle(baseTitle, 20);
         TS.asserts().equalsTo(baseTitle, TS.browser().getTitle());
         TS.browser().assertTitle(baseTitle);
@@ -49,7 +48,7 @@ public class TestBrowser extends BrowserTestPlan {
     @Test
     public void TestScreenShot() {
         final String screenshot = TS.browser().takeScreenShot();
-        final File f = new File(TS.params().getOutput(),screenshot);
+        final File f = new File(TS.params().getOutput(), screenshot);
         TS.asserts().notNull(f);
         step("step 2");
         TS.asserts().isTrue(f.exists());

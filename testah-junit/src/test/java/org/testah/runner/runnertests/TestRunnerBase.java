@@ -5,8 +5,7 @@ import org.testah.TS;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.testPlan.HttpTestPlan;
 
-
-public class TestRunnerBase extends HttpTestPlan{
+public class TestRunnerBase extends HttpTestPlan {
 
     @Test
     @TestCase

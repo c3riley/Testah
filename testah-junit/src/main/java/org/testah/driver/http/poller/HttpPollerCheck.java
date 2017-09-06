@@ -10,8 +10,7 @@ public interface HttpPollerCheck {
     /**
      * Checks if is done.
      *
-     * @param response
-     *            the response
+     * @param response the response
      * @return true, if is done
      */
     public boolean isDone(final ResponseDto response);

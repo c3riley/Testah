@@ -1,4 +1,3 @@
-
 package org.testah.formatter;
 
 import org.junit.Test;

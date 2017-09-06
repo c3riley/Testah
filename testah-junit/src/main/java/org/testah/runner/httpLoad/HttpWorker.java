@@ -1,10 +1,9 @@
 package org.testah.runner.httpLoad;
 
+import akka.actor.UntypedActor;
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.runner.HttpAkkaRunner;
-
-import akka.actor.UntypedActor;
 
 public class HttpWorker extends UntypedActor {
 

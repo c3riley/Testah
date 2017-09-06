@@ -1,12 +1,11 @@
 package org.testah.driver.web.browser;
 
-import java.io.IOException;
-
+import com.machinepublishers.jbrowserdriver.JBrowserDriver;
+import com.machinepublishers.jbrowserdriver.Settings;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import com.machinepublishers.jbrowserdriver.JBrowserDriver;
-import com.machinepublishers.jbrowserdriver.Settings;
+import java.io.IOException;
 
 /**
  * The Class JBrowserDriverBrowser.
