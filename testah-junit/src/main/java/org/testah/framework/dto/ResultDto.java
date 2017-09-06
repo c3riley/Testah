@@ -41,11 +41,11 @@ public class ResultDto {
      */
     public ResultDto(final Result junitResult) {
         this.junitResult = junitResult;
-        this.testPlan = AbstractTestPlan.getTestPlan();
-        AbstractTestPlan.stopTestPlan();
-        // this.testPlan = new
-        // Cloner().deepClone(AbstractTestPlan.getTestPlan()); // (TestPlanDto)
-        // SerializationUtils.clone(AbstractTestPlan.getTestPlan());
+        if(null!=AbstractTestPlan.getTestPlan()) {
+            this.testPlan = AbstractTestPlan.getTestPlan().clone();
+        } else {
+            this.testPlan = AbstractTestPlan.getTestPlan();
+        }
     }
 
     /**

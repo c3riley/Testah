@@ -1,16 +1,5 @@
 package org.testah.driver.http;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.net.ssl.SSLContext;
-
-import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
@@ -63,6 +52,15 @@ import org.testah.driver.http.requests.PutRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
+import javax.net.ssl.SSLContext;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
+
 /**
  * The Class AbstractHttpWrapper.
  */
@@ -72,7 +70,7 @@ public abstract class AbstractHttpWrapper {
     private int defaultPoolSize = 100;
 
     /** The Default max per route. */
-    private final int DefaultMaxPerRoute = 100;
+    private int DefaultMaxPerRoute = 100;
 
     /** The default connection timeout. */
     private int defaultConnectionTimeout = 5000;
@@ -85,9 +83,6 @@ public abstract class AbstractHttpWrapper {
 
     /** The ignore http error. */
     private boolean ignoreHttpError = false;
-
-    /** The headers. */
-    private Header[] headers = null;
 
     /** The cookie store. */
     private CookieStore cookieStore = null;
@@ -793,27 +788,6 @@ public abstract class AbstractHttpWrapper {
      */
     public AbstractHttpWrapper setCookieSpecs(final String cookieSpecs) {
         this.cookieSpecs = cookieSpecs;
-        return getSelf();
-    }
-
-    /**
-     * Gets the headers.
-     *
-     * @return the headers
-     */
-    public Header[] getHeaders() {
-        return headers;
-    }
-
-    /**
-     * Sets the headers.
-     *
-     * @param headers
-     *            the new headers
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setHeaders(final Header[] headers) {
-        this.headers = headers;
         return getSelf();
     }
 

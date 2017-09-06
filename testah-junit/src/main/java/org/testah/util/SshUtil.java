@@ -1,5 +1,15 @@
 package org.testah.util;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import org.testah.TS;
+import org.testah.framework.dto.StepAction;
+import org.testah.util.dto.ShellInfoDto;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,17 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import org.testah.TS;
-import org.testah.framework.dto.StepAction;
-import org.testah.util.dto.ShellInfoDto;
-
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -290,15 +289,14 @@ public class SshUtil {
      */
     public List<String> getOutputLinesForCommand(final String command,
             final HashMap<Integer, List<String>> outputHash) {
-        List<String> lst = new ArrayList<>();
+        final List<String> lst = new ArrayList<>();
         if (null != command && null != outputHash && !outputHash.isEmpty()) {
-            for (final Integer key : outputHash.keySet()) {
-                if (outputHash.get(key).get(0).equals(command)) {
-                    lst = outputHash.get(key);
+            outputHash.forEach((key,value) -> {
+                if (value.get(0).equals(command)) {
+                    lst.addAll(value);
                     lst.remove(0);
-                    return lst;
                 }
-            }
+            });
         }
         return lst;
     }

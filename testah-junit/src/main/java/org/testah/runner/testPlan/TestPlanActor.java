@@ -1,20 +1,18 @@
 package org.testah.runner.testPlan;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.testah.TS;
-import org.testah.framework.dto.ResultDto;
-
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.routing.RoundRobinRouter;
+import org.testah.TS;
+import org.testah.framework.dto.ResultDto;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class TestPlanActor extends UntypedActor {
 	private static List<ResultDto> results;
-
 	private final ActorRef workerRouter;
 	private final int nrOfWorkers;
 

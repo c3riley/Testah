@@ -1,5 +1,6 @@
 package org.testah.driver.http.requests;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpDelete;
 
@@ -9,16 +10,9 @@ public class DeleteRequestDto extends AbstractRequestDto<DeleteRequestDto> {
         super(new HttpDelete(uri), "DELETE");
     }
 
-    public DeleteRequestDto setPayload(final String payload) {
-        return this;
-    }
-
-    public DeleteRequestDto setPayload(final HttpEntity payload) {
-        return this;
-    }
-
-    public DeleteRequestDto setPayload(final Object payload) {
-        return this;
+    @Override
+    protected DeleteRequestDto setEntity(final HttpEntity payload) {
+        throw new NotImplementedException("Get per Http spec cannot have a payload");
     }
 
 }

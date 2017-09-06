@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.slf4j.MDC;
 
 /**
  * The Class Log.
@@ -14,6 +15,7 @@ public class Log {
 
     /** The logger. */
     private static Log   LOGGER;
+    private static ThreadLocal<Log> _LOGGER;
 
     /** The logger. */
     private final Logger logger;
@@ -26,6 +28,7 @@ public class Log {
     public static Logger getLog() {
         if (null == LOGGER) {
             LOGGER = new Log("Testah");
+            MDC.put("threadId", "" +Thread.currentThread().getId());
         }
         return LOGGER.getLogger();
     }

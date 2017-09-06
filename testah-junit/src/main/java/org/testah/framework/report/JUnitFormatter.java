@@ -7,7 +7,7 @@ import org.testah.client.dto.TestPlanDto;
 /**
  * The Class JUnitFormatter.
  */
-public class JUnitFormatter extends AbstractFormatter {
+public class JUnitFormatter extends AbstractTestPlanFormatter {
 
 	/**
 	 * Instantiates a new j unit formatter.

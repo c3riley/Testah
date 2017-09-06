@@ -1,14 +1,14 @@
 package org.testah.util;
 
+import org.apache.maven.wagon.util.IoUtils;
+import org.testah.TS;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
-
-import org.apache.maven.wagon.util.IoUtils;
-import org.testah.TS;
 
 /**
  * The Class BashUtil.
@@ -73,7 +73,7 @@ public class BashUtil {
 			process.destroy();
 			process.destroyForcibly();
 		} finally {
-			tempScript.delete();
+			TS.log().trace("tempScript.delete " + tempScript.delete());
 		}
 		return getOutput();
 	}

@@ -3,7 +3,7 @@ package org.testah.framework.report;
 import org.apache.velocity.VelocityContext;
 import org.testah.client.dto.TestPlanDto;
 
-public class JsonFormatter extends AbstractFormatter {
+public class JsonFormatter extends AbstractTestPlanFormatter {
 
     public JsonFormatter(final TestPlanDto testPlan) {
         super(testPlan, null);
