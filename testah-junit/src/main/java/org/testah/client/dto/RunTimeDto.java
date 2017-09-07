@@ -2,20 +2,25 @@ package org.testah.client.dto;
 
 import java.util.Date;
 
-
 /**
  * The Class RunTimeDto.
  */
 public class RunTimeDto {
 
-    /** The start time. */
+    /**
+     * The start time.
+     */
     private Long startTime = null;
-    
-    /** The end time. */
-    private Long endTime   = null;
-    
-    /** The duration. */
-    private long duration  = 0L;
+
+    /**
+     * The end time.
+     */
+    private Long endTime = null;
+
+    /**
+     * The duration.
+     */
+    private long duration = 0L;
 
     /**
      * Instantiates a new run time dto.

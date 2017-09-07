@@ -1,10 +1,4 @@
-
 package org.testah.framework.report.jira.dto;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Generated;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -13,23 +7,33 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.annotation.Generated;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The Class Application.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("org.jsonschema2pojo")
-@JsonPropertyOrder({ "type", "name" })
+@JsonPropertyOrder({"type", "name"})
 public class Application {
 
-    /** The type. */
+    /**
+     * The type.
+     */
     @JsonProperty("type")
     private String type;
 
-    /** The name. */
+    /**
+     * The name.
+     */
     @JsonProperty("name")
     private String name;
 
-    /** The additional properties. */
+    /**
+     * The additional properties.
+     */
     @JsonIgnore
     private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
@@ -46,8 +50,7 @@ public class Application {
     /**
      * Sets the type.
      *
-     * @param type
-     *            The type
+     * @param type The type
      * @return the application
      */
     @JsonProperty("type")
@@ -69,8 +72,7 @@ public class Application {
     /**
      * Sets the name.
      *
-     * @param name
-     *            The name
+     * @param name The name
      * @return the application
      */
     @JsonProperty("name")
@@ -92,10 +94,8 @@ public class Application {
     /**
      * Sets the additional property.
      *
-     * @param name
-     *            the name
-     * @param value
-     *            the value
+     * @param name  the name
+     * @param value the value
      * @return the application
      */
     @JsonAnySetter

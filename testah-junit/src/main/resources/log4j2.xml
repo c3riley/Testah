@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="INFO">
-	<Appenders>
-		<Console name="Console" target="SYSTEM_OUT">
-			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level - %-25C{1} - %msg%n" />
-		</Console>
-		<File name="LogFile" fileName="testah.log" immediateFlush="false"
-			append="false">
-			<PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} %-5level - %-25C{1} - %msg%n" />
-		</File>
-	</Appenders>
-	<Loggers>
-		<Root level="debug">
-			<AppenderRef ref="Console" />
-			<AppenderRef ref="LogFile" />
-		</Root>
-	</Loggers>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level - %-25C{1} - %msg%n"/>
+        </Console>
+        <File name="LogFile" fileName="testah.log" immediateFlush="false"
+              append="false">
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} %-5level - %-25C{1} - %msg%n"/>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="LogFile"/>
+        </Root>
+    </Loggers>
 </Configuration>

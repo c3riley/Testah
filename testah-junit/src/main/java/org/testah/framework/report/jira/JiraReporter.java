@@ -1,7 +1,6 @@
 package org.testah.framework.report.jira;
 
-import java.util.List;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
@@ -12,7 +11,7 @@ import org.testah.driver.http.requests.PutRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.report.jira.dto.RemoteIssueLinkDto;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
 
 public class JiraReporter {
 

@@ -1,33 +1,45 @@
 package org.testah.client.dto;
 
+import org.testah.client.enums.TestStatus;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.testah.client.enums.TestStatus;
 
 /**
  * The Class TestStepDto.
  */
 public class TestStepDto {
 
-    /** The step actions. */
+    /**
+     * The step actions.
+     */
     protected List<StepActionDto> stepActions = new ArrayList<StepActionDto>();
 
-    /** The run time. */
+    /**
+     * The run time.
+     */
     private RunTimeDto runTime = new RunTimeDto();
 
-    /** The status. */
+    /**
+     * The status.
+     */
     private Boolean status = null;
 
     private TestStatus statusEnum = null;
 
-    /** The id. */
+    /**
+     * The id.
+     */
     private int id = 0;
 
-    /** The name. */
+    /**
+     * The name.
+     */
     private String name = "";
 
-    /** The description. */
+    /**
+     * The description.
+     */
     private String description = "";
 
     private String exceptionMessage = null;
@@ -42,10 +54,8 @@ public class TestStepDto {
     /**
      * Instantiates a new test step dto.
      *
-     * @param name
-     *            the name
-     * @param description
-     *            the description
+     * @param name        the name
+     * @param description the description
      */
     public TestStepDto(final String name, final String description) {
         setName(name);
@@ -55,8 +65,7 @@ public class TestStepDto {
     /**
      * Adds the step action.
      *
-     * @param stepActions
-     *            the step actions
+     * @param stepActions the step actions
      * @return the test step dto
      */
     public TestStepDto addStepAction(final StepActionDto stepActions) {
@@ -119,8 +128,7 @@ public class TestStepDto {
     /**
      * Sets the run time.
      *
-     * @param runTime
-     *            the run time
+     * @param runTime the run time
      * @return the test step dto
      */
     public TestStepDto setRunTime(final RunTimeDto runTime) {
@@ -140,8 +148,7 @@ public class TestStepDto {
     /**
      * Sets the status.
      *
-     * @param status
-     *            the status
+     * @param status the status
      * @return the test step dto
      */
     public TestStepDto setStatus(final Boolean status) {
@@ -189,8 +196,7 @@ public class TestStepDto {
     /**
      * Adds the step actions.
      *
-     * @param stepAction
-     *            the step action
+     * @param stepAction the step action
      * @return the test step dto
      */
     public TestStepDto addStepActions(final StepActionDto stepAction) {
@@ -201,8 +207,7 @@ public class TestStepDto {
     /**
      * Sets the step actions.
      *
-     * @param stepActions
-     *            the step actions
+     * @param stepActions the step actions
      * @return the test step dto
      */
     public TestStepDto setStepActions(final List<StepActionDto> stepActions) {
@@ -222,8 +227,7 @@ public class TestStepDto {
     /**
      * Sets the id.
      *
-     * @param id
-     *            the id
+     * @param id the id
      * @return the test step dto
      */
     public TestStepDto setId(final int id) {
@@ -260,8 +264,7 @@ public class TestStepDto {
     /**
      * Sets the name.
      *
-     * @param name
-     *            the name
+     * @param name the name
      * @return the test step dto
      */
     public TestStepDto setName(final String name) {
@@ -281,8 +284,7 @@ public class TestStepDto {
     /**
      * Sets the description.
      *
-     * @param description
-     *            the description
+     * @param description the description
      * @return the test step dto
      */
     public TestStepDto setDescription(final String description) {

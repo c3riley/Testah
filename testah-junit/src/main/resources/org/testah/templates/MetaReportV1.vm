@@ -6,12 +6,12 @@ TestPlan: $testPlan.getName() [ $!testPlan.getSource() ]
 #foreach( $testcase in $testPlan.getTestCases() )
 Testcase: $testcase.getName() [ $!testcase.getSource() ]
 desc: $!testcase.getDescription()
-#foreach ($step in $testcase.getTestSteps()) 
-	Step $step.getId(): $step.getName()
-		desc: $!step.getDescription()
-#foreach ($stepAction in $step.getStepActions())
-		StepAction: $!stepAction.getDescription()
-			expected: $!stepAction.getExpected()
-#end
-#end
+    #foreach ($step in $testcase.getTestSteps())
+    Step $step.getId(): $step.getName()
+    desc: $!step.getDescription()
+        #foreach ($stepAction in $step.getStepActions())
+        StepAction: $!stepAction.getDescription()
+        expected: $!stepAction.getExpected()
+        #end
+    #end
 #end

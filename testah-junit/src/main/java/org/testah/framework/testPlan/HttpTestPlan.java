@@ -1,12 +1,10 @@
 package org.testah.framework.testPlan;
 
-
 /**
  * The Class HttpTestPlan.
  */
 public class HttpTestPlan extends AbstractTestPlan {
-    
-    
+
     /* (non-Javadoc)
      * @see org.testah.framework.testPlan.AbstractTestPlan#initlizeTest()
      */
@@ -14,8 +12,7 @@ public class HttpTestPlan extends AbstractTestPlan {
         // TODO Auto-generated method stub
 
     }
-    
-    
+
     /* (non-Javadoc)
      * @see org.testah.framework.testPlan.AbstractTestPlan#tearDownTest()
      */
@@ -23,8 +20,7 @@ public class HttpTestPlan extends AbstractTestPlan {
         // TODO Auto-generated method stub
 
     }
-    
-    
+
     /* (non-Javadoc)
      * @see org.testah.framework.testPlan.AbstractTestPlan#doOnFail()
      */
@@ -32,8 +28,7 @@ public class HttpTestPlan extends AbstractTestPlan {
         // TODO Auto-generated method stub
 
     }
-    
-    
+
     /* (non-Javadoc)
      * @see org.testah.framework.testPlan.AbstractTestPlan#doOnPass()
      */
@@ -41,5 +36,5 @@ public class HttpTestPlan extends AbstractTestPlan {
         // TODO Auto-generated method stub
 
     }
-    
+
 }

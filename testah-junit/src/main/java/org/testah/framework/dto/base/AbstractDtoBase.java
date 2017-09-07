@@ -1,10 +1,8 @@
 package org.testah.framework.dto.base;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -13,9 +11,10 @@ import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractDtoBase<T> {
 
@@ -53,9 +52,8 @@ public abstract class AbstractDtoBase<T> {
             TS.log().info(getSelf().getClass());
             return (T) TS.util().getMap().readValue(this.toJson(), getSelf().getClass());
         } catch (Exception e) {
-            TS.log().warn(String.format("Issue Trying to Clone: %s - err: %s", getClassPath(), e.getMessage()));
+            throw new RuntimeException(String.format("Issue Trying to Clone: %s - err: %s", getClassPath(), e.getMessage()), e);
         }
-        return null;
     }
 
     @JsonIgnore
@@ -115,7 +113,7 @@ public abstract class AbstractDtoBase<T> {
         TS.log().warn(String.format(MSG_UNKNOWN_JSON_PROP_FOUND + ": %s - Dto Class: %s", name,
                 getSelf().getClass().getCanonicalName()));
         if (!isAllowUnknown()) {
-            TS.asserts().isTrue(String.format("Expecting No unknown Fields for Dto but found field: %s with value: ",
+            TS.asserts().isTrue(String.format("Expecting No unknown Fields for Dto but found field: %s with value: %s",
                     name, (null != value ? value.toString() : "null")), false);
         }
         this.additionalProperties.put(name, value);

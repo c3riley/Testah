@@ -1,24 +1,29 @@
 package org.testah.client.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.testah.client.enums.TypeOfKnown;
 
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class KnownProblemDto.
  */
 public class KnownProblemDto {
 
-    /** The linked ids. */
-    private List<String> linkedIds   = new ArrayList<String>();
+    /**
+     * The linked ids.
+     */
+    private List<String> linkedIds = new ArrayList<String>();
 
-    /** The description. */
-    private String       description = "";
+    /**
+     * The description.
+     */
+    private String description = "";
 
-    /** The type of known. */
-    private TypeOfKnown  typeOfKnown = TypeOfKnown.DEFECT;
+    /**
+     * The type of known.
+     */
+    private TypeOfKnown typeOfKnown = TypeOfKnown.DEFECT;
 
     /**
      * Instantiates a new known problem dto.

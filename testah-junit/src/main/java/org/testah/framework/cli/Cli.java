@@ -1,13 +1,12 @@
 package org.testah.framework.cli;
 
-import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.impl.Arguments;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
+import net.sourceforge.argparse4j.inf.Subparser;
+import net.sourceforge.argparse4j.inf.Subparsers;
 import org.apache.commons.io.FileUtils;
 import org.testah.TS;
 import org.testah.client.dto.TestPlanDto;
@@ -17,40 +16,57 @@ import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.dto.ResultDto;
 import org.testah.framework.dto.TestDtoHelper;
+import org.testah.framework.report.SummaryHtmlFormatter;
+import org.testah.framework.report.TestPlanReporter;
+import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.runner.TestahJUnitRunner;
 
-import net.sourceforge.argparse4j.ArgumentParsers;
-import net.sourceforge.argparse4j.impl.Arguments;
-import net.sourceforge.argparse4j.inf.ArgumentParser;
-import net.sourceforge.argparse4j.inf.ArgumentParserException;
-import net.sourceforge.argparse4j.inf.Namespace;
-import net.sourceforge.argparse4j.inf.Subparser;
-import net.sourceforge.argparse4j.inf.Subparsers;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.List;
+
+import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
 
 /**
  * The Class Cli.
  */
 public class Cli {
 
-    /** The res. */
+    /**
+     * The res.
+     */
     private Namespace res;
 
-    /** The param loader. */
+    /**
+     * The param loader.
+     */
     private final ParamLoader paramLoader;
 
-    /** The opt. */
+    /**
+     * The opt.
+     */
     private Params opt;
 
-    /** The Constant version. */
-    public static final String version = "0.8.2";
+    /**
+     * The Constant version.
+     */
+    public static final String version = "0.8.3";
 
-    /** The Constant BAR_LONG. */
+    /**
+     * The Constant BAR_LONG.
+     */
     public static final String BAR_LONG = "=============================================================================================";
 
-    /** The Constant BAR_SHORT. */
+    /**
+     * The Constant BAR_SHORT.
+     */
     public static final String BAR_SHORT = "=========================================";
 
-    /** The Constant BAR_WALL. */
+    /**
+     * The Constant BAR_WALL.
+     */
     public static final String BAR_WALL = "# ";
 
     private TestFilter testPlanFilter;
@@ -80,8 +96,7 @@ public class Cli {
     /**
      * Gets the argument parser.
      *
-     * @param args
-     *            the args
+     * @param args the args
      * @return the argument parser
      */
     public Cli getArgumentParser(final String[] args) {
@@ -210,7 +225,9 @@ public class Cli {
 
             TS.util().pause(1000L, "Waiting for TestsPlans to complete");
             for (final ResultDto result : results) {
+
                 if (null != result.getTestPlan()) {
+                    result.getTestPlan().getRunInfo().recalc(result.getTestPlan());
                     totalTestCases += result.getTestPlan().getRunInfo().getTotal();
                     totalTestCasesFailed += result.getTestPlan().getRunInfo().getFail();
                     totalTestCasesPassed += result.getTestPlan().getRunInfo().getPass();
@@ -221,7 +238,13 @@ public class Cli {
             }
             for (final ResultDto result : results) {
                 if (null != result.getTestPlan()) {
-                    TS.getTestPlanReporter().reportResults(result.getTestPlan());
+                    TS.getTestPlanReporter().reportResults(result.getTestPlan(), false, this.opt.getOutput());
+                }
+            }
+
+            for (final ResultDto result : results) {
+                if (null != result.getTestPlan()) {
+                    System.out.println("" + result.getTestPlan().getRunInfo().getReportFilePath().get("html"));
                 }
             }
         }
@@ -236,13 +259,17 @@ public class Cli {
         TS.log().info(Cli.BAR_WALL + "Total TestCases Ignored: " + totalTestCasesIgnored);
         TS.log().info(Cli.BAR_LONG);
 
+        File summaryHtml = new SummaryHtmlFormatter(results).createReport().getReportFile();
+        if (TS.params().isAutoOpenHtmlReport()) {
+            new TestPlanReporter().openReport(summaryHtml.getAbsolutePath());
+        }
+        AbstractTestPlan.tearDownTestah();
     }
 
     /**
      * Process query.
      *
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public void processQuery() throws IOException {
         this.setTestPlanFilter(new TestFilter());
@@ -301,8 +328,7 @@ public class Cli {
     /**
      * Sets the res.
      *
-     * @param res
-     *            the new res
+     * @param res the new res
      * @return the cli
      */
     public Cli setRes(final Namespace res) {

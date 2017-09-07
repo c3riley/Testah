@@ -1,5 +1,6 @@
 package org.testah.driver.http.requests;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpGet;
 
@@ -9,16 +10,8 @@ public class GetRequestDto extends AbstractRequestDto<GetRequestDto> {
         super(new HttpGet(uri), "GET");
     }
 
-    public GetRequestDto setPayload(final String payload) {
-        return this;
+    @Override
+    protected GetRequestDto setEntity(final HttpEntity payload) {
+        throw new NotImplementedException("Get per Http spec cannot have a payload");
     }
-
-    public GetRequestDto setPayload(final HttpEntity payload) {
-        return this;
-    }
-
-    public GetRequestDto setPayload(final Object payload) {
-        return this;
-    }
-
 }

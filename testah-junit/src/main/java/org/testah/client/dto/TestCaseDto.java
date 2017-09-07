@@ -1,76 +1,115 @@
 package org.testah.client.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class TestCaseDto.
  */
 public class TestCaseDto {
 
-    /** The run time. */
+    /**
+     * The run time.
+     */
     private RunTimeDto runTime = new RunTimeDto();
 
-    /** The test steps. */
+    /**
+     * The test steps.
+     */
     private List<TestStepDto> testSteps = new ArrayList<TestStepDto>();
 
-    /** The status. */
+    /**
+     * The status.
+     */
     private Boolean status = null;
 
-    /** The status enum. */
+    /**
+     * The status enum.
+     */
     private TestStatus statusEnum = null;
 
-    /** The data value. */
+    /**
+     * The data value.
+     */
     private String dataValue = "";
 
-    /** The id. */
+    /**
+     * The id.
+     */
     private int id = -1;
 
-    /** The name. */
+    /**
+     * The name.
+     */
     private String name = "";
 
-    /** The description. */
+    /**
+     * The description.
+     */
     private String description = "";
 
-    /** The related links. */
+    /**
+     * The related links.
+     */
     private List<String> relatedLinks = new ArrayList<String>();
 
-    /** The related ids. */
+    /**
+     * The related ids.
+     */
     private List<String> relatedIds = new ArrayList<String>();
 
-    /** The tags. */
+    /**
+     * The tags.
+     */
     private List<String> tags = new ArrayList<String>();
 
-    /** The known problem. */
+    /**
+     * The known problem.
+     */
     private KnownProblemDto knownProblem = null;
 
-    /** The test type. */
+    /**
+     * The test type.
+     */
     private TestType testType;
 
-    /** The source. */
+    /**
+     * The source.
+     */
     private String source = null;
 
-    /** The components. */
+    /**
+     * The components.
+     */
     private List<String> components = new ArrayList<String>();
 
-    /** The devices. */
+    /**
+     * The devices.
+     */
     private List<String> devices = new ArrayList<String>();
 
-    /** The platforms. */
+    /**
+     * The platforms.
+     */
     private List<String> platforms = new ArrayList<String>();
 
-    /** The run types. */
+    /**
+     * The run types.
+     */
     private List<String> runTypes = new ArrayList<String>();
 
-    /** The owner. */
+    /**
+     * The owner.
+     */
     private String owner = "NA";
 
-    /** The exceptions. */
+    /**
+     * The exceptions.
+     */
     private String exceptions = null;
 
     /**
@@ -83,8 +122,7 @@ public class TestCaseDto {
     /**
      * Adds the test step.
      *
-     * @param testStep
-     *            the test step
+     * @param testStep the test step
      * @return the test case dto
      */
     public TestCaseDto addTestStep(final TestStepDto testStep) {
@@ -117,8 +155,7 @@ public class TestCaseDto {
     /**
      * Stop.
      *
-     * @param status
-     *            the status
+     * @param status the status
      * @return the test case dto
      */
     public TestCaseDto stop(final Boolean status) {
@@ -162,8 +199,7 @@ public class TestCaseDto {
     /**
      * Sets the run time.
      *
-     * @param runTime
-     *            the run time
+     * @param runTime the run time
      * @return the test case dto
      */
     public TestCaseDto setRunTime(final RunTimeDto runTime) {
@@ -183,8 +219,7 @@ public class TestCaseDto {
     /**
      * Sets the test steps.
      *
-     * @param testSteps
-     *            the test steps
+     * @param testSteps the test steps
      * @return the test case dto
      */
     public TestCaseDto setTestSteps(final List<TestStepDto> testSteps) {
@@ -204,8 +239,7 @@ public class TestCaseDto {
     /**
      * Sets the status.
      *
-     * @param status
-     *            the status
+     * @param status the status
      * @return the test case dto
      */
     public TestCaseDto setStatus(final Boolean status) {
@@ -234,8 +268,7 @@ public class TestCaseDto {
     /**
      * Sets the exceptions.
      *
-     * @param exceptions
-     *            the exceptions
+     * @param exceptions the exceptions
      * @return the test case dto
      */
     public TestCaseDto setExceptions(final String exceptions) {
@@ -245,7 +278,7 @@ public class TestCaseDto {
 
     /**
      * Gets the assertion error.
-     *
+     * <p>
      * throws Assertion Error for Errors in the steps
      */
     @JsonIgnore
@@ -270,8 +303,7 @@ public class TestCaseDto {
     /**
      * Sets the status enum.
      *
-     * @param statusEnum
-     *            the status enum
+     * @param statusEnum the status enum
      * @return the test case dto
      */
     public TestCaseDto setStatusEnum(final TestStatus statusEnum) {
@@ -291,8 +323,7 @@ public class TestCaseDto {
     /**
      * Sets the data value.
      *
-     * @param dataValue
-     *            the data value
+     * @param dataValue the data value
      * @return the test case dto
      */
     public TestCaseDto setDataValue(final String dataValue) {
@@ -312,8 +343,7 @@ public class TestCaseDto {
     /**
      * Sets the id.
      *
-     * @param id
-     *            the id
+     * @param id the id
      * @return the test case dto
      */
     public TestCaseDto setId(final int id) {
@@ -333,8 +363,7 @@ public class TestCaseDto {
     /**
      * Sets the name.
      *
-     * @param name
-     *            the name
+     * @param name the name
      * @return the test case dto
      */
     public TestCaseDto setName(final String name) {
@@ -354,8 +383,7 @@ public class TestCaseDto {
     /**
      * Sets the description.
      *
-     * @param description
-     *            the description
+     * @param description the description
      * @return the test case dto
      */
     public TestCaseDto setDescription(final String description) {
@@ -375,8 +403,7 @@ public class TestCaseDto {
     /**
      * Sets the related links.
      *
-     * @param relatedLinks
-     *            the related links
+     * @param relatedLinks the related links
      * @return the test case dto
      */
     public TestCaseDto setRelatedLinks(final List<String> relatedLinks) {
@@ -396,8 +423,7 @@ public class TestCaseDto {
     /**
      * Sets the related ids.
      *
-     * @param relatedIds
-     *            the related ids
+     * @param relatedIds the related ids
      * @return the test case dto
      */
     public TestCaseDto setRelatedIds(final List<String> relatedIds) {
@@ -417,8 +443,7 @@ public class TestCaseDto {
     /**
      * Sets the tags.
      *
-     * @param tags
-     *            the tags
+     * @param tags the tags
      * @return the test case dto
      */
     public TestCaseDto setTags(final List<String> tags) {
@@ -438,8 +463,7 @@ public class TestCaseDto {
     /**
      * Sets the known problem.
      *
-     * @param knownProblem
-     *            the known problem
+     * @param knownProblem the known problem
      * @return the test case dto
      */
     public TestCaseDto setKnownProblem(final KnownProblemDto knownProblem) {
@@ -459,8 +483,7 @@ public class TestCaseDto {
     /**
      * Sets the test type.
      *
-     * @param testType
-     *            the test type
+     * @param testType the test type
      * @return the test case dto
      */
     public TestCaseDto setTestType(final TestType testType) {
@@ -480,8 +503,7 @@ public class TestCaseDto {
     /**
      * Sets the source.
      *
-     * @param source
-     *            the source
+     * @param source the source
      * @return the test case dto
      */
     public TestCaseDto setSource(final String source) {
@@ -501,8 +523,7 @@ public class TestCaseDto {
     /**
      * Sets the components.
      *
-     * @param components
-     *            the components
+     * @param components the components
      * @return the test case dto
      */
     public TestCaseDto setComponents(final List<String> components) {
@@ -522,8 +543,7 @@ public class TestCaseDto {
     /**
      * Sets the devices.
      *
-     * @param devices
-     *            the devices
+     * @param devices the devices
      * @return the test case dto
      */
     public TestCaseDto setDevices(final List<String> devices) {
@@ -543,8 +563,7 @@ public class TestCaseDto {
     /**
      * Sets the platforms.
      *
-     * @param platforms
-     *            the platforms
+     * @param platforms the platforms
      * @return the test case dto
      */
     public TestCaseDto setPlatforms(final List<String> platforms) {
@@ -564,8 +583,7 @@ public class TestCaseDto {
     /**
      * Sets the run types.
      *
-     * @param runTypes
-     *            the run types
+     * @param runTypes the run types
      * @return the test case dto
      */
     public TestCaseDto setRunTypes(final List<String> runTypes) {
@@ -585,8 +603,7 @@ public class TestCaseDto {
     /**
      * Sets the owner.
      *
-     * @param owner
-     *            the owner
+     * @param owner the owner
      * @return the test case dto
      */
     public TestCaseDto setOwner(final String owner) {

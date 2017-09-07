@@ -1,16 +1,5 @@
 package org.testah.driver.http;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.net.ssl.SSLContext;
-
-import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
@@ -63,74 +52,120 @@ import org.testah.driver.http.requests.PutRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
+import javax.net.ssl.SSLContext;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
+
 /**
  * The Class AbstractHttpWrapper.
  */
 public abstract class AbstractHttpWrapper {
 
-    /** The default pool size. */
+    /**
+     * The default pool size.
+     */
     private int defaultPoolSize = 100;
 
-    /** The Default max per route. */
-    private final int DefaultMaxPerRoute = 100;
+    /**
+     * The Default max per route.
+     */
+    private int DefaultMaxPerRoute = 100;
 
-    /** The default connection timeout. */
+    /**
+     * The default connection timeout.
+     */
     private int defaultConnectionTimeout = 5000;
 
-    /** The verbose. */
+    /**
+     * The verbose.
+     */
     private boolean verbose = true;
 
-    /** The share state. */
+    /**
+     * The share state.
+     */
     private boolean shareState = true;
 
-    /** The ignore http error. */
+    /**
+     * The ignore http error.
+     */
     private boolean ignoreHttpError = false;
 
-    /** The headers. */
-    private Header[] headers = null;
-
-    /** The cookie store. */
+    /**
+     * The cookie store.
+     */
     private CookieStore cookieStore = null;
 
-    /** The cookie specs. */
+    /**
+     * The cookie specs.
+     */
     private String cookieSpecs = CookieSpecs.DEFAULT;
 
-    /** The request config. */
+    /**
+     * The request config.
+     */
     private RequestConfig requestConfig = null;
 
-    /** The proxy. */
+    /**
+     * The proxy.
+     */
     private HttpHost proxy = null;
 
-    /** The default timeout. */
+    /**
+     * The default timeout.
+     */
     private Integer defaultTimeout = null;
 
-    /** The connection keep alive strategy. */
+    /**
+     * The connection keep alive strategy.
+     */
     private ConnectionKeepAliveStrategy connectionKeepAliveStrategy = null;
 
-    /** The http client. */
+    /**
+     * The http client.
+     */
     private HttpClient httpClient = null;
 
-    /** The sslcontext. */
+    /**
+     * The sslcontext.
+     */
     private SSLContext sslcontext = null;
 
-    /** The socket factory registry. */
+    /**
+     * The socket factory registry.
+     */
     private Registry<ConnectionSocketFactory> socketFactoryRegistry = null;
 
-    /** The response parser factory. */
+    /**
+     * The response parser factory.
+     */
     private HttpMessageParserFactory<HttpResponse> responseParserFactory = null;
 
-    /** The dns resolver. */
+    /**
+     * The dns resolver.
+     */
     private DnsResolver dnsResolver = null;
 
-    /** The request writer factory. */
+    /**
+     * The request writer factory.
+     */
     private HttpMessageWriterFactory<HttpRequest> requestWriterFactory = null;
 
-    /** The trust all certs. */
+    /**
+     * The trust all certs.
+     */
     protected boolean trustAllCerts = true;
 
     private org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory = null;
 
-    /** The conn manager. */
+    /**
+     * The conn manager.
+     */
     private PoolingHttpClientConnectionManager connManager;
 
     protected abstract AbstractHttpWrapper getSelf();
@@ -138,8 +173,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do request with assert.
      *
-     * @param request
-     *            the request
+     * @param request the request
      * @return the response dto
      */
     public ResponseDto doRequestWithAssert(final AbstractRequestDto<?> request) {
@@ -149,10 +183,8 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do request with assert.
      *
-     * @param request
-     *            the request
-     * @param expectedStatus
-     *            the expected status
+     * @param request        the request
+     * @param expectedStatus the expected status
      * @return the response dto
      */
     public ResponseDto doRequestWithAssert(final AbstractRequestDto<?> request, final int expectedStatus) {
@@ -162,8 +194,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do get.
      *
-     * @param uri
-     *            the uri
+     * @param uri the uri
      * @return the response dto
      */
     public ResponseDto doGet(final String uri) {
@@ -173,10 +204,8 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do post.
      *
-     * @param uri
-     *            the uri
-     * @param payload
-     *            the payload
+     * @param uri     the uri
+     * @param payload the payload
      * @return the response dto
      */
     public ResponseDto doPost(final String uri, final String payload) {
@@ -186,10 +215,8 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do post.
      *
-     * @param uri
-     *            the uri
-     * @param payload
-     *            the payload
+     * @param uri     the uri
+     * @param payload the payload
      * @return the response dto
      */
     public ResponseDto doPost(final String uri, final Object payload) {
@@ -199,10 +226,8 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do put.
      *
-     * @param uri
-     *            the uri
-     * @param payload
-     *            the payload
+     * @param uri     the uri
+     * @param payload the payload
      * @return the response dto
      */
     public ResponseDto doPut(final String uri, final String payload) {
@@ -212,10 +237,8 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do put.
      *
-     * @param uri
-     *            the uri
-     * @param payload
-     *            the payload
+     * @param uri     the uri
+     * @param payload the payload
      * @return the response dto
      */
     public ResponseDto doPut(final String uri, final Object payload) {
@@ -225,8 +248,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do delete.
      *
-     * @param uri
-     *            the uri
+     * @param uri the uri
      * @return the response dto
      */
     public ResponseDto doDelete(final String uri) {
@@ -236,10 +258,8 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do request with assert.
      *
-     * @param request
-     *            the request
-     * @param expected
-     *            the expected
+     * @param request  the request
+     * @param expected the expected
      * @return the response dto
      */
     public ResponseDto doRequestWithAssert(final AbstractRequestDto<?> request, final ResponseDto expected) {
@@ -254,8 +274,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do request.
      *
-     * @param request
-     *            the request
+     * @param request the request
      * @return the response dto
      */
     public ResponseDto doRequest(final AbstractRequestDto<?> request) {
@@ -265,10 +284,8 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do request.
      *
-     * @param request
-     *            the request
-     * @param verbose
-     *            the verbose
+     * @param request the request
+     * @param verbose the verbose
      * @return the response dto
      */
     public ResponseDto doRequest(final AbstractRequestDto<?> request, final boolean verbose) {
@@ -278,16 +295,13 @@ public abstract class AbstractHttpWrapper {
     /**
      * Do request.
      *
-     * @param request
-     *            the request
-     * @param verbose
-     *            the verbose
-     * @param ignoreHttpError
-     *            the ignore http error
+     * @param request         the request
+     * @param verbose         the verbose
+     * @param ignoreHttpError the ignore http error
      * @return the response dto
      */
     public ResponseDto doRequest(final AbstractRequestDto<?> request, final boolean verbose,
-            final boolean ignoreHttpError) {
+                                 final boolean ignoreHttpError) {
         try {
             final HttpClientContext context = HttpClientContext.create();
             if (null != cookieStore) {
@@ -336,10 +350,8 @@ public abstract class AbstractHttpWrapper {
     /**
      * Gets the response dto.
      *
-     * @param response
-     *            the response
-     * @param request
-     *            the request
+     * @param response the response
+     * @param request  the request
      * @return the response dto
      */
     public ResponseDto getResponseDto(final HttpResponse response, final AbstractRequestDto<?> request) {
@@ -481,7 +493,7 @@ public abstract class AbstractHttpWrapper {
 
             public InetAddress[] resolve(final String host) throws UnknownHostException {
                 if (host.equalsIgnoreCase("localhost")) {
-                    return new InetAddress[] { InetAddress.getByAddress(new byte[] { 127, 0, 0, 1 }) };
+                    return new InetAddress[]{InetAddress.getByAddress(new byte[]{127, 0, 0, 1})};
                 } else {
                     return super.resolve(host);
                 }
@@ -505,10 +517,8 @@ public abstract class AbstractHttpWrapper {
      * Sets the connection manager pooling advanced.
      *
      * @return the abstract http wrapper
-     * @throws NoSuchAlgorithmException
-     *             the no such algorithm exception
-     * @throws KeyStoreException
-     *             the key store exception
+     * @throws NoSuchAlgorithmException the no such algorithm exception
+     * @throws KeyStoreException        the key store exception
      */
     public AbstractHttpWrapper setConnectionManagerPoolingAdvanced()
             throws NoSuchAlgorithmException, KeyStoreException {
@@ -523,7 +533,9 @@ public abstract class AbstractHttpWrapper {
         connManager.setMaxTotal(getDefaultPoolSize());
 
         return setConnManager(connManager);
-    };
+    }
+
+    ;
 
     /**
      * Sets the socket factory registry.
@@ -531,7 +543,7 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setSocketFactoryRegistry() {
-        return setSocketFactoryRegistry(RegistryBuilder.<ConnectionSocketFactory> create()
+        return setSocketFactoryRegistry(RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(getSslcontext())).build());
     }
@@ -607,8 +619,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the default pool size.
      *
-     * @param defaultPoolSize
-     *            the default pool size
+     * @param defaultPoolSize the default pool size
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setDefaultPoolSize(final int defaultPoolSize) {
@@ -623,7 +634,9 @@ public abstract class AbstractHttpWrapper {
      */
     public AbstractHttpWrapper setAllowAnyCerts() {
         return getSelf();
-    };
+    }
+
+    ;
 
     /**
      * Gets the default connection timeout.
@@ -637,8 +650,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the default connection timeout.
      *
-     * @param defaultConnectionTimeout
-     *            the default connection timeout
+     * @param defaultConnectionTimeout the default connection timeout
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setDefaultConnectionTimeout(final int defaultConnectionTimeout) {
@@ -658,8 +670,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the verbose.
      *
-     * @param verbose
-     *            the verbose
+     * @param verbose the verbose
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setVerbose(final boolean verbose) {
@@ -679,8 +690,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the share state.
      *
-     * @param shareState
-     *            the share state
+     * @param shareState the share state
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setShareState(final boolean shareState) {
@@ -709,8 +719,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the cookies from browser.
      *
-     * @param browserCookies
-     *            the browser cookies
+     * @param browserCookies the browser cookies
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setCookiesFromBrowser(final Set<org.openqa.selenium.Cookie> browserCookies) {
@@ -736,8 +745,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the cookie store.
      *
-     * @param cookieStore
-     *            the cookie store
+     * @param cookieStore the cookie store
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setCookieStore(final CookieStore cookieStore) {
@@ -757,8 +765,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the conn manager.
      *
-     * @param connManager
-     *            the conn manager
+     * @param connManager the conn manager
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setConnManager(final PoolingHttpClientConnectionManager connManager) {
@@ -787,8 +794,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the cookie specs.
      *
-     * @param cookieSpecs
-     *            the cookie specs
+     * @param cookieSpecs the cookie specs
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setCookieSpecs(final String cookieSpecs) {
@@ -797,31 +803,9 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Gets the headers.
-     *
-     * @return the headers
-     */
-    public Header[] getHeaders() {
-        return headers;
-    }
-
-    /**
-     * Sets the headers.
-     *
-     * @param headers
-     *            the new headers
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setHeaders(final Header[] headers) {
-        this.headers = headers;
-        return getSelf();
-    }
-
-    /**
      * Sets the request config.
      *
-     * @param requestConfig
-     *            the request config
+     * @param requestConfig the request config
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setRequestConfig(final RequestConfig requestConfig) {
@@ -841,8 +825,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the proxy.
      *
-     * @param proxy
-     *            the proxy
+     * @param proxy the proxy
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setProxy(final HttpHost proxy) {
@@ -853,10 +836,8 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the proxy.
      *
-     * @param host
-     *            the host
-     * @param port
-     *            the port
+     * @param host the host
+     * @param port the port
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setProxy(final String host, final int port) {
@@ -875,8 +856,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the default timeout.
      *
-     * @param defaultTimeout
-     *            the default timeout
+     * @param defaultTimeout the default timeout
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setDefaultTimeout(final Integer defaultTimeout) {
@@ -896,8 +876,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the connection keep alive strategy.
      *
-     * @param connectionKeepAliveStrategy
-     *            the connection keep alive strategy
+     * @param connectionKeepAliveStrategy the connection keep alive strategy
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setConnectionKeepAliveStrategy(
@@ -909,8 +888,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the http client.
      *
-     * @param httpClient
-     *            the http client
+     * @param httpClient the http client
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setHttpClient(final HttpClient httpClient) {
@@ -980,8 +958,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the sslcontext.
      *
-     * @param sslcontext
-     *            the sslcontext
+     * @param sslcontext the sslcontext
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setSslcontext(final SSLContext sslcontext) {
@@ -1001,8 +978,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the socket factory registry.
      *
-     * @param socketFactoryRegistry
-     *            the socket factory registry
+     * @param socketFactoryRegistry the socket factory registry
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setSocketFactoryRegistry(final Registry<ConnectionSocketFactory> socketFactoryRegistry) {
@@ -1022,8 +998,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the response parser factory.
      *
-     * @param responseParserFactory
-     *            the new response parser factory
+     * @param responseParserFactory the new response parser factory
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setResponseParserFactory(
@@ -1044,8 +1019,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the dns resolver.
      *
-     * @param dnsResolver
-     *            the new dns resolver
+     * @param dnsResolver the new dns resolver
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setDnsResolver(final DnsResolver dnsResolver) {
@@ -1065,8 +1039,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the request writer factory.
      *
-     * @param requestWriterFactory
-     *            the new request writer factory
+     * @param requestWriterFactory the new request writer factory
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setRequestWriterFactory(
@@ -1087,8 +1060,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the ignore http error.
      *
-     * @param ignoreHttpError
-     *            the new ignore http error
+     * @param ignoreHttpError the new ignore http error
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setIgnoreHttpError(final boolean ignoreHttpError) {
@@ -1108,8 +1080,7 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the trust all certs.
      *
-     * @param trustAllCerts
-     *            the new trust all certs
+     * @param trustAllCerts the new trust all certs
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setTrustAllCerts(final boolean trustAllCerts) {

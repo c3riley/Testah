@@ -1,5 +1,14 @@
 package org.testah.framework.cli;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.PropertiesConfigurationLayout;
+import org.apache.logging.log4j.Level;
+import org.testah.TS;
+import org.testah.framework.annotations.Comment;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -8,28 +17,24 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.PropertiesConfigurationLayout;
-import org.apache.logging.log4j.Level;
-import org.testah.TS;
-import org.testah.framework.annotations.Comment;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * The Class ParamLoader.
  */
 public class ParamLoader {
 
-    /** The params from properties. */
+    /**
+     * The params from properties.
+     */
     private PropertiesConfiguration paramsFromProperties = null;
 
-    /** The Constant fieldPrefix. */
+    /**
+     * The Constant fieldPrefix.
+     */
     private static final String fieldPrefix = "param_";
 
-    /** The path to param prop file. */
+    /**
+     * The path to param prop file.
+     */
     private final String pathToParamPropFile;
 
     /**
@@ -51,8 +56,7 @@ public class ParamLoader {
     /**
      * Instantiates a new param loader.
      *
-     * @param pathToParamPropFile
-     *            the path to param prop file
+     * @param pathToParamPropFile the path to param prop file
      */
     public ParamLoader(final String pathToParamPropFile) {
         this.pathToParamPropFile = pathToParamPropFile;
@@ -63,7 +67,7 @@ public class ParamLoader {
      *
      * @return the params
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Params loadParamValues() {
 
         final Params params = new Params();
@@ -191,7 +195,7 @@ public class ParamLoader {
         } catch (final ConfigurationException e) {
             TS.log().warn("Issues with testah.properties");
         }
-
+        params.mkOutput();
         return params;
     }
 
@@ -241,11 +245,9 @@ public class ParamLoader {
     /**
      * Gets the custom param properties.
      *
-     * @param customPropfile
-     *            the custom propfile
+     * @param customPropfile the custom propfile
      * @return the custom param properties
-     * @throws ConfigurationException
-     *             the configuration exception
+     * @throws ConfigurationException the configuration exception
      */
     public PropertiesConfiguration getCustomParamProperties(final File customPropfile) throws ConfigurationException {
         return new PropertiesConfiguration(customPropfile);

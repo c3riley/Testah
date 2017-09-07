@@ -1,9 +1,6 @@
 package org.testah.framework.cli;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-
+import com.google.common.collect.ImmutableSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +10,9 @@ import org.testah.client.dto.TestCaseDto;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 
 public class TestFilterDeviceTest {
 
@@ -65,7 +64,7 @@ public class TestFilterDeviceTest {
     }
 
     private void testFilterMyDevice(final int expectedTest1, final int expectedTest2, final int expectedTest3,
-            final int expectedTest4, final Class<?>... classesToAdd) {
+                                    final int expectedTest4, final Class<?>... classesToAdd) {
         TestFilter filter = new TestFilter();
         Set<Class<?>> classes = ImmutableSet.copyOf(Arrays.asList(classesToAdd));
 
@@ -102,50 +101,68 @@ class TestPlanWithDeviceDefault {
 class TestPlanWithDeviceEmpty {
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 }
 
-@TestPlan(devices = { "" })
+@TestPlan(devices = {""})
 class TestPlanWithDeviceEmptyString {
 
     @TestCase()
     public void test1() {
-    };
+    }
+
+    ;
 
 }
 
-@TestPlan(devices = { "TEST_Device" })
+@TestPlan(devices = {"TEST_Device"})
 class TestPlanWithDevice {
     @TestCase()
     public void test1() {
-    };
+    }
 
-    @TestCase(devices = { "TEST_Device" })
+    ;
+
+    @TestCase(devices = {"TEST_Device"})
     public void test2() {
-    };
+    }
+
+    ;
 
 }
 
-@TestPlan(devices = { "TEST_Device", "TEST_Device1", "TEST_Device2", "TEST_Device3" })
+@TestPlan(devices = {"TEST_Device", "TEST_Device1", "TEST_Device2", "TEST_Device3"})
 class TestPlanWithManyDevices {
     @TestCase(devices = {})
     public void test1() {
-    };
+    }
 
-    @TestCase(devices = { "" })
+    ;
+
+    @TestCase(devices = {""})
     public void test2() {
-    };
+    }
 
-    @TestCase(devices = { "TEST_Device" })
+    ;
+
+    @TestCase(devices = {"TEST_Device"})
     public void test3() {
-    };
+    }
 
-    @TestCase(devices = { "TEST_Device", "TEST_Device1", "TEST_Device2", "TEST_Device3" })
+    ;
+
+    @TestCase(devices = {"TEST_Device", "TEST_Device1", "TEST_Device2", "TEST_Device3"})
     public void test4() {
-    };
+    }
+
+    ;
 
     @TestCase()
     public void test5() {
-    };
+    }
+
+    ;
 
 }

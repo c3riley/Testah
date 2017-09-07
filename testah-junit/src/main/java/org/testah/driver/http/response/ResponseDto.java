@@ -1,13 +1,8 @@
 package org.testah.driver.http.response;
 
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -20,47 +15,73 @@ import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 /**
  * The Class ResponseDto.
  */
 public class ResponseDto extends AbstractDtoBase<ResponseDto> {
 
-    /** The status code. */
+    /**
+     * The status code.
+     */
     private int statusCode = -1;
 
-    /** The status text. */
+    /**
+     * The status text.
+     */
     private String statusText = null;
 
-    /** The response body. */
+    /**
+     * The response body.
+     */
     @JsonIgnore
     private String responseBody = null;
 
-    /** The headers. */
+    /**
+     * The headers.
+     */
     private Header[] headers = null;
 
-    /** The footers. */
+    /**
+     * The footers.
+     */
     private Header[] footers = null;
 
-    /** The response bytes. */
+    /**
+     * The response bytes.
+     */
     private byte[] responseBytes = null;
 
-    /** The url. */
+    /**
+     * The url.
+     */
     private String url = null;
 
-    /** The start. */
+    /**
+     * The start.
+     */
     private Long start = 0L;
 
-    /** The end. */
+    /**
+     * The end.
+     */
     private Long end = 0L;
 
-    /** The request type. */
+    /**
+     * The request type.
+     */
     private String requestType = null;
 
-    /** The request used. */
+    /**
+     * The request used.
+     */
     private AbstractRequestDto<?> requestUsed = null;
 
     private HashMap<String, String> headerHash = null;
@@ -75,8 +96,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Instantiates a new response dto.
      *
-     * @param statusCode
-     *            the status code
+     * @param statusCode the status code
      */
     public ResponseDto(final int statusCode) {
         this.statusCode = statusCode;
@@ -85,8 +105,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Assert status.
      *
-     * @param expectedStatus
-     *            the expected status
+     * @param expectedStatus the expected status
      * @return the response dto
      */
     public ResponseDto assertStatus(final int expectedStatus) {
@@ -106,8 +125,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Assert response body contains.
      *
-     * @param expectedContents
-     *            the expected contents
+     * @param expectedContents the expected contents
      * @return the response dto
      */
     public ResponseDto assertResponseBodyContains(final String expectedContents) {
@@ -175,8 +193,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * Save to file.
      *
      * @return the file
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public File saveToFile() throws IOException {
         return saveToFile(File.createTempFile("download", ".tmp", new File(TS.params().getOutput())));
@@ -185,11 +202,9 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Save to file.
      *
-     * @param downloadFile
-     *            the download file
+     * @param downloadFile the download file
      * @return the file
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public File saveToFile(final File downloadFile) throws IOException {
         try (
@@ -211,8 +226,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the status code.
      *
-     * @param statusCode
-     *            the status code
+     * @param statusCode the status code
      * @return the response dto
      */
     public ResponseDto setStatusCode(final int statusCode) {
@@ -223,8 +237,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the status text.
      *
-     * @param statusText
-     *            the status text
+     * @param statusText the status text
      * @return the response dto
      */
     public ResponseDto setStatusText(final String statusText) {
@@ -235,8 +248,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the response body.
      *
-     * @param responseBody
-     *            the response body
+     * @param responseBody the response body
      * @return the response dto
      */
     public ResponseDto setResponseBody(final String responseBody) {
@@ -247,8 +259,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the response body.
      *
-     * @param responseBody
-     *            the response body
+     * @param responseBody the response body
      * @return the response dto
      */
     public ResponseDto setResponseBody(final HttpEntity responseBody) {
@@ -277,10 +288,8 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Gets the response.
      *
-     * @param <T>
-     *            the generic type
-     * @param valueType
-     *            the value type
+     * @param <T>       the generic type
+     * @param valueType the value type
      * @return the response
      */
     public <T> T getResponse(final Class<T> valueType) {
@@ -296,10 +305,8 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Gets the response.
      *
-     * @param <T>
-     *            the generic type
-     * @param valueType
-     *            the value type
+     * @param <T>       the generic type
+     * @param valueType the value type
      * @return the response
      */
     public <T> T getResponse(final TypeReference<T> valueType) {
@@ -315,8 +322,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the headers.
      *
-     * @param headers
-     *            the headers
+     * @param headers the headers
      * @return the response dto
      */
     public ResponseDto setHeaders(final Header[] headers) {
@@ -327,8 +333,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the footers.
      *
-     * @param footers
-     *            the footers
+     * @param footers the footers
      * @return the response dto
      */
     public ResponseDto setFooters(final Header[] footers) {
@@ -339,8 +344,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the response bytes.
      *
-     * @param responseBytes
-     *            the response bytes
+     * @param responseBytes the response bytes
      * @return the response dto
      */
     public ResponseDto setResponseBytes(final byte[] responseBytes) {
@@ -351,8 +355,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the url.
      *
-     * @param url
-     *            the url
+     * @param url the url
      * @return the response dto
      */
     public ResponseDto setUrl(final String url) {
@@ -372,8 +375,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Prints the.
      *
-     * @param shortResponseBody
-     *            the short response body
+     * @param shortResponseBody the short response body
      * @return the response dto
      */
     public ResponseDto print(final boolean shortResponseBody) {
@@ -383,10 +385,8 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Prints the.
      *
-     * @param shortResponseBody
-     *            the short response body
-     * @param truncate
-     *            the truncate
+     * @param shortResponseBody the short response body
+     * @param truncate          the truncate
      * @return the response dto
      */
     public ResponseDto print(final boolean shortResponseBody, final int truncate) {
@@ -419,16 +419,13 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Creates the response info step.
      *
-     * @param shortResponseBody
-     *            the short response body
-     * @param escapdeBody
-     *            the escapde body
-     * @param truncate
-     *            the truncate
+     * @param shortResponseBody the short response body
+     * @param escapdeBody       the escapde body
+     * @param truncate          the truncate
      * @return the step action dto
      */
     public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapdeBody,
-            final int truncate) {
+                                                final int truncate) {
         StepActionDto stepAction = null;
         if (shortResponseBody) {
             stepAction = StepAction
@@ -449,8 +446,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Gets the response body.
      *
-     * @param escape
-     *            the escape
+     * @param escape the escape
      * @return the response body
      */
     public String getResponseBody(final boolean escape) {
@@ -506,8 +502,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the start.
      *
-     * @param start
-     *            the start
+     * @param start the start
      * @return the response dto
      */
     public ResponseDto setStart(final Long start) {
@@ -536,8 +531,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the end.
      *
-     * @param end
-     *            the end
+     * @param end the end
      * @return the response dto
      */
     public ResponseDto setEnd(final Long end) {
@@ -566,8 +560,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the request type.
      *
-     * @param requestType
-     *            the request type
+     * @param requestType the request type
      * @return the response dto
      */
     public ResponseDto setRequestType(final String requestType) {
@@ -587,8 +580,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the request used.
      *
-     * @param requestUsed
-     *            the new request used
+     * @param requestUsed the new request used
      * @return the response dto
      */
     public ResponseDto setRequestUsed(final AbstractRequestDto<?> requestUsed) {

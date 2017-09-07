@@ -6,16 +6,22 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.slf4j.MDC;
 
 /**
  * The Class Log.
  */
 public class Log {
 
-    /** The logger. */
-    private static Log   LOGGER;
+    /**
+     * The logger.
+     */
+    private static Log LOGGER;
+    private static ThreadLocal<Log> _LOGGER;
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private final Logger logger;
 
     /**
@@ -26,6 +32,7 @@ public class Log {
     public static Logger getLog() {
         if (null == LOGGER) {
             LOGGER = new Log("Testah");
+            MDC.put("threadId", "" + Thread.currentThread().getId());
         }
         return LOGGER.getLogger();
     }
@@ -33,8 +40,7 @@ public class Log {
     /**
      * Instantiates a new log.
      *
-     * @param logName
-     *            the log name
+     * @param logName the log name
      */
     public Log(final String logName) {
         this(logName, Level.DEBUG);
@@ -43,10 +49,8 @@ public class Log {
     /**
      * Instantiates a new log.
      *
-     * @param logName
-     *            the log name
-     * @param level
-     *            the level
+     * @param logName the log name
+     * @param level   the level
      */
     public Log(final String logName, final Level level) {
         this.logger = LogManager.getLogger(logName);
@@ -72,8 +76,7 @@ public class Log {
     /**
      * Sets the level.
      *
-     * @param level
-     *            the new level
+     * @param level the new level
      */
     public static void setLevel(final Level level) {
         final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);

@@ -4,17 +4,25 @@ import org.junit.runner.Result;
 import org.testah.client.dto.TestPlanDto;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
-
 /**
  * The Class ResultDto.
  */
 public class ResultDto {
 
-    /** The junit result. */
-    private Result      junitResult = null;
-    
-    /** The test plan. */
-    private TestPlanDto testPlan    = null;
+    /**
+     * The junit result.
+     */
+    private Result junitResult = null;
+
+    /**
+     * The test plan.
+     */
+    private TestPlanDto testPlan = null;
+
+    /**
+     * The class Name.
+     */
+    private String className = null;
 
     /**
      * Instantiates a new result dto.
@@ -27,7 +35,7 @@ public class ResultDto {
      * Instantiates a new result dto.
      *
      * @param junitResult the junit result
-     * @param testPlan the test plan
+     * @param testPlan    the test plan
      */
     public ResultDto(final Result junitResult, final TestPlanDto testPlan) {
         this.junitResult = junitResult;
@@ -41,11 +49,11 @@ public class ResultDto {
      */
     public ResultDto(final Result junitResult) {
         this.junitResult = junitResult;
-        this.testPlan = AbstractTestPlan.getTestPlan();
-        AbstractTestPlan.stopTestPlan();
-        // this.testPlan = new
-        // Cloner().deepClone(AbstractTestPlan.getTestPlan()); // (TestPlanDto)
-        // SerializationUtils.clone(AbstractTestPlan.getTestPlan());
+        if (null != AbstractTestPlan.getTestPlan()) {
+            this.testPlan = AbstractTestPlan.getTestPlan().clone();
+        } else {
+            this.testPlan = AbstractTestPlan.getTestPlan();
+        }
     }
 
     /**
@@ -82,6 +90,15 @@ public class ResultDto {
      */
     public void setTestPlan(final TestPlanDto testPlan) {
         this.testPlan = testPlan;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public ResultDto setClassName(final String className) {
+        this.className = className;
+        return this;
     }
 
 }

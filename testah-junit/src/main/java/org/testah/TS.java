@@ -1,7 +1,5 @@
 package org.testah;
 
-import java.util.HashMap;
-
 import org.apache.logging.log4j.Logger;
 import org.testah.client.dto.StepActionDto;
 import org.testah.driver.http.AbstractHttpWrapper;
@@ -15,32 +13,48 @@ import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.util.Log;
 import org.testah.util.TestahUtil;
 
+import java.util.HashMap;
+
 /**
  * The Class TS.
  */
 public class TS {
 
-    /** The _stateful data. */
+    /**
+     * The _stateful data.
+     */
     private static ThreadLocal<HashMap<String, Object>> _statefulData;
 
-    /** The _browser. */
+    /**
+     * The _browser.
+     */
     private static ThreadLocal<AbstractBrowser<?>> _browser;
 
-    /** The _http. */
+    /**
+     * The _http.
+     */
     private static ThreadLocal<AbstractHttpWrapper> _http;
 
     private static TestPlanReporter _testPlanReporter;
 
-    /** The _asserts. */
+    /**
+     * The _asserts.
+     */
     private static VerboseAsserts _asserts;
 
-    /** The _verify. */
+    /**
+     * The _verify.
+     */
     private static VerboseAsserts _verify;
 
-    /** The _testah util. */
+    /**
+     * The _testah util.
+     */
     private static TestahUtil _testahUtil;
 
-    /** The _params. */
+    /**
+     * The _params.
+     */
     private static Params _params;
 
     private static final HashMap<String, String> maskValues = new HashMap<>();
@@ -117,8 +131,7 @@ public class TS {
     /**
      * Params.
      *
-     * @param params
-     *            the params
+     * @param params the params
      * @return the params
      */
     public static Params params(final Params params) {
@@ -144,8 +157,7 @@ public class TS {
     /**
      * Sets the params.
      *
-     * @param params
-     *            the params
+     * @param params the params
      * @return the params
      */
     public static Params setParams(final Params params) {
@@ -177,8 +189,7 @@ public class TS {
     /**
      * Sets the browser.
      *
-     * @param browser
-     *            the browser
+     * @param browser the browser
      * @return the abstract browser
      */
     public static AbstractBrowser<?> setBrowser(final AbstractBrowser<?> browser) {
@@ -203,8 +214,7 @@ public class TS {
     /**
      * Sets the http.
      *
-     * @param http
-     *            the http
+     * @param http the http
      * @return the abstract http wrapper
      */
     public static AbstractHttpWrapper setHttp(final AbstractHttpWrapper http) {
@@ -216,8 +226,7 @@ public class TS {
     /**
      * Adds the step action.
      *
-     * @param stepAction
-     *            the step action
+     * @param stepAction the step action
      */
     public static void addStepAction(final StepActionDto stepAction) {
         AbstractTestPlan.addStepAction(stepAction);
