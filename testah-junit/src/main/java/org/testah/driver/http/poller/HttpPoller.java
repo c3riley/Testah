@@ -65,11 +65,10 @@ public class HttpPoller {
         try {
             for (pollCtr = 1; pollCtr < getMaxPollIteration(); pollCtr++) {
                 try {
+                    // doRequest does not return null
                     response = TS.http().doRequest(request, false);
                     if (isStatusAssert()) {
-                        if (null == response) {
-                            TS.asserts().fail("Response is null, cannot check status code");
-                        } else if (request.getExpectedStatus() != response.getStatusCode()) {
+                        if (request.getExpectedStatus() != response.getStatusCode()) {
                             response.assertStatus(request.getExpectedStatus());
                         }
                     }

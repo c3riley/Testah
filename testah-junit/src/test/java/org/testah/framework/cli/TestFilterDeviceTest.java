@@ -25,7 +25,7 @@ public class TestFilterDeviceTest {
     }
 
     @Test
-    public void TestFilterTestCaseDevice() {
+    public void testFilterTestCaseDevice() {
         TestFilter filter = new TestFilter();
         TestCaseDto meta = new TestCaseDto().setDevices(new ArrayList<String>());
         TS.params().setFilterByTestType(null);
@@ -51,7 +51,7 @@ public class TestFilterDeviceTest {
     }
 
     @Test
-    public void TestFilterTestPlanDevice() {
+    public void testFilterTestPlanDevice() {
 
         testFilterMyDevice(1, 1, 0, 1, TestPlanWithDevice.class);
 

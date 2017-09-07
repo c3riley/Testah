@@ -29,9 +29,9 @@ public class HttpAkkaStats {
         Long sumDurations = 0L;
         Long sumDurationsStatus = 0L;
         Integer statusCodeCtr;
-        Long duration = 0L;
+        Long responseDuration = 0L;
         for (final ResponseDto r : responses) {
-            duration = r.getDuration();
+            responseDuration = r.getDuration();
             statusCodeCtr = statusCodes.get(r.getStatusCode());
             sumDurationsStatus = avgDurationsForStatus.get(r.getStatusCode());
             if (null == statusCodeCtr) {
@@ -39,13 +39,13 @@ public class HttpAkkaStats {
                 statusCodeCtr = 0;
                 sumDurationsStatus = 0L;
             }
-            durationsForStatus.get(r.getStatusCode()).add(duration);
+            durationsForStatus.get(r.getStatusCode()).add(responseDuration);
             statusCodes.put(r.getStatusCode(), ++statusCodeCtr);
-            avgDurationsForStatus.put(r.getStatusCode(), sumDurationsStatus + duration);
+            avgDurationsForStatus.put(r.getStatusCode(), sumDurationsStatus + responseDuration);
             setStartTime(r.getStart());
             setEndTime(r.getEnd());
-            durations.add(duration);
-            sumDurations += duration;
+            durations.add(responseDuration);
+            sumDurations += responseDuration;
         }
         this.shortestDuration = durations.first();
         this.longestDuration = durations.last();

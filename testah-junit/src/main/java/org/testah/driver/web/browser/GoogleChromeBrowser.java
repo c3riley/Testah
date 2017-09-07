@@ -112,10 +112,13 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
                     webDriverExecutable = findWebriverExecutable(unZipDestination);
                 } else {
                     TS.log().info("WebDriver executable already downloaded : " + webDriverExecutable.getAbsolutePath());
+                } if(webDriverExecutable.exists()) {
+                    webDriverExecutable.setExecutable(true);
+                    binPath = webDriverExecutable.getAbsolutePath();
+                    TS.params().setWebDriver_chromeDriverBinary(binPath);
+                } else {
+                    TS.log().error("WebDriver not found : " + webDriverExecutable.getAbsolutePath());
                 }
-                webDriverExecutable.setExecutable(true);
-                binPath = webDriverExecutable.getAbsolutePath();
-                TS.params().setWebDriver_chromeDriverBinary(binPath);
             }
         } catch (final Exception e) {
             TS.log().warn(e);
@@ -124,13 +127,17 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     }
 
     private File findWebriverExecutable(File driverParentDirectory) {
-        return Arrays.stream(driverParentDirectory.listFiles(
+        File webriverExecutable = null;
+        if (driverParentDirectory.exists()) {
+            webriverExecutable = Arrays.stream(driverParentDirectory.listFiles(
                 (d, s) -> {
                     return d.exists() && d.isDirectory() && s.toLowerCase().contains("driver");
                 }
-        )).
-                findAny().
-                orElse((File) null);
+            ))
+                .findAny()
+                .orElse((File) null);
+        }
+        return webriverExecutable;
     }
 
     private void cleanupDownloads(File downloadDestinationDir) {
@@ -138,11 +145,11 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
                 downloadDestinationDir.listFiles(
                         (d, s) -> {
                             return d.exists() && d.isDirectory() && s.toLowerCase().contains("download");
-                        })).
-                filter(f -> {
+                        }))
+                .filter(f -> {
                     return f.isFile();
-                }).
-                forEach(file -> file.delete());
+                })
+                .forEach(file -> file.delete());
     }
 
     /*

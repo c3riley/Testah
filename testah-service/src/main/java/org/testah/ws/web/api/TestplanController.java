@@ -72,7 +72,7 @@ public class TestplanController {
 		Testplan testplan = testPlansMap.get(id);
 		
 		if (testplan == null) {
-			return new ResponseEntity<Testplan>(testplan, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Testplan>((Testplan)null, HttpStatus.NOT_FOUND);
 		}
 		
 		return new ResponseEntity<Testplan>(testplan, HttpStatus.OK);

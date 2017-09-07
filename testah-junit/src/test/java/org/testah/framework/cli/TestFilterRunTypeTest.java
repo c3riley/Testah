@@ -25,7 +25,7 @@ public class TestFilterRunTypeTest {
     }
 
     @Test
-    public void TestFilterTestCaseRunType() {
+    public void testFilterTestCaseRunType() {
         TestFilter filter = new TestFilter();
         TestCaseDto meta = new TestCaseDto().setRunTypes(new ArrayList<String>());
         TS.params().setFilterByTestType(null);
@@ -51,7 +51,7 @@ public class TestFilterRunTypeTest {
     }
 
     @Test
-    public void TestFilterTestPlanRunType() {
+    public void testFilterTestPlanRunType() {
 
         testFilterMyRunType(1, 1, 0, 1, TestPlanWithRunType.class);
 

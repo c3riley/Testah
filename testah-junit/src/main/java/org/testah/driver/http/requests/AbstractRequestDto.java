@@ -61,11 +61,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     protected HttpRequestBase httpRequestBase = null;
 
     /**
-     * The http request class.
-     */
-    protected Class httpRequestClass = null;
-
-    /**
      * The http entity.
      */
     protected HttpEntity httpEntity = null;
