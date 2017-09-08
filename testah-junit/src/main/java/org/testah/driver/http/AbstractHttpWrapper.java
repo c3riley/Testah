@@ -1,15 +1,5 @@
 package org.testah.driver.http;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
-import javax.net.ssl.SSLContext;
-
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
@@ -53,7 +43,6 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
-
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.requests.DeleteRequestDto;
@@ -62,6 +51,16 @@ import org.testah.driver.http.requests.PostRequestDto;
 import org.testah.driver.http.requests.PutRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.testPlan.AbstractTestPlan;
+
+import javax.net.ssl.SSLContext;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * The Class AbstractHttpWrapper.

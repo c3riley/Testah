@@ -29,8 +29,8 @@ public enum BrowserType {
     /**
      * The phantomjs.
      */
-    PHANTOMJS("PHANTOMJS"),
-    JBROWSER("JBROWSER");
+
+    PHANTOMJS("PHANTOMJS"), JBROWSER("JBROWSER");
 
     /**
      * The browser code.

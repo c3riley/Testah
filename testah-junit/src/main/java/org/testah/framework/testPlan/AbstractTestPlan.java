@@ -88,7 +88,6 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      */
     public TestRule globalTimeout = Timeout.millis(100000L);
 
-
     public TestRule getGlobalTimeout() {
         return globalTimeout;
     }

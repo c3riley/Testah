@@ -465,13 +465,14 @@ public class TestFilter {
             if (null != externalValue && externalValue.length() > 0) {
                 final List<File> files = new ArrayList<>();
                 try (
-                    final GroovyClassLoader loader =
-                        (GroovyClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
-                            final ClassLoader parent = this.getClass().getClassLoader();
-                            public Object run() {
-                                return new GroovyClassLoader(parent);
-                            }
-                        });
+                        final GroovyClassLoader loader =
+                                (GroovyClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                                    final ClassLoader parent = this.getClass().getClassLoader();
+
+                                    public Object run() {
+                                        return new GroovyClassLoader(parent);
+                                    }
+                                });
                 ) {
 
                     for (final String path : externalValue.split(",")) {
