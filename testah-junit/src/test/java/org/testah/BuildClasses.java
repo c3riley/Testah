@@ -13,21 +13,21 @@ public class BuildClasses {
     public void buildVerboseAssert() {
 
         StringBuilder s;
-        String param;
+        StringBuilder param;
         for (final Method m : Assert.class.getMethods()) {
             if (Modifier.isPublic(m.getModifiers())
                     && (m.getName().startsWith("assert") || m.getName().startsWith("fail"))) {
                 s = new StringBuilder("public static " + m.getGenericReturnType() + " " + m.getName() + "(");
-                param = "Assert." + m.getName() + "(";
+                param = new StringBuilder("Assert." + m.getName() + "(");
                 int i = 0;
                 for (final Parameter p : m.getParameters()) {
                     s.append((i > 0 ? ", final " : " final ") + p.getType().getSimpleName() + " " + p.getName());
-                    param += (i > 0 ? "," : "") + p.getName();
+                    param.append((i > 0 ? "," : "") + p.getName());
                     i++;
                 }
                 s.append(") {\n");
                 s.append("try{\n");
-                s.append(param + ");\n");
+                s.append(param.toString() + ");\n");
                 if (s.toString().contains("arg2")) {
                     s.append("addAssertHistory(message,false,\"" + m.getName() + "\",expected,actual);\n");
                 } else {

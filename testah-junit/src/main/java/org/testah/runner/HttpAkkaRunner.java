@@ -20,10 +20,28 @@ import java.util.List;
  */
 public class HttpAkkaRunner {
 
+    private static HttpAkkaRunner httpAkkaRunner = new HttpAkkaRunner();
+
+    public static HttpAkkaRunner getInstance() {
+        return httpAkkaRunner;
+    }
+
+    private HttpAkkaRunner() {
+    }
+
+    public static HttpAkkaRunner getHttpAkkaRunner() {
+        return httpAkkaRunner;
+    }
+
+    public static void setHttpAkkaRunner(HttpAkkaRunner httpAkkaRunner) {
+        HttpAkkaRunner.httpAkkaRunner = httpAkkaRunner;
+    }
+
     /**
      * The http wrapper.
      */
-    public static AbstractHttpWrapper httpWrapper;
+    private AbstractHttpWrapper httpWrapper;
+
 
     /**
      * Run and report.
@@ -96,7 +114,7 @@ public class HttpAkkaRunner {
      *
      * @return the http wrapper
      */
-    public static AbstractHttpWrapper getHttpWrapper() {
+    public AbstractHttpWrapper getHttpWrapper() {
         if (null == httpWrapper) {
             final AbstractHttpWrapper httpWrapperTmp = new HttpWrapperV1();
             httpWrapperTmp.setVerbose(false);
@@ -111,8 +129,8 @@ public class HttpAkkaRunner {
      *
      * @param httpWrapper the new http wrapper
      */
-    public static void setHttpWrapper(final AbstractHttpWrapper httpWrapper) {
-        HttpAkkaRunner.httpWrapper = httpWrapper;
+    public void setHttpWrapper(final AbstractHttpWrapper httpWrapper) {
+        HttpAkkaRunner.getInstance().httpWrapper = httpWrapper;
     }
 
 }

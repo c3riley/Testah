@@ -19,7 +19,7 @@ import java.util.Set;
  */
 public class TestahJUnitRunner {
 
-    public static boolean inUse = false;
+    private static boolean inUse = false;
 
     /**
      * Run tests.

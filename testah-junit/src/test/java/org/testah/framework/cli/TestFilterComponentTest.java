@@ -25,7 +25,7 @@ public class TestFilterComponentTest {
     }
 
     @Test
-    public void TestFilterTestCaseComponent() {
+    public void testFilterTestCaseComponent() {
         TestFilter filter = new TestFilter();
         TestCaseDto meta = new TestCaseDto().setComponents(new ArrayList<String>());
         TS.params().setFilterByTestType(null);
@@ -51,7 +51,7 @@ public class TestFilterComponentTest {
     }
 
     @Test
-    public void TestFilterTestPlanComponent() {
+    public void testFilterTestPlanComponent() {
 
         testFilterMyComponent(1, 1, 0, 1, TestPlanWithComponent.class);
 

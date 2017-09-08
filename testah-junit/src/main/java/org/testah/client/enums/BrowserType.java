@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * The Enum BrowserType.
  */
 public enum BrowserType {
-    
+
     /**
      * The firefox.
      */
@@ -29,13 +29,14 @@ public enum BrowserType {
     /**
      * The phantomjs.
      */
+    
     PHANTOMJS("PHANTOMJS"), JBROWSER("JBROWSER");
     
     /**
      * The browser code.
      */
     String browserCode;
-    
+
     /**
      * Instantiates a new browser type.
      *
@@ -45,7 +46,7 @@ public enum BrowserType {
     BrowserType(final String browserCode) {
         this.browserCode = browserCode;
     }
-    
+
     /**
      * Gets the browser types.
      *
@@ -63,7 +64,7 @@ public enum BrowserType {
         }
         return null;
     }
-    
+
     /**
      * Gets the browser type.
      *
@@ -81,7 +82,7 @@ public enum BrowserType {
         }
         return BrowserType.FIREFOX;
     }
-    
+
     /**
      * Gets the browser code.
      *
@@ -90,11 +91,11 @@ public enum BrowserType {
     public String getBrowserCode() {
         return browserCode;
     }
-    
+
     @Override
     @JsonValue
     public String toString() {
         return this.name();
     }
-    
+
 }

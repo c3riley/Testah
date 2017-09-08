@@ -4,13 +4,13 @@ apply plugin: 'groovy'
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
-//apply plugin: 'findbugs'
-//apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
 //apply plugin: 'org.jenkins-ci.jpi'
 
 sourceCompatibility = 1.8
 group = 'org.testah'
-version = '0.8.3'
+version = '0.9.0'
 
 buildscript {
     repositories {
@@ -35,6 +35,12 @@ repositories {
     jcenter()
 }
 
+// Set checkstyle version.
+checkstyle {
+// FYI: This is how the location of the checkfile can be set
+//    configFile = new File(rootDir, "checkstyle.xml")
+    toolVersion ="8.2"
+}
 dependencies {
     compile 'com.machinepublishers:jbrowserdriver:0.10.5'
     compile 'org.rauschig:jarchivelib:0.7.1'

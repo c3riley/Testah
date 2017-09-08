@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 /**
  * The Class BashUtil.
@@ -99,7 +100,7 @@ public class BashUtil {
     public File createBashFile(final String... commands) throws IOException {
         final File tmpBashScript = File.createTempFile("tmpBashScript", null);
 
-        final Writer streamWriter = new OutputStreamWriter(new FileOutputStream(tmpBashScript));
+        final Writer streamWriter = new OutputStreamWriter(new FileOutputStream(tmpBashScript), "UTF-8");
         final PrintWriter printWriter = new PrintWriter(streamWriter);
         printWriter.println(getBangLine());
         printWriter.println(getBashSource());

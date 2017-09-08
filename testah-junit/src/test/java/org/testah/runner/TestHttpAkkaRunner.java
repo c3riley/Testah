@@ -9,7 +9,7 @@ public class TestHttpAkkaRunner {
     @Ignore
     @Test
     public void test() {
-        final HttpAkkaRunner a = new HttpAkkaRunner();
+        final HttpAkkaRunner a = HttpAkkaRunner.getInstance();
         a.runAndReport(5, new GetRequestDto("http://www.google.com"), 5);
     }
 

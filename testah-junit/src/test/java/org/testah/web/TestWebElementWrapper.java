@@ -13,7 +13,7 @@ import org.testah.framework.testPlan.BrowserTestPlan;
 @TestPlan
 public class TestWebElementWrapper extends BrowserTestPlan {
 
-    private final String baseUrl = "http://htmlpreview.github.io/?https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/clicks.html";
+    private static final String baseUrl = "http://htmlpreview.github.io/?https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/clicks.html";
 
     @Before
     public void setup() {

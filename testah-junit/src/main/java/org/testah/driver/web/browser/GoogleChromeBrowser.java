@@ -20,12 +20,12 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
  * The Class GoogleChromeBrowser.
  */
 public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
-
+    
     /**
      * The service.
      */
     private ChromeDriverService service = null;
-
+    
     /*
      * (non-Javadoc)
      *
@@ -41,7 +41,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
             return new ChromeDriver(service, capabilities);
         }
     }
-
+    
     /*
      * (non-Javadoc)
      *
@@ -51,7 +51,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         ChromeDriverManager.getInstance().setup();
         return this;
     }
-
+    
     /*
      * (non-Javadoc)
      *
@@ -63,7 +63,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         service.start();
         return this;
     }
-
+    
     /*
      * (non-Javadoc)
      *
@@ -71,11 +71,11 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
      */
     public DesiredCapabilities createCapabilities() {
         final DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-
+        
         if (null != getUserAgentValue()) {
             capabilities.setCapability("user-agent", getUserAgentValue());
         }
-
+        
         final Map<String, Object> prefs = new HashMap<>();
         prefs.put("download.directory_upgrade", true);
         prefs.put("profile.default_content_settings.popups", 0);
@@ -84,21 +84,21 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         final ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("start-maximized");
         chromeOptions.setExperimentalOption("prefs", prefs);
-
+        
         capabilities.setCapability("chrome.switches",
                 Arrays.asList("--disable-default-apps", "--allow-running-insecure-content", "--start-maximized"));
-
+        
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         return capabilities;
     }
-
+    
     /**
      * Gets the chrome path.
      *
      * @return the chrome path
      */
     private String getChromePath() {
-        
+
         String binPath = TS.params().getWebDriver_chromeDriverBinary();
         try {
             if (null == binPath || binPath.length() == 0 || !(new File(binPath)).exists()) {
@@ -121,9 +121,14 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
                 else {
                     TS.log().info("WebDriver executable already downloaded : " + webDriverExecutable.getAbsolutePath());
                 }
-                webDriverExecutable.setExecutable(true);
-                binPath = webDriverExecutable.getAbsolutePath();
-                TS.params().setWebDriver_chromeDriverBinary(binPath);
+                if (webDriverExecutable.exists()) {
+                    webDriverExecutable.setExecutable(true);
+                    binPath = webDriverExecutable.getAbsolutePath();
+                    TS.params().setWebDriver_chromeDriverBinary(binPath);
+                }
+                else {
+                    TS.log().error("WebDriver not found : " + webDriverExecutable.getAbsolutePath());
+                }
             }
         }
         catch (final Exception e) {
@@ -132,13 +137,17 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         // return binPath;
         return ChromeDriverManager.getInstance().getBinaryPath();
     }
-
+    
     private File findWebriverExecutable(final File driverParentDirectory) {
-        return Arrays.stream(driverParentDirectory.listFiles((d, s) -> {
-            return d.exists() && d.isDirectory() && s.toLowerCase().contains("driver");
-        })).findAny().orElse((File) null);
+        File webriverExecutable = null;
+        if (driverParentDirectory.exists()) {
+            webriverExecutable = Arrays.stream(driverParentDirectory.listFiles((d, s) -> {
+                return d.exists() && d.isDirectory() && s.toLowerCase().contains("driver");
+            })).findAny().orElse((File) null);
+        }
+        return webriverExecutable;
     }
-
+    
     private void cleanupDownloads(final File downloadDestinationDir) {
         Arrays.stream(downloadDestinationDir.listFiles((d, s) -> {
             return d.exists() && d.isDirectory() && s.toLowerCase().contains("download");
@@ -146,7 +155,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
             return f.isFile();
         }).forEach(file -> file.delete());
     }
-
+    
     /*
      * (non-Javadoc)
      *
@@ -158,11 +167,11 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         }
         return null;
     }
-
+    
     @Override
     public AbstractBrowser<GoogleChromeBrowser> logBrowerInfo() {
         // TODO Auto-generated method stub
         return null;
     }
-
+    
 }

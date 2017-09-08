@@ -34,7 +34,7 @@ public class HttpActor extends UntypedActor {
         if (message instanceof ResponseDto) {
             results.get(hashId).add((ResponseDto) message);
         } else if (message instanceof List) {
-            for (final Class<?> test : (ArrayList<Class<?>>) message) {
+            for (final Class<?> test : (List<Class<?>>) message) {
                 workerRouter.tell(test, getSelf());
             }
         } else if (message instanceof AbstractRequestDto) {

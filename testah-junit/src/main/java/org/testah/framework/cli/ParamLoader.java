@@ -11,6 +11,7 @@ import org.testah.framework.annotations.Comment;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -83,7 +84,7 @@ public class ParamLoader {
 
             final File f = new File(pathToParamPropFile);
             if (f.exists()) {
-
+                TS.log().info("Using properties file: " + f.getAbsolutePath());
                 // paramsFromProperties
                 boolean accessible;
                 for (final Field field : Params.class.getDeclaredFields()) {
@@ -171,7 +172,7 @@ public class ParamLoader {
                                 field.set(params, propValue);
                             }
                         }
-                    } catch (final Exception e) {
+                    } catch (final IllegalAccessException | IOException e) {
                         TS.log().warn(e);
                     } finally {
                         try {
@@ -182,7 +183,6 @@ public class ParamLoader {
                         field.setAccessible(accessible);
                     }
                 }
-
             } else {
                 TS.log().warn("Issue loading custom properties[" + f.getAbsolutePath()
                         + "] - was not found, will create one for the next runs use");
