@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Class AbstractBrowser wraps Webdriver Api implementation with many macrotized methods to reduce code in tests.
+ * The Class AbstractBrowser wraps Webdriver Api implementation with many
+ * macrotized methods to reduce code in tests.
  */
 public abstract class AbstractBrowser<T> {
 
@@ -338,15 +339,13 @@ public abstract class AbstractBrowser<T> {
             return new PhantomJsBrowser().start();
         } else if (TS.params().getBrowser() == BrowserType.CHROME) {
             return new GoogleChromeBrowser().start();
-        } else if (TS.params().getBrowser() == BrowserType.FIREFOX_GECKO) {
-            return new FirefoxGeckoBrowser().start();
         } else if (TS.params().getBrowser() == BrowserType.FIREFOX) {
             return new FirefoxBrowser().start();
         } else if (TS.params().getBrowser() == BrowserType.JBROWSER) {
             return new JBrowserDriverBrowser().start();
         } else {
             TS.log().debug("No Browser Match Found defaulting to Firefox");
-            return new FirefoxGeckoBrowser().start();
+            return new FirefoxBrowser().start();
         }
     }
 
@@ -356,7 +355,7 @@ public abstract class AbstractBrowser<T> {
      * @return the firefox browser
      */
     public static AbstractBrowser<?> getFirefoxBrowser() {
-        return new FirefoxGeckoBrowser().start();
+        return new FirefoxBrowser().start();
     }
 
     /**
@@ -501,7 +500,7 @@ public abstract class AbstractBrowser<T> {
     public abstract T stopService() throws IOException;
 
     public File getScreenshotDir(final String directoryPath) {
-        File screenshotDir = new File(directoryPath, "screenshots");
+        final File screenshotDir = new File(directoryPath, "screenshots");
         TS.log().trace("screenshotDir.mkdir " + screenshotDir.mkdirs());
         return screenshotDir;
     }

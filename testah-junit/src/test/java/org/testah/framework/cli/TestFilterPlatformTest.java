@@ -25,7 +25,7 @@ public class TestFilterPlatformTest {
     }
 
     @Test
-    public void TestFilterTestCasePlatform() {
+    public void testFilterTestCasePlatform() {
         TestFilter filter = new TestFilter();
         TestCaseDto meta = new TestCaseDto().setPlatforms(new ArrayList<String>());
         TS.params().setFilterByTestType(null);
@@ -51,7 +51,7 @@ public class TestFilterPlatformTest {
     }
 
     @Test
-    public void TestFilterTestPlanPlatform() {
+    public void testFilterTestPlanPlatform() {
 
         testFilterMyPlatform(1, 1, 0, 1, TestPlanWithPlatform.class);
 

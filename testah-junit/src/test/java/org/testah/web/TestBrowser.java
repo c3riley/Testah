@@ -5,8 +5,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.testah.TS;
+import org.testah.client.enums.BrowserType;
 import org.testah.driver.web.browser.AbstractBrowser;
-import org.testah.driver.web.browser.FirefoxGeckoBrowser;
+import org.testah.driver.web.browser.FirefoxBrowser;
 import org.testah.driver.web.browser.GoogleChromeBrowser;
 import org.testah.driver.web.browser.PhantomJsBrowser;
 import org.testah.driver.web.element.AbstractWebElementWrapper;
@@ -19,10 +20,10 @@ import java.util.List;
 
 @TestPlan
 public class TestBrowser extends BrowserTestPlan {
-
-    private final String baseUrl = "http://www.google.com/";
+    
+    private final String baseUrl = "https://www.google.com/";
     private final String baseTitle = "Google";
-
+    
     @Before
     public void setup() {
         TS.browser().goTo(baseUrl);
@@ -87,7 +88,8 @@ public class TestBrowser extends BrowserTestPlan {
     @Test
     public void TestGetCapabilities() {
         TS.asserts().notNull(TS.browser().getCapabilities());
-        TS.asserts().equalsTo("firefox", TS.browser().getCapabilities().getBrowserName());
+        TS.asserts().equalsTo(BrowserType.getBrowserType(TS.browser().getCapabilities().getBrowserName()),
+                TS.params().getBrowser());
     }
 
     @TestCase
@@ -99,8 +101,7 @@ public class TestBrowser extends BrowserTestPlan {
         TS.asserts().notNull(lst.get(0));
         TS.asserts().equalsTo(By.id("hplogo"), lst.get(0).getBy());
         TS.asserts().notNull(lst.get(0).getDriverWebElement());
-        TS.asserts().notNull("src value is not null",
-                lst.get(0).getAttribute("src"));
+        TS.asserts().notNull("src value is not null", lst.get(0).getAttribute("src"));
     }
 
     @TestCase
@@ -110,8 +111,7 @@ public class TestBrowser extends BrowserTestPlan {
         TS.asserts().notNull(e);
         TS.asserts().equalsTo(By.id("hplogo"), e.getBy());
         TS.asserts().notNull(e.getDriverWebElement());
-        TS.asserts().notNull("src value is not null",
-                e.getAttribute("src"));
+        TS.asserts().notNull("src value is not null", e.getAttribute("src"));
     }
 
     @Ignore
@@ -127,7 +127,6 @@ public class TestBrowser extends BrowserTestPlan {
 
     }
 
-    @Ignore
     @Test
     @TestCase(name = "test3")
     public void testChrome() {
@@ -141,9 +140,9 @@ public class TestBrowser extends BrowserTestPlan {
 
     @Test
     @TestCase(name = "test2")
-    public void test2() {
+    public void testFirefox() {
 
-        final FirefoxGeckoBrowser b = new FirefoxGeckoBrowser();
+        final FirefoxBrowser b = new FirefoxBrowser();
         b.start().getDriver().get("http://www.google.com");
         b.goToAndWaitForTitleToChange("http://www.google.com");
         b.close();

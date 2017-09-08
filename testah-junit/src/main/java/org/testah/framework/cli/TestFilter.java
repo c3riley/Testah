@@ -12,6 +12,8 @@ import org.testah.framework.annotations.TestPlan;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -462,9 +464,16 @@ public class TestFilter {
 
             if (null != externalValue && externalValue.length() > 0) {
                 final List<File> files = new ArrayList<>();
-                final ClassLoader parent = this.getClass().getClassLoader();
                 try (
-                        final GroovyClassLoader loader = new GroovyClassLoader(parent)) {
+                        final GroovyClassLoader loader =
+                                (GroovyClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                                    final ClassLoader parent = this.getClass().getClassLoader();
+
+                                    public Object run() {
+                                        return new GroovyClassLoader(parent);
+                                    }
+                                });
+                ) {
 
                     for (final String path : externalValue.split(",")) {
 
@@ -502,8 +511,9 @@ public class TestFilter {
                     TS.log().error("issue with external class loading", e1);
                 }
             }
-        } catch (final Exception e) {
+        } catch (final RuntimeException e) {
             TS.log().warn("Issue loading uncompiled Tests, if groovy part of the porject?", e);
+            throw new RuntimeException(e);
         }
         return this;
     }

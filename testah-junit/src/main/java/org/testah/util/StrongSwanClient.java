@@ -118,7 +118,7 @@ public class StrongSwanClient {
 
             final byte[] buf = new byte[128];
             final int read = is.read(buf);
-            TS.log().debug("Server says: " + new String(buf, 0, read));
+            TS.log().debug("Server says: " + new String(buf, 0, read, "UTF-8"));
             TS.log().debug("Replying to server...");
             for (final String message : messages) {
                 os.write(message.getBytes(Charset.forName("UTF-8")));

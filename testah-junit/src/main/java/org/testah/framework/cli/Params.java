@@ -1011,7 +1011,7 @@ public class Params {
             }
             this.output = outputFile.getAbsolutePath();
         } else {
-            this.output = output;
+            this.output = null;
         }
         return this;
     }

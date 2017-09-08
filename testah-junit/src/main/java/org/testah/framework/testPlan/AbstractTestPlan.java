@@ -88,6 +88,10 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      */
     public TestRule globalTimeout = Timeout.millis(100000L);
 
+    public TestRule getGlobalTimeout() {
+        return globalTimeout;
+    }
+
     /**
      * The description.
      */
@@ -238,6 +242,10 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      */
     @Rule
     public TestRule chain = RuleChain.outerRule(watchman2).around(initialize).around(name).around(filter);
+
+    public TestRule getChain() {
+        return chain;
+    }
 
     /**
      * Setup abstract test plan.
@@ -456,7 +464,6 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         if (null != getTestCase()) {
             stopTestStep();
             getTestPlan().addTestCase(getTestCase().stop(status));
-            getTestCase().getStatus();
         }
     }
 

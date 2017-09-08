@@ -28,7 +28,7 @@ public class TestFilterTestTypeTest extends HttpTestPlan {
 
     @TestCase
     @Test
-    public void TestFilterTestCaseTestType() {
+    public void testFilterTestCaseTestType() {
         TS.asserts().isTrue(true);
         TestFilter filter = new TestFilter();
         TestCaseDto meta = new TestCaseDto().setTestType(TestType.PENDING);
@@ -63,7 +63,7 @@ public class TestFilterTestTypeTest extends HttpTestPlan {
 
     @TestCase
     @Test
-    public void TestFilterTestPlanTestType() {
+    public void testFilterTestPlanTestType() {
         TS.asserts().isTrue(true);
         HashMap<TestType, Integer> expected = new HashMap<TestType, Integer>();
         expected.put(TestType.AUTOMATED, 1);

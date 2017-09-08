@@ -167,7 +167,7 @@ public class SshUtil {
 
         try {
             final OutputStream inputstream_for_the_channel = channel.getOutputStream();
-            final PrintStream commander = new PrintStream(inputstream_for_the_channel);
+            final PrintStream commander = new PrintStream(inputstream_for_the_channel, false, "UTF-8");
 
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             channel.setInputStream(System.in);
@@ -195,7 +195,7 @@ public class SshUtil {
                     }
                     Thread.sleep(1000);
                 }
-                info.getOutput().append(new String(baos.toByteArray()));
+                info.getOutput().append(new String(baos.toByteArray(), "UTF-8"));
             } else {
                 final byte[] tmp = new byte[1024];
                 while (true) {
@@ -204,9 +204,9 @@ public class SshUtil {
                         if (i < 0) {
                             break;
                         }
-                        info.getOutput().append(new String(tmp, 0, i));
+                        info.getOutput().append(new String(tmp, 0, i, "UTF-8"));
                         if (verbose) {
-                            TS.log().debug(new String(tmp, 0, i));
+                            TS.log().debug(new String(tmp, 0, i, "UTF-8"));
                         }
                     }
                     if (verbose) {

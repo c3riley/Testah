@@ -12,12 +12,11 @@ import java.util.List;
 import java.util.Set;
 
 public class TestPlanActor extends UntypedActor {
-    private static List<ResultDto> results;
+    private static List<ResultDto> results = new ArrayList<ResultDto>();
     private final ActorRef workerRouter;
     private final int nrOfWorkers;
 
     public TestPlanActor(final int nrOfWorkers) {
-        results = new ArrayList<ResultDto>();
         this.nrOfWorkers = nrOfWorkers;
         workerRouter = this.getContext()
                 .actorOf(new Props(TestPlanWorker.class).withRouter(new RoundRobinRouter(nrOfWorkers)), "workerRouter");

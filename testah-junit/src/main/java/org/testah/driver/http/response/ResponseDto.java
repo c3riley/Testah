@@ -168,7 +168,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @return the headers
      */
     public Header[] getHeaders() {
-        return headers;
+        return headers.clone();
     }
 
     /**
@@ -177,7 +177,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @return the footers
      */
     public Header[] getFooters() {
-        return footers;
+        return footers.clone();
     }
 
     /**
@@ -186,7 +186,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @return the response bytes
      */
     public byte[] getResponseBytes() {
-        return responseBytes;
+        return responseBytes.clone();
     }
 
     /**
@@ -326,7 +326,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @return the response dto
      */
     public ResponseDto setHeaders(final Header[] headers) {
-        this.headers = headers;
+        this.headers = headers.clone();
         return this;
     }
 
@@ -337,7 +337,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @return the response dto
      */
     public ResponseDto setFooters(final Header[] footers) {
-        this.footers = footers;
+        this.footers = footers.clone();
         return this;
     }
 
@@ -348,7 +348,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @return the response dto
      */
     public ResponseDto setResponseBytes(final byte[] responseBytes) {
-        this.responseBytes = responseBytes;
+        this.responseBytes = responseBytes.clone();
         return this;
     }
 

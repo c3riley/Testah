@@ -13,24 +13,24 @@ public enum BrowserType {
     /**
      * The firefox.
      */
-    FIREFOX_GECKO(""),
+    FIREFOX_GECKO("FIREFOX_GECKO"),
     /**
      * The chrome.
      */
-    FIREFOX(""),
+    FIREFOX("FIREFOX"),
     /**
      * The chrome.
      */
-    CHROME(""),
+    CHROME("CHROME"),
     /**
      * The ie.
      */
-    IE(""),
+    IE("IE"),
     /**
      * The phantomjs.
      */
-    PHANTOMJS(""),
-    JBROWSER("");
+
+    PHANTOMJS("PHANTOMJS"), JBROWSER("JBROWSER");
 
     /**
      * The browser code.

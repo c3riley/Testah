@@ -31,20 +31,20 @@ public class SqlExecutionDto {
     }
 
     public Date getStartTime() {
-        return startTime;
+        return (Date) startTime.clone();
     }
 
     public SqlExecutionDto setStartTime(final Date startTime) {
-        this.startTime = startTime;
+        this.startTime = (Date) startTime.clone();
         return this;
     }
 
     public Date getEndTime() {
-        return endTime;
+        return (Date) endTime.clone();
     }
 
     public SqlExecutionDto setEndTime(final Date endTime) {
-        this.endTime = endTime;
+        this.endTime = (Date) endTime.clone();
         return this;
     }
 
@@ -87,5 +87,4 @@ public class SqlExecutionDto {
         this.updateCount = updateCount;
         return this;
     }
-
 }

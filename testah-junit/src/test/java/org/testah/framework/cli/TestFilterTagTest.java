@@ -25,7 +25,7 @@ public class TestFilterTagTest {
     }
 
     @Test
-    public void TestFilterTestCaseTag() {
+    public void testFilterTestCaseTag() {
         TestFilter filter = new TestFilter();
         TestCaseDto meta = new TestCaseDto().setTags(new ArrayList<String>());
         TS.params().setFilterByTestType(null);
@@ -51,7 +51,7 @@ public class TestFilterTagTest {
     }
 
     @Test
-    public void TestFilterTestPlanTag() {
+    public void testFilterTestPlanTag() {
 
         testFilterMyTag(1, 1, 0, 1, TestPlanWithTag.class);
 
