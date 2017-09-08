@@ -42,7 +42,6 @@ public class HttpAkkaRunner {
      */
     private AbstractHttpWrapper httpWrapper;
 
-
     /**
      * Run and report.
      *

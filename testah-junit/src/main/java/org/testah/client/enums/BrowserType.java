@@ -1,9 +1,9 @@
 package org.testah.client.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * The Enum BrowserType.
@@ -29,9 +29,9 @@ public enum BrowserType {
     /**
      * The phantomjs.
      */
-    
+
     PHANTOMJS("PHANTOMJS"), JBROWSER("JBROWSER");
-    
+
     /**
      * The browser code.
      */
@@ -40,8 +40,7 @@ public enum BrowserType {
     /**
      * Instantiates a new browser type.
      *
-     * @param browserCode
-     *            the browser code
+     * @param browserCode the browser code
      */
     BrowserType(final String browserCode) {
         this.browserCode = browserCode;
@@ -50,8 +49,7 @@ public enum BrowserType {
     /**
      * Gets the browser types.
      *
-     * @param browserValues
-     *            the browser values
+     * @param browserValues the browser values
      * @return the browser types
      */
     public static List<BrowserType> getBrowserTypes(final String[] browserValues) {
@@ -68,8 +66,7 @@ public enum BrowserType {
     /**
      * Gets the browser type.
      *
-     * @param browserValue
-     *            the browser value
+     * @param browserValue the browser value
      * @return the browser type
      */
     public static BrowserType getBrowserType(final String browserValue) {

@@ -1,8 +1,5 @@
 package org.testah.web;
 
-import java.io.File;
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,6 +14,9 @@ import org.testah.driver.web.element.AbstractWebElementWrapper;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.BrowserTestPlan;
+
+import java.io.File;
+import java.util.List;
 
 @TestPlan
 public class TestBrowser extends BrowserTestPlan {
@@ -127,7 +127,6 @@ public class TestBrowser extends BrowserTestPlan {
 
     }
 
-    @Ignore
     @Test
     @TestCase(name = "test3")
     public void testChrome() {
@@ -141,7 +140,7 @@ public class TestBrowser extends BrowserTestPlan {
 
     @Test
     @TestCase(name = "test2")
-    public void test2() {
+    public void testFirefox() {
 
         final FirefoxBrowser b = new FirefoxBrowser();
         b.start().getDriver().get("http://www.google.com");

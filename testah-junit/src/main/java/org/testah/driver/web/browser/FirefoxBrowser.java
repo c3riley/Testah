@@ -1,22 +1,19 @@
 package org.testah.driver.web.browser;
 
-import java.io.File;
-import java.io.IOException;
-
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testah.TS;
 
-import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import java.io.IOException;
 
 /**
  * The Class FirefoxBrowser.
  */
 public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
-    
+
     /*
      * (non-Javadoc)
      *
@@ -28,7 +25,7 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
     public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
         return new FirefoxDriver(capabilities);
     }
-    
+
     /*
      * (non-Javadoc)
      *
@@ -41,7 +38,7 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
         TS.params().setWebDriver_firefoxDriverBinary(FirefoxDriverManager.getInstance().getBinaryPath());
         return this;
     }
-    
+
     /*
      * (non-Javadoc)
      *
@@ -51,7 +48,7 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
     public FirefoxBrowser startService() {
         return this;
     }
-    
+
     /*
      * (non-Javadoc)
      *
@@ -74,14 +71,9 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
         capabilities.setCapability("nativeEvents", false);
         capabilities.setCapability(FirefoxDriver.PROFILE, profile);
         capabilities.setCapability("elementScrollBehavior", 1);
-        if (null != TS.params().getWebDriver_firefoxDriverBinary()
-                && TS.params().getWebDriver_firefoxDriverBinary().length() > 0) {
-            capabilities.setCapability(FirefoxDriver.BINARY,
-                    new FirefoxBinary(new File(TS.params().getWebDriver_firefoxDriverBinary())));
-        }
         return capabilities;
     }
-    
+
     /*
      * (non-Javadoc)
      *
@@ -91,18 +83,17 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
     public FirefoxBrowser stopService() throws IOException {
         return this;
     }
-    
+
     @Override
     public AbstractBrowser<FirefoxBrowser> logBrowerInfo() {
         try {
             TS.log().trace(
                     "Browser SessionId: " + ((FirefoxDriver) TS.browser().getDriver()).getSessionId().toString());
             TS.util().toJsonPrint(TS.browser().getDriver().manage().getCookies());
-        }
-        catch (final Exception e) {
+        } catch (final Exception e) {
             TS.log().trace("Issue geting browser info", e);
         }
         return getSelf();
     }
-    
+
 }
