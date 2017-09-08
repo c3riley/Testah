@@ -1,25 +1,25 @@
 package org.testah.runner.httpLoad;
 
+import org.testah.driver.http.response.ResponseDto;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
 
-import org.testah.driver.http.response.ResponseDto;
-
 public class HttpAkkaStats {
 
-    private final HashMap<Integer, Integer>       statusCodes;
-    private final int                             totalResponses;
-    private Long                                  startTime = 0L;
-    private Long                                  endTime   = 0L;
-    private final Long                            duration;
-    private final Long                            avgDuration;
-    private final Long                            shortestDuration;
-    private final Long                            longestDuration;
-    private final TreeSet<Long>                   durations;
+    private final HashMap<Integer, Integer> statusCodes;
+    private final int totalResponses;
+    private Long startTime = 0L;
+    private Long endTime = 0L;
+    private final Long duration;
+    private final Long avgDuration;
+    private final Long shortestDuration;
+    private final Long longestDuration;
+    private final TreeSet<Long> durations;
     private final HashMap<Integer, TreeSet<Long>> durationsForStatus;
-    private final HashMap<Integer, Long>          avgDurationsForStatus;
-    
+    private final HashMap<Integer, Long> avgDurationsForStatus;
+
     public HttpAkkaStats(final List<ResponseDto> responses) {
         this.avgDurationsForStatus = new HashMap<Integer, Long>();
         this.durationsForStatus = new HashMap<Integer, TreeSet<Long>>();
@@ -64,39 +64,39 @@ public class HttpAkkaStats {
             this.endTime = endTime;
         }
     }
-    
+
     public HashMap<Integer, Integer> getStatusCodes() {
         return statusCodes;
     }
-    
+
     public int getTotalResponses() {
         return totalResponses;
     }
-    
+
     public Long getStartTime() {
         return startTime;
     }
-    
+
     public Long getEndTime() {
         return endTime;
     }
-    
+
     public Long getDuration() {
         return duration;
     }
-    
+
     public Long getAvgDuration() {
         return avgDuration;
     }
-    
+
     public Long getShortestDuration() {
         return shortestDuration;
     }
-    
+
     public Long getLongestDuration() {
         return longestDuration;
     }
-    
+
     public TreeSet<Long> getDurations() {
         return durations;
     }

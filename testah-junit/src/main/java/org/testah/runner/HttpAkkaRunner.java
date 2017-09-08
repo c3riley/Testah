@@ -1,7 +1,10 @@
 package org.testah.runner;
 
-import java.util.List;
-
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
+import akka.actor.UntypedActor;
+import akka.actor.UntypedActorFactory;
 import org.testah.TS;
 import org.testah.driver.http.AbstractHttpWrapper;
 import org.testah.driver.http.HttpWrapperV1;
@@ -10,33 +13,28 @@ import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.httpLoad.HttpActor;
 import org.testah.runner.httpLoad.HttpAkkaStats;
 
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Props;
-import akka.actor.UntypedActor;
-import akka.actor.UntypedActorFactory;
+import java.util.List;
 
 /**
  * The Class HttpAkkaRunner.
  */
 public class HttpAkkaRunner {
 
-    /** The http wrapper. */
+    /**
+     * The http wrapper.
+     */
     public static AbstractHttpWrapper httpWrapper;
 
     /**
      * Run and report.
      *
-     * @param numConcurrent
-     *            the num concurrent
-     * @param request
-     *            the request
-     * @param numOfRequestsToMake
-     *            the num of requests to make
+     * @param numConcurrent       the num concurrent
+     * @param request             the request
+     * @param numOfRequestsToMake the num of requests to make
      * @return the list
      */
     public List<ResponseDto> runAndReport(final int numConcurrent, final AbstractRequestDto<?> request,
-            final int numOfRequestsToMake) {
+                                          final int numOfRequestsToMake) {
         final List<ResponseDto> responses = runTests(numConcurrent, request, numOfRequestsToMake);
         int i = 1;
         for (final ResponseDto response : responses) {
@@ -51,16 +49,13 @@ public class HttpAkkaRunner {
     /**
      * Run tests.
      *
-     * @param numConcurrent
-     *            the num concurrent
-     * @param request
-     *            the request
-     * @param numOfRequestsToMake
-     *            the num of requests to make
+     * @param numConcurrent       the num concurrent
+     * @param request             the request
+     * @param numOfRequestsToMake the num of requests to make
      * @return the list
      */
     public List<ResponseDto> runTests(final int numConcurrent, final AbstractRequestDto<?> request,
-            final int numOfRequestsToMake) {
+                                      final int numOfRequestsToMake) {
         final Long hashId = Thread.currentThread().getId();
         try {
             if (null == request) {
@@ -114,8 +109,7 @@ public class HttpAkkaRunner {
     /**
      * Sets the http wrapper.
      *
-     * @param httpWrapper
-     *            the new http wrapper
+     * @param httpWrapper the new http wrapper
      */
     public static void setHttpWrapper(final AbstractHttpWrapper httpWrapper) {
         HttpAkkaRunner.httpWrapper = httpWrapper;

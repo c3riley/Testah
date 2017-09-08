@@ -1,54 +1,77 @@
 package org.testah.client.dto;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * The Class StepActionDto.
  */
 public class StepActionDto extends AbstractDtoBase<StepActionDto> {
 
-    /** The test step action type. */
+    /**
+     * The test step action type.
+     */
     private TestStepActionType testStepActionType = TestStepActionType.INFO;
 
-    /** The description. */
+    /**
+     * The description.
+     */
     private String description = null;
 
-    /** The message1. */
+    /**
+     * The message1.
+     */
     private String message1 = null;
 
-    /** The message2. */
+    /**
+     * The message2.
+     */
     private String message2 = null;
 
-    /** The message3. */
+    /**
+     * The message3.
+     */
     private String message3 = null;
 
-    /** The status. */
+    /**
+     * The status.
+     */
     private Boolean status = null;
 
-    /** The status enum. */
+    /**
+     * The status enum.
+     */
     private TestStatus statusEnum = null;
 
-    /** The action name. */
+    /**
+     * The action name.
+     */
     private String actionName = null;
 
-    /** The exception. */
+    /**
+     * The exception.
+     */
     @JsonIgnore
     private Throwable exception = new Throwable();
 
-    /** The exception string. */
+    /**
+     * The exception string.
+     */
     private String exceptionString = null;
 
-    /** The snap shot path. */
+    /**
+     * The snap shot path.
+     */
     private String snapShotPath = null;
 
-    /** The snap shot path. */
+    /**
+     * The snap shot path.
+     */
     private String htmlSnapShotPath = null;
 
     /**
@@ -73,8 +96,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the description.
      *
-     * @param description
-     *            the description
+     * @param description the description
      * @return the step action dto
      */
     public StepActionDto setDescription(final String description) {
@@ -148,8 +170,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the exception string.
      *
-     * @param exceptionString
-     *            the exception string
+     * @param exceptionString the exception string
      * @return the step action dto
      */
     public StepActionDto setExceptionString(final String exceptionString) {
@@ -169,8 +190,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the test step action type.
      *
-     * @param testStepActionType
-     *            the test step action type
+     * @param testStepActionType the test step action type
      * @return the step action dto
      */
     public StepActionDto setTestStepActionType(final TestStepActionType testStepActionType) {
@@ -181,8 +201,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the message.
      *
-     * @param message
-     *            the message
+     * @param message the message
      * @return the step action dto
      */
     public StepActionDto setMessage(final String message) {
@@ -193,8 +212,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the actual.
      *
-     * @param actual
-     *            the actual
+     * @param actual the actual
      * @return the step action dto
      */
     public StepActionDto setActual(final Object actual) {
@@ -205,8 +223,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the expected.
      *
-     * @param expected
-     *            the expected
+     * @param expected the expected
      * @return the step action dto
      */
     public StepActionDto setExpected(final Object expected) {
@@ -217,8 +234,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the status.
      *
-     * @param status
-     *            the status
+     * @param status the status
      * @return the step action dto
      */
     public StepActionDto setStatus(final Boolean status) {
@@ -229,8 +245,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the assert method.
      *
-     * @param assertMethod
-     *            the assert method
+     * @param assertMethod the assert method
      * @return the step action dto
      */
     public StepActionDto setAssertMethod(final String assertMethod) {
@@ -241,8 +256,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the exception.
      *
-     * @param exception
-     *            the exception
+     * @param exception the exception
      * @return the step action dto
      */
     public StepActionDto setException(final Throwable exception) {
@@ -262,8 +276,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the message1.
      *
-     * @param message1
-     *            the message1
+     * @param message1 the message1
      * @return the step action dto
      */
     public StepActionDto setMessage1(final String message1) {
@@ -283,8 +296,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the message2.
      *
-     * @param message2
-     *            the message2
+     * @param message2 the message2
      * @return the step action dto
      */
     public StepActionDto setMessage2(final Object message2) {
@@ -304,8 +316,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the message3.
      *
-     * @param message3
-     *            the message3
+     * @param message3 the message3
      * @return the step action dto
      */
     public StepActionDto setMessage3(final Object message3) {
@@ -328,8 +339,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the action name.
      *
-     * @param actionName
-     *            the action name
+     * @param actionName the action name
      * @return the step action dto
      */
     public StepActionDto setActionName(final String actionName) {
@@ -349,8 +359,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the snap shot path.
      *
-     * @param snapShotPath
-     *            the snap shot path
+     * @param snapShotPath the snap shot path
      * @return the step action dto
      */
     public StepActionDto setSnapShotPath(final String snapShotPath) {
@@ -373,8 +382,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the status enum.
      *
-     * @param statusEnum
-     *            the status enum
+     * @param statusEnum the status enum
      * @return the step action dto
      */
     public StepActionDto setStatusEnum(final TestStatus statusEnum) {
@@ -394,8 +402,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Sets the html snap shot path.
      *
-     * @param htmlSnapShotPath
-     *            the html snap shot path
+     * @param htmlSnapShotPath the html snap shot path
      * @return the step action dto
      */
     public StepActionDto setHtmlSnapShotPath(final String htmlSnapShotPath) {

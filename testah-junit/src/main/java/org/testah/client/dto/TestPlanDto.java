@@ -1,70 +1,107 @@
 package org.testah.client.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestType;
+import org.testah.framework.dto.base.AbstractDtoBase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class TestPlanDto.
  */
-public class TestPlanDto {
+public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
 
-    /** The run time. */
+    /**
+     * The run time.
+     */
     private RunTimeDto runTime = new RunTimeDto();
 
-    /** The test cases. */
+    /**
+     * The test cases.
+     */
     private List<TestCaseDto> testCases = new ArrayList<TestCaseDto>();
 
-    /** The status. */
+    /**
+     * The status.
+     */
     private Boolean status = null;
 
     private TestStatus statusEnum = null;
 
-    /** The run info. */
+    /**
+     * The run info.
+     */
     private RunInfoDto runInfo = new RunInfoDto();
 
-    /** The id. */
+    /**
+     * The id.
+     */
     private int id = -1;
 
-    /** The name. */
+    /**
+     * The name.
+     */
     private String name = "";
 
-    /** The description. */
+    /**
+     * The description.
+     */
     private String description = "";
 
-    /** The related links. */
+    /**
+     * The related links.
+     */
     private List<String> relatedLinks = new ArrayList<String>();
 
-    /** The related ids. */
+    /**
+     * The related ids.
+     */
     private List<String> relatedIds = new ArrayList<String>();
 
-    /** The tags. */
+    /**
+     * The tags.
+     */
     private List<String> tags = new ArrayList<String>();
 
-    /** The known problem. */
+    /**
+     * The known problem.
+     */
     private KnownProblemDto knownProblem = null;
 
-    /** The test type. */
+    /**
+     * The test type.
+     */
     private TestType testType;
 
-    /** The source. */
+    /**
+     * The source.
+     */
     private String source = null;
 
-    /** The components. */
+    /**
+     * The components.
+     */
     private List<String> components = new ArrayList<String>();
 
-    /** The devices. */
+    /**
+     * The devices.
+     */
     private List<String> devices = new ArrayList<String>();
 
-    /** The platforms. */
+    /**
+     * The platforms.
+     */
     private List<String> platforms = new ArrayList<String>();
 
-    /** The run types. */
+    /**
+     * The run types.
+     */
     private List<String> runTypes = new ArrayList<String>();
 
-    /** The owner. */
+    /**
+     * The owner.
+     */
     private String owner = "NA";
 
     /**
@@ -77,8 +114,7 @@ public class TestPlanDto {
     /**
      * Adds the test case.
      *
-     * @param testCase
-     *            the test case
+     * @param testCase the test case
      * @return the test plan dto
      */
     public TestPlanDto addTestCase(final TestCaseDto testCase) {
@@ -151,8 +187,7 @@ public class TestPlanDto {
     /**
      * Sets the run time.
      *
-     * @param runTime
-     *            the run time
+     * @param runTime the run time
      * @return the test plan dto
      */
     public TestPlanDto setRunTime(final RunTimeDto runTime) {
@@ -172,8 +207,7 @@ public class TestPlanDto {
     /**
      * Sets the status.
      *
-     * @param status
-     *            the status
+     * @param status the status
      * @return the test plan dto
      */
     public TestPlanDto setStatus(final Boolean status) {
@@ -193,8 +227,7 @@ public class TestPlanDto {
     /**
      * Sets the test cases.
      *
-     * @param testCases
-     *            the test cases
+     * @param testCases the test cases
      * @return the test plan dto
      */
     public TestPlanDto setTestCases(final List<TestCaseDto> testCases) {
@@ -226,8 +259,7 @@ public class TestPlanDto {
     /**
      * Sets the name.
      *
-     * @param name
-     *            the name
+     * @param name the name
      * @return the test plan dto
      */
     public TestPlanDto setName(final String name) {
@@ -247,8 +279,7 @@ public class TestPlanDto {
     /**
      * Sets the description.
      *
-     * @param description
-     *            the description
+     * @param description the description
      * @return the test plan dto
      */
     public TestPlanDto setDescription(final String description) {
@@ -268,8 +299,7 @@ public class TestPlanDto {
     /**
      * Sets the related links.
      *
-     * @param relatedLinks
-     *            the related links
+     * @param relatedLinks the related links
      * @return the test plan dto
      */
     public TestPlanDto setRelatedLinks(final List<String> relatedLinks) {
@@ -289,8 +319,7 @@ public class TestPlanDto {
     /**
      * Sets the related ids.
      *
-     * @param relatedIds
-     *            the related ids
+     * @param relatedIds the related ids
      * @return the test plan dto
      */
     public TestPlanDto setRelatedIds(final List<String> relatedIds) {
@@ -310,8 +339,7 @@ public class TestPlanDto {
     /**
      * Sets the tags.
      *
-     * @param tags
-     *            the tags
+     * @param tags the tags
      * @return the test plan dto
      */
     public TestPlanDto setTags(final List<String> tags) {
@@ -340,8 +368,7 @@ public class TestPlanDto {
     /**
      * Sets the test type.
      *
-     * @param testType
-     *            the test type
+     * @param testType the test type
      * @return the test plan dto
      */
     public TestPlanDto setTestType(final TestType testType) {
@@ -361,8 +388,7 @@ public class TestPlanDto {
     /**
      * Sets the source.
      *
-     * @param source
-     *            the source
+     * @param source the source
      * @return the test plan dto
      */
     public TestPlanDto setSource(final String source) {
@@ -382,8 +408,7 @@ public class TestPlanDto {
     /**
      * Sets the components.
      *
-     * @param components
-     *            the components
+     * @param components the components
      * @return the test plan dto
      */
     public TestPlanDto setComponents(final List<String> components) {
@@ -403,8 +428,7 @@ public class TestPlanDto {
     /**
      * Sets the devices.
      *
-     * @param devices
-     *            the devices
+     * @param devices the devices
      * @return the test plan dto
      */
     public TestPlanDto setDevices(final List<String> devices) {
@@ -424,8 +448,7 @@ public class TestPlanDto {
     /**
      * Sets the platforms.
      *
-     * @param platforms
-     *            the platforms
+     * @param platforms the platforms
      * @return the test plan dto
      */
     public TestPlanDto setPlatforms(final List<String> platforms) {
@@ -445,8 +468,7 @@ public class TestPlanDto {
     /**
      * Sets the run types.
      *
-     * @param runTypes
-     *            the run types
+     * @param runTypes the run types
      * @return the test plan dto
      */
     public TestPlanDto setRunTypes(final List<String> runTypes) {
@@ -466,8 +488,7 @@ public class TestPlanDto {
     /**
      * Sets the owner.
      *
-     * @param owner
-     *            the owner
+     * @param owner the owner
      * @return the test plan dto
      */
     public TestPlanDto setOwner(final String owner) {
@@ -478,8 +499,7 @@ public class TestPlanDto {
     /**
      * Sets the known problem.
      *
-     * @param knownProblem
-     *            the known problem
+     * @param knownProblem the known problem
      * @return the test plan dto
      */
     public TestPlanDto setKnownProblem(final KnownProblemDto knownProblem) {
@@ -499,8 +519,7 @@ public class TestPlanDto {
     /**
      * Sets the id.
      *
-     * @param id
-     *            the id
+     * @param id the id
      * @return the test plan dto
      */
     public TestPlanDto setId(final int id) {
@@ -511,8 +530,7 @@ public class TestPlanDto {
     /**
      * Sets the run info.
      *
-     * @param runInfo
-     *            the new run info
+     * @param runInfo the new run info
      * @return the test plan dto
      */
     public TestPlanDto setRunInfo(final RunInfoDto runInfo) {

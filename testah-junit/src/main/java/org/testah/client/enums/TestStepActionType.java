@@ -7,16 +7,26 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum TestStepActionType {
 
-    /** The assert. */
+    /**
+     * The assert.
+     */
     ASSERT(),
-        /** The browser action. */
-        BROWSER_ACTION(),
-        /** The http request. */
-        HTTP_REQUEST(),
-        /** The info. */
-        INFO(),
-        /** The verify. */
-        VERIFY();
+    /**
+     * The browser action.
+     */
+    BROWSER_ACTION(),
+    /**
+     * The http request.
+     */
+    HTTP_REQUEST(),
+    /**
+     * The info.
+     */
+    INFO(),
+    /**
+     * The verify.
+     */
+    VERIFY();
 
     /**
      * Instantiates a new test step action type.

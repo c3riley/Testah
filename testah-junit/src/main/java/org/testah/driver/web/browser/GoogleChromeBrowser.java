@@ -21,7 +21,9 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
  */
 public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
 
-    /** The service. */
+    /**
+     * The service.
+     */
     private ChromeDriverService service = null;
 
     /*
@@ -96,20 +98,32 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
      * @return the chrome path
      */
     private String getChromePath() {
-
+        
         String binPath = TS.params().getWebDriver_chromeDriverBinary();
         try {
             if (null == binPath || binPath.length() == 0 || !(new File(binPath)).exists()) {
-                String urlSource = "http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip";
-                if (Params.isWindows()) {
-                    urlSource = "http://chromedriver.storage.googleapis.com/2.21/chromedriver_win32.zip";
+                final File downloadDestinationDir = TS.util().getDownloadDestinationDirectory("drivers");
+                final File unZipDestination = new File(downloadDestinationDir, "chrome");
+                File webDriverExecutable = findWebriverExecutable(unZipDestination);
+                if (null == webDriverExecutable) {
+                    String urlSource = "https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip";
+                    if (Params.isWindows()) {
+                        urlSource = "https://chromedriver.storage.googleapis.com/2.32/chromedriver_win32.zip";
+                    }
+                    else if (Params.isMac()) {
+                        urlSource = "https://chromedriver.storage.googleapis.com/2.32/chromedriver_mac64.zip";
+                    }
+                    final File zip = TS.util().downloadFile(urlSource, downloadDestinationDir);
+                    TS.util().unZip(zip, unZipDestination);
+                    cleanupDownloads(downloadDestinationDir);
+                    webDriverExecutable = findWebriverExecutable(unZipDestination);
                 }
-                else if (Params.isMac()) {
-                    urlSource = "http://chromedriver.storage.googleapis.com/2.21/chromedriver_mac32.zip";
+                else {
+                    TS.log().info("WebDriver executable already downloaded : " + webDriverExecutable.getAbsolutePath());
                 }
-                final File zip = TS.util().downloadFile(urlSource, "drivers");
-                final File dest = TS.util().unZip(zip, new File(zip.getParentFile(), "chrome"));
-                binPath = dest.getAbsolutePath();
+                webDriverExecutable.setExecutable(true);
+                binPath = webDriverExecutable.getAbsolutePath();
+                TS.params().setWebDriver_chromeDriverBinary(binPath);
             }
         }
         catch (final Exception e) {
@@ -117,7 +131,20 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         }
         // return binPath;
         return ChromeDriverManager.getInstance().getBinaryPath();
+    }
 
+    private File findWebriverExecutable(final File driverParentDirectory) {
+        return Arrays.stream(driverParentDirectory.listFiles((d, s) -> {
+            return d.exists() && d.isDirectory() && s.toLowerCase().contains("driver");
+        })).findAny().orElse((File) null);
+    }
+
+    private void cleanupDownloads(final File downloadDestinationDir) {
+        Arrays.stream(downloadDestinationDir.listFiles((d, s) -> {
+            return d.exists() && d.isDirectory() && s.toLowerCase().contains("download");
+        })).filter(f -> {
+            return f.isFile();
+        }).forEach(file -> file.delete());
     }
 
     /*

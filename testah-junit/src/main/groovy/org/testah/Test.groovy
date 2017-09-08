@@ -1,9 +1,9 @@
 package org.testah
 
 
+class Test {
 
-class test {
+    public void test() {
 
-	public void t(){
-	}
+    }
 }

@@ -1,186 +1,323 @@
 #set( $blockNumber = 1 )
 #set( $H = '#' )
 <html>
-		<head>
-		<title>Automation Results for testPlan: $testPlan.getName()</title>
+<head>
+    <title>Automation Results for testPlan: $testPlan.getName()</title>
 
-		<script>
-		function DisplayLayer(LayerName){
-			var obj = document.getElementById(LayerName);
-			if(obj.style.display==''){
-			  obj.style.display = 'none';
-			}else{
-			  obj.style.display = '';
-			}
-		}
-		</script>
+    <script>
+        function DisplayLayer(LayerName) {
+            var obj = document.getElementById(LayerName);
+            if (obj.style.display == '') {
+                obj.style.display = 'none';
+            } else {
+                obj.style.display = '';
+            }
+        }
+    </script>
 
-		<style>
+    <style>
 
-			.report_name {width: 100%; border: 1px solid black;}
+        .report_name {
+            width: 100%;
+            border: 1px solid black;
+        }
 
-			.tp_table {width: 100%; border: 1px solid black;}
+        .tp_table {
+            width: 100%;
+            border: 1px solid black;
+        }
 
-			.tp_details  {width: 80%; border: 1px solid black;}
-			.chart {width: 20%; }
+        .tp_details {
+            width: 80%;
+            border: 1px solid black;
+        }
 
-			.label {white-space:nowrap; width: 18%; border: 1px solid black; background-color:silver;}
-			.value {border: 1px solid black;}
-			.tc_table {width: 100%; border: 1px solid black;}
-			.steps_table {width: 100%; border: 1px solid black;}
-			.step_row {width: 100%; border: 1px solid black;}
-			.step_header {width: 100%; border: 1px solid black; background-color:silver;}
+        .chart {
+            width: 20%;
+        }
 
-			.step_id {}
-			.step_status_FAILED {background-color:red;}
-			.step_status_PASSED {background-color:green;}
-			.step_status_NA {background-color:grey;}
+        .label {
+            white-space: nowrap;
+            width: 18%;
+            border: 1px solid black;
+            background-color: silver;
+        }
 
-			.FAILED {background-color:red;width:100%;color:white}
-			.PASSED {background-color:green;width:100%;color:white}
-			.NA {background-color:grey;width:100%;color:white}
+        .value {
+            border: 1px solid black;
+        }
 
-			.step_desc {width: 45%;}
-			.step_expected {width: 25%;}
-			.step_actual {width: 25%;}
-			.screenshot {width: 5%;}
-			.sa_row {width: 100%; border: 1px solid black;}
-			.sa_id {}
+        .tc_table {
+            width: 100%;
+            border: 1px solid black;
+        }
 
-		</style>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		</head>
+        .steps_table {
+            width: 100%;
+            border: 1px solid black;
+        }
 
-		<body onload='elasticTextAreas();'>
+        .step_row {
+            width: 100%;
+            border: 1px solid black;
+        }
 
-		<table class='report_main'>
+        .step_header {
+            width: 100%;
+            border: 1px solid black;
+            background-color: silver;
+        }
 
-		<tr><td>
+        .step_id {
+        }
 
-		<table class='tp_table'><tr><td>
+        .step_status_FAILED {
+            background-color: red;
+        }
 
-		<table class='tp_details'>
+        .step_status_PASSED {
+            background-color: green;
+        }
 
-		<tr><td class='label'>testPlan:</td><td class='value'>$testPlan.getName() [ $testPlan.getSource() ] </td></tr>
-		<tr><td class='label'>testPlan Status:</td><td class='value'><div class='$testPlan.getStatusEnum()'>
-				$testPlan.getStatusEnum() 
-				#foreach( $tc in $testPlan.getTestCases() )
-				    #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
-						| <a style='color:white;' href='$H$tc.getName()' title='See TestCase Results'>$tc.getName()</a>
-					#end
-				#end
-		</td></tr>
-		<tr><td class='label'>TestCases Passed</td><td class='value'>$testPlan.getRunInfo().getPass()</td></tr>
-		<tr><td class='label'>TestCases Failed:</td><td class='value'>$testPlan.getRunInfo().getFail()</td></tr>
-		<tr><td class='label'>TestCases Ignored/NA:</td><td class='value'>$testPlan.getRunInfo().getIgnore()</td></tr>
-		<tr><td class='label'>User:</td><td class='value'>$!testPlan.getUser()</td></tr>
-		<tr><td class='label'>Build:</td><td class='value'>
-		#if("$!testPlan.getCiUrl()" != "")
-			<a href='testPlan.getCiUrl()' target='_blank'>View CI</a>
-		#end
-		</td></tr>
-		<tr><td class='label'>Built On</td><td class='value'>$!testPlan.getRunInfo().getRunTimeProperties().get("builtOn")</td></tr>
-		<tr><td class='label'>Environment:</td><td class='value'>$!testPlan.getEnvironment()</td></tr>
-		<tr><td class='label'>Time</td><td class='value'>$util.toDateString($testPlan.getRunTime().getStartTime()) to $util.toDateString($testPlan.getRunTime().getEndTime())</td></tr>
-        <tr><td class='label'>Duration</td><td class='value'>$util.getDurationPretty( $testPlan.getRunTime().getDuration())</td></tr>
-		</table>
-		</td>
+        .step_status_NA {
+            background-color: grey;
+        }
 
-		<td class='chart'><img src='$GoogleChart' alt='Test Results'/>
+        .FAILED {
+            background-color: red;
+            width: 100%;
+            color: white
+        }
 
-		</td>
-		</tr>
-		</table>
+        .PASSED {
+            background-color: green;
+            width: 100%;
+            color: white
+        }
 
-		</td>
-		</tr>
-		
-		
-		<!-- TESTCASES -->
-		#foreach( $testcase in $testPlan.getTestCases() )
-		<tr>
-			<td>
+        .NA {
+            background-color: grey;
+            width: 100%;
+            color: white
+        }
 
-				<table class='tc_table'>
+        .step_desc {
+            width: 45%;
+        }
 
-					<tr><td class='label'>TestCase:</td><td class='value'><a name='$testcase.getName()'>$testcase.getName() [ $testcase.getSource() ]</a></td></tr>
-					<tr><td class='label'>Description:</td><td class='value'>$testcase.getDescription()</td></tr>
-					<tr><td class='label'>Status:</td><td class='value'><div class='$testcase.getStatusEnum()'>$testcase.getStatusEnum()</div></td></tr>
-					<tr><td class='label'>Time:</td><td class='value'>$util.toDateString($testcase.getRunTime().getStartTime()) to $util.toDateString($testcase.getRunTime().getEndTime()) [Duration: $util.getDurationPretty( $testcase.getRunTime().getDuration() )]</td></tr>
+        .step_expected {
+            width: 25%;
+        }
 
-				</table>
+        .step_actual {
+            width: 25%;
+        }
 
-			</td>
-		</tr>
-		
-		
-		
-		
-			<tr>
-				<td>
-					<table class='steps_table'>
+        .screenshot {
+            width: 5%;
+        }
 
-						#foreach ($step in $testcase.getTestSteps()) 
+        .sa_row {
+            width: 100%;
+            border: 1px solid black;
+        }
 
-							<tr class='step_header'>
-							<td class='step_id'>ID</td><td class='step_desc'>Description</td>
-							<td class='step_expected'>Expected</td><td class='step_actual'>Actual</td><td></td></tr>
+        .sa_id {
+        }
 
-							<tr>
-								<td class='step_id'>$step.getId()</td>
-								<td class='step_desc'>$step.getName()</td>
-								<td class='step_expected'>$step.getDescription()</td>
-								<td class='step_actual'></td><td></td>
-							</tr>
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
 
-							#foreach ($stepAction in $step.getStepActions())
-								<tr>
-									<td class='step_status_$stepAction.getStatusEnum()' 
-									onclick="DisplayLayer('Step_$step.getId()_$blockNumber');" title='Click here to see Exception'></td>
-									<td class='step_desc'>
-									
-										<textarea rows='4' cols='50' style='word-wrap:break-word;'>$stepAction.getDescription()</textarea>
-									
-									</td>
-									<td  class='step_expected'>
-									
-										<textarea rows='4' cols='50' style='word-wrap:break-word;'>$!stepAction.getExpected()</textarea>
-									
-									</td>
-									<td  class='step_actual'>
-									
-										<textarea rows='4' cols='50' style='word-wrap:break-word;'>$!stepAction.getActual()</textarea>
-									
-									</td>
-									
-									<td id='screenshot'>
-									#if("$!stepAction.getSnapShotPath()" != "")
-										<a href='$stepAction.getSnapShotPath()' target='_blank'>View</a>
-										<br />
-										<a href='$stepAction.getHtmlSnapShotPath()' target='_blank'>Html</a>
-									#end
-									</td>
-								</tr>
-								<tr id='Step_$step.getId()_$blockNumber' style='display: none;'>
-									<td colspan='5'>
+<body onload='elasticTextAreas();'>
+
+<table class='report_main'>
+
+    <tr>
+        <td>
+
+            <table class='tp_table'>
+                <tr>
+                    <td>
+
+                        <table class='tp_details'>
+
+                            <tr>
+                                <td class='label'>testPlan:</td>
+                                <td class='value'>$testPlan.getName() [ $testPlan.getSource() ]</td>
+                            </tr>
+                            <tr>
+                                <td class='label'>testPlan Status:</td>
+                                <td class='value'>
+                                    <div class='$testPlan.getStatusEnum()'>
+                                        $testPlan.getStatusEnum()
+                                        #foreach( $tc in $testPlan.getTestCases() )
+                                            #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
+                                                | <a style='color:white;' href='$H$tc.getName()'
+                                                     title='See TestCase Results'>$tc.getName()</a>
+                                            #end
+                                        #end
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class='label'>TestCases Passed</td>
+                                <td class='value'>$testPlan.getRunInfo().getPass()</td>
+                            </tr>
+                            <tr>
+                                <td class='label'>TestCases Failed:</td>
+                                <td class='value'>$testPlan.getRunInfo().getFail()</td>
+                            </tr>
+                            <tr>
+                                <td class='label'>TestCases Ignored/NA:</td>
+                                <td class='value'>$testPlan.getRunInfo().getIgnore()</td>
+                            </tr>
+                            <tr>
+                                <td class='label'>User:</td>
+                                <td class='value'>$!testPlan.getUser()</td>
+                            </tr>
+                            <tr>
+                                <td class='label'>Build:</td>
+                                <td class='value'>
+                                    #if("$!testPlan.getCiUrl()" != "")
+                                        <a href='testPlan.getCiUrl()' target='_blank'>View CI</a>
+                                    #end
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class='label'>Built On</td>
+                                <td class='value'>$!testPlan.getRunInfo().getRunTimeProperties().get("builtOn")</td>
+                            </tr>
+                            <tr>
+                                <td class='label'>Environment:</td>
+                                <td class='value'>$!testPlan.getEnvironment()</td>
+                            </tr>
+                            <tr>
+                                <td class='label'>Time</td>
+                                <td class='value'>$util.toDateString($testPlan.getRunTime().getStartTime())
+                                    to $util.toDateString($testPlan.getRunTime().getEndTime())</td>
+                            </tr>
+                            <tr>
+                                <td class='label'>Duration</td>
+                                <td class='value'>$util.getDurationPretty( $testPlan.getRunTime().getDuration())</td>
+                            </tr>
+                        </table>
+                    </td>
+
+                    <td class='chart'><img src='$GoogleChart' alt='Test Results'/>
+
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+    </tr>
+
+
+    <!-- TESTCASES -->
+    #foreach( $testcase in $testPlan.getTestCases() )
+        <tr>
+            <td>
+
+                <table class='tc_table'>
+
+                    <tr>
+                        <td class='label'>TestCase:</td>
+                        <td class='value'><a name='$testcase.getName()'>$testcase.getName() [ $testcase.getSource() ]</a></td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Description:</td>
+                        <td class='value'>$testcase.getDescription()</td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Status:</td>
+                        <td class='value'>
+                            <div class='$testcase.getStatusEnum()'>$testcase.getStatusEnum()</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='label'>Time:</td>
+                        <td class='value'>$util.toDateString($testcase.getRunTime().getStartTime())
+                            to $util.toDateString($testcase.getRunTime().getEndTime())
+                            [Duration: $util.getDurationPretty( $testcase.getRunTime().getDuration() )]
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                <table class='steps_table'>
+
+                    #foreach ($step in $testcase.getTestSteps())
+
+                        <tr class='step_header'>
+                            <td class='step_id'>ID</td>
+                            <td class='step_desc'>Description</td>
+                            <td class='step_expected'>Expected</td>
+                            <td class='step_actual'>Actual</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class='step_id'>$step.getId()</td>
+                            <td class='step_desc'>$step.getName()</td>
+                            <td class='step_expected'>$step.getDescription()</td>
+                            <td class='step_actual'></td>
+                            <td></td>
+                        </tr>
+
+                        #foreach ($stepAction in $step.getStepActions())
+                            <tr>
+                                <td class='step_status_$stepAction.getStatusEnum()'
+                                    onclick="DisplayLayer('Step_$step.getId()_$blockNumber');" title='Click here to see Exception'></td>
+                                <td class='step_desc'>
+
+                                    <textarea rows='4' cols='50' style='word-wrap:break-word;'>$stepAction.getDescription()</textarea>
+
+                                </td>
+                                <td class='step_expected'>
+
+                                    <textarea rows='4' cols='50' style='word-wrap:break-word;'>$!stepAction.getExpected()</textarea>
+
+                                </td>
+                                <td class='step_actual'>
+
+                                    <textarea rows='4' cols='50' style='word-wrap:break-word;'>$!stepAction.getActual()</textarea>
+
+                                </td>
+
+                                <td id='screenshot'>
+                                    #if("$!stepAction.getSnapShotPath()" != "")
+                                        <a href='$stepAction.getSnapShotPath()' target='_blank'>View</a>
+                                        <br/>
+                                        <a href='$stepAction.getHtmlSnapShotPath()' target='_blank'>Html</a>
+                                    #end
+                                </td>
+                            </tr>
+                            <tr id='Step_$step.getId()_$blockNumber' style='display: none;'>
+                                <td colspan='5'>
 <pre>
-$!stepAction.getExceptionString()
+    $!stepAction.getExceptionString()
 </pre>
-									</td>
-								</tr>
-								#set( $blockNumber = $blockNumber + 1 )
-							#end
-						#end
-					</table>
-				</td>
-			</tr>
-			</td>
-			</tr>
-		
-		
-		
-		
-		
-		
-		#end
+                                </td>
+                            </tr>
+                            #set( $blockNumber = $blockNumber + 1 )
+                        #end
+                    #end
+                </table>
+            </td>
+        </tr>
+        </td>
+        </tr>
+
+
+
+
+
+
+    #end
 		

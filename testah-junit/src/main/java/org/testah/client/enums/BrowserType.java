@@ -9,22 +9,33 @@ import com.fasterxml.jackson.annotation.JsonValue;
  * The Enum BrowserType.
  */
 public enum BrowserType {
-
-    /** The firefox. */
-    FIREFOX_GECKO(""),
-        /** The chrome. */
-        FIREFOX(""),
-        /** The chrome. */
-        CHROME(""),
-        /** The ie. */
-        IE(""),
-        /** The phantomjs. */
-        PHANTOMJS(""),
-        JBROWSER("");
-
-    /** The browser code. */
+    
+    /**
+     * The firefox.
+     */
+    FIREFOX_GECKO("FIREFOX_GECKO"),
+    /**
+     * The chrome.
+     */
+    FIREFOX("FIREFOX"),
+    /**
+     * The chrome.
+     */
+    CHROME("CHROME"),
+    /**
+     * The ie.
+     */
+    IE("IE"),
+    /**
+     * The phantomjs.
+     */
+    PHANTOMJS("PHANTOMJS"), JBROWSER("JBROWSER");
+    
+    /**
+     * The browser code.
+     */
     String browserCode;
-
+    
     /**
      * Instantiates a new browser type.
      *
@@ -34,7 +45,7 @@ public enum BrowserType {
     BrowserType(final String browserCode) {
         this.browserCode = browserCode;
     }
-
+    
     /**
      * Gets the browser types.
      *
@@ -52,7 +63,7 @@ public enum BrowserType {
         }
         return null;
     }
-
+    
     /**
      * Gets the browser type.
      *
@@ -70,7 +81,7 @@ public enum BrowserType {
         }
         return BrowserType.FIREFOX;
     }
-
+    
     /**
      * Gets the browser code.
      *
@@ -79,11 +90,11 @@ public enum BrowserType {
     public String getBrowserCode() {
         return browserCode;
     }
-
+    
     @Override
     @JsonValue
     public String toString() {
         return this.name();
     }
-
+    
 }

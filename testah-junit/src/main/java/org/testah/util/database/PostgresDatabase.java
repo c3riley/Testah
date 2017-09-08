@@ -1,5 +1,8 @@
 package org.testah.util.database;
 
+import org.testah.TS;
+import org.testah.util.database.dto.SqlExecutionDto;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,13 +14,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.testah.TS;
-import org.testah.util.database.dto.SqlExecutionDto;
-
 public class PostgresDatabase extends AbstractDatabaseUtil {
 
     public PostgresDatabase(final String databaseName, final String host, final int port, final String dbUser,
-            final String dbPassword) {
+                            final String dbPassword) {
         super(databaseName, host, port, dbUser, dbPassword);
     }
 

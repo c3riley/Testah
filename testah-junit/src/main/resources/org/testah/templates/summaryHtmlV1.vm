@@ -1,0 +1,66 @@
+<table>
+
+    <tr>
+        <td>
+        <td class='chart'><img src='$GoogleChart' alt='Test Results'/>
+            <table class='tc_table' border="1">
+                <thead>
+                <th>TestPlan</th>
+                <th>TestType</th>
+                </th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Pass</th>
+                <th>Fail</th>
+                <th>Ignore</th>
+                <th>html</th>
+                <th>xml</th>
+                <th>txt</th>
+                <th>json</th>
+                </thead>
+                <tbody>
+                    #foreach( $result in $results )
+                    <tr>
+                        #if( "$!result.getTestPlan()" != "" )
+                            <td class='label'>$result.getTestPlan().getName()</td>
+                            <td class='label'>testah</td>
+                            <td class='label'>$result.getTestPlan().getStatusEnum()</td>
+                            <td class='value'>$result.getTestPlan().getRunInfo().getTotal()</td>
+                            <td class='value'>$result.getTestPlan().getRunInfo().getPass()</td>
+                            <td class='value'>$result.getTestPlan().getRunInfo().getFail()</td>
+                            <td class='value'>$result.getTestPlan().getRunInfo().getIgnore()</td>
+                        #else
+                            <td class='label'>$result.getClassName()</td>
+                            <td class='label'>junit</td>
+                            #if( "$result.getJunitResult().wasSuccessful()" == "true" )
+                                <td class='label'>PASSED</td>
+                            #else
+                                <td class='label'>FAILED</td>
+                            #end
+                            <td class='label'>$result.getJunitResult().wasSuccessful()</td>
+                            <td class='value'>$result.getJunitResult().getRunCount()</td>
+                            #set($pass = $result.getJunitResult().getRunCount() - ($result.getJunitResult().getFailureCount() + $result.getJunitResult().getIgnoreCount()))
+                            <td class='value'>$pass</td>
+                            <td class='value'>$result.getJunitResult().getFailureCount()</td>
+                            <td class='value'>$result.getJunitResult().getIgnoreCount()</td>
+                        #end
+                        <td class='value'><a target='_blank'
+                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get("html")">html</a>
+                        </td>
+                        <td class='value'><a target='_blank'
+                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get('xml')">xml</a></td>
+                        <td class='value'><a target='_blank'
+                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get('txt')">txt</a></td>
+                        <td class='value'><a target='_blank'
+                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get('json')">json</a>
+                        </td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+
+        </td>
+    </tr>
+
+
+</table>

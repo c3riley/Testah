@@ -1,15 +1,5 @@
 package org.testah.driver.http.requests;
 
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
-import static org.apache.http.HttpStatus.SC_OK;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
@@ -19,6 +9,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
@@ -29,33 +20,64 @@ import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+import static org.apache.http.HttpStatus.SC_OK;
+
 /**
  * The Class AbstractRequestDto.
  */
 public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequestDto<T>> {
 
-    /** The uri. */
+    /**
+     * The uri.
+     */
     protected String uri = null;
 
-    /** The headers. */
+    /**
+     * The headers.
+     */
     protected List<Header> headers = null;
 
-    /** The expected status. */
+    /**
+     * The expected status.
+     */
     protected int expectedStatus = SC_OK;
 
-    /** The credentials provider. */
+    /**
+     * The credentials provider.
+     */
     protected CredentialsProvider credentialsProvider = null;
 
-    /** The http request base. */
+    /**
+     * The http request base.
+     */
     protected HttpRequestBase httpRequestBase = null;
 
-    /** The http entity. */
+    /**
+     * The http request class.
+     */
+    protected Class httpRequestClass = null;
+
+    /**
+     * The http entity.
+     */
     protected HttpEntity httpEntity = null;
 
-    /** The http method. */
+    /**
+     * The http method.
+     */
     protected String httpMethod = null;
 
-    /** The auto assert. */
+    /**
+     * The auto assert.
+     */
     protected boolean autoAssert = false;
 
     /**
@@ -66,7 +88,9 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     @SuppressWarnings("unchecked")
     protected T getSelf() {
         return (T) this;
-    };
+    }
+
+    ;
 
     /**
      * Gets the http method.
@@ -80,8 +104,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the http method.
      *
-     * @param httpMethod
-     *            the http method
+     * @param httpMethod the http method
      * @return the abstract request dto
      */
     public T setHttpMethod(final String httpMethod) {
@@ -92,8 +115,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the uri.
      *
-     * @param uri
-     *            the uri
+     * @param uri the uri
      * @return the abstract request dto
      */
     public T setUri(final String uri) {
@@ -104,10 +126,8 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Instantiates a new abstract request dto.
      *
-     * @param httpRequestBase
-     *            the http request base
-     * @param httpMethod
-     *            the http method
+     * @param httpRequestBase the http request base
+     * @param httpMethod      the http method
      */
     protected AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
         this.httpRequestBase = httpRequestBase;
@@ -147,10 +167,8 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Adds the header.
      *
-     * @param name
-     *            the name
-     * @param value
-     *            the value
+     * @param name  the name
+     * @param value the value
      * @return the abstract request dto
      */
     public T addHeader(final String name, final String value) {
@@ -161,8 +179,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Adds the header.
      *
-     * @param header
-     *            the header
+     * @param header the header
      * @return the abstract request dto
      */
     public T addHeader(final Header header) {
@@ -191,14 +208,13 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         if (null == headers) {
             return null;
         }
-        return headers.toArray(new Header[] {});
+        return headers.toArray(new Header[]{});
     }
 
     /**
      * Sets the headers.
      *
-     * @param headers
-     *            the headers
+     * @param headers the headers
      * @return the abstract request dto
      */
     public T setHeaders(final List<Header> headers) {
@@ -218,8 +234,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the expected status.
      *
-     * @param expectedStatus
-     *            the expected status
+     * @param expectedStatus the expected status
      * @return the abstract request dto
      */
     public T setExpectedStatus(final int expectedStatus) {
@@ -239,8 +254,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the credentials provider.
      *
-     * @param credentialsProvider
-     *            the credentials provider
+     * @param credentialsProvider the credentials provider
      * @return the abstract request dto
      */
     public T setCredentialsProvider(final CredentialsProvider credentialsProvider) {
@@ -251,16 +265,13 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the basic auth credentials.
      *
-     * @param userName
-     *            the user name
-     * @param password
-     *            the password
-     * @param authScope
-     *            the auth scope
+     * @param userName  the user name
+     * @param password  the password
+     * @param authScope the auth scope
      * @return the abstract request dto
      */
     public T setBasicAuthCredentials(final String userName, final String password,
-            final AuthScope authScope) {
+                                     final AuthScope authScope) {
         credentialsProvider = new BasicCredentialsProvider();
         final UsernamePasswordCredentials creds = new UsernamePasswordCredentials(userName, password);
         credentialsProvider.setCredentials(authScope, creds);
@@ -270,10 +281,8 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Adds the basic auth.
      *
-     * @param userName
-     *            the user name
-     * @param password
-     *            the password
+     * @param userName the user name
+     * @param password the password
      * @return the abstract request dto
      */
     public T addBasicAuth(final String userName, final String password) {
@@ -286,10 +295,8 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Adds the basic auth header.
      *
-     * @param userName
-     *            the user name
-     * @param password
-     *            the password
+     * @param userName the user name
+     * @param password the password
      * @return the abstract request dto
      */
     public T addBasicAuthHeader(final String userName, final String password) {
@@ -302,10 +309,8 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Adds the basic auth header with mask.
      *
-     * @param userName
-     *            the user name
-     * @param password
-     *            the password
+     * @param userName the user name
+     * @param password the password
      * @return the abstract request dto
      */
     public T addBasicAuthHeaderWithMask(final String userName, final String password) {
@@ -317,10 +322,8 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the basic auth credentials.
      *
-     * @param userName
-     *            the user name
-     * @param password
-     *            the password
+     * @param userName the user name
+     * @param password the password
      * @return the abstract http wrapper
      */
     public T setBasicAuthCredentials(final String userName, final String password) {
@@ -353,8 +356,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the http request base.
      *
-     * @param httpRequestBase
-     *            the http request base
+     * @param httpRequestBase the http request base
      * @return the abstract request dto
      */
     public T setHttpRequestBase(final HttpRequestBase httpRequestBase) {
@@ -365,8 +367,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the http entity.
      *
-     * @param httpEntity
-     *            the http entity
+     * @param httpEntity the http entity
      * @return the abstract request dto
      */
     public T setHttpEntity(final HttpEntity httpEntity) {
@@ -383,32 +384,51 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         return httpRequestBase.getURI().toString();
     }
 
-    /**
-     * Sets the payload.
-     *
-     * @param payload
-     *            the payload
-     * @return the abstract request dto
-     */
-    public abstract T setPayload(final String payload);
+    public T setPayload(String payload) {
+        try {
+            if (null == payload) {
+                payload = "";
+            }
+            return setPayload(new StringEntity(payload));
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    /**
-     * Sets the payload.
-     *
-     * @param payload
-     *            the payload
-     * @return the abstract request dto
-     */
-    public abstract T setPayload(final HttpEntity payload);
+    public T setPayload(final Object payload) {
+        try {
+            if (null == payload) {
+                TS.log().warn("payload was null so setting to empty string");
+                return setPayload(new StringEntity(""));
+            } else {
+                return setPayload(new StringEntity(TS.util().toJson(payload)));
+            }
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    /**
-     * Sets the payload.
-     *
-     * @param payload
-     *            the payload
-     * @return the abstract request dto
-     */
-    public abstract T setPayload(final Object payload);
+    public T setPayload(final HttpEntity payload) {
+        try {
+            if (null != payload) {
+                httpEntity = payload;
+                setEntity(payload);
+            } else {
+                TS.log().warn("payload was null so setting to empty string");
+                setEntity(new StringEntity(""));
+            }
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+        return getSelf();
+    }
+
+    protected abstract T setEntity(final HttpEntity payload);
+
+    public T setPayload(final byte[] payload) {
+        setContentType("application/octet-stream");
+        return setPayload(new ByteArrayEntity(payload));
+    }
 
     /**
      * Gets the payload string.
@@ -495,8 +515,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the auto assert.
      *
-     * @param autoAssert
-     *            the new auto assert
+     * @param autoAssert the new auto assert
      * @return the t
      */
     public T setAutoAssert(final boolean autoAssert) {
@@ -507,8 +526,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the content type.
      *
-     * @param value
-     *            the value
+     * @param value the value
      * @return the abstract request dto
      */
     public T setContentType(final String value) {
@@ -519,11 +537,9 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the upload file.
      *
-     * @param payload
-     *            the payload
+     * @param payload the payload
      * @return the abstract request dto
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public T setUploadFile(final String payload) throws IOException {
         File file = new File(payload);
@@ -534,11 +550,9 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the upload file.
      *
-     * @param payload
-     *            the payload
+     * @param payload the payload
      * @return the abstract request dto
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public T setUploadFile(final File payload) throws IOException {
         TS.asserts().assertFileExists(payload);
@@ -548,11 +562,9 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the upload resource file.
      *
-     * @param pathToResource
-     *            the path to resource
+     * @param pathToResource the path to resource
      * @return the abstract request dto
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
+     * @throws IOException Signals that an I/O exception has occurred.
      */
     public T setUploadResourceFile(final String pathToResource) throws IOException {
         final String fileContent = TS.util().getResourceAsString(pathToResource);
@@ -563,8 +575,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the upload.
      *
-     * @param payload
-     *            the payload
+     * @param payload the payload
      * @return the abstract request dto
      */
     public T setUpload(final String payload) {
@@ -574,10 +585,8 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the upload.
      *
-     * @param payload
-     *            the payload
-     * @param charset
-     *            the charset
+     * @param payload the payload
+     * @param charset the charset
      * @return the abstract request dto
      */
     public T setUpload(final String payload, final String charset) {
@@ -587,8 +596,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the upload.
      *
-     * @param payload
-     *            the payload
+     * @param payload the payload
      * @return the abstract request dto
      */
     public T setUpload(final byte[] payload) {

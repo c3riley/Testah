@@ -1,5 +1,16 @@
 package org.testah.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.joda.time.Duration;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+import org.joda.time.format.PeriodFormat;
+import org.testah.TS;
+import org.testah.framework.cli.Params;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,24 +24,14 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.joda.time.Duration;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
-import org.joda.time.format.PeriodFormat;
-import org.testah.TS;
-import org.testah.framework.cli.Params;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 /**
  * The Class TestahUtil.
  */
 public class TestahUtil {
 
-    /** The map. */
+    /**
+     * The map.
+     */
     private final ObjectMapper map;
 
     /**
@@ -46,8 +47,7 @@ public class TestahUtil {
     /**
      * To json print.
      *
-     * @param object
-     *            the object
+     * @param object the object
      * @return the string
      */
     public String toJsonPrint(final Object object) {
@@ -59,8 +59,7 @@ public class TestahUtil {
     /**
      * To json.
      *
-     * @param object
-     *            the object
+     * @param object the object
      * @return the string
      */
     public String toJson(final Object object) {
@@ -95,8 +94,7 @@ public class TestahUtil {
     /**
      * Pause.
      *
-     * @param milliseconds
-     *            the milliseconds
+     * @param milliseconds the milliseconds
      * @return the testah util
      */
     public TestahUtil pause(final Long milliseconds) {
@@ -117,8 +115,7 @@ public class TestahUtil {
     /**
      * Pause.
      *
-     * @param reasonForPause
-     *            the reason for pause
+     * @param reasonForPause the reason for pause
      * @return the testah util
      */
     public TestahUtil pause(final String reasonForPause) {
@@ -129,10 +126,8 @@ public class TestahUtil {
     /**
      * Pause.
      *
-     * @param milliseconds
-     *            the milliseconds
-     * @param reasonForPause
-     *            the reason for pause
+     * @param milliseconds   the milliseconds
+     * @param reasonForPause the reason for pause
      * @return the testah util
      */
     public TestahUtil pause(final Long milliseconds, final String reasonForPause) {
@@ -143,10 +138,8 @@ public class TestahUtil {
     /**
      * Pause.
      *
-     * @param reasonForPause
-     *            the reason for pause
-     * @param iteration
-     *            the iteration
+     * @param reasonForPause the reason for pause
+     * @param iteration      the iteration
      * @return the testah util
      */
     public TestahUtil pause(final String reasonForPause, final Integer iteration) {
@@ -157,10 +150,8 @@ public class TestahUtil {
     /**
      * Pause.
      *
-     * @param reasonForPause
-     *            the reason for pause
-     * @param milliseconds
-     *            the milliseconds
+     * @param reasonForPause the reason for pause
+     * @param milliseconds   the milliseconds
      * @return the testah util
      */
     public TestahUtil pause(final String reasonForPause, final Long milliseconds) {
@@ -171,12 +162,9 @@ public class TestahUtil {
     /**
      * Pause.
      *
-     * @param milliseconds
-     *            the milliseconds
-     * @param reasonForPause
-     *            the reason for pause
-     * @param iteration
-     *            the iteration
+     * @param milliseconds   the milliseconds
+     * @param reasonForPause the reason for pause
+     * @param iteration      the iteration
      * @return the testah util
      */
     public TestahUtil pause(final Long milliseconds, final String reasonForPause, final Integer iteration) {
@@ -215,8 +203,7 @@ public class TestahUtil {
     /**
      * Now.
      *
-     * @param dateTimeFormat
-     *            the date time format
+     * @param dateTimeFormat the date time format
      * @return the string
      */
     public String now(final String dateTimeFormat) {
@@ -226,8 +213,7 @@ public class TestahUtil {
     /**
      * To date string.
      *
-     * @param time
-     *            the time
+     * @param time the time
      * @return the string
      */
     public String toDateString(final Long time) {
@@ -237,10 +223,8 @@ public class TestahUtil {
     /**
      * To date string.
      *
-     * @param time
-     *            the time
-     * @param dateTimeFormat
-     *            the date time format
+     * @param time           the time
+     * @param dateTimeFormat the date time format
      * @return the string
      */
     public String toDateString(final Long time, final String dateTimeFormat) {
@@ -251,8 +235,7 @@ public class TestahUtil {
     /**
      * Gets the duration pretty.
      *
-     * @param duration
-     *            the duration
+     * @param duration the duration
      * @return the duration pretty
      */
     public String getDurationPretty(final Long duration) {
@@ -263,8 +246,7 @@ public class TestahUtil {
     /**
      * Download file.
      *
-     * @param urlToUse
-     *            the url to use
+     * @param urlToUse the url to use
      * @return the file
      */
     public File downloadFile(final String urlToUse) {
@@ -272,22 +254,33 @@ public class TestahUtil {
     }
 
     /**
+     * Create File reference to parent directory of a file download.
+     *
+     * @param relativePath to download parent directory.
+     * @return return file for download
+     */
+    public File getDownloadDestinationDirectory(String relativePath) {
+        return new File(Params.addUserDir(relativePath));
+    }
+
+    /**
      * Download file.
      *
-     * @param urlToUse
-     *            the url to use
-     * @param destination
-     *            the destination
+     * @param urlToUse    the url to use
+     * @param destination the destination
      * @return the file
      */
     public File downloadFile(final String urlToUse, final String destination) {
+        final File downloadFileDirectory = getDownloadDestinationDirectory(destination);
+        return downloadFile(urlToUse, downloadFileDirectory);
+    }
+
+    public File downloadFile(final String urlToUse, final File destinationDir) {
         try {
-            final File downloadFileDirectory = new File(Params.addUserDir(destination));
-            TS.log().trace("downloadFileDirectory mkdirs: " + downloadFileDirectory.mkdirs());
-            final File fileDownLoaded = File.createTempFile("download", "", downloadFileDirectory);
+            TS.log().trace("downloadFileDirectory mkdirs: " + destinationDir.mkdirs());
+            final File fileDownLoaded = File.createTempFile("download", "", destinationDir);
             final byte[] fileBytes = TS.http().doGet(urlToUse).getResponseBytes();
-            try (FileOutputStream fileOuputStream = new FileOutputStream(
-                    File.createTempFile("download", "", downloadFileDirectory))) {
+            try (FileOutputStream fileOuputStream = new FileOutputStream(fileDownLoaded)) {
                 fileOuputStream.write(fileBytes);
             }
             return fileDownLoaded;
@@ -298,12 +291,20 @@ public class TestahUtil {
     }
 
     /**
+     * Create File reference to parent directory of a file download.
+     *
+     * @param relativePath to download parent directory.
+     * @return Unzip directory File
+     */
+    public File getUnZipDestinationDirectory(String relativePath) {
+        return new File(Params.addUserDir(relativePath));
+    }
+
+    /**
      * Un zip.
      *
-     * @param zip
-     *            the zip
-     * @param destination
-     *            the destination
+     * @param zip         the zip
+     * @param destination the destination
      * @return the file
      */
     public File unZip(final File zip, final File destination) {
@@ -335,8 +336,7 @@ public class TestahUtil {
     /**
      * Split camel case.
      *
-     * @param s
-     *            the s
+     * @param s the s
      * @return the string
      */
     public String splitCamelCase(final String s) {
@@ -347,8 +347,7 @@ public class TestahUtil {
     /**
      * Url encode.
      *
-     * @param value
-     *            the value
+     * @param value the value
      * @return the string
      */
     public String urlEncode(final String value) {
@@ -363,8 +362,7 @@ public class TestahUtil {
     /**
      * Html encode.
      *
-     * @param value
-     *            the value
+     * @param value the value
      * @return the string
      */
     public String htmlEncode(final String value) {
@@ -379,10 +377,8 @@ public class TestahUtil {
     /**
      * Gets the random int.
      *
-     * @param min
-     *            the min
-     * @param max
-     *            the max
+     * @param min the min
+     * @param max the max
      * @return the random int
      */
     public int getRandomInt(final int min, final int max) {
@@ -394,8 +390,7 @@ public class TestahUtil {
     /**
      * Gets the resource as string.
      *
-     * @param path
-     *            the path
+     * @param path the path
      * @return the resource as string
      */
     public String getResourceAsString(final String path) {
