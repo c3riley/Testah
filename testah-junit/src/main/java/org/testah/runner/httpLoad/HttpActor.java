@@ -14,6 +14,7 @@ import java.util.List;
 
 public class HttpActor extends UntypedActor {
     private static HashMap<Long, List<ResponseDto>> results = new HashMap<Long, List<ResponseDto>>();
+    public static final int UKNOWN_ERROR_STATUS = 700;
 
     private final ActorRef workerRouter;
     private final int nrOfWorkers;
@@ -31,20 +32,34 @@ public class HttpActor extends UntypedActor {
 
     @SuppressWarnings("unchecked")
     public void onReceive(final Object message) throws Exception {
-        if (message instanceof ResponseDto) {
-            results.get(hashId).add((ResponseDto) message);
-        } else if (message instanceof List) {
-            for (final Class<?> test : (List<Class<?>>) message) {
-                workerRouter.tell(test, getSelf());
-            }
-        } else if (message instanceof AbstractRequestDto) {
-            for (int start = 1; start <= numOfAttempts; start++) {
-                workerRouter.tell(message, getSelf());
-            }
-        } else {
-            TS.log().info("Issue should of not made it here, message was " + message);
+        try {
+            if (message instanceof ResponseDto) {
+                results.get(hashId).add((ResponseDto) message);
+            } else if (message instanceof List) {
+                for (final Class<?> test : (List<Class<?>>) message) {
+                    workerRouter.tell(test, getSelf());
+                }
+            } else if (message instanceof AbstractRequestDto) {
+                for (int start = 1; start <= numOfAttempts; start++) {
+                    workerRouter.tell(message, getSelf());
+                }
+            } else if (message instanceof Throwable) {
+                results.get(hashId).add(getUnExpectedErrorResponseDto((Throwable)message));
+            } else {
+                TS.log().info("Issue should of not made it here, message was " + message);
 
+            }
+        } catch (Throwable throwable) {
+            results.get(hashId).add(getUnExpectedErrorResponseDto(throwable));
         }
+    }
+
+    private ResponseDto getUnExpectedErrorResponseDto(final Throwable throwable) {
+        ResponseDto response = new ResponseDto();
+        response.setStatusCode(UKNOWN_ERROR_STATUS);
+        response.setStatusText(String.format("Unexpected Error[%s]",throwable.getMessage()));
+        response.setResponseBody(org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(throwable));
+        return response;
     }
 
     public ActorRef getWorkerRouter() {
