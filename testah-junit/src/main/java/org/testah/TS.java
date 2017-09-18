@@ -64,6 +64,11 @@ public class TS {
      *
      * @return the verbose asserts
      */
+    public static VerboseAsserts asserts(final boolean throwExceptionOnFail) {
+        _asserts = new VerboseAsserts(throwExceptionOnFail);
+        return _asserts;
+    }
+
     public static VerboseAsserts asserts() {
         if (null == _asserts) {
             _asserts = new VerboseAsserts();
@@ -78,7 +83,7 @@ public class TS {
      */
     public static VerboseAsserts verify() {
         if (null == _verify) {
-            _verify = new VerboseAsserts().onlyVerfiy();
+            _verify = new VerboseAsserts().onlyVerify();
         }
         return _verify;
     }

@@ -39,7 +39,7 @@ public class VerboseAsserts {
     /**
      * Instantiates a new verbose asserts.
      */
-    public VerboseAsserts() {
+     public VerboseAsserts() {
         setRecordSteps(TS.params().isRecordSteps());
         throwExceptionOnFail = TS.params().isThrowExceptionOnFail();
     }
@@ -50,6 +50,7 @@ public class VerboseAsserts {
      * @param throwExceptionOnFail the throw exception on fail
      */
     public VerboseAsserts(final boolean throwExceptionOnFail) {
+        setRecordSteps(TS.params().isRecordSteps());
         this.throwExceptionOnFail = throwExceptionOnFail;
     }
 
@@ -1730,7 +1731,7 @@ public class VerboseAsserts {
      *
      * @return the verbose asserts
      */
-    public VerboseAsserts onlyVerfiy() {
+    public VerboseAsserts onlyVerify() {
         this.recordSteps = false;
         this.throwExceptionOnFail = false;
         this.setVerifyOnly(true);

@@ -27,6 +27,8 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      */
     private Boolean status = null;
 
+    private Boolean failFast = null;
+
     private TestStatus statusEnum = null;
 
     /**
@@ -212,6 +214,16 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      */
     public TestPlanDto setStatus(final Boolean status) {
         this.status = status;
+        return this;
+    }
+
+
+    public Boolean getFailFast() {
+        return failFast;
+    }
+
+    public TestPlanDto setFailFast(Boolean failFast) {
+        this.failFast = failFast;
         return this;
     }
 

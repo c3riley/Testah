@@ -24,10 +24,12 @@ import org.testah.client.dto.StepActionDto;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
 import org.testah.client.dto.TestStepDto;
+import org.testah.framework.annotations.FailFast;
 import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.cli.Cli;
+import org.testah.framework.cli.Params;
 import org.testah.framework.cli.TestFilter;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.TestDtoHelper;
@@ -211,7 +213,11 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
         }
 
         protected void starting(final Description desc) {
+            boolean failOnFirstError = TS.params().isThrowExceptionOnFail();
             if (!didTestPlanStart()) {
+                if(desc.getTestClass().getAnnotation(FailFast.class) != null) {
+                    failOnFirstError = desc.getTestClass().getAnnotation(FailFast.class).failOnFirstException();
+                };
                 TS.log().info("TESTPLAN started:" + desc.getTestClass().getName() + " - thread[" + Thread.currentThread().getId() + "]");
                 final TestPlan testPlan = desc.getTestClass().getAnnotation(TestPlan.class);
                 if (null == desc.getTestClass().getAnnotation(TestPlan.class)) {
@@ -224,6 +230,9 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
                     if (null != m.getAnnotation(Ignore.class)) {
                         addIgnoredTest(desc.getClassName() + "#" + m.getName(), "JUNIT_IGNORE");
                     }
+                    if(m.getAnnotation(FailFast.class) != null) {
+                        failOnFirstError = m.getAnnotation(FailFast.class).failOnFirstException();
+                    };
                 }
                 MDC.put("logFileName", "" + Thread.currentThread().getId());
             }
@@ -231,8 +240,11 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
 
             TS.log().info(
                     "TESTCASE started:" + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
+            if(desc.getAnnotation(FailFast.class) != null) {
+                failOnFirstError = desc.getAnnotation(FailFast.class).failOnFirstException();
+            }
             startTestCase(desc, desc.getAnnotation(TestCase.class), desc.getTestClass().getAnnotation(TestPlan.class),
-                    desc.getAnnotation(KnownProblem.class));
+                    desc.getAnnotation(KnownProblem.class), failOnFirstError);
             getTestStep();
         }
     };
@@ -442,14 +454,15 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      * @param desc        the desc
      * @param testCase    the test case
      * @param testPlan    the test plan
-     * @param knowProblem the know problem
+     * @param knownProblem the know problem
      * @return the test case dto
      */
     private TestCaseDto startTestCase(final Description desc, final TestCase testCase, final TestPlan testPlan,
-                                      final KnownProblem knowProblem) {
+                                      final KnownProblem knownProblem, final boolean failOnFirstError) {
         if (didTestPlanStart()) {
+            TS.asserts(failOnFirstError);
             getTestCaseThreadLocal()
-                    .set(TestDtoHelper.createTestCaseDto(desc, testCase, knowProblem, testPlan).start());
+                    .set(TestDtoHelper.createTestCaseDto(desc, testCase, knownProblem, testPlan).start());
         }
         return getTestCase();
     }
