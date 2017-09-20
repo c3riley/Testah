@@ -1,8 +1,8 @@
 package org.testah.framework.cli;
 
 import net.sourceforge.argparse4j.annotation.Arg;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Level;
-import org.springframework.util.StringUtils;
 import org.testah.TS;
 import org.testah.client.enums.BrowserType;
 import org.testah.client.enums.TestType;
