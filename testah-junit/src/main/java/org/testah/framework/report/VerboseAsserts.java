@@ -223,7 +223,7 @@ public class VerboseAsserts {
     public boolean sameJson(final String message, final Object expected, final Object actual, final boolean strict) {
         final JSONObject expectedJsonNode = new JSONObject(expected);
         final JSONObject actualJsonNode = new JSONObject(actual);
-        return sameJson(message,expectedJsonNode, actualJsonNode, strict);
+        return sameJson(message, expectedJsonNode, actualJsonNode, strict);
     }
 
     /**
