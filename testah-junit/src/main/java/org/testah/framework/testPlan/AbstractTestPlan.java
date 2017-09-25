@@ -16,9 +16,6 @@ import org.junit.rules.Timeout;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.slf4j.MDC;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.ContextHierarchy;
-import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.testah.TS;
 import org.testah.client.dto.StepActionDto;
 import org.testah.client.dto.TestCaseDto;
@@ -40,8 +37,7 @@ import java.util.HashMap;
 /**
  * The Class AbstractTestPlan.
  */
-@ContextHierarchy({@ContextConfiguration(classes = TestConfiguration.class)})
-public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests {
+public abstract class AbstractTestPlan {
 
     /**
      * The test plan.
@@ -86,7 +82,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * The global timeout.
      */
-    public TestRule globalTimeout = Timeout.millis(100000L);
+    private TestRule globalTimeout = Timeout.millis(100000L);
 
     public TestRule getGlobalTimeout() {
         return globalTimeout;
@@ -100,7 +96,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * The initialize.
      */
-    public ExternalResource initialize = new ExternalResource() {
+    private ExternalResource initialize = new ExternalResource() {
 
         protected void before() throws Throwable {
             filterTest(description);
@@ -140,7 +136,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      *
      * @param description the description
      */
-    public void filterTest(final Description description) {
+    private void filterTest(final Description description) {
         final String name = description.getClassName() + "#" + description.getMethodName();
         final KnownProblem kp = description.getAnnotation(KnownProblem.class);
         setAssumeTrue(false);
@@ -175,7 +171,7 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     /**
      * The watchman2.
      */
-    public TestWatcher watchman2 = new TestWatcher() {
+    private TestWatcher watchman2 = new TestWatcher() {
 
         protected void failed(final Throwable e, final Description description) {
             StepAction.createAssertResult("Unexpected Error occured", false, "UnhandledExceptionFoundByJUnit", "",
@@ -252,11 +248,6 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
      */
     @BeforeClass
     public static void setupAbstractTestPlan() {
-        try {
-
-        } catch (final Exception e) {
-
-        }
     }
 
     /**
@@ -518,16 +509,16 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
             if (writeToLog) {
                 final StringBuilder sb = new StringBuilder("StepAction - ");
                 if (null != stepAction.getStatus()) {
-                    sb.append("status:" + stepAction.getStatus() + " - ");
+                    sb.append("status:").append(stepAction.getStatus()).append(" - ");
                 }
                 if (null != stepAction.getMessage1()) {
-                    sb.append(" " + stepAction.getMessage1());
+                    sb.append(" ").append(stepAction.getMessage1());
                 }
                 if (null != stepAction.getMessage2()) {
-                    sb.append(" " + stepAction.getMessage2());
+                    sb.append(" ").append(stepAction.getMessage2());
                 }
                 if (null != stepAction.getMessage3()) {
-                    sb.append(" " + stepAction.getMessage3());
+                    sb.append(" ").append(stepAction.getMessage3());
                 }
                 TS.log().info(sb.toString());
             }
@@ -703,10 +694,10 @@ public abstract class AbstractTestPlan extends AbstractJUnit4SpringContextTests 
     }
 
     public static void setUpThreadLocals() {
-        testPlan = new ThreadLocal<TestPlanDto>();
-        testCase = new ThreadLocal<TestCaseDto>();
-        testStep = new ThreadLocal<TestStepDto>();
-        testPlanStart = new ThreadLocal<Boolean>();
-        ignoredTests = new ThreadLocal<HashMap<String, String>>();
+        testPlan = new ThreadLocal<>();
+        testCase = new ThreadLocal<>();
+        testStep = new ThreadLocal<>();
+        testPlanStart = new ThreadLocal<>();
+        ignoredTests = new ThreadLocal<>();
     }
 }
