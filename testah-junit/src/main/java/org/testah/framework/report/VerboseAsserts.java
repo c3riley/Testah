@@ -177,7 +177,7 @@ public class VerboseAsserts {
     // final JsonNode jsonNode=new ObjectMapper().valueToTree(tp);
 
     /**
-     * Same json.
+     * Same json uses https://github.com/skyscreamer/JSONassert
      *
      * @param expected the expected
      * @param actual   the actual
@@ -189,33 +189,57 @@ public class VerboseAsserts {
     }
 
     /**
-     * Same json.
+     * Same json uses https://github.com/skyscreamer/JSONassert
      *
-     * @param expected the expected
-     * @param actual   the actual
-     * @param strict   the strict
-     * @return true, if successful
+     * @param message
+     * @param expected
+     * @param actual
+     * @return
      */
-    public boolean sameJson(final Object expected, final Object actual, final boolean strict) {
-        final JSONObject expectedJsonNode = new JSONObject(expected);
-        final JSONObject actualJsonNode = new JSONObject(actual);
-        return sameJson(expectedJsonNode, actualJsonNode, strict);
+    public boolean sameJson(final String message, final Object expected, final Object actual) {
+        return sameJson(message, expected, actual, true);
     }
 
     /**
-     * Same json.
+     * Same json uses https://github.com/skyscreamer/JSONassert
+     *
+     * @param expected
+     * @param actual
+     * @param strict
+     * @return
+     */
+    public boolean sameJson(final Object expected, final Object actual, final boolean strict) {
+        return sameJson("", expected, actual, strict);
+    }
+
+    /**
+     * Same json uses https://github.com/skyscreamer/JSONassert
      *
      * @param expected the expected
      * @param actual   the actual
      * @param strict   the strict
      * @return true, if successful
      */
-    public boolean sameJson(final JSONObject expected, final JSONObject actual, final boolean strict) {
+    public boolean sameJson(final String message, final Object expected, final Object actual, final boolean strict) {
+        final JSONObject expectedJsonNode = new JSONObject(expected);
+        final JSONObject actualJsonNode = new JSONObject(actual);
+        return sameJson(message, expectedJsonNode, actualJsonNode, strict);
+    }
+
+    /**
+     * Same json uses https://github.com/skyscreamer/JSONassert
+     *
+     * @param expected the expected
+     * @param actual   the actual
+     * @param strict   the strict
+     * @return true, if successful
+     */
+    public boolean sameJson(final String message, final JSONObject expected, final JSONObject actual, final boolean strict) {
         try {
             JSONAssert.assertEquals(expected, actual, strict);
-            return addAssertHistory("", true, "assertSameJson", expected, actual);
+            return addAssertHistory(message, true, "assertSameJson", expected, actual);
         } catch (final Exception e) {
-            final boolean rtn = addAssertHistory("", false, "assertSame", expected.toString(), actual.toString(), e);
+            final boolean rtn = addAssertHistory(message, false, "assertSame", expected.toString(), actual.toString(), e);
             if (getThrowExceptionOnFail()) {
                 throw new AssertionError(e);
             }
