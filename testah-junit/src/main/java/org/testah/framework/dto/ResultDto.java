@@ -51,6 +51,7 @@ public class ResultDto {
         this.junitResult = junitResult;
         if (null != AbstractTestPlan.getTestPlan()) {
             this.testPlan = AbstractTestPlan.getTestPlan().clone();
+            AbstractTestPlan.cleanUpTestplanThreadLocal();
         } else {
             this.testPlan = AbstractTestPlan.getTestPlan();
         }
