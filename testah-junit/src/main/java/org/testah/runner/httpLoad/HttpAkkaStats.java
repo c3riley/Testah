@@ -14,6 +14,7 @@ public class HttpAkkaStats {
     private Long endTime = 0L;
     private final Long duration;
     private final Long avgDuration;
+
     private final Long shortestDuration;
     private final Long longestDuration;
     private final TreeSet<Long> durations;
@@ -30,6 +31,7 @@ public class HttpAkkaStats {
         Long sumDurationsStatus = 0L;
         Integer statusCodeCtr;
         Long responseDuration = 0L;
+
         for (final ResponseDto r : responses) {
             responseDuration = r.getDuration();
             statusCodeCtr = statusCodes.get(r.getStatusCode());
