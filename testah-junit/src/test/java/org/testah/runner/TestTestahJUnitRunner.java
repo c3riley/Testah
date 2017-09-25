@@ -1,10 +1,5 @@
 package org.testah.runner;
 
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -12,6 +7,11 @@ import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.ResultDto;
 import org.testah.http.TestHttp;
 import org.testah.web.TestBrowser;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 public class TestTestahJUnitRunner {
 
@@ -79,6 +79,23 @@ public class TestTestahJUnitRunner {
     public void testCliRunTests() {
 
         System.setProperty("param_numConcurrentThreads", "10");
+        System.setProperty("param_lookAtInternalTests", "org.testah.runner.runnertests");
+        try {
+            final String[] args = { "run" };
+            final Cli cli = new Cli();
+            cli.getArgumentParser(args);
+            Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), greaterThanOrEqualTo(10));
+        }
+        finally {
+            System.getProperties().remove("param_lookAtInternalTests");
+            System.getProperties().remove("param_numConcurrentThreads");
+        }
+    }
+
+    @Test
+    public void testCliRunTestsSerial() {
+
+        System.setProperty("param_numConcurrentThreads", "1");
         System.setProperty("param_lookAtInternalTests", "org.testah.runner.runnertests");
         try {
             final String[] args = { "run" };
