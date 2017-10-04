@@ -264,6 +264,8 @@ public class Cli {
             new TestPlanReporter().openReport(summaryHtml.getAbsolutePath());
         }
         AbstractTestPlan.tearDownTestah();
+
+        System.exit(totalTestCasesFailed);
     }
 
     /**

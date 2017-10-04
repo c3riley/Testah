@@ -485,7 +485,9 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
                 "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
                         : Arrays.toString(headers.toArray())),
                 getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
-        printComplete();
+        if(TS.http().isVerbose()) {
+            printComplete();
+        }
         return stepAction;
     }
 

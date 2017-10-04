@@ -1,58 +1,39 @@
 package org.testah.runner.httpLoad;
 
+import static java.util.stream.Collectors.*;
+
+import com.google.common.primitives.Doubles;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.testah.driver.http.response.ResponseDto;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class HttpAkkaStats {
 
-    private final HashMap<Integer, Integer> statusCodes;
     private final int totalResponses;
     private Long startTime = 0L;
     private Long endTime = 0L;
     private final Long duration;
-    private final Long avgDuration;
 
-    private final Long shortestDuration;
-    private final Long longestDuration;
-    private final TreeSet<Long> durations;
-    private final HashMap<Integer, TreeSet<Long>> durationsForStatus;
-    private final HashMap<Integer, Long> avgDurationsForStatus;
+    private DescriptiveStatistics statsDuration = new DescriptiveStatistics();
+    private Map<Integer, DescriptiveStatistics> statsDurationPerStatus = new HashMap<>();
 
     public HttpAkkaStats(final List<ResponseDto> responses) {
-        this.avgDurationsForStatus = new HashMap<Integer, Long>();
-        this.durationsForStatus = new HashMap<Integer, TreeSet<Long>>();
         this.totalResponses = responses.size();
-        this.statusCodes = new HashMap<Integer, Integer>();
-        this.durations = new TreeSet<Long>();
-        Long sumDurations = 0L;
-        Long sumDurationsStatus = 0L;
-        Integer statusCodeCtr;
-        Long responseDuration = 0L;
+        statsDuration = new DescriptiveStatistics();
+        statsDurationPerStatus = new HashMap<>();
 
         for (final ResponseDto r : responses) {
-            responseDuration = r.getDuration();
-            statusCodeCtr = statusCodes.get(r.getStatusCode());
-            sumDurationsStatus = avgDurationsForStatus.get(r.getStatusCode());
-            if (null == statusCodeCtr) {
-                durationsForStatus.put(r.getStatusCode(), new TreeSet<Long>());
-                statusCodeCtr = 0;
-                sumDurationsStatus = 0L;
+            statsDuration.addValue(r.getDuration());
+            if (!statsDurationPerStatus.keySet().contains(r.getStatusCode())) {
+                statsDurationPerStatus.put(r.getStatusCode(), new DescriptiveStatistics());
             }
-            durationsForStatus.get(r.getStatusCode()).add(responseDuration);
-            statusCodes.put(r.getStatusCode(), ++statusCodeCtr);
-            avgDurationsForStatus.put(r.getStatusCode(), sumDurationsStatus + responseDuration);
+            statsDurationPerStatus.get(r.getStatusCode()).addValue(r.getDuration());
             setStartTime(r.getStart());
             setEndTime(r.getEnd());
-            durations.add(responseDuration);
-            sumDurations += responseDuration;
         }
-        this.shortestDuration = durations.first();
-        this.longestDuration = durations.last();
-        this.avgDuration = sumDurations / totalResponses;
-        this.duration = (endTime - startTime);
+        duration = (endTime - startTime);
     }
 
     private void setStartTime(final Long startTime) {
@@ -67,40 +48,95 @@ public class HttpAkkaStats {
         }
     }
 
-    public HashMap<Integer, Integer> getStatusCodes() {
-        return statusCodes;
+    /**
+     * Get the number of responses grouped by HTTP status code.
+     * @return map of number of responses per status code
+     */
+    public Map<Integer, Integer> getStatusCodes() {
+        Map<Integer, Integer> map = new HashMap<>();
+        statsDurationPerStatus.entrySet().stream().forEach(entry -> {
+            map.put(entry.getKey(), Long.valueOf(entry.getValue().getN()).intValue());
+        });
+        return map;
     }
 
+    /**
+     * Get the number of registered responses.
+     * @return number of all responses
+     */
     public int getTotalResponses() {
         return totalResponses;
     }
 
+    /**
+     * Get the time stamp in milliseconds of the first response.
+     * @return the start timestamp
+     */
     public Long getStartTime() {
         return startTime;
     }
 
+    /**
+     * Get the time stamp in milliseconds of the last response.
+     * @return the last response time stamp
+     */
     public Long getEndTime() {
         return endTime;
     }
 
+    /**
+     * Get the elapsed time in milliseconds for the requests.
+     * @return the elapsed time
+     */
     public Long getDuration() {
         return duration;
     }
 
+    /**
+     * Get the average duration of a request.
+     * @return the mean duration in milliseconds
+     */
     public Long getAvgDuration() {
-        return avgDuration;
+        return (long) statsDuration.getMean();
     }
 
+    /**
+     * Get the shortest duration of a request.
+     * @return the shortest duration of a request
+     */
     public Long getShortestDuration() {
-        return shortestDuration;
+        return (long) statsDuration.getMin();
     }
 
+    /**
+     * Get the longest duration of a request.
+     * @return the longest duration of a request
+     */
     public Long getLongestDuration() {
-        return longestDuration;
+        return (long) statsDuration.getMax();
     }
 
-    public TreeSet<Long> getDurations() {
-        return durations;
+    /**
+     * Get the list of durations of all the requests in the completed order.
+     * @return the list of all durations
+     */
+    public List<Long> getDurations() {
+        return Doubles.asList(statsDuration.getValues()).stream().map(val -> new Double(val).longValue()).collect(Collectors.toList());
     }
 
+    /**
+     * Return the org.apache.commons.math3.stat.descriptive.DescriptiveStatistics object build from all durations for additional statistical data.
+     * @return DescriptiveStatistics object build from all durations
+     */
+    public DescriptiveStatistics getStatsDuration() {
+        return statsDuration;
+    }
+
+    /**
+     * Return the org.apache.commons.math3.stat.descriptive.DescriptiveStatistics object build for each HTTP code for additional statistical data.
+     * @return map DescriptiveStatistics of durations for each HTTP status code
+     */
+    public Map<Integer, DescriptiveStatistics> getStatsDurationPerStatus() {
+        return statsDurationPerStatus;
+    }
 }

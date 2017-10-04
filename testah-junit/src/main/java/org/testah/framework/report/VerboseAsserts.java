@@ -419,7 +419,7 @@ public class VerboseAsserts {
      */
     public boolean equalsTo(final String message, final double expected, final double actual) {
         try {
-            Assert.assertEquals(message, expected, actual);
+            Assert.assertEquals(message, expected, actual, expected/10000.0);
             return addAssertHistory(message, true, "assertEquals", expected, actual);
         } catch (final AssertionError e) {
             final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
