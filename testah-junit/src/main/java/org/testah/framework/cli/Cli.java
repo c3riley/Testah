@@ -265,7 +265,9 @@ public class Cli {
         }
         AbstractTestPlan.tearDownTestah();
 
-        System.exit(totalTestCasesFailed);
+        if(totalTestCasesFailed > 0) {
+            throw new RuntimeException("There are test failures " + totalTestCasesFailed);
+        }
     }
 
     /**
