@@ -55,12 +55,13 @@ public class HttpAkkaRunner {
     public List<ResponseDto> runAndReport(final int numConcurrent, final AbstractRequestDto<?> request,
                                           final int numOfRequestsToMake) {
         final List<ResponseDto> responses = runTests(numConcurrent, request, numOfRequestsToMake);
-        int i = 1;
-        for (final ResponseDto response : responses) {
-            TS.log().info(i++ + "] " + response.getStatusCode() + " [" + response.getStatusText() + "] - "
+        if(TS.http().isVerbose()) {
+            int iResponse = 1;
+            for (final ResponseDto response : responses) {
+                TS.log().info("[" + iResponse++ + "] " + response.getStatusCode() + " [" + response.getStatusText() + "] - "
                     + TS.util().toDateString(response.getStart()) + " - " + TS.util().toDateString(response.getEnd()));
+            }
         }
-
         TS.util().toJsonPrint(new HttpAkkaStats(responses));
         return responses;
     }

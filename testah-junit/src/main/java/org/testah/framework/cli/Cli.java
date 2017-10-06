@@ -264,6 +264,10 @@ public class Cli {
             new TestPlanReporter().openReport(summaryHtml.getAbsolutePath());
         }
         AbstractTestPlan.tearDownTestah();
+
+        if(totalTestCasesFailed > 0) {
+            throw new RuntimeException("There are test failures " + totalTestCasesFailed);
+        }
     }
 
     /**
