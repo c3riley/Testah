@@ -23,7 +23,13 @@ import java.util.Properties;
  */
 public class ParamLoader {
 
+
+    /**
+     * Jacoco instrumentation adds Field $jacocoData that is picked up and added to the Testah properties if not explicitly excluded.
+     * Keeping the property causes java.lang.IllegalArgumentException when executing tests.
+     */
     private static final String excludeJacocoInstrumentation = "$jacocoData";
+
     /**
      * The params from properties.
      */
