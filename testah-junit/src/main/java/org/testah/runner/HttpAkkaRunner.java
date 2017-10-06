@@ -9,11 +9,13 @@ import org.testah.TS;
 import org.testah.driver.http.AbstractHttpWrapper;
 import org.testah.driver.http.HttpWrapperV1;
 import org.testah.driver.http.requests.AbstractRequestDto;
+import org.testah.driver.http.requests.PostRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.httpLoad.HttpActor;
 import org.testah.runner.httpLoad.HttpAkkaStats;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * The Class HttpAkkaRunner.
@@ -64,6 +66,25 @@ public class HttpAkkaRunner {
     }
 
     /**
+     * Run and report.
+     *
+     * @param numConcurrent       the num concurrent
+     * @param concurrentLinkedQueue ConcurrentLinkedQueue of PostRequestDto
+     * @return the list
+     */
+    public List<ResponseDto> runAndReport(final int numConcurrent, final ConcurrentLinkedQueue concurrentLinkedQueue) {
+        final List<ResponseDto> responses = runTests(numConcurrent, concurrentLinkedQueue);
+        if(TS.http().isVerbose()) {
+            int iResponse = 1;
+            for (final ResponseDto response : responses) {
+                TS.log().info("[" + iResponse++ + "] " + response.getStatusCode() + " [" + response.getStatusText() + "] - "
+                    + TS.util().toDateString(response.getStart()) + " - " + TS.util().toDateString(response.getEnd()));
+            }
+        }
+        return responses;
+    }
+
+    /**
      * Run tests.
      *
      * @param numConcurrent       the num concurrent
@@ -97,6 +118,51 @@ public class HttpAkkaRunner {
             master.tell(request, master);
 
             while (null == HttpActor.getResults(hashId) || HttpActor.getResults(hashId).size() < numOfRequestsToMake) {
+                TS.log().info(HttpActor.getResults().size());
+                Thread.sleep(500);
+            }
+            system.shutdown();
+
+            return HttpActor.getResults(hashId);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Run tests.
+     *
+     * @param numConcurrent       the num concurrent
+     * @param concurrentLinkedQueue  ConcurrentLinkedQueue of
+     * @return the list
+     */
+    public List<ResponseDto> runTests(final int numConcurrent, final ConcurrentLinkedQueue concurrentLinkedQueue) {
+        final Long hashId = Thread.currentThread().getId();
+        try {
+            if (null == concurrentLinkedQueue || concurrentLinkedQueue.size() == 0) {
+                TS.log().warn("No Request Found to Run!");
+                return null;
+            }
+
+            httpWrapper = new HttpWrapperV1();
+            httpWrapper.setVerbose(true);
+            httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
+
+            final ActorSystem system = ActorSystem.create("HttpAkkaRunner");
+            final ActorRef master = system.actorOf(new Props(new UntypedActorFactory() {
+                private static final long serialVersionUID = 1L;
+
+                public UntypedActor create() {
+                    return new HttpActor(numConcurrent, concurrentLinkedQueue.size(), hashId);
+                }
+            }), "master");
+
+            HttpActor.resetResults();
+
+            master.tell((AbstractRequestDto<?>) concurrentLinkedQueue.poll(), master);
+//            master.tell(concurrentLinkedQueue, master);
+
+            while (null == HttpActor.getResults(hashId) || HttpActor.getResults(hashId).size() < concurrentLinkedQueue.size()) {
                 TS.log().info(HttpActor.getResults().size());
                 Thread.sleep(500);
             }
