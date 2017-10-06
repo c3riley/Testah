@@ -6,11 +6,12 @@ apply plugin: 'eclipse'
 apply plugin: 'maven'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
+apply plugin: 'jacoco'
 //apply plugin: 'org.jenkins-ci.jpi'
 
 sourceCompatibility = 1.8
 group = 'org.testah'
-version = '0.9.4'
+version = '0.9.5'
 
 buildscript {
     repositories {

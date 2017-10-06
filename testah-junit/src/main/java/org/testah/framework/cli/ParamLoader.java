@@ -23,6 +23,13 @@ import java.util.Properties;
  */
 public class ParamLoader {
 
+
+    /**
+     * Jacoco instrumentation adds Field $jacocoData that is picked up and added to the Testah properties if not explicitly excluded.
+     * Keeping the property causes java.lang.IllegalArgumentException when executing tests.
+     */
+    private static final String excludeJacocoInstrumentation = "$jacocoData";
+
     /**
      * The params from properties.
      */
@@ -271,30 +278,35 @@ public class ParamLoader {
         String propName = null;
         String commentValue = null;
         for (final Field f : Params.class.getDeclaredFields()) {
-            accessible = f.isAccessible();
-            try {
-                f.setAccessible(true);
-                if (f.getName().startsWith("filter")) {
-                    propName = "filter_DEFAULT_" + f.getName();
-                } else {
-                    propName = fieldPrefix + f.getName();
-                }
-                defaultConfig.addProperty(propName, f.get(params));
-                comment = f.getAnnotation(Comment.class);
-                if (null != comment) {
-                    commentValue = comment.info().replace("[BAR1]", "\n\n" + Cli.BAR_SHORT + "\n").replace("[BAR2]",
-                            "\n" + Cli.BAR_SHORT + "\n\n");
-                    if (f.getType().isEnum()) {
-                        layout.setComment(propName,
-                                commentValue + "values: " + Arrays.toString(f.getType().getEnumConstants()));
+            if(f.getName().equals(excludeJacocoInstrumentation)) {
+                TS.log().info("Skipping field " + f.getName());
+            }
+            else {
+                accessible = f.isAccessible();
+                try {
+                    f.setAccessible(true);
+                    if (f.getName().startsWith("filter")) {
+                        propName = "filter_DEFAULT_" + f.getName();
                     } else {
-                        layout.setComment(propName, commentValue);
+                        propName = fieldPrefix + f.getName();
                     }
+                    defaultConfig.addProperty(propName, f.get(params));
+                    comment = f.getAnnotation(Comment.class);
+                    if (null != comment) {
+                        commentValue = comment.info().replace("[BAR1]", "\n\n" + Cli.BAR_SHORT + "\n").replace("[BAR2]",
+                            "\n" + Cli.BAR_SHORT + "\n\n");
+                        if (f.getType().isEnum()) {
+                            layout.setComment(propName,
+                                commentValue + "values: " + Arrays.toString(f.getType().getEnumConstants()));
+                        } else {
+                            layout.setComment(propName, commentValue);
+                        }
+                    }
+                } catch (final Exception e) {
+                    TS.log().warn(e);
+                } finally {
+                    f.setAccessible(accessible);
                 }
-            } catch (final Exception e) {
-                TS.log().warn(e);
-            } finally {
-                f.setAccessible(accessible);
             }
         }
         return defaultConfig;
