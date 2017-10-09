@@ -11,6 +11,7 @@ import org.testah.driver.http.response.ResponseDto;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class HttpActor extends UntypedActor {
     private static HashMap<Long, List<ResponseDto>> results = new HashMap<Long, List<ResponseDto>>();
@@ -27,7 +28,7 @@ public class HttpActor extends UntypedActor {
         this.nrOfWorkers = nrOfWorkers;
         this.numOfAttempts = numOfAttempts;
         workerRouter = this.getContext()
-                .actorOf(new Props(HttpWorker.class).withRouter(new RoundRobinRouter(nrOfWorkers)), "workerRouter");
+            .actorOf(new Props(HttpWorker.class).withRouter(new RoundRobinRouter(nrOfWorkers)), "workerRouter");
     }
 
     @SuppressWarnings("unchecked")
@@ -43,8 +44,12 @@ public class HttpActor extends UntypedActor {
                 for (int start = 1; start <= numOfAttempts; start++) {
                     workerRouter.tell(message, getSelf());
                 }
+            } else if (message instanceof ConcurrentLinkedQueue) {
+                for (int start = 1; start <= numOfAttempts; start++) {
+                    workerRouter.tell(message, getSelf());
+                }
             } else if (message instanceof Throwable) {
-                results.get(hashId).add(getUnExpectedErrorResponseDto((Throwable)message));
+                results.get(hashId).add(getUnExpectedErrorResponseDto((Throwable) message));
             } else {
                 TS.log().info("Issue should of not made it here, message was " + message);
 
@@ -57,7 +62,7 @@ public class HttpActor extends UntypedActor {
     private ResponseDto getUnExpectedErrorResponseDto(final Throwable throwable) {
         ResponseDto response = new ResponseDto();
         response.setStatusCode(UKNOWN_ERROR_STATUS);
-        response.setStatusText(String.format("Unexpected Error[%s]",throwable.getMessage()));
+        response.setStatusText(String.format("Unexpected Error[%s]", throwable.getMessage()));
         response.setResponseBody(org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(throwable));
         return response;
     }

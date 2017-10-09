@@ -203,7 +203,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         if (null == headers) {
             return null;
         }
-        return headers.toArray(new Header[]{});
+        return headers.toArray(new Header[] {});
     }
 
     /**
@@ -266,7 +266,8 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T setBasicAuthCredentials(final String userName, final String password,
-                                     final AuthScope authScope) {
+                                     final AuthScope authScope)
+    {
         credentialsProvider = new BasicCredentialsProvider();
         final UsernamePasswordCredentials creds = new UsernamePasswordCredentials(userName, password);
         credentialsProvider.setCredentials(authScope, creds);
@@ -282,7 +283,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      */
     public T addBasicAuth(final String userName, final String password) {
         final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName(
-                "UTF-8")));
+            "UTF-8")));
         addHeader("Authorization", "Basic " + encoding);
         return getSelf();
     }
@@ -296,7 +297,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      */
     public T addBasicAuthHeader(final String userName, final String password) {
         final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName(
-                "ISO-8859-1")));
+            "ISO-8859-1")));
         addHeader(new BasicHeader("Authorization", "Basic " + encoding));
         return getSelf();
     }
@@ -482,12 +483,10 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     public StepActionDto createRequestInfoStep() {
         StepActionDto stepAction = null;
         stepAction = StepAction.createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
-                "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
-                        : Arrays.toString(headers.toArray())),
-                getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
-        if(TS.http().isVerbose()) {
-            printComplete();
-        }
+            "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
+                : Arrays.toString(headers.toArray())),
+            getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+        printComplete();
         return stepAction;
     }
 
