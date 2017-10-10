@@ -76,8 +76,8 @@ public class HttpAkkaRunner {
      * @return the list
      */
     public List<ResponseDto> runAndReport(final int numConcurrent, final ConcurrentLinkedQueue<?> concurrentLinkedQueue, boolean isVerbose) {
-        final List<ResponseDto> responses = runTests(numConcurrent, concurrentLinkedQueue, false);
-        if (TS.http().isVerbose()) {
+        final List<ResponseDto> responses = runTests(numConcurrent, concurrentLinkedQueue, isVerbose);
+        if (isVerbose) {
             int iResponse = 1;
             for (final ResponseDto response : responses) {
                 TS.log().info("[" + iResponse++ + "] " + response.getStatusCode() + " [" + response.getStatusText() + "] - "
