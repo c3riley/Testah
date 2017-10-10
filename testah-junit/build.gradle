@@ -37,7 +37,11 @@ def getEnvirVariable = {
 
 uploadArchives {
     repositories.mavenDeployer {
-        repository(url: "${getEnvirVariable('MAVEN_REPO_TO_USE')}")
+        repository(url: "${getEnvirVariable()}") {
+            if (!"${getEnvirVariable()}".startsWith("file")) {
+                authentication(userName: System.getenv("ARTIFACTORY_USERNAME"), password: System.getenv("ARTIFACTORY_PASSWORD"))
+            }
+        }
     }
 }
 
