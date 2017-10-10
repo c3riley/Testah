@@ -3,9 +3,7 @@ package org.testah.runner.httpLoad;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.junit.Test;
 import org.testah.TS;
-import org.testah.driver.http.requests.GetRequestDto;
 import org.testah.driver.http.response.ResponseDto;
-import org.testah.runner.HttpAkkaRunner;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,7 +36,7 @@ public class TestHttpAkkaStats {
         TS.asserts().equalsTo("average duration", 350.0, descriptiveStatistics.getMean(), delta);
         TS.asserts().equalsTo("number of data points", responses.size(), descriptiveStatistics.getN());
 
-        for(Integer statusCode : statusCodes) {
+        for (Integer statusCode : statusCodes) {
             TS.asserts().equalsTo("number of data points for status " + statusCode, 3,
                 httpAkkaStats.getStatsDurationPerStatus().get(statusCode).getN());
             TS.asserts().equalsTo("average duration for status " + statusCode, statusCode.doubleValue(),
@@ -59,7 +57,7 @@ public class TestHttpAkkaStats {
         long offset = 50;
         long startTime = now;
         Map<Integer, List<ResponseDto>> map = new HashMap<>();
-        for(Integer statusCode : statusCodes) {
+        for (Integer statusCode : statusCodes) {
             map.put(statusCode, generateResponses(startTime, statusCode, statusCode.longValue()));
             startTime += offset;
         }
@@ -69,6 +67,7 @@ public class TestHttpAkkaStats {
     private List<ResponseDto> generateResponses(long startTime, int statusCode, long seed) {
         Long[] durations = new Long[] {seed - 10L, seed, seed + 10L};
         return Arrays.stream(durations).map(duration ->
-            new ResponseDto().setStatusCode(statusCode).setStart(startTime).setEnd(startTime + duration.longValue())).collect(Collectors.toList());
+            new ResponseDto().setStatusCode(statusCode)
+                .setStart(startTime).setEnd(startTime + duration.longValue())).collect(Collectors.toList());
     }
 }
