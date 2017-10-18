@@ -20,9 +20,9 @@ public class HttpWorker extends UntypedActor {
                 getSender().tell(throwable);
             }
         } else if (arg0 instanceof ConcurrentLinkedQueue) {
-            PostRequestDto postRequestDto = (PostRequestDto) ((ConcurrentLinkedQueue<?>) arg0).poll();
+            AbstractRequestDto requestDto = (AbstractRequestDto) ((ConcurrentLinkedQueue<?>) arg0).poll();
             try {
-                getSender().tell(httpWrapper.doRequest(postRequestDto, httpWrapper.isVerbose()), getSelf());
+                getSender().tell(httpWrapper.doRequest(requestDto, httpWrapper.isVerbose()), getSelf());
             } catch (Throwable throwable) {
                 getSender().tell(throwable);
             }
