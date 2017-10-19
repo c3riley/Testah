@@ -51,10 +51,12 @@ public class HttpActor extends UntypedActor {
             } else if (message instanceof Throwable) {
                 results.get(hashId).add(getUnExpectedErrorResponseDto((Throwable) message));
             } else {
-                TS.log().info("Issue should of not made it here, message was " + message);
+                TS.log().info("Issue, should not have made it here, message is " + message);
 
             }
         } catch (Throwable throwable) {
+            TS.log().info("Throwable thrown in HttpActor.onReceive(): " + throwable.getMessage());
+            TS.log().info("Throwable thrown in HttpActor.onReceive()", throwable);
             results.get(hashId).add(getUnExpectedErrorResponseDto(throwable));
         }
     }
@@ -73,7 +75,11 @@ public class HttpActor extends UntypedActor {
     }
 
     public static List<ResponseDto> getResults(final Long hashId) {
-        return getResults().get(hashId);
+        HashMap<Long, List<ResponseDto>> results = getResults();
+        if (results.isEmpty() || !results.containsKey(hashId)) {
+            results.put(hashId, new ArrayList<ResponseDto>());
+        }
+        return results.get(hashId);
     }
 
     public static HashMap<Long, List<ResponseDto>> getResults() {
@@ -83,9 +89,8 @@ public class HttpActor extends UntypedActor {
         return results;
     }
 
-    public static HashMap<Long, List<ResponseDto>> resetResults() {
+    public static void resetResults() {
         results = new HashMap<Long, List<ResponseDto>>();
-        return results;
     }
 
     public int getNrOfWorkers() {
