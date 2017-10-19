@@ -75,11 +75,11 @@ public class HttpActor extends UntypedActor {
     }
 
     public static List<ResponseDto> getResults(final Long hashId) {
-        HashMap<Long, List<ResponseDto>> results = getResults();
-        if (results.isEmpty() || !results.containsKey(hashId)) {
-            results.put(hashId, new ArrayList<ResponseDto>());
+        HashMap<Long, List<ResponseDto>> resultsLocalPointer = getResults();
+        if (resultsLocalPointer.isEmpty() || !resultsLocalPointer.containsKey(hashId)) {
+            resultsLocalPointer.put(hashId, new ArrayList<ResponseDto>());
         }
-        return results.get(hashId);
+        return resultsLocalPointer.get(hashId);
     }
 
     public static HashMap<Long, List<ResponseDto>> getResults() {
