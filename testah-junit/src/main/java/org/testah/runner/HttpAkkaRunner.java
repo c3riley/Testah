@@ -1,8 +1,6 @@
 package org.testah.runner;
 
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
+import akka.actor.*;
 import org.testah.TS;
 import org.testah.driver.http.AbstractHttpWrapper;
 import org.testah.driver.http.HttpWrapperV1;
@@ -11,16 +9,15 @@ import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.http.load.HttpActor;
 import org.testah.runner.http.load.HttpAkkaStats;
 
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Props;
-import akka.actor.UntypedActor;
-import akka.actor.UntypedActorFactory;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * The Class HttpAkkaRunner.
  */
 public class HttpAkkaRunner {
+
+    private static final String rptInfo = "[%d] %d [%s] - %s - %s";
 
     private static HttpAkkaRunner httpAkkaRunner = new HttpAkkaRunner();
 
@@ -76,14 +73,19 @@ public class HttpAkkaRunner {
      * @return the list
      */
     public List<ResponseDto> runAndReport(final int numConcurrent,
-                    final ConcurrentLinkedQueue<?> concurrentLinkedQueue,
-                    boolean isVerbose) {
+                                          final ConcurrentLinkedQueue<?> concurrentLinkedQueue,
+                                          boolean isVerbose)
+    {
         final List<ResponseDto> responses = runTests(numConcurrent, concurrentLinkedQueue, isVerbose);
         if (isVerbose) {
             int responseCount = 1;
             for (final ResponseDto response : responses) {
-                TS.log().info("[" + responseCount++ + "] " + response.getStatusCode() + " [" + response.getStatusText() + "] - "
-                    + TS.util().toDateString(response.getStart()) + " - " + TS.util().toDateString(response.getEnd()));
+                TS.log().info(String.format(rptInfo,
+                    responseCount++,
+                    response.getStatusCode(),
+                    response.getStatusText(),
+                    TS.util().toDateString(response.getStart()),
+                    TS.util().toDateString(response.getEnd())));
             }
         }
         return responses;
