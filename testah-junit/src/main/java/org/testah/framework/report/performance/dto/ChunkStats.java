@@ -12,7 +12,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 public class ChunkStats {
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm:ss");
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
     private String testClass;
     private String testMethod;
     private String serviceName;

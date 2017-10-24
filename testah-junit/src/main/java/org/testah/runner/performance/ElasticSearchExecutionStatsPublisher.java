@@ -10,7 +10,7 @@ public class ElasticSearchExecutionStatsPublisher implements ExecutionStatsPubli
     private String username;
     private String password;
     private static final String urlPathUpload = "/%s/json";
-    private String index = "test2";
+    private String index = "testah";
 
     /**
      * Constructor.

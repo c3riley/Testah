@@ -28,7 +28,8 @@ public class TestLongRunning extends AbstractLongRunningTest {
             new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, chunkSize, numberOfChunks, millisBetweenChunks)
                 .setVerbose(true)
                 .setExpectedStatusCodes(Arrays.stream(new Integer[] {200, 300, 400, 500}).collect(Collectors.toSet()))
-                .setRunDuration(1000L * 10), new ElasticSearchExecutionStatsPublisher(baseUrl, username, password)
-        );
+                .setRunDuration(1000L * 10),
+                (ElasticSearchExecutionStatsPublisher) null);
+//                new ElasticSearchExecutionStatsPublisher(baseUrl, username, password);
     }
 }
