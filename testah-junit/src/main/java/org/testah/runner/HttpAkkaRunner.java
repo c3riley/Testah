@@ -8,8 +8,8 @@ import org.testah.driver.http.AbstractHttpWrapper;
 import org.testah.driver.http.HttpWrapperV1;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
-import org.testah.runner.httpLoad.HttpActor;
-import org.testah.runner.httpLoad.HttpAkkaStats;
+import org.testah.runner.http.load.HttpActor;
+import org.testah.runner.http.load.HttpAkkaStats;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
@@ -57,9 +57,9 @@ public class HttpAkkaRunner {
     {
         final List<ResponseDto> responses = runTests(numConcurrent, request, numOfRequestsToMake);
         if (TS.http().isVerbose()) {
-            int iResponse = 1;
+            int responseCount = 1;
             for (final ResponseDto response : responses) {
-                TS.log().info("[" + iResponse++ + "] " + response.getStatusCode() + " [" + response.getStatusText() + "] - "
+                TS.log().info("[" + responseCount++ + "] " + response.getStatusCode() + " [" + response.getStatusText() + "] - "
                     + TS.util().toDateString(response.getStart()) + " - " + TS.util().toDateString(response.getEnd()));
             }
         }
@@ -72,15 +72,17 @@ public class HttpAkkaRunner {
      *
      * @param numConcurrent         the num concurrent
      * @param concurrentLinkedQueue ConcurrentLinkedQueue of PostRequestDto
-     * @param isVerbose             TODO
+     * @param isVerbose             if true the requests/responses are written to log
      * @return the list
      */
-    public List<ResponseDto> runAndReport(final int numConcurrent, final ConcurrentLinkedQueue<?> concurrentLinkedQueue, boolean isVerbose) {
+    public List<ResponseDto> runAndReport(final int numConcurrent,
+                    final ConcurrentLinkedQueue<?> concurrentLinkedQueue,
+                    boolean isVerbose) {
         final List<ResponseDto> responses = runTests(numConcurrent, concurrentLinkedQueue, isVerbose);
         if (isVerbose) {
-            int iResponse = 1;
+            int responseCount = 1;
             for (final ResponseDto response : responses) {
-                TS.log().info("[" + iResponse++ + "] " + response.getStatusCode() + " [" + response.getStatusText() + "] - "
+                TS.log().info("[" + responseCount++ + "] " + response.getStatusCode() + " [" + response.getStatusText() + "] - "
                     + TS.util().toDateString(response.getStart()) + " - " + TS.util().toDateString(response.getEnd()));
             }
         }

@@ -1,9 +1,10 @@
-package org.testah.runner.httpLoad;
+package org.testah.runner.http.load;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.driver.http.response.ResponseDto;
+import org.testah.runner.http.load.HttpAkkaStats;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,7 +14,6 @@ public class TestHttpAkkaStats {
     private static final long elapsedTime = 660L;
     private static final double delta = 0.001;
     private static final Integer[] statusCodes = new Integer[] {200, 300, 400, 500};
-
 
     /**
      * Verify that the responses are properly processed into instances of org.apache.commons.math3.stat.descriptive.DescriptiveStatistics.

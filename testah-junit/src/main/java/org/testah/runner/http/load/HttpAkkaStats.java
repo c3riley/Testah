@@ -1,13 +1,14 @@
-package org.testah.runner.httpLoad;
+package org.testah.runner.http.load;
 
-import static java.util.stream.Collectors.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import com.google.common.primitives.Doubles;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.testah.driver.http.response.ResponseDto;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import com.google.common.primitives.Doubles;
 
 public class HttpAkkaStats {
 
