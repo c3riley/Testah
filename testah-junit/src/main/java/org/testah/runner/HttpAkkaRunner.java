@@ -56,8 +56,12 @@ public class HttpAkkaRunner {
         if (TS.http().isVerbose()) {
             int responseCount = 1;
             for (final ResponseDto response : responses) {
-                TS.log().info("[" + responseCount++ + "] " + response.getStatusCode() + " [" + response.getStatusText() + "] - "
-                    + TS.util().toDateString(response.getStart()) + " - " + TS.util().toDateString(response.getEnd()));
+                TS.log().info(String.format(rptInfo,
+                                responseCount++,
+                                response.getStatusCode(),
+                                response.getStatusText(),
+                                TS.util().toDateString(response.getStart()),
+                                TS.util().toDateString(response.getEnd())));
             }
         }
         TS.util().toJsonPrint(new HttpAkkaStats(responses));
