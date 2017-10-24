@@ -190,6 +190,8 @@ public class ChunkStats {
     }
 
     /**
+     * Set the name to the test plan/test class.
+     *
      * @param className the className to set
      * @return this object
      */
