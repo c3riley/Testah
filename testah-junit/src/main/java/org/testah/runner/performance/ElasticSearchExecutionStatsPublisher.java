@@ -6,25 +6,29 @@ import org.testah.framework.report.performance.dto.ChunkStats;
 
 public class ElasticSearchExecutionStatsPublisher implements ExecutionStatsPublisher {
 
+    private static final String urlPathUpload = "/%s/json";
     private String baseUrl;
     private String username;
     private String password;
-    private static final String urlPathUpload = "/%s/json";
-    private String index = "testah";
+    private String index;
+    private Boolean verbose = false;
 
     /**
      * Constructor.
-     * @param baseUrl  domain URL
+     * @param baseUrl   domain URL
+     * @param index     Elasticsearch index
      * @param username  username for basic authentication
      * @param password  password for basic authentication
      */
-    public ElasticSearchExecutionStatsPublisher(String baseUrl, String username, String password) {
+    public ElasticSearchExecutionStatsPublisher(String baseUrl, String index, String username, String password) {
         this.password = password;
+        this.index = index;
         this.baseUrl = baseUrl;
         this.username = username;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Push the data to Elasticsearch.
      * @see org.testah.runner.performance.ExecutionStatsPublisher#push(org.testah.framework.report.performance.dto.ChunkStats)
      */
     @Override
@@ -32,7 +36,7 @@ public class ElasticSearchExecutionStatsPublisher implements ExecutionStatsPubli
         String payload = TS.util().getMap().writeValueAsString(chunkStats);
         PostRequestDto postRequestDto = new PostRequestDto(getUploadUrl(), payload);
         postRequestDto.setBasicAuthCredentials(username, password).withJson();
-        TS.log().info("Upload to elasticsearch completed with status : " + TS.http().doRequest(postRequestDto, false).getStatusCode());
+        TS.log().info("Upload to elasticsearch completed with status : " + TS.http().doRequest(postRequestDto, verbose).getStatusCode());
     }
 
     /**
@@ -58,5 +62,41 @@ public class ElasticSearchExecutionStatsPublisher implements ExecutionStatsPubli
      */
     public String getUploadUrl() {
         return baseUrl + String.format(urlPathUpload, index);
+    }
+
+    /**
+     * Get the verbosity setting. If true each service request and response is logged.
+     * @return the verbosity
+     */
+    public Boolean getVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Set the verbosity. If true each service request and response is logged.
+     * @param verbose the verbose to set
+     * @return this object
+     */
+    public ElasticSearchExecutionStatsPublisher setVerbose(Boolean verbose) {
+        this.verbose = verbose;
+        return this;
+    }
+
+    /**
+     * Get the Elasticsearch index.
+     * @return the index
+     */
+    public String getIndex() {
+        return index;
+    }
+
+    /**
+     * Set the Elasticsearch index.
+     * @param index the index to set
+     * @return this object
+     */
+    public ElasticSearchExecutionStatsPublisher setIndex(String index) {
+        this.index = index;
+        return this;
     }
 }
