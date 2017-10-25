@@ -73,7 +73,8 @@ public class TestFilter {
      * @return the list
      */
     public List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter, final List<Class<
-            ?>> testClassesMetFiltersToUse) {
+        ?>> testClassesMetFiltersToUse)
+    {
 
         final Params filterParams = TS.params();
 
@@ -141,7 +142,7 @@ public class TestFilter {
                 if (filterByTestType) {
                     if (!isFilterByTestType(meta.testType())) {
                         TS.log().trace(
-                                "test[" + test.getName() + "] filtered out by isFilterByTestType[" + TS.params().getFilterByTestType() + "]");
+                            "test[" + test.getName() + "] filtered out by isFilterByTestType[" + TS.params().getFilterByTestType() + "]");
                         continue;
                     }
                 }
@@ -186,7 +187,7 @@ public class TestFilter {
             }
             TS.log().info(Cli.BAR_LONG);
             TS.log().info(String.format("%s TestPlan Classes To Run: ( %d of %d )", Cli.BAR_WALL,
-                    testClassesMetFiltersToUse.size(), testClassesToFilter.size()));
+                testClassesMetFiltersToUse.size(), testClassesToFilter.size()));
             TS.log().info(Cli.BAR_WALL);
             for (final Class<?> test : testClassesMetFiltersToUse) {
                 TS.log().info(Cli.BAR_WALL + " " + test.getName());
@@ -217,17 +218,12 @@ public class TestFilter {
 
             String filter = null;
 
-            boolean filterByUuid = isFilterOn(TS.params().getFilterById());
-
-            boolean filterByComponent = isFilterOn(TS.params().getFilterByComponent());
-
-            boolean filterByDevice = isFilterOn(TS.params().getFilterByDevice());
-
-            boolean filterByPlatform = isFilterOn(TS.params().getFilterByPlatform());
-
-            boolean filterByTag = isFilterOn(TS.params().getFilterByTag());
-
-            boolean filterByRunType = isFilterOn(TS.params().getFilterByRunType());
+            final boolean filterByUuid = isFilterOn(TS.params().getFilterById());
+            final boolean filterByComponent = isFilterOn(TS.params().getFilterByComponent());
+            final boolean filterByDevice = isFilterOn(TS.params().getFilterByDevice());
+            final boolean filterByPlatform = isFilterOn(TS.params().getFilterByPlatform());
+            final boolean filterByTag = isFilterOn(TS.params().getFilterByTag());
+            final boolean filterByRunType = isFilterOn(TS.params().getFilterByRunType());
 
             boolean filterByTestType = true;
             if (null == TS.params().getFilterByTestType()) {
@@ -433,15 +429,6 @@ public class TestFilter {
     }
 
     /**
-     * Load uncompiled test plans.
-     *
-     * @return the test filter
-     */
-    public TestFilter loadUncompiledTestPlans() {
-        return loadUncompiledTestPlans(TS.params().getLookAtExternalTests());
-    }
-
-    /**
      * Load test plans.
      *
      * @param testValue the test value
@@ -452,7 +439,16 @@ public class TestFilter {
     }
 
     /**
-     * Load uncompiled test plans.
+     * Load un-compiled test plans.
+     *
+     * @return the test filter
+     */
+    public TestFilter loadUncompiledTestPlans() {
+        return loadUncompiledTestPlans(TS.params().getLookAtExternalTests());
+    }
+
+    /**
+     * Load un-compiled test plans.
      *
      * @param externalValue the external value
      * @return the test filter
@@ -465,15 +461,16 @@ public class TestFilter {
             if (null != externalValue && externalValue.length() > 0) {
                 final List<File> files = new ArrayList<>();
                 try (
-                        final GroovyClassLoader loader =
-                                (GroovyClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
-                                    final ClassLoader parent = this.getClass().getClassLoader();
+                    final GroovyClassLoader loader =
+                        (GroovyClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                            final ClassLoader parent = this.getClass().getClassLoader();
 
-                                    public Object run() {
-                                        return new GroovyClassLoader(parent);
-                                    }
-                                });
-                ) {
+                            public Object run() {
+                                return new GroovyClassLoader(parent);
+                            }
+                        });
+                )
+                {
 
                     for (final String path : externalValue.split(",")) {
 
@@ -485,8 +482,8 @@ public class TestFilter {
                         if (!externalTests.exists()) {
                             if (loadCompiledTestClase(path) == 0) {
                                 TS.log().error(
-                                        "Param LookAtExternalTests is set to a class/file/directory not found: " +
-                                                externalTests.getAbsolutePath());
+                                    "Param LookAtExternalTests is set to a class/file/directory not found: "
+                                        + externalTests.getAbsolutePath());
                             }
                         } else if (externalTests.isDirectory()) {
                             files.addAll(FileUtils.getFilesRecurse(externalTests, "(.?)*\\.groovy"));

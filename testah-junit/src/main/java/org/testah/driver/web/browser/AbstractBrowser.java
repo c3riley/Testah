@@ -245,16 +245,6 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Gets the webelement no wait.
-     *
-     * @param webElement the web element
-     * @return the webelement no wait
-     */
-    public AbstractWebElementWrapper getWebElementNoWait(final AbstractWebElementWrapper webElement) {
-        return new WebElementWrapperV1(webElement.getBy(), getWebElementNative(webElement.getBy(), true), this);
-    }
-
-    /**
      * Gets the webelement.
      *
      * @param by the by
@@ -273,16 +263,6 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractWebElementWrapper getWebElement(final By by, final int waitIterationCount) {
         return new WebElementWrapperV1(by, getWebElementNative(by, false, waitIterationCount), this);
-    }
-
-    /**
-     * Gets the webelement no wait.
-     *
-     * @param by the by
-     * @return the webelement no wait
-     */
-    public AbstractWebElementWrapper getWebElementNoWait(final By by) {
-        return new WebElementWrapperV1(by, getWebElementNative(by, true), this);
     }
 
     /**
@@ -312,6 +292,26 @@ public abstract class AbstractBrowser<T> {
             lst.add(new WebElementWrapperV1(by, e, this));
         }
         return lst;
+    }
+
+    /**
+     * Gets the webelement no wait.
+     *
+     * @param by the by
+     * @return the webelement no wait
+     */
+    public AbstractWebElementWrapper getWebElementNoWait(final By by) {
+        return new WebElementWrapperV1(by, getWebElementNative(by, true), this);
+    }
+
+    /**
+     * Gets the webelement no wait.
+     *
+     * @param webElement the web element
+     * @return the webelement no wait
+     */
+    public AbstractWebElementWrapper getWebElementNoWait(final AbstractWebElementWrapper webElement) {
+        return new WebElementWrapperV1(webElement.getBy(), getWebElementNative(webElement.getBy(), true), this);
     }
 
     /**
@@ -499,13 +499,23 @@ public abstract class AbstractBrowser<T> {
      */
     public abstract T stopService() throws IOException;
 
+    /**
+     * Create parent directory for screenshots.
+     * @param directoryPath parent directory
+     * @return parent directory of screenshot directories
+     */
     public File getScreenshotDir(final String directoryPath) {
         final File screenshotDir = new File(directoryPath, "screenshots");
         TS.log().trace("screenshotDir.mkdir " + screenshotDir.mkdirs());
         return screenshotDir;
     }
 
-    public String getScreenshotPathToUse(final File screenshot, final String directoryPath) {
+    /**
+     * Get the intended path to the screenshot path.
+     * @param screenshot file
+     * @return new path to screenshot file
+     */
+    public String getScreenshotPathToUse(final File screenshot) {
         String replaceAbsolutePath = "";
         try {
             replaceAbsolutePath = screenshot.getParentFile().getParentFile().getAbsolutePath() + File.separator;
@@ -532,13 +542,13 @@ public abstract class AbstractBrowser<T> {
      */
     public String takeHtmlSnapshot(final String path) {
         try {
-            File f = getScreenshotDir(path);
-            if (f.isDirectory()) {
-                f = File.createTempFile("htmlsnapshot_", ".html", f);
+            File file = getScreenshotDir(path);
+            if (file.isDirectory()) {
+                file = File.createTempFile("htmlsnapshot_", ".html", file);
             }
-            FileUtils.writeStringToFile(f, this.getHtml(), "UTF-8");
-            TS.log().info("Html Snapshot file: " + f.getAbsolutePath());
-            return getScreenshotPathToUse(f, path);
+            FileUtils.writeStringToFile(file, this.getHtml(), "UTF-8");
+            TS.log().info("Html Snapshot file: " + file.getAbsolutePath());
+            return getScreenshotPathToUse(file);
         } catch (final Exception e) {
             TS.log().error(e);
         }
@@ -564,22 +574,22 @@ public abstract class AbstractBrowser<T> {
     public String takeScreenShot(final String path) {
         try {
             final String version = driver.toString().toLowerCase();
-            File f = getScreenshotDir(path);
-            TS.log().trace("screenshotDir.mkdir " + f.mkdirs());
-            if (f.isDirectory()) {
-                f = File.createTempFile("screenshot_", ".png", f);
+            File file = getScreenshotDir(path);
+            TS.log().trace("screenshotDir.mkdir " + file.mkdirs());
+            if (file.isDirectory()) {
+                file = File.createTempFile("screenshot_", ".png", file);
             }
             if (version.contains("remotewebdriver")) {
                 final WebDriver augmentedDriver = new Augmenter().augment(driver);
                 final File s = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.FILE);
-                FileUtils.copyFile(s, f);
-                TS.log().info("Screenshot file: " + f.getAbsolutePath());
+                FileUtils.copyFile(s, file);
+                TS.log().info("Screenshot file: " + file.getAbsolutePath());
             } else {
                 final File sf = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-                FileUtils.copyFile(sf, f);
-                TS.log().info("Screenshot file: " + f.getAbsolutePath());
+                FileUtils.copyFile(sf, file);
+                TS.log().info("Screenshot file: " + file.getAbsolutePath());
             }
-            return getScreenshotPathToUse(f, path);
+            return getScreenshotPathToUse(file);
         } catch (final Exception e) {
             TS.log().error(e);
         }
@@ -702,12 +712,12 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractBrowser<T> waitForTitle(final String pageTitle, final int timeout) {
         String title;
-        for (int i = 1; i <= timeout; i++) {
+        for (int count = 1; count <= timeout; count++) {
             title = getTitle();
             if (TS.verify().equalsTo(pageTitle, title)) {
                 break;
             }
-            TS.util().pause("waitForTitle from [" + pageTitle + "] - current [" + title + "]", i);
+            TS.util().pause("waitForTitle from [" + pageTitle + "] - current [" + title + "]", count);
         }
         return getSelf();
     }
@@ -721,12 +731,12 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractBrowser<T> waitForTitleToChange(final String pageTitleToChange, final int timeout) {
         String title;
-        for (int i = 1; i <= timeout; i++) {
+        for (int count = 1; count <= timeout; count++) {
             title = getTitle();
             if (TS.verify().notEquals(pageTitleToChange, title)) {
                 break;
             }
-            TS.util().pause("waitForTitleToChange from [" + pageTitleToChange + "] - current [" + title + "]", i);
+            TS.util().pause("waitForTitleToChange from [" + pageTitleToChange + "] - current [" + title + "]", count);
         }
         return getSelf();
     }
@@ -740,12 +750,12 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractBrowser<T> waitForUrlToChange(final String pageUrlToChange, final int timeout) {
         String url;
-        for (int i = 1; i <= timeout; i++) {
+        for (int count = 1; count <= timeout; count++) {
             url = getUrl();
             if (TS.verify().notEquals(pageUrlToChange, url)) {
                 break;
             }
-            TS.util().pause("waitForUrlToChange from [" + pageUrlToChange + "] - current [" + url + "]", i);
+            TS.util().pause("waitForUrlToChange from [" + pageUrlToChange + "] - current [" + url + "]", count);
         }
 
         return getSelf();
@@ -773,7 +783,7 @@ public abstract class AbstractBrowser<T> {
     private WebElement getWebElementNative(final By by, final boolean noWait, final int waitIterationCount) {
         String error = "";
         WebElement element = null;
-        for (int i = 1; i <= waitIterationCount; i++) {
+        for (int count = 1; count <= waitIterationCount; count++) {
             try {
                 element = driver.findElement(by);
                 break;
@@ -783,7 +793,7 @@ public abstract class AbstractBrowser<T> {
             if (noWait) {
                 break;
             }
-            TS.util().pause("getWebElementNative", i);
+            TS.util().pause("getWebElementNative", count);
         }
         TS.asserts().notNull("Expected to find WebElement with By[" + by + "]: " + error, element);
         return element;
@@ -811,7 +821,7 @@ public abstract class AbstractBrowser<T> {
     private List<WebElement> getWebElementsNative(final By by, final boolean noWait, final int waitIterationCount) {
         String error = "";
         List<WebElement> lst = new ArrayList<>();
-        for (int i = 1; i <= waitIterationCount; i++) {
+        for (int count = 1; count <= waitIterationCount; count++) {
             error = "";
             try {
                 lst = driver.findElements(by);
@@ -825,7 +835,7 @@ public abstract class AbstractBrowser<T> {
             if (noWait) {
                 break;
             }
-            TS.util().pause("getWebElementsNative", i);
+            TS.util().pause("getWebElementsNative", count);
         }
         TS.asserts().isTrue("Expected to find WebElements with By[" + by + "] found: " + lst.size() + " " + error,
                 lst.size() > 0);
@@ -960,6 +970,15 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
+     * Gets the html.
+     *
+     * @return the html
+     */
+    public String getHtml() {
+        return driver.findElement(By.tagName("html")).getAttribute("outerHTML");
+    }
+
+    /**
      * Switch to window.
      *
      * @param pageTitle the page title
@@ -967,15 +986,6 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractBrowser<T> switchToWindow(final String pageTitle) {
         return switchToWindow(pageTitle, true);
-    }
-
-    /**
-     * Gets the html.
-     *
-     * @return the html
-     */
-    public String getHtml() {
-        return driver.findElement(By.tagName("html")).getAttribute("outerHTML");
     }
 
     /**
@@ -988,9 +998,9 @@ public abstract class AbstractBrowser<T> {
     public AbstractBrowser<T> switchToWindow(final String pageTitle, final boolean autoReport) {
         boolean rtn = false;
         final int waitForWindow = 10;
-        for (int i = 0; i < waitForWindow; i++) {
-            for (final String h : driver.getWindowHandles()) {
-                driver.switchTo().window(h);
+        for (int count = 0; count < waitForWindow; count++) {
+            for (final String handle : driver.getWindowHandles()) {
+                driver.switchTo().window(handle);
                 if (pageTitle.equalsIgnoreCase(driver.getTitle())) {
                     rtn = true;
                     break;

@@ -63,7 +63,8 @@ public class StepAction extends StepActionDto {
      * @return the step action
      */
     public static StepAction createAssertResult(final String message, final Boolean status, final String assertMethod,
-                                                final Object expected, final Object actual, final Throwable exception) {
+                                                final Object expected, final Object actual, final Throwable exception)
+    {
         final StepAction step = new StepAction();
         step.setActionName(assertMethod);
         step.setMessage1(message);
@@ -76,8 +77,8 @@ public class StepAction extends StepActionDto {
             step.setSnapShotPath(TS.browser().takeScreenShot());
             step.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());
         }
-        TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message + " - expected[" + expected +
-                "] actual[" + actual + "]");
+        TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message + " - expected[" + expected
+            + "] actual[" + actual + "]");
         if (null != step.getExceptionString()) {
             TS.log().trace("Exception Related to above Assert\n" + step.getExceptionString());
         }
@@ -96,7 +97,8 @@ public class StepAction extends StepActionDto {
      * @return the step action
      */
     public static StepAction createVerifyResult(final String message, final Boolean status, final String assertMethod,
-                                                final Object expected, final Object actual, final Throwable exception) {
+                                                final Object expected, final Object actual, final Throwable exception)
+    {
         final StepAction step = new StepAction();
         step.setActionName(assertMethod);
         step.setMessage1(message + " - " + status);
@@ -106,8 +108,8 @@ public class StepAction extends StepActionDto {
         step.setException(null);
         step.setTestStepActionType(TestStepActionType.VERIFY);
 
-        TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " + status + " - " + message + " - expected[" + expected +
-                "] actual[" + actual + "]");
+        TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " + status + " - " + message + " - expected[" + expected
+            + "] actual[" + actual + "]");
         return step;
     }
 
@@ -142,12 +144,14 @@ public class StepAction extends StepActionDto {
      * @return the step action
      */
     public static StepAction createInfo(final String message1, final String message2, final String message3,
-                                        final boolean autoLog) {
+                                        final boolean autoLog)
+    {
         return createInfo(message1, message2, message3, autoLog, false);
     }
 
     public static StepAction createInfo(final String message1, final String message2, final String message3,
-                                        final boolean autoLog, final boolean takeSnapShot) {
+                                        final boolean autoLog, final boolean takeSnapShot)
+    {
         final StepAction step = new StepAction();
         step.setMessage1(message1);
         step.setMessage2(message2);
@@ -176,14 +180,6 @@ public class StepAction extends StepActionDto {
         return createBrowserAction(message1, by.toString());
     }
 
-    public static StepAction screenshot(final String message) {
-        return createInfo(message, "", "", true, true);
-    }
-
-    public static StepAction screenshot() {
-        return screenshot("");
-    }
-
     /**
      * Creates the browser action.
      *
@@ -200,6 +196,19 @@ public class StepAction extends StepActionDto {
         return step;
     }
 
+    public static StepAction screenshot(final String message) {
+        return createInfo(message, "", "", true, true);
+    }
+
+    public static StepAction screenshot() {
+        return screenshot("");
+    }
+
+    /**
+     * Add a screen snapshot to a step action.
+     * @param stepAction the StepAction to which to add a screen snapshot
+     * @return the updated StepAction
+     */
     public StepAction addSnapshot(final StepAction stepAction) {
         stepAction.setSnapShotPath(TS.browser().takeScreenShot());
         stepAction.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());

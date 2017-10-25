@@ -25,13 +25,13 @@ public class TestahJUnitRunner {
      * Run tests.
      *
      * @param numConcurrent        the num concurrent
-     * @param jUnitTestPlanClasses the j unit test plan classes
+     * @param junitTestPlanClasses the junit test plan classes
      * @return the list
      */
-    public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> jUnitTestPlanClasses) {
+    public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> junitTestPlanClasses) {
         setInUse(true);
-        if (null != jUnitTestPlanClasses) {
-            return runTests(numConcurrent, new HashSet<Class<?>>(jUnitTestPlanClasses));
+        if (null != junitTestPlanClasses) {
+            return runTests(numConcurrent, new HashSet<Class<?>>(junitTestPlanClasses));
         }
         setInUse(false);
         return null;
@@ -41,16 +41,16 @@ public class TestahJUnitRunner {
      * Run tests.
      *
      * @param numConcurrent        the num concurrent
-     * @param jUnitTestPlanClasses the j unit test plan classes
+     * @param junitTestPlanClasses the junit test plan classes
      * @return the list
      */
-    private List<ResultDto> runTests(final int numConcurrent, final Set<Class<?>> jUnitTestPlanClasses) {
+    private List<ResultDto> runTests(final int numConcurrent, final Set<Class<?>> junitTestPlanClasses) {
         try {
-            if (null == jUnitTestPlanClasses || jUnitTestPlanClasses.size() == 0) {
+            if (null == junitTestPlanClasses || junitTestPlanClasses.size() == 0) {
                 TS.log().warn("No TestPlans Found to Run!");
                 return null;
             }
-            final int numOfTests = jUnitTestPlanClasses.size();
+            final int numOfTests = junitTestPlanClasses.size();
             final ActorSystem system = ActorSystem.create("TestahJunitRunner");
             final ActorRef master = system.actorOf(new Props(new UntypedActorFactory() {
                 private static final long serialVersionUID = 1L;
@@ -64,7 +64,7 @@ public class TestahJUnitRunner {
             //Setup thread locals to be used
             AbstractTestPlan.setUpThreadLocals();
 
-            master.tell(jUnitTestPlanClasses, master);
+            master.tell(junitTestPlanClasses, master);
 
             while (TestPlanActor.getResults().size() < numOfTests) {
                 TS.log().trace(TestPlanActor.getResults().size());

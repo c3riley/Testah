@@ -164,7 +164,7 @@ public class Params {
      * The default wait time.
      */
     @Comment(
-            info = "Default Wait time, determines the length of the loop, is not in seconds, works with the default pause time")
+        info = "Default Wait time, determines the length of the loop, is not in seconds, works with the default pause time")
     @Arg(dest = "defaultWaitTime")
     private int defaultWaitTime = 10;
 
@@ -179,15 +179,15 @@ public class Params {
      * The look at internal tests.
      */
     @Comment(
-            info = "Provide a value for the base level where tests can be found in the project, if empty will not run tests in jar")
+        info = "Provide a value for the base level where tests can be found in the project, if empty will not run tests in jar")
     @Arg(dest = "lookAtInternalTests")
     private String lookAtInternalTests = "org.testah";
 
     /**
      * The look at external tests.
      */
-    @Comment(info = "Provide a path where to look for external uncompiled Test Classes, " +
-            "can be stored as .java or .groovy, can supply a directory or specific file")
+    @Comment(info = "Provide a path where to look for external uncompiled Test Classes, "
+        + "can be stored as .java or .groovy, can supply a directory or specific file")
     @Arg(dest = "lookAtExternalTests")
     private String lookAtExternalTests = "";
 
@@ -202,7 +202,8 @@ public class Params {
      * The throw exception on fail.
      */
     @Comment(
-            info = "Should the System work as normal JUnit and stop a test case method on first fail, if false will continue to end then check for any fails")
+        info = "Should the System work as normal JUnit and stop a test case method on first fail, if false will continue to end "
+            + "then check for any fails")
     @Arg(dest = "throwExceptionOnFail")
     private boolean throwExceptionOnFail = true;
 
@@ -210,53 +211,53 @@ public class Params {
      * The web driver_user agent value.
      */
     @Comment(
-            info = "[BAR1]Webdriver properties[BAR2]Override Browser UserAgent property, allows tests to act as mobile device, etc")
+        info = "[BAR1]Webdriver properties[BAR2]Override Browser UserAgent property, allows tests to act as mobile device, etc")
     @Arg(dest = "webDriver_userAgentValue")
-    private String webDriver_userAgentValue = "";
+    private String webDriverUserAgentValue = "";
 
     /**
      * The web driver_use remote driver.
      */
     @Comment(info = "Use A Remote Dirver to run the Browser with, allows for Grid use")
     @Arg(dest = "webDriver_useRemoteDriver")
-    private boolean webDriver_useRemoteDriver = false;
+    private boolean webDriverUseRemoteDriver = false;
 
     /**
      * The web driver_default remote uri.
      */
     @Comment(
-            info = "If Use Remote Driver is True, value will be used to connect to a Webdriver Grid, can be local or remote")
+        info = "If Use Remote Driver is True, value will be used to connect to a Webdriver Grid, can be local or remote")
     @Arg(dest = "webDriver_defaultRemoteUri")
-    private String webDriver_defaultRemoteUri = "http://localhost:4444/wd/hub";
+    private String webDriverDefaultRemoteUri = "http://localhost:4444/wd/hub";
 
     /**
      * The web driver_firefox driver binary.
      */
     @Comment(info = "Add path to the Firefox Binary (only needed if in a non default location")
     @Arg(dest = "webDriver_FirefoxDriverBinary")
-    private String webDriver_firefoxDriverBinary = "";
+    private String webDriverFirefoxDriverBinary = "";
 
     /**
      * The web driver_phantom js driver binary.
      */
     @Comment(
-            info = "Add a path to the Phantomjs Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
+        info = "Add a path to the Phantomjs Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
     @Arg(dest = "webDriver_PhantomJsDriverBinary")
-    private String webDriver_phantomJsDriverBinary = "";
+    private String webDriverPhantomJsDriverBinary = "";
 
     /**
      * The web driver_chrome driver binary.
      */
     @Comment(
-            info = "Add a path to the Chrome Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
+        info = "Add a path to the Chrome Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
     @Arg(dest = "webDriver_ChromeDriverBinary")
-    private String webDriver_chromeDriverBinary = "";
+    private String webDriverChromeDriverBinary = "";
 
     /**
      * The output.
      */
     @Comment(
-            info = "[BAR1]Reporting Properties[BAR2]Folder to write output to, if empty will be {user dir}/testahOutput")
+        info = "[BAR1]Reporting Properties[BAR2]Folder to write output to, if empty will be {user dir}/testahOutput")
     @Arg(dest = "output")
     private String output = "";
 
@@ -299,7 +300,8 @@ public class Params {
      * The send json test data to service.
      */
     @Comment(
-            info = "Should the Runner Post info to a service in Json Format. If Uri is supplied it will attempt to send the json info as a List of 1 to many TestPlans")
+        info = "Should the Runner Post info to a service in Json Format. If Uri is supplied it will attempt to send "
+            + "the json info as a List of 1 to many TestPlans")
     @Arg(dest = "sendJsonTestDataToService")
     private String sendJsonTestDataToService = "";
 
@@ -321,31 +323,35 @@ public class Params {
      * The run info_version id.
      */
     @Comment(
-            info = "[BAR1]Run Info Properties[BAR2]Version Id is a value that can be used to tell what version the test is testing against. Can be passed runtime via -Dtestah.versionId=login-0.0.2")
+        info = "[BAR1]Run Info Properties[BAR2]Version Id is a value that can be used to tell what version the test is "
+            + "testing against. Can be passed runtime via -Dtestah.versionId=login-0.0.2")
     @Arg(dest = "runInfo_versionId")
-    private String runInfo_versionId = "";
+    private String runInfoVersionId = "";
 
     /**
      * The run info_build number.
      */
     @Comment(
-            info = "Build Number is a value that can be used to tell what build the test is testing against. Can be passed runtime via -Dtestah.buildNumber=login-0.0.2")
+        info = "Build Number is a value that can be used to tell what build the test is testing against. "
+            + "Can be passed runtime via -Dtestah.buildNumber=login-0.0.2")
     @Arg(dest = "runInfo_buildNumber")
-    private String runInfo_buildNumber = "";
+    private String runInfoBuildNumber = "";
 
     /**
      * The run info_run id.
      */
     @Comment(
-            info = "Run Id is a value that can be used to group many differnt results together. Can be passed runtime via -Dtestah.runId=run23")
+        info = "Run Id is a value that can be used to group many differnt results together. "
+            + "Can be passed runtime via -Dtestah.runId=run23")
     @Arg(dest = "runInfo_runId")
-    private String runInfo_runId = "";
+    private String runInfoRunId = "";
 
     /**
      * The run location.
      */
     @Comment(
-            info = "Run Location is a way to tell where the test ran, can be local machine name, or Jenkins Job Url. Can be passed runtime via -Dtestah.runLocation=local")
+        info = "Run Location is a way to tell where the test ran, can be local machine name, or Jenkins Job Url. "
+            + "Can be passed runtime via -Dtestah.runLocation=local")
     @Arg(dest = "runInfo_runLocation")
     private String runLocation = "localhost";
 
@@ -353,7 +359,8 @@ public class Params {
      * The run type.
      */
     @Comment(
-            info = "Run Type is a way to tell what type of run the test execution was involed in, smoke, regression, other. Can be passed runtime via -Dtestah.runType=smoke")
+        info = "Run Type is a way to tell what type of run the test execution was involed in, smoke, regression, other. "
+            + "Can be passed runtime via -Dtestah.runType=smoke")
     @Arg(dest = "runInfo_runType")
     private String runType = "";
 
@@ -361,7 +368,8 @@ public class Params {
      * The usefilter schema.
      */
     @Comment(
-            info = "[BAR1]Filter Properties[BAR2]Filter Schema To Use. Leave empty to not apply fitlers, to use default filter, set value to DEFAULT.  You can also create your own, like REG, or SMOKE")
+        info = "[BAR1]Filter Properties[BAR2]Filter Schema To Use. Leave empty to not apply fitlers, to use default filter, "
+            + "set value to DEFAULT.  You can also create your own, like REG, or SMOKE")
     @Arg(dest = "usefilterSchema")
     private String usefilterSchema = "DEFAULT";
 
@@ -369,7 +377,8 @@ public class Params {
      * The filter by platform.
      */
     @Comment(
-            info = "Filter using the Platform metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
+        info = "Filter using the Platform metadata field. Can be a comma seperated list of values that a test must match. "
+            + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByPlatform")
     private String filterByPlatform = "";
 
@@ -377,7 +386,8 @@ public class Params {
      * The filter by device.
      */
     @Comment(
-            info = "Filter using the Device metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
+        info = "Filter using the Device metadata field. Can be a comma seperated list of values that a test must match. "
+            + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByDevice")
     private String filterByDevice = "";
 
@@ -385,7 +395,8 @@ public class Params {
      * The filter by component.
      */
     @Comment(
-            info = "Filter using the Component metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
+        info = "Filter using the Component metadata field. Can be a comma seperated list of values that a test must match. "
+            + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByComponent")
     private String filterByComponent = "";
 
@@ -393,7 +404,8 @@ public class Params {
      * The filter by run type.
      */
     @Comment(
-            info = "Filter using the RunType metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
+        info = "Filter using the RunType metadata field. Can be a comma seperated list of values that a test must match. "
+            + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByRunType")
     private String filterByRunType = "";
 
@@ -401,7 +413,8 @@ public class Params {
      * The filter ignore known problem.
      */
     @Comment(
-            info = "Filter Using The @KnownProblem Annotation.  True means testplan/testcase must not be a known problem. False means must be a known problem. Empty means do not use filter.")
+        info = "Filter Using The @KnownProblem Annotation.  True means testplan/testcase must not be a known problem. "
+            + "False means must be a known problem. Empty means do not use filter.")
     @Arg(dest = "filterIgnoreKnownProblem")
     private String filterIgnoreKnownProblem = "";
 
@@ -409,7 +422,8 @@ public class Params {
      * The filter by tag.
      */
     @Comment(
-            info = "Filter using the Tag metadata field. Can be a comma seperated list of values that a test must match. Value can use the (~) for [Must Not Have], any match will be excluded.")
+        info = "Filter using the Tag metadata field. Can be a comma seperated list of values that a test must match. "
+            + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByTag")
     private String filterByTag = "";
 
@@ -931,7 +945,7 @@ public class Params {
      * @return true, if is web driver_use remote driver
      */
     public boolean isWebDriver_useRemoteDriver() {
-        return webDriver_useRemoteDriver;
+        return webDriverUseRemoteDriver;
     }
 
     /**
@@ -940,7 +954,7 @@ public class Params {
      * @return the web driver_default remote uri
      */
     public String getWebDriver_defaultRemoteUri() {
-        return webDriver_defaultRemoteUri;
+        return webDriverDefaultRemoteUri;
     }
 
     /**
@@ -949,7 +963,7 @@ public class Params {
      * @return the web driver_firefox driver binary
      */
     public String getWebDriver_firefoxDriverBinary() {
-        return webDriver_firefoxDriverBinary;
+        return webDriverFirefoxDriverBinary;
     }
 
     /**
@@ -958,7 +972,7 @@ public class Params {
      * @return the web driver_phantom js driver binary
      */
     public String getWebDriver_phantomJsDriverBinary() {
-        return webDriver_phantomJsDriverBinary;
+        return webDriverPhantomJsDriverBinary;
     }
 
     /**
@@ -967,7 +981,7 @@ public class Params {
      * @return the web driver_chrome driver binary
      */
     public String getWebDriver_chromeDriverBinary() {
-        return webDriver_chromeDriverBinary;
+        return webDriverChromeDriverBinary;
     }
 
     /**
@@ -976,7 +990,7 @@ public class Params {
      * @return the run info_version id
      */
     public String getRunInfo_versionId() {
-        return runInfo_versionId;
+        return runInfoVersionId;
     }
 
     /**
@@ -985,7 +999,7 @@ public class Params {
      * @return the run info_build number
      */
     public String getRunInfo_buildNumber() {
-        return runInfo_buildNumber;
+        return runInfoBuildNumber;
     }
 
     /**
@@ -994,7 +1008,7 @@ public class Params {
      * @return the run info_run id
      */
     public String getRunInfo_runId() {
-        return runInfo_runId;
+        return runInfoRunId;
     }
 
     /**
@@ -1016,6 +1030,11 @@ public class Params {
         return this;
     }
 
+    /**
+     * Create output directories.
+     *
+     * @return the params
+     */
     public Params mkOutput() {
 
         if (null == output || output.length() == 0) {
@@ -1037,105 +1056,105 @@ public class Params {
      * @return the web driver_user agent value
      */
     public String getWebDriver_userAgentValue() {
-        return webDriver_userAgentValue;
+        return webDriverUserAgentValue;
     }
 
     /**
      * Sets the web driver_user agent value.
      *
-     * @param webDriver_userAgentValue the new web driver_user agent value
+     * @param webDriverUserAgentValue the new web driver_user agent value
      * @return the params
      */
-    public Params setWebDriver_userAgentValue(final String webDriver_userAgentValue) {
-        this.webDriver_userAgentValue = webDriver_userAgentValue;
+    public Params setWebDriver_userAgentValue(final String webDriverUserAgentValue) {
+        this.webDriverUserAgentValue = webDriverUserAgentValue;
         return this;
     }
 
     /**
      * Sets the web driver_use remote driver.
      *
-     * @param webDriver_useRemoteDriver the new web driver_use remote driver
+     * @param webDriverUseRemoteDriver the new web driver_use remote driver
      * @return the params
      */
-    public Params setWebDriver_useRemoteDriver(final boolean webDriver_useRemoteDriver) {
-        this.webDriver_useRemoteDriver = webDriver_useRemoteDriver;
+    public Params setWebDriver_useRemoteDriver(final boolean webDriverUseRemoteDriver) {
+        this.webDriverUseRemoteDriver = webDriverUseRemoteDriver;
         return this;
     }
 
     /**
      * Sets the web driver_default remote uri.
      *
-     * @param webDriver_defaultRemoteUri the new web driver_default remote uri
+     * @param webDriverDefaultRemoteUri the new web driver_default remote uri
      * @return the params
      */
-    public Params setWebDriver_defaultRemoteUri(final String webDriver_defaultRemoteUri) {
-        this.webDriver_defaultRemoteUri = webDriver_defaultRemoteUri;
+    public Params setWebDriver_defaultRemoteUri(final String webDriverDefaultRemoteUri) {
+        this.webDriverDefaultRemoteUri = webDriverDefaultRemoteUri;
         return this;
     }
 
     /**
      * Sets the web driver_firefox driver binary.
      *
-     * @param webDriver_firefoxDriverBinary the new web driver_firefox driver binary
+     * @param webDriverFirefoxDriverBinary the new web driver_firefox driver binary
      * @return the params
      */
-    public Params setWebDriver_firefoxDriverBinary(final String webDriver_firefoxDriverBinary) {
-        this.webDriver_firefoxDriverBinary = webDriver_firefoxDriverBinary;
+    public Params setWebDriver_firefoxDriverBinary(final String webDriverFirefoxDriverBinary) {
+        this.webDriverFirefoxDriverBinary = webDriverFirefoxDriverBinary;
         return this;
     }
 
     /**
      * Sets the web driver_phantom js driver binary.
      *
-     * @param webDriver_phantomJsDriverBinary the new web driver_phantom js driver binary
+     * @param webDriverPhantomJsDriverBinary the new web driver_phantom js driver binary
      * @return the params
      */
-    public Params setWebDriver_phantomJsDriverBinary(final String webDriver_phantomJsDriverBinary) {
-        this.webDriver_phantomJsDriverBinary = webDriver_phantomJsDriverBinary;
+    public Params setWebDriver_phantomJsDriverBinary(final String webDriverPhantomJsDriverBinary) {
+        this.webDriverPhantomJsDriverBinary = webDriverPhantomJsDriverBinary;
         return this;
     }
 
     /**
      * Sets the web driver_chrome driver binary.
      *
-     * @param webDriver_chromeDriverBinary the new web driver_chrome driver binary
+     * @param webDriverChromeDriverBinary the new web driver_chrome driver binary
      * @return the params
      */
-    public Params setWebDriver_chromeDriverBinary(final String webDriver_chromeDriverBinary) {
-        this.webDriver_chromeDriverBinary = webDriver_chromeDriverBinary;
+    public Params setWebDriver_chromeDriverBinary(final String webDriverChromeDriverBinary) {
+        this.webDriverChromeDriverBinary = webDriverChromeDriverBinary;
         return this;
     }
 
     /**
      * Sets the run info_version id.
      *
-     * @param runInfo_versionId the new run info_version id
+     * @param runInfoVersionId the new run info_version id
      * @return the params
      */
-    public Params setRunInfo_versionId(final String runInfo_versionId) {
-        this.runInfo_versionId = runInfo_versionId;
+    public Params setRunInfo_versionId(final String runInfoVersionId) {
+        this.runInfoVersionId = runInfoVersionId;
         return this;
     }
 
     /**
      * Sets the run info_build number.
      *
-     * @param runInfo_buildNumber the new run info_build number
+     * @param runInfoBuildNumber the new run info_build number
      * @return the params
      */
-    public Params setRunInfo_buildNumber(final String runInfo_buildNumber) {
-        this.runInfo_buildNumber = runInfo_buildNumber;
+    public Params setRunInfo_buildNumber(final String runInfoBuildNumber) {
+        this.runInfoBuildNumber = runInfoBuildNumber;
         return this;
     }
 
     /**
      * Sets the run info_run id.
      *
-     * @param runInfo_runId the new run info_run id
+     * @param runInfoRunId the new run info_run id
      * @return the params
      */
-    public Params setRunInfo_runId(final String runInfo_runId) {
-        this.runInfo_runId = runInfo_runId;
+    public Params setRunInfo_runId(final String runInfoRunId) {
+        this.runInfoRunId = runInfoRunId;
         return this;
     }
 
@@ -1301,6 +1320,13 @@ public class Params {
         return getValue(key, getOther().get(key));
     }
 
+    /**
+     * Get the value of the specified environment parameter. Return the default value if not found.
+     *
+     * @param key          parameter name
+     * @param defaultValue default parameter name
+     * @return parameter value
+     */
     public String getValue(final String key, final String defaultValue) {
         String rtnValue = defaultValue;
         if (!StringUtils.isEmpty(key)) {

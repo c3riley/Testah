@@ -163,15 +163,26 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      */
     public TestPlanDto setStatus() {
         for (final TestCaseDto e : testCases) {
-            if (null == e.getStatus()) {
-
-            } else if (e.getStatus() == false) {
-                status = false;
-                return this;
-            } else if (e.getStatus() == true) {
-                status = true;
+            if (null != e.getStatus()) {
+                if (e.getStatus() == false) {
+                    status = false;
+                    return this;
+                } else if (e.getStatus() == true) {
+                    status = true;
+                }
             }
         }
+        return this;
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @param status the status
+     * @return the test plan dto
+     */
+    public TestPlanDto setStatus(final Boolean status) {
+        this.status = status;
         return this;
     }
 
@@ -205,17 +216,6 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
     }
 
     /**
-     * Sets the status.
-     *
-     * @param status the status
-     * @return the test plan dto
-     */
-    public TestPlanDto setStatus(final Boolean status) {
-        this.status = status;
-        return this;
-    }
-
-    /**
      * Gets the test cases.
      *
      * @return the test cases
@@ -235,6 +235,10 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
         return this;
     }
 
+    /**
+     * Get test status enum.
+     * @return test status enum
+     */
     public TestStatus getStatusEnum() {
         if (null == statusEnum) {
             this.statusEnum = TestStatus.getStatus(status);
