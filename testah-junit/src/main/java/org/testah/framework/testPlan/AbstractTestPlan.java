@@ -142,12 +142,12 @@ public abstract class AbstractTestPlan {
         setAssumeTrue(false);
         TestCaseDto test = new TestCaseDto();
         test = TestDtoHelper.fill(test, description.getAnnotation(TestCase.class), kp,
-                description.getTestClass().getAnnotation(TestPlan.class));
+            description.getTestClass().getAnnotation(TestPlan.class));
         if (!getTestFilter().filterTestCase(test, name)) {
             addIgnoredTest(name, "METADATA_FILTER");
             setAssumeTrue(true);
-            Assume.assumeTrue("Filtered out, For details use Trace level logging" +
-                    "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
+            Assume.assumeTrue("Filtered out, For details use Trace level logging"
+                + "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
         }
 
         if (null != TS.params().getFilterIgnoreKnownProblem()) {
@@ -155,15 +155,16 @@ public abstract class AbstractTestPlan {
                 if ("true".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                     setAssumeTrue(true);
                     addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
-                    Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description() +
-                            "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
+                    Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description()
+                        + "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
                 }
             } else if ("false".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                 setAssumeTrue(true);
                 addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
                 Assume.assumeTrue(
-                        "Filtered out, KnownProblem Not found and is required\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem",
-                        false);
+                    "Filtered out, KnownProblem Not found and is required\nCheck your filter settings in "
+                        + "Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem",
+                    false);
             }
         }
     }
@@ -175,7 +176,7 @@ public abstract class AbstractTestPlan {
 
         protected void failed(final Throwable e, final Description description) {
             StepAction.createAssertResult("Unexpected Error occured", false, "UnhandledExceptionFoundByJUnit", "",
-                    e.getMessage(), e).add();
+                e.getMessage(), e).add();
 
             TS.log().error("TESTCASE Status: failed", e);
             stopTestCase(false);
@@ -191,7 +192,7 @@ public abstract class AbstractTestPlan {
                         getTestCase().getAssertionError();
                         if (null == getTestCase().getStatus()) {
                             addIgnoredTest(description.getClassName() + "#" + description.getMethodName(),
-                                    "NA_STATUS_NO_ASSERTS");
+                                "NA_STATUS_NO_ASSERTS");
                         }
                     }
                 }
@@ -226,9 +227,9 @@ public abstract class AbstractTestPlan {
             TS.log().info(Cli.BAR_LONG);
 
             TS.log().info(
-                    "TESTCASE started:" + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
+                "TESTCASE started:" + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
             startTestCase(desc, desc.getAnnotation(TestCase.class), desc.getTestClass().getAnnotation(TestPlan.class),
-                    desc.getAnnotation(KnownProblem.class));
+                desc.getAnnotation(KnownProblem.class));
             getTestStep();
         }
     };
@@ -274,6 +275,9 @@ public abstract class AbstractTestPlan {
         }
     }
 
+    /**
+     * Clean up when Testah is done.
+     */
     public static void tearDownTestah() {
         if (TS.isBrowser()) {
             TS.browser().close();
@@ -282,6 +286,9 @@ public abstract class AbstractTestPlan {
         TS.tearDown();
     }
 
+    /**
+     * Clean up all Threadlocal.
+     */
     public static void cleanUpTestplanThreadLocal() {
         cleanUpThreadLocal(testPlan);
         cleanUpThreadLocal(testCase);
@@ -380,18 +387,11 @@ public abstract class AbstractTestPlan {
      */
     public static TestStepDto getTestStep() {
 
-        if (null == getTestStepTreadLocal().get() && null != getTestCase()) {
+        if (null == getTestStepThreadLocal().get() && null != getTestCase()) {
             AbstractTestPlan.testStep.set(new TestStepDto("Initial Step", "").start());
             TS.log().info("TESTSTEP - " + AbstractTestPlan.testStep.get().getName());
         }
-        return getTestStepTreadLocal().get();
-    }
-
-    public static ThreadLocal<TestStepDto> getTestStepTreadLocal() {
-        if (null == testStep) {
-            testStep = new ThreadLocal<>();
-        }
-        return testStep;
+        return getTestStepThreadLocal().get();
     }
 
     /**
@@ -437,10 +437,11 @@ public abstract class AbstractTestPlan {
      * @return the test case dto
      */
     private TestCaseDto startTestCase(final Description desc, final TestCase testCase, final TestPlan testPlan,
-                                      final KnownProblem knowProblem) {
+                                      final KnownProblem knowProblem)
+    {
         if (didTestPlanStart()) {
             getTestCaseThreadLocal()
-                    .set(TestDtoHelper.createTestCaseDto(desc, testCase, knowProblem, testPlan).start());
+                .set(TestDtoHelper.createTestCaseDto(desc, testCase, knowProblem, testPlan).start());
         }
         return getTestCase();
     }
@@ -687,12 +688,21 @@ public abstract class AbstractTestPlan {
         return this;
     }
 
+    /**
+     * Reset the test case.
+     *
+     * @param reasonWhy explanation why test case was reset
+     * @return this object
+     */
     public AbstractTestPlan resetTestCase(final String reasonWhy) {
         getTestCase().getTestSteps().clear();
         getTestStepThreadLocal().set(new TestStepDto("Reseting TestCase And Going To Retry", reasonWhy).start());
         return this;
     }
 
+    /**
+     * Set up ThreadLocals.
+     */
     public static void setUpThreadLocals() {
         testPlan = new ThreadLocal<>();
         testCase = new ThreadLocal<>();

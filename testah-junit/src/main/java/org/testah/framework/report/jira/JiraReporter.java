@@ -16,8 +16,11 @@ import java.util.List;
 public class JiraReporter {
 
     private final String baseUrl;
-    private final static String apiUrl = "rest/api/latest";
+    private static final String apiUrl = "rest/api/latest";
 
+    /**
+     * Constructor.
+     */
     public JiraReporter() {
         if (TS.params().getJiraUrl().endsWith("/")) {
             this.baseUrl = TS.params().getJiraUrl() + apiUrl;
@@ -26,6 +29,11 @@ public class JiraReporter {
         }
     }
 
+    /**
+     * Create or update issue.
+     * @param testPlan the test plan
+     * @param remoteLinkBuilder JiraRemoteLinkBuilder
+     */
     public void createOrUpdateTestPlanRemoteLink(final TestPlanDto testPlan, final JiraRemoteLinkBuilder remoteLinkBuilder) {
         if (TS.params().isUseJiraRemoteLink() && TS.params().getJiraUrl().length() > 0) {
             RemoteIssueLinkDto remoteLink;
@@ -45,7 +53,8 @@ public class JiraReporter {
                     if (null == remoteLink) {
                         createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
                     } else {
-                        updateRemoteLink(relatedId, remoteLink.getId(), remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
+                        updateRemoteLink(relatedId, remoteLink.getId(),
+                            remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
                     }
                 }
             }
@@ -58,7 +67,7 @@ public class JiraReporter {
                                 createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
                             } else {
                                 updateRemoteLink(relatedId, remoteLink.getId(),
-                                        remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
+                                    remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
                             }
                         }
                     }
@@ -81,13 +90,24 @@ public class JiraReporter {
         return request.addBasicAuth(TS.params().getJiraUserName(), TS.params().getJiraPassword());
     }
 
+    /**
+     * Get remote links.
+     * @param issue the issue
+     * @return list of remote issue link
+     */
     public List<RemoteIssueLinkDto> getRemoteLinks(final String issue) {
-        GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue +
-                "/remotelink");
+        GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue
+            + "/remotelink");
         return TS.http().doRequest(addAuthHeader(get.withJson())).getResponse(new TypeReference<List<RemoteIssueLinkDto>>() {
         });
     }
 
+    /**
+     * Get remote link for global id.
+     * @param issue the issue
+     * @param globalId global id
+     * @return remote issue link for global id
+     */
     public RemoteIssueLinkDto getRemoteLinkForGlobalId(final String issue, final String globalId) {
         if (null != issue && null != globalId) {
             for (RemoteIssueLinkDto link : getRemoteLinks(issue)) {
@@ -99,6 +119,12 @@ public class JiraReporter {
         return null;
     }
 
+    /**
+     * Create a remote issue link.
+     * @param issue the issue
+     * @param remoteLink remote link to create
+     * @return remote issue link
+     */
     public RemoteIssueLinkDto createRemoteLink(final String issue, final RemoteIssueLinkDto remoteLink) {
         if (null != remoteLink) {
             PostRequestDto post = new PostRequestDto(baseUrl + "/issue/" + issue + "/remotelink", remoteLink);
@@ -107,6 +133,13 @@ public class JiraReporter {
         return null;
     }
 
+    /**
+     * Update a remote issue link.
+     * @param issue the issue
+     * @param id the issue id
+     * @param remoteLink remote issue link
+     * @return response of HTTP request
+     */
     public ResponseDto updateRemoteLink(final String issue, final int id, final RemoteIssueLinkDto remoteLink) {
         if (null != remoteLink) {
             PutRequestDto put = new PutRequestDto(baseUrl + "/issue/" + issue + "/remotelink/" + id, remoteLink);

@@ -48,7 +48,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
             if (null != getConnectionManager()) {
                 final ConnectingIOReactor ioReactor = new DefaultConnectingIOReactor();
                 final PoolingNHttpClientConnectionManager connManager = new PoolingNHttpClientConnectionManager(
-                        ioReactor);
+                    ioReactor);
                 connManager.setMaxTotal(100);
                 hcb.setConnectionManager(connManager);
             }
@@ -89,39 +89,40 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
             try {
                 getHttpAsyncClient().start();
                 final Future<HttpResponse> future = getHttpAsyncClient().execute(request.getHttpRequestBase(), context,
-                        new FutureCallback<HttpResponse>() {
+                    new FutureCallback<HttpResponse>() {
 
-                            public void completed(final HttpResponse response) {
-                                if (verbose) {
-                                    final ResponseDto responseDto = getResponseDto(response, request);
-                                    AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500));
-                                }
+                        public void completed(final HttpResponse response) {
+                            if (verbose) {
+                                final ResponseDto responseDto = getResponseDto(response, request);
+                                AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500));
                             }
+                        }
 
-                            public void failed(final Exception ex) {
-                                if (verbose) {
-                                    AbstractTestPlan.addStepAction(StepAction.createInfo(
-                                            "ERROR - Issue with reques" + request.getHttpRequestBase().getRequestLine(),
-                                            ex.getMessage()));
-                                }
+                        public void failed(final Exception ex) {
+                            if (verbose) {
+                                AbstractTestPlan.addStepAction(StepAction.createInfo(
+                                    "ERROR - Issue with reques" + request.getHttpRequestBase().getRequestLine(),
+                                    ex.getMessage()));
                             }
+                        }
 
-                            public void cancelled() {
-                                if (verbose) {
-                                    AbstractTestPlan.addStepAction(StepAction.createInfo("Canceled Request",
-                                            request.getHttpRequestBase().getRequestLine().toString()));
-                                }
+                        public void cancelled() {
+                            if (verbose) {
+                                AbstractTestPlan.addStepAction(StepAction.createInfo("Canceled Request",
+                                    request.getHttpRequestBase().getRequestLine().toString()));
                             }
-                        });
+                        }
+                    });
                 return future;
             } finally {
-
+                // need to complete try block, maybe move declaration of Future<HttpResponse> future = null out of try block
+                // and return future here.
             }
         } catch (final Exception e) {
             TS.log().error(e);
             if (!isIgnoreHttpError()) {
                 TS.asserts().equalsTo("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
-                        e.getMessage());
+                    e.getMessage());
             }
             return null;
         }
@@ -170,11 +171,12 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
      * @throws Exception the exception
      */
     public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response, final AbstractRequestDto<?> request)
-            throws Exception {
+        throws Exception
+    {
         if (null != response) {
             try {
                 TS.log().debug("Getting response from future, current done state is: " + response.isDone()
-                        + " will block until done.");
+                    + " will block until done.");
                 final HttpResponse responseFromFuture = response.get();
                 return getResponseDto(responseFromFuture, request);
             } catch (final Exception e) {

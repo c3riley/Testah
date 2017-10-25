@@ -47,7 +47,7 @@ public class TestPlanReporter {
         if (null == testPlan) {
             TS.log().info(Cli.BAR_LONG);
             TS.log().info(
-                    Cli.BAR_WALL + "No Tests Ran, could be due to use of filters, for details turn on trace logging");
+                Cli.BAR_WALL + "No Tests Ran, could be due to use of filters, for details turn on trace logging");
 
             if (null != ignored) {
                 ignored.forEach((k, v) -> TS.log().info(Cli.BAR_WALL + "" + v + " - " + k));
@@ -58,7 +58,7 @@ public class TestPlanReporter {
         try {
             testPlan.getRunInfo().setIgnore(AbstractTestPlan.getIgnoredTests().size());
             testPlan.getRunInfo()
-                    .setTotal(testPlan.getRunInfo().getFail() + testPlan.getRunInfo().getPass() + testPlan.getRunInfo().getIgnore());
+                .setTotal(testPlan.getRunInfo().getFail() + testPlan.getRunInfo().getPass() + testPlan.getRunInfo().getIgnore());
             testPlan.getRunInfo().getRunTimeProperties().put("builtOn", TS.params().getComputerName());
         } catch (final Exception e) {
             TS.log().trace(e);
@@ -70,8 +70,8 @@ public class TestPlanReporter {
         final org.testah.client.dto.RunInfoDto ri = testPlan.getRunInfo();
         System.out.println("\n\n\n");
         TS.log().info(Cli.BAR_LONG);
-        TS.log().info(Cli.BAR_WALL + "TestPlan[" + testPlan.getSource() + " (thread:" + Thread.currentThread().getId() + ") Status: " +
-                testPlan.getStatusEnum());
+        TS.log().info(Cli.BAR_WALL + "TestPlan[" + testPlan.getSource() + " (thread:" + Thread.currentThread().getId() + ") Status: "
+            + testPlan.getStatusEnum());
         TS.log().info(Cli.BAR_WALL + "Passed: " + ri.getPass());
         TS.log().info(Cli.BAR_WALL + "Failed: " + ri.getFail());
         TS.log().info(Cli.BAR_WALL + "Ignore/NA/FilteredOut: " + ri.getIgnore());
@@ -112,8 +112,8 @@ public class TestPlanReporter {
                 final JiraReporter jiraReporter = new JiraReporter();
                 jiraReporter.createOrUpdateTestPlanRemoteLink(testPlan, this.getJiraRemoteLinkBuilder());
             } else {
-                TS.log().warn("Use Jira is On, but JiraRemoteLinkBuilder is not set, can set ex: " +
-                        "TS.getTestPlanReporter().setJiraRemoteLinkBuilder(jiraRemoteLinkBuilder);");
+                TS.log().warn("Use Jira is On, but JiraRemoteLinkBuilder is not set, can set ex: "
+                    + "TS.getTestPlanReporter().setJiraRemoteLinkBuilder(jiraRemoteLinkBuilder);");
             }
         }
         if (null == TS.params().getSendJsonTestDataToService() || TS.params().getSendJsonTestDataToService().length() > 0) {
@@ -122,19 +122,19 @@ public class TestPlanReporter {
                 map.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
                 TS.log().info(Cli.BAR_WALL + "Posting Data: ");
                 final ResponseDto response = TS.http().doRequest(
-                        new PostRequestDto(TS.params().getSendJsonTestDataToService(), AbstractTestPlan.getTestPlan())
-                                .withJsonUTF8(),
-                        false).print(true);
+                    new PostRequestDto(TS.params().getSendJsonTestDataToService(), AbstractTestPlan.getTestPlan())
+                        .withJsonUTF8(),
+                    false).print(true);
                 TS.log().trace("Request Payload:\n" + response.getRequestUsed().getPayloadString());
                 TS.log().trace("Response Body:\n" + response.getResponseBody());
                 try {
                     final HashMap<String, String> values = TS.util().getMap().readValue(response.getResponseBody(),
-                            new TypeReference<HashMap<String, String>>() {
-                            });
+                        new TypeReference<HashMap<String, String>>() {
+                        });
                     if (null != values.get("message")) {
                         final HashMap<Integer, String> ids = TS.util().getMap().readValue(values.get("message"),
-                                new TypeReference<HashMap<Integer, String>>() {
-                                });
+                            new TypeReference<HashMap<Integer, String>>() {
+                            });
                         TS.log().info(Cli.BAR_LONG);
                         TS.log().info(Cli.BAR_WALL + "Ids From TMS");
                         ids.forEach((k, v) -> TS.log().info("ID[ " + k + " ] - " + v));
@@ -145,7 +145,7 @@ public class TestPlanReporter {
 
             } catch (final Exception e) {
                 TS.log().warn("Issue posting data to declared service: " + TS.params().getSendJsonTestDataToService(),
-                        e);
+                    e);
             }
         }
 
@@ -162,14 +162,14 @@ public class TestPlanReporter {
     public void openReport(final String pathToReport) {
         if (TS.params().isAutoOpenHtmlReport()) {
             try {
-                ProcessBuilder pb = null;
+                ProcessBuilder processBuilder = null;
                 if (Params.isMac()) {
-                    pb = new ProcessBuilder("/usr/bin/open", pathToReport);
+                    processBuilder = new ProcessBuilder("/usr/bin/open", pathToReport);
                 } else if (Params.isWindows()) {
-                    pb = new ProcessBuilder("cmd", "/c", "start", pathToReport);
+                    processBuilder = new ProcessBuilder("cmd", "/c", "start", pathToReport);
                 }
-                if (null != pb) {
-                    final Process p = pb.start();
+                if (null != processBuilder) {
+                    final Process p = processBuilder.start();
                     p.waitFor();
                 }
             } catch (final Exception e) {
