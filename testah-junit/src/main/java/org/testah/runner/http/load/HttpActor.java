@@ -1,4 +1,4 @@
-package org.testah.runner.httpLoad;
+package org.testah.runner.http.load;
 
 import akka.actor.ActorRef;
 import akka.actor.Props;
@@ -55,7 +55,6 @@ public class HttpActor extends UntypedActor {
 
             }
         } catch (Throwable throwable) {
-            TS.log().info("Throwable thrown in HttpActor.onReceive(): " + throwable.getMessage());
             TS.log().info("Throwable thrown in HttpActor.onReceive()", throwable);
             results.get(hashId).add(getUnExpectedErrorResponseDto(throwable));
         }
@@ -76,7 +75,7 @@ public class HttpActor extends UntypedActor {
 
     public static List<ResponseDto> getResults(final Long hashId) {
         HashMap<Long, List<ResponseDto>> resultsLocalPointer = getResults();
-        if (resultsLocalPointer.isEmpty() || !resultsLocalPointer.containsKey(hashId)) {
+        if (!resultsLocalPointer.containsKey(hashId)) {
             resultsLocalPointer.put(hashId, new ArrayList<ResponseDto>());
         }
         return resultsLocalPointer.get(hashId);

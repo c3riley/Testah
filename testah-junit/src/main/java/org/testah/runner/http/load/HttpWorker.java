@@ -1,4 +1,4 @@
-package org.testah.runner.httpLoad;
+package org.testah.runner.http.load;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
