@@ -6,11 +6,11 @@ public class TestServiceClient {
         //
     }
 
-    public String getUrl() {
-        return "https://httpstat.us/";
+    public String getUrlGet(int statusCode) {
+        return "https://httpstat.us/" + statusCode;
     }
 
-    public String getUrl(int statusCode) {
-        return getUrl() + statusCode;
+    public String getUrlPost() {
+        return "https://httpbin.org/post";
     }
 }
