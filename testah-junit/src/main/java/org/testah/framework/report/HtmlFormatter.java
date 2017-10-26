@@ -18,7 +18,8 @@ public class HtmlFormatter extends AbstractTestPlanFormatter {
 
     }
 
-    /* (non-Javadoc)
+    /**
+     * Override getContext(...) in AbstractTestPlanFormatter
      * @see org.testah.framework.report.AbstractFormatter#getContext(org.apache.velocity.VelocityContext)
      */
     public VelocityContext getContext(final VelocityContext context) {

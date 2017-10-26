@@ -34,10 +34,14 @@ public class AuditReport {
     private String filePathAndName;
     private final CellStyle headerCellStyle;
     private final CellStyle bodyCellStyle;
-    private final CellStyle xBodyCellStyle;
+    private final CellStyle xbodyCellStyle;
     private final XSSFWorkbook workbook;
 
-    public AuditReport() throws IOException, InterruptedException {
+    /**
+     * Constructor.
+     * @throws IOException if writing to file fails
+     */
+    public AuditReport() throws IOException {
         this.filePathAndName = Params.addUserDir("AutomationAudit.xlsx");
         File report = new File(filePathAndName);
         if (report.exists()) {
@@ -46,12 +50,12 @@ public class AuditReport {
         this.workbook = new XSSFWorkbook();
         this.headerCellStyle = createHeaderCellStyle();
         this.bodyCellStyle = createBodyCellStyle();
-        this.xBodyCellStyle = createXBodyCellStyle();
+        this.xbodyCellStyle = createXBodyCellStyle();
     }
 
     public static void main(final String[] args) throws IOException, InterruptedException {
-        AuditReport ar = new AuditReport();
-        ar.buildReport();
+        AuditReport auditReport = new AuditReport();
+        auditReport.buildReport();
     }
 
     private CellStyle createHeaderCellStyle() {
@@ -125,7 +129,7 @@ public class AuditReport {
         } else {
             cell.setCellValue("");
         }
-        cell.setCellStyle(xBodyCellStyle);
+        cell.setCellStyle(xbodyCellStyle);
     }
 
     private HashMap<String, TestPlanDto> getTestMetadata() {
@@ -135,24 +139,27 @@ public class AuditReport {
         final HashMap<String, TestPlanDto> testPlans = new HashMap<>();
         for (final Class<?> test : testPlanFilter.getTestClassesMetFilters()) {
             testPlans
-                    .put(test.getCanonicalName(),
-                            TestDtoHelper
-                                    .createTestPlanDto(test, test.getAnnotation(TestPlan.class),
-                                            test.getAnnotation(KnownProblem.class))
-                                    .setRunTime(null).setRunInfo(null));
+                .put(test.getCanonicalName(),
+                    TestDtoHelper
+                        .createTestPlanDto(test, test.getAnnotation(TestPlan.class),
+                            test.getAnnotation(KnownProblem.class))
+                        .setRunTime(null).setRunInfo(null));
 
             for (final Method method : test.getDeclaredMethods()) {
                 if (null != method.getAnnotation(TestCase.class)) {
                     testPlans.get(test.getCanonicalName())
-                            .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
-                                    method.getAnnotation(TestCase.class), method.getAnnotation(KnownProblem.class),
-                                    test.getAnnotation(TestPlan.class)).setRunTime(null));
+                        .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
+                            method.getAnnotation(TestCase.class), method.getAnnotation(KnownProblem.class),
+                            test.getAnnotation(TestPlan.class)).setRunTime(null));
                 }
             }
         }
         return testPlans;
     }
 
+    /**
+     * Create results report.
+     */
     public void buildReport() {
 
         final HashMap<String, TestPlanDto> testPlans = getTestMetadata();
@@ -170,12 +177,12 @@ public class AuditReport {
         Row tpRow = testPlanSheet.createRow(tpRowNum++);
 
         addHeader(tcRow, "TestPlan", "TestCase", "RunTypes", "ACCEPTANCE", "SMOKE", "REG", "RunTypes", "TestType",
-                "HasKnownProblem", "Platforms",
-                "Components", "Comments", "Description", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
+            "HasKnownProblem", "Platforms",
+            "Components", "Comments", "Description", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
 
         addHeader(tpRow, "TestPlan", "Description", "RunTypes", "ACCEPTANCE", "SMOKE", "REG", "RunTypes", "TestType",
-                "HasKnownProblem", "Platforms",
-                "Components", "Comments", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
+            "HasKnownProblem", "Platforms",
+            "Components", "Comments", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
 
         for (final Entry<String, TestPlanDto> testPlan : testPlans.entrySet()) {
             tpRow = testPlanSheet.createRow(tpRowNum++);
@@ -195,16 +202,16 @@ public class AuditReport {
             if (null != testPlan.getValue().getKnownProblem()) {
                 if (null != testPlan.getValue().getKnownProblem().getLinkedIds()) {
                     addToCell(tcRow.createCell(tpColNum++), String.join(", ", testPlan.getValue()
-                            .getKnownProblem()
-                            .getLinkedIds()));
+                        .getKnownProblem()
+                        .getLinkedIds()));
                 } else {
                     addToCell(tcRow.createCell(tpColNum++), "");
                 }
                 addToCell(tcRow.createCell(tpColNum++), testPlan.getValue().getKnownProblem()
-                        .getDescription());
+                    .getDescription());
                 addToCell(tcRow.createCell(tpColNum++), testPlan.getValue().getKnownProblem()
-                        .getTypeOfKnown()
-                        .name());
+                    .getTypeOfKnown()
+                    .name());
             }
 
             for (final TestCaseDto testCase : testPlan.getValue().getTestCases()) {
@@ -226,13 +233,13 @@ public class AuditReport {
                 if (null != testCase.getKnownProblem()) {
                     if (null != testCase.getKnownProblem().getLinkedIds()) {
                         addToCell(tcRow.createCell(tcColNum++), String.join(", ", testCase.getKnownProblem()
-                                .getLinkedIds()));
+                            .getLinkedIds()));
                     } else {
                         addToCell(tcRow.createCell(tcColNum++), "");
                     }
                     addToCell(tcRow.createCell(tcColNum++), testCase.getKnownProblem().getDescription());
                     addToCell(tcRow.createCell(tcColNum++), testCase.getKnownProblem().getTypeOfKnown()
-                            .name());
+                        .name());
                 }
                 tcRow.setHeightInPoints(-1);
                 // cell.setCellValue((Integer) field);

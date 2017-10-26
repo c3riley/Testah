@@ -16,12 +16,20 @@ public class TestPlanActor extends UntypedActor {
     private final ActorRef workerRouter;
     private final int nrOfWorkers;
 
+    /**
+     * Constructor.
+     * @param nrOfWorkers number of workders
+     */
     public TestPlanActor(final int nrOfWorkers) {
         this.nrOfWorkers = nrOfWorkers;
         workerRouter = this.getContext()
                 .actorOf(new Props(TestPlanWorker.class).withRouter(new RoundRobinRouter(nrOfWorkers)), "workerRouter");
     }
 
+    /**
+     * Override onReceive in UntypedActor.
+     * @see akka.actor.UntypedActor#onReceive(java.lang.Object)
+     */
     @SuppressWarnings("unchecked")
     public void onReceive(final Object message) throws Exception {
         if (message instanceof ResultDto) {
@@ -38,11 +46,18 @@ public class TestPlanActor extends UntypedActor {
         }
     }
 
+    /**
+     * Get the worker router.
+     * @return the worker router
+     */
     public ActorRef getWorkerRouter() {
-
         return workerRouter;
     }
 
+    /**
+     * Get the results.
+     * @return list of results
+     */
     public static List<ResultDto> getResults() {
         if (null == results) {
             results = new ArrayList<ResultDto>();
@@ -50,10 +65,17 @@ public class TestPlanActor extends UntypedActor {
         return results;
     }
 
+    /**
+     * Check it results is null.
+     * @return return true if not null
+     */
     public static boolean isResultsInUse() {
         return (null != results);
     }
 
+    /**
+     * Reset the results to null.
+     */
     public static void resetResults() {
         results = null;
     }

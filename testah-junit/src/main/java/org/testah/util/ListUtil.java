@@ -73,15 +73,15 @@ public class ListUtil {
 
     private static <T> void getAllSublists(List<T> list, int origSize, List<T> sublist, List<List<T>> listOfSubLists) {
         if (sublist.size() < origSize) {
-            for (int iListElem = 0; iListElem < list.size(); iListElem++) {
+            for (int ilistElem = 0; ilistElem < list.size(); ilistElem++) {
                 // create a new list containing all the elements computed so far
                 List<T> newSublist = new ArrayList<T>();
                 newSublist.addAll(sublist);
                 // add an element from the remaining elements
-                newSublist.add(list.get(iListElem));
+                newSublist.add(list.get(ilistElem));
                 listOfSubLists.add(newSublist);
                 // repeat element selection with the ones following the element just selected
-                getAllSublists(list.subList(iListElem + 1, list.size()), origSize, newSublist, listOfSubLists);
+                getAllSublists(list.subList(ilistElem + 1, list.size()), origSize, newSublist, listOfSubLists);
             }
         }
     }

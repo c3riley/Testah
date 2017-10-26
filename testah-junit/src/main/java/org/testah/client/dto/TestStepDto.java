@@ -100,17 +100,28 @@ public class TestStepDto {
     /**
      * Sets the status.
      *
+     * @param status the status
+     * @return the test step dto
+     */
+    public TestStepDto setStatus(final Boolean status) {
+        this.status = status;
+        return this;
+    }
+
+    /**
+     * Sets the status.
+     *
      * @return the test step dto
      */
     public TestStepDto setStatus() {
         for (final StepActionDto e : stepActions) {
-            if (null == e.getStatus()) {
-
-            } else if (e.getStatus() == false) {
-                status = false;
-                return this;
-            } else if (e.getStatus() == true) {
-                status = true;
+            if (null != e.getStatus()) {
+                if (e.getStatus() == false) {
+                    status = false;
+                    return this;
+                } else if (e.getStatus() == true) {
+                    status = true;
+                }
             }
         }
         return this;
@@ -143,17 +154,6 @@ public class TestStepDto {
      */
     public Boolean getStatus() {
         return status;
-    }
-
-    /**
-     * Sets the status.
-     *
-     * @param status the status
-     * @return the test step dto
-     */
-    public TestStepDto setStatus(final Boolean status) {
-        this.status = status;
-        return this;
     }
 
     /**

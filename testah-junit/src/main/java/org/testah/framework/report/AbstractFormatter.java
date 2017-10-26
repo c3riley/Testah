@@ -21,7 +21,7 @@ public abstract class AbstractFormatter {
     /**
      * The Constant DEFAULT_PACKAGE.
      */
-    protected final static String DEFAULT_PACKAGE = "org/testah/templates/";
+    protected static final String DEFAULT_PACKAGE = "org/testah/templates/";
 
     /**
      * The path to template.
@@ -61,6 +61,8 @@ public abstract class AbstractFormatter {
      */
     public abstract VelocityContext getContext(final VelocityContext context);
 
+    public abstract String getBaseReportObject();
+
     /**
      * Gets the report.
      *
@@ -69,8 +71,6 @@ public abstract class AbstractFormatter {
     public String getReport() {
         return getReport(getContextBase());
     }
-
-    public abstract String getBaseReportObject();
 
     /**
      * Gets the report.
@@ -110,7 +110,7 @@ public abstract class AbstractFormatter {
         }
         final int size = TS.getMaskValues().keySet().size();
         return StringUtils.replaceEach(report, TS.getMaskValues().keySet().toArray(new String[size]),
-                TS.getMaskValues().values().toArray(new String[size]));
+            TS.getMaskValues().values().toArray(new String[size]));
     }
 
     /**

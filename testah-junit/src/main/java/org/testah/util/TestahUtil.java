@@ -183,21 +183,21 @@ public class TestahUtil {
     }
 
     /**
-     * Now.
-     *
-     * @return the string
-     */
-    public String now() {
-        return now("MM/dd/yyyy HH:mm:ss.S");
-    }
-
-    /**
      * Now unique.
      *
      * @return the string
      */
     public String nowUnique() {
         return now("MMddyyyyHHmmssS");
+    }
+
+    /**
+     * Now.
+     *
+     * @return the string
+     */
+    public String now() {
+        return now("MM/dd/yyyy HH:mm:ss.S");
     }
 
     /**
@@ -244,16 +244,6 @@ public class TestahUtil {
     }
 
     /**
-     * Download file.
-     *
-     * @param urlToUse the url to use
-     * @return the file
-     */
-    public File downloadFile(final String urlToUse) {
-        return downloadFile(urlToUse, "");
-    }
-
-    /**
      * Create File reference to parent directory of a file download.
      *
      * @param relativePath to download parent directory.
@@ -261,6 +251,17 @@ public class TestahUtil {
      */
     public File getDownloadDestinationDirectory(String relativePath) {
         return new File(Params.addUserDir(relativePath));
+    }
+
+
+    /**
+     * Download file.
+     *
+     * @param urlToUse the url to use
+     * @return the file
+     */
+    public File downloadFile(final String urlToUse) {
+        return downloadFile(urlToUse, "");
     }
 
     /**
@@ -275,6 +276,13 @@ public class TestahUtil {
         return downloadFile(urlToUse, downloadFileDirectory);
     }
 
+    /**
+     * Download file.
+     *
+     * @param urlToUse the url to use
+     * @param destinationDir the target directory
+     * @return the file
+     */
     public File downloadFile(final String urlToUse, final File destinationDir) {
         try {
             TS.log().trace("downloadFileDirectory mkdirs: " + destinationDir.mkdirs());
@@ -327,8 +335,6 @@ public class TestahUtil {
             }
         } catch (final Exception e) {
             TS.log().warn(e);
-        } finally {
-
         }
         return destination;
     }

@@ -41,7 +41,8 @@ public class TestDtoHelper {
      * @return the test plan dto
      */
     public static TestPlanDto fill(TestPlanDto testPlanToFill, final TestPlan fillFromTestPlan,
-                                   final KnownProblem knownProblemFillFrom) {
+                                   final KnownProblem knownProblemFillFrom)
+    {
         if (null == testPlanToFill) {
             testPlanToFill = new TestPlanDto();
         }
@@ -67,6 +68,25 @@ public class TestDtoHelper {
     /**
      * Fill.
      *
+     * @param runInfo the run info
+     * @return the run info dto
+     */
+    public static RunInfoDto fill(RunInfoDto runInfo) {
+        if (null == runInfo) {
+            runInfo = new RunInfoDto();
+        }
+        runInfo.setRunId(System.getProperty("testah.runId", TS.params().getRunInfo_runId()));
+        runInfo.setRunLocation(System.getProperty("testah.runLocation", TS.params().getRunLocation()));
+        runInfo.setBuildNumber(System.getProperty("testah.buildNumber", TS.params().getRunInfo_buildNumber()));
+        runInfo.setRunType(System.getProperty("testah.runType", TS.params().getRunType()));
+        runInfo.setVersionId(System.getProperty("testah.versionId", TS.params().getRunInfo_versionId()));
+        return runInfo;
+
+    }
+
+    /**
+     * Fill.
+     *
      * @param testCaseToFill       the test case to fill
      * @param fillFromTestCase     the fill from test case
      * @param knownProblemFillFrom the known problem fill from
@@ -74,7 +94,8 @@ public class TestDtoHelper {
      * @return the test case dto
      */
     public static TestCaseDto fill(TestCaseDto testCaseToFill, final TestCase fillFromTestCase,
-                                   final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
+                                   final KnownProblem knownProblemFillFrom, final TestPlan tpMeta)
+    {
         if (null == testCaseToFill) {
             testCaseToFill = new TestCaseDto();
         }
@@ -147,7 +168,8 @@ public class TestDtoHelper {
      * @return the test plan dto
      */
     public static TestPlanDto createTestPlanDto(final Description desc, final TestPlan meta,
-                                                final KnownProblem knownProblemFillFrom) {
+                                                final KnownProblem knownProblemFillFrom)
+    {
         TestPlanDto testPlanToFill = new TestPlanDto();
         if (null == meta || null == meta.name() || meta.name().length() == 0) {
             testPlanToFill.setName(desc.getClassName());
@@ -170,7 +192,8 @@ public class TestDtoHelper {
      * @return the test plan dto
      */
     public static TestPlanDto createTestPlanDto(final Class<?> testPlanClass, final TestPlan meta,
-                                                final KnownProblem knownProblemFillFrom) {
+                                                final KnownProblem knownProblemFillFrom)
+    {
         TestPlanDto testPlanToFill = new TestPlanDto();
         if (null == meta || null == meta.name() || meta.name().length() == 0) {
             testPlanToFill.setName(testPlanClass.getName());
@@ -194,7 +217,8 @@ public class TestDtoHelper {
      * @return the test case dto
      */
     public static TestCaseDto createTestCaseDto(final Description desc, final TestCase meta,
-                                                final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
+                                                final KnownProblem knownProblemFillFrom, final TestPlan tpMeta)
+    {
         TestCaseDto testCaseToFill = new TestCaseDto();
         if (null == meta || null == meta.name() || meta.name().length() == 0) {
             testCaseToFill.setName(desc.getMethodName());
@@ -219,7 +243,8 @@ public class TestDtoHelper {
      * @return the test case dto
      */
     public static TestCaseDto createTestCaseDto(final String testPlanClass, final String testCaseMethod,
-                                                final TestCase meta, final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
+                                                final TestCase meta, final KnownProblem knownProblemFillFrom, final TestPlan tpMeta)
+    {
         TestCaseDto testCaseToFill = new TestCaseDto();
         if (null == meta || null == meta.name() || meta.name().length() == 0) {
             testCaseToFill.setName(testCaseMethod);
@@ -241,24 +266,4 @@ public class TestDtoHelper {
     public static RunInfoDto createRunInfo() {
         return fill(new RunInfoDto());
     }
-
-    /**
-     * Fill.
-     *
-     * @param runInfo the run info
-     * @return the run info dto
-     */
-    public static RunInfoDto fill(RunInfoDto runInfo) {
-        if (null == runInfo) {
-            runInfo = new RunInfoDto();
-        }
-        runInfo.setRunId(System.getProperty("testah.runId", TS.params().getRunInfo_runId()));
-        runInfo.setRunLocation(System.getProperty("testah.runLocation", TS.params().getRunLocation()));
-        runInfo.setBuildNumber(System.getProperty("testah.buildNumber", TS.params().getRunInfo_buildNumber()));
-        runInfo.setRunType(System.getProperty("testah.runType", TS.params().getRunType()));
-        runInfo.setVersionId(System.getProperty("testah.versionId", TS.params().getRunInfo_versionId()));
-        return runInfo;
-
-    }
-
 }

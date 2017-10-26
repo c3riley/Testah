@@ -122,7 +122,8 @@ public class SshUtil {
      * @throws JSchException the j sch exception
      */
     public Session getSession(final String username, final String host, final int port, final String password)
-            throws JSchException {
+        throws JSchException
+    {
         final Session session = jsch.getSession(username, host, port);
         session.setServerAliveInterval(120 * 1000);
         session.setServerAliveCountMax(1000);
@@ -140,7 +141,8 @@ public class SshUtil {
     }
 
     public String runShell(final Session session, final String... commands)
-            throws JSchException, IOException, InterruptedException {
+        throws JSchException, IOException, InterruptedException
+    {
         return runShellRtnInfo(session, commands).getOutput().toString();
 
     }
@@ -156,7 +158,8 @@ public class SshUtil {
      * @throws InterruptedException the interrupted exception
      */
     public ShellInfoDto runShellRtnInfo(final Session session, final String... commands)
-            throws JSchException, IOException, InterruptedException {
+        throws JSchException, IOException, InterruptedException
+    {
         ShellInfoDto info = new ShellInfoDto();
         this.lastExitCode = LAST_EXIT_CODE_DEFAULT;
         if (!session.isConnected()) {
@@ -249,7 +252,8 @@ public class SshUtil {
      * @throws InterruptedException the interrupted exception
      */
     public HashMap<Integer, List<String>> runShellEnhanced(final Session session, final String... commands)
-            throws JSchException, IOException, InterruptedException {
+        throws JSchException, IOException, InterruptedException
+    {
         final HashMap<Integer, List<String>> outputHash = new HashMap<>();
         final List<String> commandList = new ArrayList<>();
         int ctr = 0;
@@ -287,7 +291,8 @@ public class SshUtil {
      * @return the output lines for command
      */
     public List<String> getOutputLinesForCommand(final String command,
-                                                 final HashMap<Integer, List<String>> outputHash) {
+                                                 final HashMap<Integer, List<String>> outputHash)
+    {
         final List<String> lst = new ArrayList<>();
         if (null != command && null != outputHash && !outputHash.isEmpty()) {
             outputHash.forEach((key, value) -> {
@@ -496,6 +501,7 @@ public class SshUtil {
                 try {
                     Thread.sleep(1000);
                 } catch (final Exception ee) {
+                    TS.log().info("Swallowed Interrupted exception in SshUtil.runExec()");
                 }
             }
             channel.disconnect();

@@ -175,15 +175,26 @@ public class TestCaseDto {
      */
     public TestCaseDto setStatus() {
         for (final TestStepDto e : testSteps) {
-            if (null == e.getStatus()) {
-
-            } else if (e.getStatus() == false) {
-                status = false;
-                return this;
-            } else if (e.getStatus() == true) {
-                status = true;
+            if (null != e.getStatus()) {
+                if (e.getStatus() == false) {
+                    status = false;
+                    return this;
+                } else if (e.getStatus() == true) {
+                    status = true;
+                }
             }
         }
+        return this;
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @param status the status
+     * @return the test case dto
+     */
+    public TestCaseDto setStatus(final Boolean status) {
+        this.status = status;
         return this;
     }
 
@@ -237,17 +248,6 @@ public class TestCaseDto {
     }
 
     /**
-     * Sets the status.
-     *
-     * @param status the status
-     * @return the test case dto
-     */
-    public TestCaseDto setStatus(final Boolean status) {
-        this.status = status;
-        return this;
-    }
-
-    /**
      * Gets the exceptions.
      *
      * @return the exceptions
@@ -278,8 +278,8 @@ public class TestCaseDto {
 
     /**
      * Gets the assertion error.
-     * <p>
-     * throws Assertion Error for Errors in the steps
+     * 
+     * <p>throws Assertion Error for Errors in the steps
      */
     @JsonIgnore
     public void getAssertionError() {
