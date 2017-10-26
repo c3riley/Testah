@@ -1,15 +1,16 @@
 package org.testah.runner.performance;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.testah.TS;
-import org.testah.driver.http.requests.GetRequestDto;
+import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.report.performance.dto.ChunkStats;
 import org.testah.runner.HttpAkkaRunner;
 import org.testah.runner.http.load.HttpAkkaStats;
 
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractLongRunningTest {
 
@@ -28,9 +29,9 @@ public abstract class AbstractLongRunningTest {
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
         while (System.currentTimeMillis() < runProps.getStopTime()) {
-            List<ConcurrentLinkedQueue<GetRequestDto>> concurrentLinkedQueues =
+            List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues =
                 loadTestDataGenerator.generateRequests(runProps.getChunkSize(), runProps.getNumberOfChunks());
-            for (ConcurrentLinkedQueue<GetRequestDto> concurrentLinkedQueue : concurrentLinkedQueues) {
+            for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues) {
                 try {
                     responses = akkaRunner.runAndReport(runProps.getNumberOfAkkaThreads(), concurrentLinkedQueue, runProps.isVerbose());
                     HttpAkkaStats stats = new HttpAkkaStats(responses);
