@@ -1,5 +1,7 @@
 package org.testah.driver.http.response;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -20,8 +22,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
 /**
  * The Class ResponseDto.
@@ -130,8 +130,8 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public ResponseDto assertResponseBodyContains(final String expectedContents) {
         TS.asserts().notNull("assertResponseBodyContains", responseBody);
-        TS.asserts().isTrue("assertResponseBodyContains responseBody[" + responseBody + "] expected to contain[" +
-                expectedContents + "]", responseBody.contains(expectedContents));
+        TS.asserts().isTrue("assertResponseBodyContains responseBody[" + responseBody + "] expected to contain["
+            + expectedContents + "]", responseBody.contains(expectedContents));
         return this;
     }
 
@@ -160,6 +160,20 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public String getResponseBody() {
         return responseBody;
+    }
+
+    /**
+     * Gets the response body.
+     *
+     * @param escape the escape
+     * @return the response body
+     */
+    public String getResponseBody(final boolean escape) {
+        if (escape) {
+            return escapeHtml(getResponseBody());
+        } else {
+            return getResponseBody();
+        }
     }
 
     /**
@@ -208,7 +222,8 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public File saveToFile(final File downloadFile) throws IOException {
         try (
-                FileOutputStream fileOuputStream = new FileOutputStream(downloadFile)) {
+            FileOutputStream fileOuputStream = new FileOutputStream(downloadFile))
+        {
             fileOuputStream.write(this.getResponseBytes());
             return downloadFile;
         }
@@ -425,36 +440,23 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @return the step action dto
      */
     public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapdeBody,
-                                                final int truncate) {
+                                                final int truncate)
+    {
         StepActionDto stepAction = null;
         if (shortResponseBody) {
             stepAction = StepAction
-                    .createInfo(this.getRequestType() + " - Uri: " + getUrl(),
-                            "Status: " + getStatusCode() + " [ " + getStatusText() + " ]",
-                            StringUtils.abbreviate(getResponseBody(escapdeBody), truncate), false)
-                    .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+                .createInfo(this.getRequestType() + " - Uri: " + getUrl(),
+                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]",
+                    StringUtils.abbreviate(getResponseBody(escapdeBody), truncate), false)
+                .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         } else {
             stepAction = StepAction.createInfo(this.getRequestType() + " - Uri: " + getUrl(),
-                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapdeBody), false)
-                    .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+                "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapdeBody), false)
+                .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
 
         }
         print(shortResponseBody, truncate);
         return stepAction;
-    }
-
-    /**
-     * Gets the response body.
-     *
-     * @param escape the escape
-     * @return the response body
-     */
-    public String getResponseBody(final boolean escape) {
-        if (escape) {
-            return escapeHtml(getResponseBody());
-        } else {
-            return getResponseBody();
-        }
     }
 
     /**
@@ -478,7 +480,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public String toStringStatus() {
         return new StringBuilder("Uri:").append(getUrl()).append("\nStatus: ").append(statusCode).append(" [ ")
-                .append(statusText).append(" ]").toString();
+            .append(statusText).append(" ]").toString();
     }
 
     /**
@@ -588,10 +590,21 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         return this;
     }
 
+    /**
+     * Get value of header.
+     *
+     * @param name header name.
+     * @return value of header
+     */
     public String getHeaderValue(final String name) {
         return getHeaderHash().get(name);
     }
 
+    /**
+     * Get the headers as a map.
+     *
+     * @return header map
+     */
     public HashMap<String, String> getHeaderHash() {
         if (null == headerHash) {
             this.headerHash = new HashMap<>();

@@ -293,7 +293,7 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto> {
     }
 
     /**
-     * add report path by report type
+     * Add report path by report type.
      *
      * @param reportType     runtype report string [html,json,xml,txt]
      * @param reportFilePath report file path

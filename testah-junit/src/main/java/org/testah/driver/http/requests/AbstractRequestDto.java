@@ -1,5 +1,8 @@
 package org.testah.driver.http.requests;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+import static org.apache.http.HttpStatus.SC_OK;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
@@ -26,9 +29,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
-import static org.apache.http.HttpStatus.SC_OK;
 
 /**
  * The Class AbstractRequestDto.
@@ -419,12 +419,12 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         return getSelf();
     }
 
-    protected abstract T setEntity(final HttpEntity payload);
-
     public T setPayload(final byte[] payload) {
         setContentType("application/octet-stream");
         return setPayload(new ByteArrayEntity(payload));
     }
+
+    protected abstract T setEntity(final HttpEntity payload);
 
     /**
      * Gets the payload string.

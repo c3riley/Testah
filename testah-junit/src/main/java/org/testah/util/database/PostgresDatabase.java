@@ -16,34 +16,68 @@ import java.util.List;
 
 public class PostgresDatabase extends AbstractDatabaseUtil {
 
+    /**
+     * Constructor.
+     * @param databaseName name of database
+     * @param host host name
+     * @param port database part
+     * @param dbUser db user name
+     * @param dbPassword db password
+     */
     public PostgresDatabase(final String databaseName, final String host, final int port, final String dbUser,
-                            final String dbPassword) {
+                            final String dbPassword)
+    {
         super(databaseName, host, port, dbUser, dbPassword);
     }
 
+    /**
+     *  Get the database connection.
+     * @see org.testah.util.database.AbstractDatabaseUtil#getConnection()
+     */
     public Connection getConnection() throws SQLException {
         Connection connection = null;
         connection = DriverManager.getConnection(getConnectionString(), getDbUser(), getDbPassword());
         return connection;
     }
 
+    /**
+     * Check if driver is loaded.
+     * @see org.testah.util.database.AbstractDatabaseUtil#isDriverLoaded()
+     */
     public boolean isDriverLoaded() throws Exception {
         Class.forName("org.postgresql.Driver");
         return true;
     }
 
+    /* (non-Javadoc)
+     * @see org.testah.util.database.AbstractDatabaseUtil#getConnectionString()
+     */
     public String getConnectionString() {
         return "jdbc:postgresql://" + getHost() + ":" + getPort() + "/" + getDatabaseName();
     }
 
+    /**
+     * Execute SQL query.
+     * @param sql the SQL query string
+     * @return the SQL response as a map
+     * @throws SQLException query execution fails
+     */
     public List<HashMap<String, Object>> execuateSelectSql(final String sql) throws SQLException {
         try (Connection conn = getConnection()) {
             return execuateSelectSql(sql, conn);
         }
     }
 
+    /**
+     * Execute SQL query.
+     * @param sql the SQL query string
+     * @param conn database connection
+     * @return the SQL response as a map
+     * @throws SQLException query execution fails
+     */
     public List<HashMap<String, Object>> execuateSelectSql(final String sql, final Connection conn)
-            throws SQLException {
+        throws SQLException
+    {
         if (null == sql || !sql.toLowerCase().startsWith("select")) {
             throw new RuntimeException("execuateSelectSql can only use Select sql statement!");
         }
@@ -57,8 +91,8 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
 
                 while (rs.next()) {
                     final HashMap<String, Object> row = new HashMap<>(columns);
-                    for (int i = 1; i <= columns; ++i) {
-                        row.put(md.getColumnName(i), rs.getObject(i));
+                    for (int icolumn = 1; icolumn <= columns; ++icolumn) {
+                        row.put(md.getColumnName(icolumn), rs.getObject(icolumn));
                     }
                     values.add(row);
                 }
@@ -67,12 +101,25 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
         return values;
     }
 
+    /**
+     * Execute SQL query.
+     * @param sql the SQL query string
+     * @return the SQL response
+     * @throws SQLException query execution fails
+     */
     public SqlExecutionDto getSqlPerformance(final String sql) throws SQLException {
         try (Connection conn = getConnection()) {
             return getSqlPerformance(sql, conn);
         }
     }
 
+    /**
+     * Execute SQL query.
+     * @param sql the SQL query string
+     * @param conn database connection
+     * @return the SQL response
+     * @throws SQLException query execution fails
+     */
     public SqlExecutionDto getSqlPerformance(final String sql, final Connection conn) throws SQLException {
         final SqlExecutionDto perf = new SqlExecutionDto(sql);
 

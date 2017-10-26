@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
 
-    private final static String DRIVER_PATH_VAR = "webdriver.gecko.driver";
+    private static final String DRIVER_PATH_VAR = "webdriver.gecko.driver";
 
     /*
      * (non-Javadoc)
@@ -62,7 +62,7 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
         }
         profile.setPreference("browser.download.folderList", 2);
         profile.setPreference("browser.helperApps.neverAsk.saveToDisk",
-                "text/csv;application/pdf;application/vnd.ms-excelapplication/txt;application/txt;");
+            "text/csv;application/pdf;application/vnd.ms-excelapplication/txt;application/txt;");
         profile.setPreference("pdfjs.disabled", true);
         profile.setPreference("pdfjs.firstRun", false);
         profile.setPreference("dom.max_script_run_time", 0);
@@ -70,9 +70,10 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
         capabilities.setCapability(FirefoxDriver.PROFILE, profile);
         capabilities.setCapability("elementScrollBehavior", 1);
         if (null != TS.params().getWebDriver_firefoxDriverBinary()
-                && TS.params().getWebDriver_firefoxDriverBinary().length() > 0) {
+            && TS.params().getWebDriver_firefoxDriverBinary().length() > 0)
+        {
             capabilities.setCapability(FirefoxDriver.BINARY,
-                    new FirefoxBinary(new File(TS.params().getWebDriver_firefoxDriverBinary())));
+                new FirefoxBinary(new File(TS.params().getWebDriver_firefoxDriverBinary())));
         }
         return capabilities;
     }

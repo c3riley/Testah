@@ -75,7 +75,7 @@ public class ParamLoader {
      *
      * @return the params
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings( {"unchecked", "rawtypes"})
     public Params loadParamValues() {
 
         final Params params = new Params();
@@ -162,8 +162,8 @@ public class ParamLoader {
                                 field.setBoolean(params, Boolean.parseBoolean((String) propValue));
                             } else if (field.getType().isAssignableFrom(HashMap.class)) {
                                 field.set(params, mapper.readValue((String) propValue,
-                                        new TypeReference<HashMap<String, String>>() {
-                                        }));
+                                    new TypeReference<HashMap<String, String>>() {
+                                    }));
                             } else if (field.getType().isAssignableFrom(Boolean.class)) {
                                 TS.log().info(field.getName());
                                 if (0 == propValue.toString().trim().length()) {
@@ -192,7 +192,7 @@ public class ParamLoader {
                 }
             } else {
                 TS.log().warn("Issue loading custom properties[" + f.getAbsolutePath()
-                        + "] - was not found, will create one for the next runs use");
+                    + "] - was not found, will create one for the next runs use");
                 try {
                     paramsFromProperties.save(f);
                 } catch (final Exception e) {
@@ -206,10 +206,17 @@ public class ParamLoader {
         return params;
     }
 
+    /**
+     * Set properties from file whose location is stored in local.properties.
+     */
     public void injectLocalProperties() {
         injectLocalProperties(new File(Params.addUserDir("local.properties")));
     }
 
+    /**
+     * Set system properties from file.
+     * @param localPropFile file with system properties
+     */
     public void injectLocalProperties(final File localPropFile) {
         try {
             if (localPropFile.exists()) {
@@ -269,19 +276,18 @@ public class ParamLoader {
         final PropertiesConfiguration defaultConfig = new PropertiesConfiguration();
         final PropertiesConfigurationLayout layout = defaultConfig.getLayout();
         layout.setHeaderComment(Cli.BAR_LONG + "\nTestah Properties - version: " + Cli.version + " - File Created: "
-                + TS.util().now()
-                + "\nNo values are required. Leaving a key empty will not use the value, turning the property off."
-                + "\n" + Cli.BAR_LONG);
+            + TS.util().now()
+            + "\nNo values are required. Leaving a key empty will not use the value, turning the property off."
+            + "\n" + Cli.BAR_LONG);
         boolean accessible;
         final Params params = new Params();
         Comment comment = null;
         String propName = null;
         String commentValue = null;
         for (final Field f : Params.class.getDeclaredFields()) {
-            if(f.getName().equals(excludeJacocoInstrumentation)) {
+            if (f.getName().equals(excludeJacocoInstrumentation)) {
                 TS.log().info("Skipping field " + f.getName());
-            }
-            else {
+            } else {
                 accessible = f.isAccessible();
                 try {
                     f.setAccessible(true);
