@@ -76,8 +76,7 @@ public class TestHttpAkkaRunner {
             TS.asserts().isTrue(stats.getStatsDuration().getPercentile(90.0) > 0);
         });
 
-
-        Pattern pattern= Pattern.compile(regexString);
+        Pattern pattern = Pattern.compile(regexString);
         Set<String> responseValues = new HashSet<>();
         for (ResponseDto response : responses) {
             Matcher matcher = pattern.matcher(response.getResponseBody().replaceAll("\\s", ""));

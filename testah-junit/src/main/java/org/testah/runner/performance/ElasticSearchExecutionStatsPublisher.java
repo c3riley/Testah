@@ -1,5 +1,8 @@
 package org.testah.runner.performance;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.testah.TS;
 import org.testah.driver.http.requests.PostRequestDto;
 import org.testah.framework.report.performance.dto.ChunkStats;
@@ -12,6 +15,7 @@ public class ElasticSearchExecutionStatsPublisher implements ExecutionStatsPubli
     private String password;
     private String index;
     private Boolean verbose = false;
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     /**
      * Constructor.
@@ -98,5 +102,14 @@ public class ElasticSearchExecutionStatsPublisher implements ExecutionStatsPubli
     public ElasticSearchExecutionStatsPublisher setIndex(String index) {
         this.index = index;
         return this;
+    }
+
+    /**
+     * Get the LocalDateTime as a String formatted so that Elasticsearch recognizes it as time stamp.
+     * @param dateTime the LocalDateTime object
+     * @return LocalDateTime as string
+     */
+    public static String getDateTimeString(LocalDateTime dateTime) {
+        return dateTime.format(dateTimeFormatter);
     }
 }
