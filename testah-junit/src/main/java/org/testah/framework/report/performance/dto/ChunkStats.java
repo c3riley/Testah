@@ -1,18 +1,17 @@
 package org.testah.framework.report.performance.dto;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.testah.runner.http.load.HttpAkkaStats;
-import org.testah.runner.performance.TestRunProperties;
-
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.testah.runner.http.load.HttpAkkaStats;
+import org.testah.runner.performance.ElasticSearchExecutionStatsPublisher;
+import org.testah.runner.performance.TestRunProperties;
+
 public class ChunkStats {
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     private String testClass;
     private String testMethod;
@@ -30,7 +29,7 @@ public class ChunkStats {
      * @param stats    overall execution data for a chunk of requests
      */
     public ChunkStats(TestRunProperties runProps, HttpAkkaStats stats) {
-        setTimeStamp(LocalDateTime.now().format(dateTimeFormatter));
+        setTimeStamp(ElasticSearchExecutionStatsPublisher.getDateTimeString(LocalDateTime.now()));
         setServiceName(runProps.getServiceUnderTest());
         setClassName(runProps.getTestClass());
         setMethodName(runProps.getTestMethod());
