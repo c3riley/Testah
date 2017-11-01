@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 
 /**
  * The Class AbstractFormatter.
@@ -134,7 +135,7 @@ public abstract class AbstractFormatter {
     public AbstractFormatter createReport(final String reportName, final String directory) {
         try {
             reportFile = new File(directory, reportName);
-            FileUtils.writeStringToFile(reportFile, getReport());
+            FileUtils.writeStringToFile(reportFile, getReport(), Charset.forName("UTF-8"));
         } catch (final IOException e) {
             TS.log().error("issue creating report: " + reportName, e);
         }

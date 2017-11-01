@@ -462,7 +462,7 @@ public class TestFilter {
                 final List<File> files = new ArrayList<>();
                 try (
                     final GroovyClassLoader loader =
-                        (GroovyClassLoader) AccessController.doPrivileged(new PrivilegedAction() {
+                        (GroovyClassLoader) AccessController.doPrivileged(new PrivilegedAction<Object>() {
                             final ClassLoader parent = this.getClass().getClassLoader();
 
                             public Object run() {

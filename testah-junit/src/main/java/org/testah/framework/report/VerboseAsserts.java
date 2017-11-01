@@ -898,8 +898,7 @@ public class VerboseAsserts {
      * @param expected expected object
      * @param matcher Hamcrest matcher
      */
-    @SuppressWarnings("unchecked")
-    public void assertThat(final String message, final Object expected, final Matcher matcher) {
+    public void assertThat(final String message, final Object expected, final Matcher<Object> matcher) {
         try {
             MatcherAssert.assertThat(message, expected, matcher);
         } catch (AssertionError e) {
@@ -915,7 +914,7 @@ public class VerboseAsserts {
      * @param expected expected object
      * @param matcher Hamcrest matcher
      */
-    public void assertThat(final Object expected, final Matcher matcher) {
+    public void assertThat(final Object expected, final Matcher<Object> matcher) {
         assertThat("", expected, matcher);
     }
 

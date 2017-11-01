@@ -26,6 +26,7 @@ import org.testah.runner.TestahJUnitRunner;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class Cli {
     /**
      * The Constant version.
      */
-    public static final String version = "0.9.14";
+    public static final String version = "0.9.15";
 
     /**
      * The Constant BAR_LONG.
@@ -310,7 +311,7 @@ public class Cli {
             resultObject = testPlans;
         }
 
-        FileUtils.writeStringToFile(results, TS.util().toJson(resultObject));
+        FileUtils.writeStringToFile(results, TS.util().toJson(resultObject), Charset.forName("UTF-8"));
         TS.log().info("Query Results: Found[" + getTestPlanFilter().getTestClassesMetFilters().size() + "] "
             + results.getAbsolutePath());
 

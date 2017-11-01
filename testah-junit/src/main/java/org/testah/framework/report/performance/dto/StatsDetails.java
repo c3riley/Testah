@@ -1,13 +1,12 @@
 package org.testah.framework.report.performance.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.testah.runner.http.load.HttpAkkaStats;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder( {"count", "mean", "pct90", "std", "elapsed", "short", "long"})
 public class StatsDetails {
 
     private static final double percentile90 = 90.0;

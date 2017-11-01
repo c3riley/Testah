@@ -63,7 +63,6 @@ public abstract class AbstractBrowser<T> {
      *
      * @return the self
      */
-    @SuppressWarnings("unchecked")
     protected AbstractBrowser<T> getSelf() {
         return this;
     }
