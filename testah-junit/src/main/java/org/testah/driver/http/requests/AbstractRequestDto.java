@@ -260,6 +260,17 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * Sets the basic auth credentials.
      *
+     * @param userName the user name
+     * @param password the password
+     * @return the abstract http wrapper
+     */
+    public T setBasicAuthCredentials(final String userName, final String password) {
+        return setBasicAuthCredentials(userName, password, AuthScope.ANY);
+    }
+
+    /**
+     * Sets the basic auth credentials.
+     *
      * @param userName  the user name
      * @param password  the password
      * @param authScope the auth scope
@@ -313,17 +324,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         TS.addMask(userName);
         TS.addMask(password);
         return addBasicAuthHeader(userName, password);
-    }
-
-    /**
-     * Sets the basic auth credentials.
-     *
-     * @param userName the user name
-     * @param password the password
-     * @return the abstract http wrapper
-     */
-    public T setBasicAuthCredentials(final String userName, final String password) {
-        return setBasicAuthCredentials(userName, password, AuthScope.ANY);
     }
 
     /**
@@ -540,7 +540,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     public T setUploadFile(final String payload) throws IOException {
         File file = new File(payload);
         TS.asserts().assertFileExists(file);
-        return setUpload(FileUtils.readFileToString(file).getBytes(Charset.forName("UTF-8")));
+        return setUpload(FileUtils.readFileToString(file, Charset.forName("UTF-8")));
     }
 
     /**
@@ -552,7 +552,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      */
     public T setUploadFile(final File payload) throws IOException {
         TS.asserts().assertFileExists(payload);
-        return setUpload(FileUtils.readFileToString(payload).getBytes(Charset.forName("UTF-8")));
+        return setUpload(FileUtils.readFileToString(payload, Charset.forName("UTF-8")));
     }
 
     /**

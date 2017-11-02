@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 public class ParamsTest {
 
@@ -27,12 +28,12 @@ public class ParamsTest {
 
     @Test
     public void injectLocalPropertiesTest() throws IOException {
-        ParamLoader paramLoader = new ParamLoader();
+        final ParamLoader paramLoader = new ParamLoader();
         Assert.assertEquals("NaN", System.getProperty("PROP_TEST_AA1", "NaN"));
         Assert.assertEquals("NaN", System.getProperty("PROP_TEST_AA2", "NaN"));
 
         File temp = File.createTempFile("local", ".properties");
-        FileUtils.writeStringToFile(temp, "PROP_TEST_AA1=hello\nPROP_TEST_AA2=world");
+        FileUtils.writeStringToFile(temp, "PROP_TEST_AA1=hello\nPROP_TEST_AA2=world", Charset.forName("UTF-8"));
         temp.deleteOnExit();
 
         paramLoader.injectLocalProperties(temp);

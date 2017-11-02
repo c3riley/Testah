@@ -26,7 +26,7 @@ public class TestFilterRunTypeTest {
 
     @Test
     public void testFilterTestCaseRunType() {
-        TestFilter filter = new TestFilter();
+        final TestFilter filter = new TestFilter();
         TestCaseDto meta = new TestCaseDto().setRunTypes(new ArrayList<String>());
         TS.params().setFilterByTestType(null);
         meta.getRunTypes().add("TEST_RunType");
@@ -58,31 +58,32 @@ public class TestFilterRunTypeTest {
         testFilterMyRunType(1, 1, 0, 1, TestPlanWithManyRunTypes.class);
 
         testFilterMyRunType(5, 5, 3, 2, TestPlanWithRunType.class, TestPlanWithManyRunTypes.class,
-                TestPlanWithRunTypeDefault.class, TestPlanWithRunTypeEmpty.class,
-                TestPlanWithRunTypeEmptyString.class);
+            TestPlanWithRunTypeDefault.class, TestPlanWithRunTypeEmpty.class,
+            TestPlanWithRunTypeEmptyString.class);
 
     }
 
     private void testFilterMyRunType(final int expectedTest1, final int expectedTest2, final int expectedTest3,
-                                     final int expectedTest4, final Class<?>... classesToAdd) {
-        TestFilter filter = new TestFilter();
+                                     final int expectedTest4, final Class<?>... classesToAdd)
+    {
+        final TestFilter filter = new TestFilter();
         Set<Class<?>> classes = ImmutableSet.copyOf(Arrays.asList(classesToAdd));
 
         TS.params().setFilterByRunType(null);
         Assert.assertEquals(expectedTest1, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-                .size());
+            .size());
 
         TS.params().setFilterByRunType("");
         Assert.assertEquals(expectedTest2, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-                .size());
+            .size());
 
         TS.params().setFilterByRunType("~TEST_RunType");
         Assert.assertEquals(expectedTest3, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-                .size());
+            .size());
 
         TS.params().setFilterByRunType("TEST_RunType");
         Assert.assertEquals(expectedTest4, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-                .size());
+            .size());
     }
 
     @After

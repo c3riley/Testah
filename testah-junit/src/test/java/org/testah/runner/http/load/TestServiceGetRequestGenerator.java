@@ -1,5 +1,7 @@
 package org.testah.runner.http.load;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -36,5 +38,10 @@ public class TestServiceGetRequestGenerator extends TestServiceClient implements
             concurrentLinkedQueues.add(new ConcurrentLinkedQueue<AbstractRequestDto<?>>(getRequestSublist));
         }
         return concurrentLinkedQueues;
+    }
+
+    @Override
+    public String getDomain() throws MalformedURLException {
+        return new URL(getUrlGet(200)).getHost();
     }
 }

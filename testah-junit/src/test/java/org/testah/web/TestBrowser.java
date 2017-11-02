@@ -31,7 +31,7 @@ public class TestBrowser extends BrowserTestPlan {
 
     @TestCase
     @Test
-    public void TestPageTitle() {
+    public void testPageTitle() {
         TS.browser().getWebElement(By.name("q"), 30).waitTillIsDisplayed();
         TS.browser().waitForTitle(baseTitle, 20);
         TS.asserts().equalsTo(baseTitle, TS.browser().getTitle());
@@ -40,14 +40,14 @@ public class TestBrowser extends BrowserTestPlan {
 
     @TestCase
     @Test
-    public void TestPageUtl() {
+    public void testPageUtl() {
         TS.asserts().equalsTo(baseUrl, TS.browser().getUrl());
         TS.browser().assertUrl(baseUrl);
     }
 
     @TestCase
     @Test
-    public void TestScreenShot() {
+    public void testScreenShot() {
         final String screenshot = TS.browser().takeScreenShot();
         final File f = new File(TS.params().getOutput(), screenshot);
         TS.asserts().notNull(f);
@@ -62,21 +62,21 @@ public class TestBrowser extends BrowserTestPlan {
 
     @TestCase
     @Test
-    public void TestGetDriver() {
+    public void testGetDriver() {
         TS.asserts().notNull(TS.browser().getDriver());
         TS.asserts().equalsTo(baseTitle, TS.browser().getDriver().getTitle());
     }
 
     @TestCase
     @Test
-    public void TestGetJavaScriptValue() {
+    public void testGetJavaScriptValue() {
         final String rtn = TS.browser().getJavaScriptValue("return 'cool';");
         TS.asserts().equalsTo(rtn, "cool");
     }
 
     @TestCase
     @Test
-    public void TestElementWaitTime() {
+    public void testElementWaitTime() {
         final int rtn = TS.browser().getElementWaitTime();
         TS.asserts().equalsTo(10, rtn);
         TS.browser().setElementWaitTime(2);
@@ -86,7 +86,7 @@ public class TestBrowser extends BrowserTestPlan {
 
     @TestCase
     @Test
-    public void TestGetCapabilities() {
+    public void testGetCapabilities() {
         TS.asserts().notNull(TS.browser().getCapabilities());
         TS.asserts().equalsTo(BrowserType.getBrowserType(TS.browser().getCapabilities().getBrowserName()),
                 TS.params().getBrowser());
@@ -94,7 +94,7 @@ public class TestBrowser extends BrowserTestPlan {
 
     @TestCase
     @Test
-    public void TestWebElements() {
+    public void testWebElements() {
         final List<AbstractWebElementWrapper> lst = TS.browser().getWebElements(By.id("hplogo"));
         TS.asserts().notNull(lst);
         TS.asserts().equalsTo(1, lst.size());
@@ -106,7 +106,7 @@ public class TestBrowser extends BrowserTestPlan {
 
     @TestCase
     @Test
-    public void TestWebElement() {
+    public void testWebElement() {
         final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("hplogo"));
         TS.asserts().notNull(e);
         TS.asserts().equalsTo(By.id("hplogo"), e.getBy());

@@ -20,19 +20,23 @@ public class HttpAkkaStats {
     private DescriptiveStatistics statsDuration = new DescriptiveStatistics();
     private Map<Integer, DescriptiveStatistics> statsDurationPerStatus = new HashMap<>();
 
+    /**
+     * Constructor. Takes the provided responses to generate execution statistics.
+     * @param responses list of service responses
+     */
     public HttpAkkaStats(final List<ResponseDto> responses) {
         this.totalResponses = responses.size();
         statsDuration = new DescriptiveStatistics();
         statsDurationPerStatus = new HashMap<>();
 
-        for (final ResponseDto r : responses) {
-            statsDuration.addValue(r.getDuration());
-            if (!statsDurationPerStatus.keySet().contains(r.getStatusCode())) {
-                statsDurationPerStatus.put(r.getStatusCode(), new DescriptiveStatistics());
+        for (final ResponseDto response : responses) {
+            statsDuration.addValue(response.getDuration());
+            if (!statsDurationPerStatus.keySet().contains(response.getStatusCode())) {
+                statsDurationPerStatus.put(response.getStatusCode(), new DescriptiveStatistics());
             }
-            statsDurationPerStatus.get(r.getStatusCode()).addValue(r.getDuration());
-            setStartTime(r.getStart());
-            setEndTime(r.getEnd());
+            statsDurationPerStatus.get(response.getStatusCode()).addValue(response.getDuration());
+            setStartTime(response.getStart());
+            setEndTime(response.getEnd());
         }
         duration = (endTime - startTime);
     }

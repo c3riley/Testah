@@ -17,7 +17,6 @@ public class Log {
      * The logger.
      */
     private static Log LOGGER;
-    private static ThreadLocal<Log> _LOGGER;
 
     /**
      * The logger.
