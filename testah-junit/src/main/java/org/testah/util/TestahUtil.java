@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -401,7 +402,7 @@ public class TestahUtil {
      */
     public String getResourceAsString(final String path) {
         try (InputStream is = getClass().getResourceAsStream(path)) {
-            return IOUtils.toString(is);
+            return IOUtils.toString(is, Charset.forName("UTF-8"));
         } catch (IOException e) {
             TS.log().error(e);
             return null;

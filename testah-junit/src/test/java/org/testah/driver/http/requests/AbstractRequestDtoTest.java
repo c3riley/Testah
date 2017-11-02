@@ -1,6 +1,5 @@
 package org.testah.driver.http.requests;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.testah.framework.dto.base.TestAbstractDtoBaseDto;

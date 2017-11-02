@@ -12,45 +12,50 @@ public class BuildClasses {
     @Test
     public void buildVerboseAssert() {
 
-        StringBuilder s;
+        StringBuilder logMsg;
         StringBuilder param;
-        for (final Method m : Assert.class.getMethods()) {
-            if (Modifier.isPublic(m.getModifiers())
-                    && (m.getName().startsWith("assert") || m.getName().startsWith("fail"))) {
-                s = new StringBuilder("public static " + m.getGenericReturnType() + " " + m.getName() + "(");
-                param = new StringBuilder("Assert." + m.getName() + "(");
-                int i = 0;
-                for (final Parameter p : m.getParameters()) {
-                    s.append((i > 0 ? ", final " : " final ") + p.getType().getSimpleName() + " " + p.getName());
-                    param.append((i > 0 ? "," : "") + p.getName());
-                    i++;
+        for (final Method method : Assert.class.getMethods()) {
+            if (Modifier.isPublic(method.getModifiers())
+                && (method.getName().startsWith("assert") || method.getName().startsWith("fail")))
+            {
+                logMsg = new StringBuilder("public static " + method.getGenericReturnType() + " " + method.getName() + "(");
+                param = new StringBuilder("Assert." + method.getName() + "(");
+                int count = 0;
+                for (final Parameter methodParams : method.getParameters()) {
+                    logMsg
+                        .append(count > 0 ? ", final " : " final ")
+                        .append(methodParams.getType().getSimpleName())
+                        .append(" ")
+                        .append(methodParams.getName());
+                    param.append((count > 0 ? "," : "") + methodParams.getName());
+                    count++;
                 }
-                s.append(") {\n");
-                s.append("try{\n");
-                s.append(param.toString() + ");\n");
-                if (s.toString().contains("arg2")) {
-                    s.append("addAssertHistory(message,false,\"" + m.getName() + "\",expected,actual);\n");
+                logMsg.append(") {\n");
+                logMsg.append("try{\n");
+                logMsg.append(param.toString() + ");\n");
+                if (logMsg.toString().contains("arg2")) {
+                    logMsg.append("addAssertHistory(message,false,\"" + method.getName() + "\",expected,actual);\n");
                 } else {
-                    s.append("addAssertHistory(\"\",false,\"" + m.getName() + "\",expected,actual);\n");
+                    logMsg.append("addAssertHistory(\"\",false,\"" + method.getName() + "\",expected,actual);\n");
                 }
-                s.append("}catch(Exception e){\n");
-                if (s.toString().contains("arg2")) {
-                    s.append("addAssertHistory(message,true,\"" + m.getName() + "\",expected,actual, e);\n");
+                logMsg.append("}catch(Exception e){\n");
+                if (logMsg.toString().contains("arg2")) {
+                    logMsg.append("addAssertHistory(message,true,\"" + method.getName() + "\",expected,actual, e);\n");
                 } else {
-                    s.append("addAssertHistory(\"\",true,\"" + m.getName() + "\",expected,actual, e);\n");
+                    logMsg.append("addAssertHistory(\"\",true,\"" + method.getName() + "\",expected,actual, e);\n");
                 }
-                s.append("if (getThrowExceptionOnFail()) {\n");
-                s.append("throw e;\n");
-                s.append("}\n");
+                logMsg.append("if (getThrowExceptionOnFail()) {\n");
+                logMsg.append("throw e;\n");
+                logMsg.append("}\n");
 
-                s.append("}\n");
+                logMsg.append("}\n");
 
-                s.append("}\n");
-                if (s.toString().contains("arg2")) {
-                    System.out.println(s.toString().replace("arg0", "message").replace("arg1", "expected")
-                            .replace("arg2", "actual"));
+                logMsg.append("}\n");
+                if (logMsg.toString().contains("arg2")) {
+                    System.out.println(logMsg.toString().replace("arg0", "message").replace("arg1", "expected")
+                        .replace("arg2", "actual"));
                 } else {
-                    System.out.println(s.toString().replace("arg0", "expected").replace("arg1", "actual"));
+                    System.out.println(logMsg.toString().replace("arg0", "expected").replace("arg1", "actual"));
                 }
 
             }

@@ -3,19 +3,17 @@ package org.testah.runner.http.load;
 import org.junit.Test;
 import org.testah.framework.annotations.TestCase;
 import org.testah.runner.performance.AbstractLongRunningTest;
-import org.testah.runner.performance.ElasticSearchExecutionStatsPublisher;
+import org.testah.runner.performance.ChunkStatsLogPublisher;
 import org.testah.runner.performance.TestRunProperties;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+//import org.testah.runner.performance.ElasticSearchResponseTimesPublisher;
 
 public class TestLongRunning extends AbstractLongRunningTest {
-    private static final String baseUrl = "http://localhost:9200";
-    private static final String username = "elastic";
-    private static final String password = "changeme";
-    private static final String index = "testah";
-    private static final ElasticSearchExecutionStatsPublisher elasticSearchExecutionStatsPublisher =
-        new ElasticSearchExecutionStatsPublisher(baseUrl, index, username, password).setVerbose(true);
+    // private static final String baseUrl = "http://localhost:9200";
+    // private static final String username = "elastic";
+    // private static final String password = "changeme";
+    // private static final String index = "testah";
+    // private static final String type = "load";
 
     @Test
     @TestCase()
@@ -28,13 +26,18 @@ public class TestLongRunning extends AbstractLongRunningTest {
         String testClass = this.getClass().getSimpleName();
         String testMethod = Thread.currentThread().getStackTrace()[1].getMethodName();
         String serviceUnderTest = "ServiceUnderTest";
+        TestRunProperties runProps =
+            new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, chunkSize, numberOfChunks, millisBetweenChunks);
+        //ElasticSearchResponseTimesPublisher elasticSearchExecutionStatsPublisher =
+        //new ElasticSearchResponseTimesPublisher(baseUrl, index, type, username, password, runProps).setVerbose(true);
+        ChunkStatsLogPublisher chunkStatsLogPublisher = new ChunkStatsLogPublisher();
+
         executeTest(new TestServiceGetRequestGenerator(),
-            new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, chunkSize, numberOfChunks, millisBetweenChunks)
+            runProps
                 .setVerbose(true)
-                .setExpectedStatusCodes(Arrays.stream(new Integer[] {200, 300, 400, 500}).collect(Collectors.toSet()))
                 .setRunDuration(1000L * 10),
-            (ElasticSearchExecutionStatsPublisher[]) null);
-        //elasticSearchExecutionStatsPublisher);
+            //elasticSearchExecutionStatsPublisher,
+            chunkStatsLogPublisher);
     }
 
     @Test
@@ -47,11 +50,17 @@ public class TestLongRunning extends AbstractLongRunningTest {
         String testClass = this.getClass().getSimpleName();
         String testMethod = Thread.currentThread().getStackTrace()[1].getMethodName();
         String serviceUnderTest = "ServiceUnderTest";
+        TestRunProperties runProps =
+            new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, chunkSize, numberOfChunks, millisBetweenChunks);
+        //ElasticSearchResponseTimesPublisher elasticSearchExecutionStatsPublisher =
+        //new ElasticSearchResponseTimesPublisher(baseUrl, index, type, username, password, runProps).setVerbose(true);
+        ChunkStatsLogPublisher chunkStatsLogPublisher = new ChunkStatsLogPublisher();
+
         executeTest(new TestServicePostRequestGenerator(),
-            new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, chunkSize, numberOfChunks, millisBetweenChunks)
+            runProps
                 .setVerbose(true)
                 .setRunDuration(1000L * 10),
-            (ElasticSearchExecutionStatsPublisher[]) null);
-        // elasticSearchExecutionStatsPublisher);
+            //elasticSearchExecutionStatsPublisher,
+            chunkStatsLogPublisher);
     }
 }

@@ -1,6 +1,5 @@
 package org.testah.framework.report.performance.dto;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -8,16 +7,10 @@ import java.util.Set;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.testah.runner.http.load.HttpAkkaStats;
-import org.testah.runner.performance.ElasticSearchExecutionStatsPublisher;
-import org.testah.runner.performance.TestRunProperties;
 
 public class ChunkStats {
 
-    private String testClass;
-    private String testMethod;
-    private String serviceName;
     private long elapsedTime;
-    private String timeStamp;
     private Set<Integer> statusCodes;
     private StatsDetails overallStats;
     private Map<Integer, StatsDetails> statsByStatusCode;
@@ -25,14 +18,9 @@ public class ChunkStats {
     /**
      * Constructor for holder of statistical data of the the execution of a chunk of requests.
      *
-     * @param runProps properties to execute the long running test
      * @param stats    overall execution data for a chunk of requests
      */
-    public ChunkStats(TestRunProperties runProps, HttpAkkaStats stats) {
-        setTimeStamp(ElasticSearchExecutionStatsPublisher.getDateTimeString(LocalDateTime.now()));
-        setServiceName(runProps.getServiceUnderTest());
-        setClassName(runProps.getTestClass());
-        setMethodName(runProps.getTestMethod());
+    public ChunkStats(HttpAkkaStats stats) {
         setElapsedTime(stats.getDuration());
         setStatusCodes(stats.getStatsDurationPerStatus().keySet());
         overallStats = new StatsDetails(stats);
@@ -116,106 +104,6 @@ public class ChunkStats {
      */
     public ChunkStats setStatusCodes(Set<Integer> statusCodes) {
         this.statusCodes = statusCodes;
-        return this;
-    }
-
-    /**
-     * Get the timestamp the data was sent to Elasticsearch.
-     *
-     * @return the timeStamp
-     */
-    public String getTimeStamp() {
-        return timeStamp;
-    }
-
-    /**
-     * Record the time the data was sent to Elasticsearch.
-     *
-     * @param timeStamp the timeStamp to set
-     * @return this object
-     */
-    public ChunkStats setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
-        return this;
-    }
-
-    /**
-     * Get the name of the test plan/test class.
-     *
-     * @return the testName
-     */
-    public String getTestName() {
-        return testClass;
-    }
-
-    /**
-     * Set the name of the test plan/test class.
-     *
-     * @param testClass the test plan/test class name to set
-     * @return this object
-     */
-    public ChunkStats setTestName(String testClass) {
-        this.testClass = testClass;
-        return this;
-    }
-
-    /**
-     * Get the name of the tested service.
-     *
-     * @return the serviceName
-     */
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    /**
-     * Set the name of the tested service.
-     *
-     * @param serviceName the serviceName to set
-     * @return this object
-     */
-    public ChunkStats setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-        return this;
-    }
-
-    /**
-     * Get the name to the test plan/test class.
-     *
-     * @return the className
-     */
-    public String getClassName() {
-        return testClass;
-    }
-
-    /**
-     * Set the name to the test plan/test class.
-     *
-     * @param className the className to set
-     * @return this object
-     */
-    public ChunkStats setClassName(String className) {
-        this.testClass = className;
-        return this;
-    }
-
-    /**
-     * Get the name of the test method/test case.
-     *
-     * @return the methodName
-     */
-    public String getMethodName() {
-        return testMethod;
-    }
-
-    /**
-     * Set the name of the test method/test case.
-     *
-     * @param methodName the methodName to set
-     * @return this object
-     */
-    public ChunkStats setMethodName(String methodName) {
-        this.testMethod = methodName;
         return this;
     }
 }

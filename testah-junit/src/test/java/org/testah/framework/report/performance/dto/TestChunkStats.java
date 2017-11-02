@@ -1,4 +1,4 @@
-package org.testah.framework.performance.dto;
+package org.testah.framework.report.performance.dto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,10 +10,7 @@ import java.util.stream.Collectors;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.driver.http.response.ResponseDto;
-import org.testah.framework.report.performance.dto.ChunkStats;
-import org.testah.framework.report.performance.dto.StatsDetails;
 import org.testah.runner.http.load.HttpAkkaStats;
-import org.testah.runner.performance.TestRunProperties;
 
 public class TestChunkStats {
     private static final long now = System.currentTimeMillis();
@@ -22,24 +19,11 @@ public class TestChunkStats {
 
     @Test
     public void test() {
-        String serviceUnderTest = "ServiceUnderTest";
-        String testClass = "TestClass";
-        String testMethod = "TestMethod";
-        int numberOfAkkaThreads = 5;
-        int chunkSize = 5;
-        int numberOfChunks = 5;
-        long millisBetweenChunks = 1000L;
-
         List<ResponseDto> responses = getResponseList(generateResponseMap());
-        TestRunProperties testRunProperties = new TestRunProperties(serviceUnderTest, testClass, testMethod, 
-                        numberOfAkkaThreads, chunkSize, numberOfChunks, millisBetweenChunks);
 
         HttpAkkaStats httpAkkaStats = new HttpAkkaStats(responses);
-        ChunkStats chunkStats = new ChunkStats(testRunProperties, httpAkkaStats);
+        ChunkStats chunkStats = new ChunkStats(httpAkkaStats);
 
-        TS.asserts().equalsTo("tested service", serviceUnderTest, chunkStats.getServiceName());
-        TS.asserts().equalsTo("test class", testClass, chunkStats.getClassName());
-        TS.asserts().equalsTo("test method", testMethod, chunkStats.getMethodName());
         TS.asserts().equalsTo("elapased time", elapsedTime, chunkStats.getElapsedTime());
         TS.asserts().equalsTo("number of data points", Long.valueOf(responses.size()), chunkStats.getOverallStats().getCount());
         TS.asserts().equalsTo("longest duration", Long.valueOf(510), chunkStats.getOverallStats().getMax());

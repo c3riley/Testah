@@ -1,8 +1,8 @@
 package org.testah.framework.report;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.util.HashMap;
+
 import org.testah.TS;
 import org.testah.client.dto.TestPlanDto;
 import org.testah.driver.http.requests.PostRequestDto;
@@ -14,8 +14,9 @@ import org.testah.framework.report.jira.JiraReporter;
 import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.runner.testPlan.TestPlanActor;
 
-import java.io.File;
-import java.util.HashMap;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * The Class TestPlanReporter.
@@ -78,7 +79,6 @@ public class TestPlanReporter {
         TS.log().info(Cli.BAR_WALL + "Total: " + ri.getTotal());
         TS.log().info(Cli.BAR_WALL + "Duration: " + TS.util().getDurationPretty(testPlan.getRunTime().getDuration()));
         String reportType = null;
-        String reportPath = null;
         File reportFile = null;
         if (TS.params().isUseXunitFormatter()) {
             reportType = "xml";

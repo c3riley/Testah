@@ -31,7 +31,7 @@ public class TestWebElementWrapper extends BrowserTestPlan {
     @Ignore
     @TestCase
     @Test
-    public void TestWebElementAsserts() {
+    public void testWebElementAsserts() {
         final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("enclosed-image"));
         e.assertAttributeExists("src");
         e.assertAttributeValue("src",
@@ -42,7 +42,7 @@ public class TestWebElementWrapper extends BrowserTestPlan {
     @Ignore
     @TestCase
     @Test
-    public void TestWebElementVerify() {
+    public void testWebElementVerify() {
         final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("enclosed-image"));
 
         TS.asserts().isTrue(e.verifytAttributeValue("src",
@@ -55,7 +55,7 @@ public class TestWebElementWrapper extends BrowserTestPlan {
     @Ignore
     @TestCase
     @Test
-    public void TestWebElementWithin() {
+    public void testWebElementWithin() {
         TS.browser().goToAndWaitForTitle(
                 "http://htmlpreview.github.io/?https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/xhtmlTest.html",
                 "XHTML Test Page");
@@ -67,7 +67,7 @@ public class TestWebElementWrapper extends BrowserTestPlan {
     @Ignore
     @TestCase
     @Test
-    public void TestWithin() {
+    public void testWithin() {
         TS.browser().goToAndWaitForTitle(
                 "http://htmlpreview.github.io/?https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/xhtmlTest.html",
                 "XHTML Test Page");

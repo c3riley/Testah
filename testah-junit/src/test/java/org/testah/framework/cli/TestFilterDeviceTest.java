@@ -26,7 +26,7 @@ public class TestFilterDeviceTest {
 
     @Test
     public void testFilterTestCaseDevice() {
-        TestFilter filter = new TestFilter();
+        final TestFilter filter = new TestFilter();
         TestCaseDto meta = new TestCaseDto().setDevices(new ArrayList<String>());
         TS.params().setFilterByTestType(null);
         meta.getDevices().add("TEST_Device");
@@ -58,31 +58,32 @@ public class TestFilterDeviceTest {
         testFilterMyDevice(1, 1, 0, 1, TestPlanWithManyDevices.class);
 
         testFilterMyDevice(5, 5, 3, 2, TestPlanWithDevice.class, TestPlanWithManyDevices.class,
-                TestPlanWithDeviceDefault.class, TestPlanWithDeviceEmpty.class,
-                TestPlanWithDeviceEmptyString.class);
+            TestPlanWithDeviceDefault.class, TestPlanWithDeviceEmpty.class,
+            TestPlanWithDeviceEmptyString.class);
 
     }
 
     private void testFilterMyDevice(final int expectedTest1, final int expectedTest2, final int expectedTest3,
-                                    final int expectedTest4, final Class<?>... classesToAdd) {
-        TestFilter filter = new TestFilter();
+                                    final int expectedTest4, final Class<?>... classesToAdd)
+    {
+        final TestFilter filter = new TestFilter();
         Set<Class<?>> classes = ImmutableSet.copyOf(Arrays.asList(classesToAdd));
 
         TS.params().setFilterByDevice(null);
         Assert.assertEquals(expectedTest1, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-                .size());
+            .size());
 
         TS.params().setFilterByDevice("");
         Assert.assertEquals(expectedTest2, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-                .size());
+            .size());
 
         TS.params().setFilterByDevice("~TEST_Device");
         Assert.assertEquals(expectedTest3, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-                .size());
+            .size());
 
         TS.params().setFilterByDevice("TEST_Device");
         Assert.assertEquals(expectedTest4, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-                .size());
+            .size());
     }
 
     @After

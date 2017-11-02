@@ -1,5 +1,6 @@
 package org.testah.runner.http.load;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -36,5 +37,10 @@ public class TestServicePostRequestGenerator extends TestServiceClient implement
             concurrentLinkedQueues.add(new ConcurrentLinkedQueue<AbstractRequestDto<?>>(postRequestSublist));
         }
         return concurrentLinkedQueues;
+    }
+
+    @Override
+    public String getDomain() throws Exception {
+        return new URL(getUrlPost()).getHost();
     }
 }

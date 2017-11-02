@@ -1,7 +1,5 @@
 package org.testah.runner.performance;
 
-import java.util.Set;
-
 public class TestRunProperties {
     private Integer numberOfChunks = 2500;
     private Long runDuration = 48 * 3600 * 1000L;
@@ -11,12 +9,9 @@ public class TestRunProperties {
     private Long millisBetweenChunks = 3000L;
     private boolean isVerbose = false;
     private String serviceUnderTest;
+    private String domain;
     private String testClass;
     private String testMethod;
-
-
-    // for testing purposes only
-    private Set<Integer> expectedStatusCodes = null;
 
     /**
      * Constructor.
@@ -191,26 +186,6 @@ public class TestRunProperties {
     }
 
     /**
-     * Get the expected status codes for the responses. This is for testing of the long running test functionality only.
-     *
-     * @return the expectedStatusCodes
-     */
-    public Set<Integer> getExpectedStatusCodes() {
-        return expectedStatusCodes;
-    }
-
-    /**
-     * Set the expected status codes for the responses. This is for testing of the long running test functionality only.
-     *
-     * @param expectedStatusCodes the expectedStatusCodes to set
-     * @return this object
-     */
-    public TestRunProperties setExpectedStatusCodes(Set<Integer> expectedStatusCodes) {
-        this.expectedStatusCodes = expectedStatusCodes;
-        return this;
-    }
-
-    /**
      * Get the name of the tested service.
      *
      * @return the serviceUnderTest
@@ -235,5 +210,14 @@ public class TestRunProperties {
      */
     public String getTestMethod() {
         return testMethod;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public TestRunProperties setDomain(String domain) {
+        this.domain = domain;
+        return this;
     }
 }

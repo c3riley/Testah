@@ -6,11 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
-import org.testah.framework.report.performance.dto.ChunkStats;
 import org.testah.runner.HttpAkkaRunner;
-import org.testah.runner.http.load.HttpAkkaStats;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public abstract class AbstractLongRunningTest {
 
@@ -26,6 +22,7 @@ public abstract class AbstractLongRunningTest {
         throws Exception
     {
         List<ResponseDto> responses;
+        runProps.setDomain(loadTestDataGenerator.getDomain());
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
         while (System.currentTimeMillis() < runProps.getStopTime()) {
@@ -34,21 +31,15 @@ public abstract class AbstractLongRunningTest {
             for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues) {
                 try {
                     responses = akkaRunner.runAndReport(runProps.getNumberOfAkkaThreads(), concurrentLinkedQueue, runProps.isVerbose());
-                    HttpAkkaStats stats = new HttpAkkaStats(responses);
-                    ChunkStats chunkStats = new ChunkStats(runProps, stats);
-                    // for unit test only
-                    if (runProps.getExpectedStatusCodes() != null && !runProps.getExpectedStatusCodes().isEmpty()) {
-                        TS.asserts().equalsTo("Check status codes.",
-                            runProps.getExpectedStatusCodes(),
-                            chunkStats.getStatsByStatusCode().keySet());
-                    }
 
-                    TS.log().info(new ObjectMapper().writeValueAsString(chunkStats));
                     if (publishers != null && publishers.length > 0) {
                         for (ExecutionStatsPublisher publisher : publishers) {
-                            publisher.push(chunkStats);
+                            publisher.push(responses);
                         }
                     }
+
+                    // Take care of open sockets
+                    System.gc();
 
                     Thread.sleep(runProps.getMillisBetweenChunks());
                     if (System.currentTimeMillis() >= runProps.getStopTime()) {
