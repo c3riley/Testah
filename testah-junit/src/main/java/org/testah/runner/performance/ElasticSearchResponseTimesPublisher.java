@@ -3,6 +3,8 @@ package org.testah.runner.performance;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -70,7 +72,7 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
     @Override
     public void push(List<ResponseDto> responses) throws Exception {
         // Always use server time (GMT)
-        final String collectionTime = getDateTimeString(LocalDateTime.now(zoneId));
+        final String collectionTime = getDateTimeString(LocalDateTime.now(zoneId), null);
         StringBuilder payloadBuilder = new StringBuilder();
         // cannot do pretty print here, the whole object must be one line
         ObjectMapper mapper = new ObjectMapper();
@@ -138,8 +140,17 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
      *
      * @return the upload url to Elasticsearch
      */
+    public String getUrlPathUpload() {
+        return String.format(urlPathUpload, index, type);
+    }
+
+    /**
+     * Get the upload URL to Elasticsearch.
+     *
+     * @return the upload url to Elasticsearch
+     */
     public String getUploadUrl() {
-        return baseUrl + String.format(urlPathUpload, index, type);
+        return baseUrl + getUrlPathUpload();
     }
 
     /**
@@ -198,12 +209,26 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
      * Get the LocalDateTime as a String formatted so that Elasticsearch recognizes it as time stamp.
      *
      * @param dateTime the LocalDateTime object
+     * @param zoneOffset the time zone offset to the time used by elasticsearch, e.g. UTC; null if already
+     * using the right time zone
      * @return LocalDateTime as string
      */
-    public static String getDateTimeString(LocalDateTime dateTime) {
-        return dateTime.format(dateTimeFormatter);
+    public static String getDateTimeString(LocalDateTime dateTime, ZoneOffset zoneOffset) {
+        if(zoneOffset != null) {
+            return ZonedDateTime.of(dateTime, ZoneId.systemDefault()).withZoneSameInstant(zoneOffset).toLocalDateTime().format(dateTimeFormatter);
+        }
+        else {
+            return dateTime.format(dateTimeFormatter);
+        }
     }
 
+    /**
+     * Get the date time string in the given time zone for the given epoch time.
+     *
+     * @param milliseconds epoch time in milliseconds
+     * @param zoneId time zone id
+     * @return elastic search formatted time string
+     */
     public static String getDateTimeString(long milliseconds, ZoneId zoneId) {
         return Instant.ofEpochMilli(milliseconds).atZone(zoneId).toLocalDateTime().format(dateTimeFormatter);
     }

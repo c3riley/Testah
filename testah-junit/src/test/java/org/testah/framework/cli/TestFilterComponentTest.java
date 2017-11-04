@@ -7,8 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
-import org.testah.framework.annotations.TestCase;
-import org.testah.framework.annotations.TestPlan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +14,7 @@ import java.util.Set;
 
 public class TestFilterComponentTest {
 
+    private static final String TEST_WITH_COMPONENT_ONLY = "TestWithComponentOnly";
     private Params paramsBeforeTest;
 
     @Before
@@ -32,22 +31,22 @@ public class TestFilterComponentTest {
         meta.getComponents().add("TEST_COMPONENT");
 
         TS.params().setFilterByComponent(null);
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithComponentOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, TEST_WITH_COMPONENT_ONLY));
 
         TS.params().setFilterByComponent("");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithComponentOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, TEST_WITH_COMPONENT_ONLY));
 
         TS.params().setFilterByComponent("TEST_COMPONENT");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithComponentOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, TEST_WITH_COMPONENT_ONLY));
 
         TS.params().setFilterByComponent("~TEST_COMPONENT");
-        Assert.assertEquals(false, filter.filterTestCase(meta, "TestWithComponentOnly"));
+        Assert.assertEquals(false, filter.filterTestCase(meta, TEST_WITH_COMPONENT_ONLY));
 
         TS.params().setFilterByComponent("Test1, test2, TEST_COMPONENT");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithComponentOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, TEST_WITH_COMPONENT_ONLY));
 
         TS.params().setFilterByComponent("Test1, test2,~TEST_COMPONENT");
-        Assert.assertEquals(false, filter.filterTestCase(meta, "TestWithComponentOnly"));
+        Assert.assertEquals(false, filter.filterTestCase(meta, TEST_WITH_COMPONENT_ONLY));
     }
 
     @Test
@@ -90,80 +89,5 @@ public class TestFilterComponentTest {
     public void tearDown() {
         TS.setParams(paramsBeforeTest);
     }
-
-}
-
-@TestPlan()
-class TestPlanWithComponentDefault {
-
-}
-
-@TestPlan(components = {})
-class TestPlanWithComponentEmpty {
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-}
-
-@TestPlan(components = {""})
-class TestPlanWithComponentEmptyString {
-
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-
-}
-
-@TestPlan(components = {"TEST_COMPONENT"})
-class TestPlanWithComponent {
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-
-    @TestCase(components = {"TEST_COMPONENT"})
-    public void test2() {
-    }
-
-    ;
-
-}
-
-@TestPlan(components = {"TEST_COMPONENT", "TEST_COMPONENT1", "TEST_COMPONENT2", "TEST_COMPONENT3"})
-class TestPlanWithManyComponents {
-    @TestCase(components = {})
-    public void test1() {
-    }
-
-    ;
-
-    @TestCase(components = {""})
-    public void test2() {
-    }
-
-    ;
-
-    @TestCase(components = {"TEST_COMPONENT"})
-    public void test3() {
-    }
-
-    ;
-
-    @TestCase(components = {"TEST_COMPONENT", "TEST_COMPONENT1", "TEST_COMPONENT2", "TEST_COMPONENT3"})
-    public void test4() {
-    }
-
-    ;
-
-    @TestCase()
-    public void test5() {
-    }
-
-    ;
 
 }
