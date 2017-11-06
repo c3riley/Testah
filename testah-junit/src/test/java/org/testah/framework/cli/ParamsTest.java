@@ -10,18 +10,21 @@ import java.nio.charset.Charset;
 
 public class ParamsTest {
 
+    private static final String NA_N = "NaN";
+    private static final String TEST = "TEST";
+
     @Test
     public void testGetValue() {
 
         Params params = new Params();
         Assert.assertNull(params.getValue(null));
         Assert.assertNull(params.getValue(null, null));
-        params.getOther().put("TEST", null);
+        params.getOther().put(TEST, null);
         Assert.assertNull(params.getValue(null));
-        params.getOther().put("TEST", "TEST_VALUE");
-        Assert.assertEquals("TEST_VALUE", params.getValue("TEST"));
-        System.setProperty("TEST", "TEST_VALUE_SYS");
-        Assert.assertEquals("TEST_VALUE_SYS", params.getValue("TEST"));
+        params.getOther().put(TEST, "TEST_VALUE");
+        Assert.assertEquals("TEST_VALUE", params.getValue(TEST));
+        System.setProperty(TEST, "TEST_VALUE_SYS");
+        Assert.assertEquals("TEST_VALUE_SYS", params.getValue(TEST));
         Assert.assertNotNull(params.getValue("PATH"));
 
     }
@@ -29,8 +32,8 @@ public class ParamsTest {
     @Test
     public void injectLocalPropertiesTest() throws IOException {
         final ParamLoader paramLoader = new ParamLoader();
-        Assert.assertEquals("NaN", System.getProperty("PROP_TEST_AA1", "NaN"));
-        Assert.assertEquals("NaN", System.getProperty("PROP_TEST_AA2", "NaN"));
+        Assert.assertEquals(NA_N, System.getProperty("PROP_TEST_AA1", NA_N));
+        Assert.assertEquals(NA_N, System.getProperty("PROP_TEST_AA2", NA_N));
 
         File temp = File.createTempFile("local", ".properties");
         FileUtils.writeStringToFile(temp, "PROP_TEST_AA1=hello\nPROP_TEST_AA2=world", Charset.forName("UTF-8"));
@@ -38,9 +41,9 @@ public class ParamsTest {
 
         paramLoader.injectLocalProperties(temp);
 
-        Assert.assertEquals("hello", System.getProperty("PROP_TEST_AA1", "NaN"));
+        Assert.assertEquals("hello", System.getProperty("PROP_TEST_AA1", NA_N));
         System.getProperties().remove("PROP_TEST_AA1");
-        Assert.assertEquals("world", System.getProperty("PROP_TEST_AA2", "NaN"));
+        Assert.assertEquals("world", System.getProperty("PROP_TEST_AA2", NA_N));
         System.getProperties().remove("PROP_TEST_AA2");
     }
 

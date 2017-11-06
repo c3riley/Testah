@@ -13,8 +13,13 @@ import org.testah.framework.testPlan.BrowserTestPlan;
 @TestPlan
 public class TestWebElementWrapper extends BrowserTestPlan {
 
-    private static final String baseUrl = "http://htmlpreview.github.io/?https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/clicks.html";
+    private static final String SRC = "src";
+    private static final String baseUrl =
+            "http://htmlpreview.github.io/?https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/clicks.html";
 
+    /**
+     * Test setup.
+     */
     @Before
     public void setup() {
         TS.browser().goTo(baseUrl);
@@ -33,8 +38,8 @@ public class TestWebElementWrapper extends BrowserTestPlan {
     @Test
     public void testWebElementAsserts() {
         final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("enclosed-image"));
-        e.assertAttributeExists("src");
-        e.assertAttributeValue("src",
+        e.assertAttributeExists(SRC);
+        e.assertAttributeValue(SRC,
                 "https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/icon.gif");
         e.assertFound();
     }
@@ -45,11 +50,11 @@ public class TestWebElementWrapper extends BrowserTestPlan {
     public void testWebElementVerify() {
         final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("enclosed-image"));
 
-        TS.asserts().isTrue(e.verifytAttributeValue("src",
+        TS.asserts().isTrue(e.verifytAttributeValue(SRC,
                 "https://raw.githubusercontent.com/SeleniumHQ/selenium/master/common/src/web/icon.gif"));
         TS.asserts().isTrue(e.verifyFound());
         TS.asserts().isFalse(e.verifyNotfound());
-        TS.asserts().isFalse(e.verifytAttributeValue("src", "shouldNotFind"));
+        TS.asserts().isFalse(e.verifytAttributeValue(SRC, "shouldNotFind"));
     }
 
     @Ignore
