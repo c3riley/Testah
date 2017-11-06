@@ -147,7 +147,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
             return d.exists() && d.isDirectory() && s.toLowerCase().contains("download");
         })).filter(f -> {
             return f.isFile();
-        }).forEach(file -> file.delete());
+        }).forEach(File::delete);
     }
 
     /*

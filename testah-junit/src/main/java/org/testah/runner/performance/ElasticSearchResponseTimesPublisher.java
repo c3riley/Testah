@@ -1,20 +1,15 @@
 package org.testah.runner.performance;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testah.TS;
 import org.testah.driver.http.requests.PostRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.report.performance.dto.RequestExecutionDuration;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublisher {
 
@@ -208,16 +203,16 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
     /**
      * Get the LocalDateTime as a String formatted so that Elasticsearch recognizes it as time stamp.
      *
-     * @param dateTime the LocalDateTime object
+     * @param dateTime   the LocalDateTime object
      * @param zoneOffset the time zone offset to the time used by elasticsearch, e.g. UTC; null if already
-     * using the right time zone
+     *                   using the right time zone
      * @return LocalDateTime as string
      */
     public static String getDateTimeString(LocalDateTime dateTime, ZoneOffset zoneOffset) {
-        if(zoneOffset != null) {
-            return ZonedDateTime.of(dateTime, ZoneId.systemDefault()).withZoneSameInstant(zoneOffset).toLocalDateTime().format(dateTimeFormatter);
-        }
-        else {
+        if (zoneOffset != null) {
+            return ZonedDateTime.of(dateTime,
+                ZoneId.systemDefault()).withZoneSameInstant(zoneOffset).toLocalDateTime().format(dateTimeFormatter);
+        } else {
             return dateTime.format(dateTimeFormatter);
         }
     }
@@ -226,7 +221,7 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
      * Get the date time string in the given time zone for the given epoch time.
      *
      * @param milliseconds epoch time in milliseconds
-     * @param zoneId time zone id
+     * @param zoneId       time zone id
      * @return elastic search formatted time string
      */
     public static String getDateTimeString(long milliseconds, ZoneId zoneId) {
