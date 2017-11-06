@@ -7,8 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
-import org.testah.framework.annotations.TestCase;
-import org.testah.framework.annotations.TestPlan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,22 +30,23 @@ public class TestFilterPlatformTest {
         meta.getPlatforms().add("TEST_Platform");
 
         TS.params().setFilterByPlatform(null);
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithPlatformOnly"));
+        String testCaseName = "TestWithPlatformOnly";
+        Assert.assertEquals(true, filter.filterTestCase(meta, testCaseName));
 
         TS.params().setFilterByPlatform("");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithPlatformOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, testCaseName));
 
         TS.params().setFilterByPlatform("TEST_Platform");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithPlatformOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, testCaseName));
 
         TS.params().setFilterByPlatform("~TEST_Platform");
-        Assert.assertEquals(false, filter.filterTestCase(meta, "TestWithPlatformOnly"));
+        Assert.assertEquals(false, filter.filterTestCase(meta, testCaseName));
 
         TS.params().setFilterByPlatform("Test1, test2, TEST_Platform");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithPlatformOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, testCaseName));
 
         TS.params().setFilterByPlatform("Test1, test2,~TEST_Platform");
-        Assert.assertEquals(false, filter.filterTestCase(meta, "TestWithPlatformOnly"));
+        Assert.assertEquals(false, filter.filterTestCase(meta, testCaseName));
     }
 
     @Test
@@ -90,80 +89,4 @@ public class TestFilterPlatformTest {
     public void tearDown() {
         TS.setParams(paramsBeforeTest);
     }
-
-}
-
-@TestPlan()
-class TestPlanWithPlatformDefault {
-
-}
-
-@TestPlan(platforms = {})
-class TestPlanWithPlatformEmpty {
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-}
-
-@TestPlan(platforms = {""})
-class TestPlanWithPlatformEmptyString {
-
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-
-}
-
-@TestPlan(platforms = {"TEST_Platform"})
-class TestPlanWithPlatform {
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-
-    @TestCase(platforms = {"TEST_Platform"})
-    public void test2() {
-    }
-
-    ;
-
-}
-
-@TestPlan(platforms = {"TEST_Platform", "TEST_Platform1", "TEST_Platform2", "TEST_Platform3"})
-class TestPlanWithManyPlatforms {
-    @TestCase(platforms = {})
-    public void test1() {
-    }
-
-    ;
-
-    @TestCase(platforms = {""})
-    public void test2() {
-    }
-
-    ;
-
-    @TestCase(platforms = {"TEST_Platform"})
-    public void test3() {
-    }
-
-    ;
-
-    @TestCase(platforms = {"TEST_Platform", "TEST_Platform1", "TEST_Platform2", "TEST_Platform3"})
-    public void test4() {
-    }
-
-    ;
-
-    @TestCase()
-    public void test5() {
-    }
-
-    ;
-
 }
