@@ -7,8 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
-import org.testah.framework.annotations.TestCase;
-import org.testah.framework.annotations.TestPlan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +14,7 @@ import java.util.Set;
 
 public class TestFilterTagTest {
 
+    private static final String TEST_WITH_TAG_ONLY = "TestWithTagOnly";
     private Params paramsBeforeTest;
 
     @Before
@@ -32,22 +31,22 @@ public class TestFilterTagTest {
         meta.getTags().add("TEST_Tag");
 
         TS.params().setFilterByTag(null);
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithTagOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, TEST_WITH_TAG_ONLY));
 
         TS.params().setFilterByTag("");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithTagOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, TEST_WITH_TAG_ONLY));
 
         TS.params().setFilterByTag("TEST_Tag");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithTagOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, TEST_WITH_TAG_ONLY));
 
         TS.params().setFilterByTag("~TEST_Tag");
-        Assert.assertEquals(false, filter.filterTestCase(meta, "TestWithTagOnly"));
+        Assert.assertEquals(false, filter.filterTestCase(meta, TEST_WITH_TAG_ONLY));
 
         TS.params().setFilterByTag("Test1, test2, TEST_Tag");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithTagOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, TEST_WITH_TAG_ONLY));
 
         TS.params().setFilterByTag("Test1, test2,~TEST_Tag");
-        Assert.assertEquals(false, filter.filterTestCase(meta, "TestWithTagOnly"));
+        Assert.assertEquals(false, filter.filterTestCase(meta, TEST_WITH_TAG_ONLY));
     }
 
     @Test
@@ -90,80 +89,4 @@ public class TestFilterTagTest {
     public void tearDown() {
         TS.setParams(paramsBeforeTest);
     }
-
-}
-
-@TestPlan()
-class TestPlanWithTagDefault {
-
-}
-
-@TestPlan(tags = {})
-class TestPlanWithTagEmpty {
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-}
-
-@TestPlan(tags = {""})
-class TestPlanWithTagEmptyString {
-
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-
-}
-
-@TestPlan(tags = {"TEST_Tag"})
-class TestPlanWithTag {
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-
-    @TestCase(tags = {"TEST_Tag"})
-    public void test2() {
-    }
-
-    ;
-
-}
-
-@TestPlan(tags = {"TEST_Tag", "TEST_Tag1", "TEST_Tag2", "TEST_Tag3"})
-class TestPlanWithManyTags {
-    @TestCase(tags = {})
-    public void test1() {
-    }
-
-    ;
-
-    @TestCase(tags = {""})
-    public void test2() {
-    }
-
-    ;
-
-    @TestCase(tags = {"TEST_Tag"})
-    public void test3() {
-    }
-
-    ;
-
-    @TestCase(tags = {"TEST_Tag", "TEST_Tag1", "TEST_Tag2", "TEST_Tag3"})
-    public void test4() {
-    }
-
-    ;
-
-    @TestCase()
-    public void test5() {
-    }
-
-    ;
-
 }

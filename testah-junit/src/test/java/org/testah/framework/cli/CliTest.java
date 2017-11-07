@@ -10,14 +10,17 @@ import org.junit.Test;
 
 public class CliTest {
     
+    private static final String ORG_TESTAH = "org.testah";
+    private static final String PARAM_LOOK_AT_INTERNAL_TESTS = "param_lookAtInternalTests";
+
     @Before
     public void setup() {
-        System.getProperties().remove("param_lookAtInternalTests");
+        System.getProperties().remove(PARAM_LOOK_AT_INTERNAL_TESTS);
     }
     
     @Test
     public void testCliRun() {
-        System.setProperty("param_lookAtInternalTests", "org.testah");
+        System.setProperty(PARAM_LOOK_AT_INTERNAL_TESTS, ORG_TESTAH);
         final String[] args = { "run" };
         final Cli cli = new Cli();
         cli.setUnderTest(true);
@@ -28,7 +31,7 @@ public class CliTest {
     
     @Test
     public void testCliRunWithExternal() {
-        System.setProperty("param_lookAtInternalTests", "org.testah");
+        System.setProperty(PARAM_LOOK_AT_INTERNAL_TESTS, ORG_TESTAH);
         System.setProperty("param_lookAtExternalTests", "test.groovy");
         final String[] args = { "run" };
         final Cli cli = new Cli();
@@ -40,7 +43,7 @@ public class CliTest {
     
     @Test
     public void testCliQuery() {
-        System.setProperty("param_lookAtInternalTests", "org.testah");
+        System.setProperty(PARAM_LOOK_AT_INTERNAL_TESTS, ORG_TESTAH);
         final String[] args = { "query" };
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
@@ -50,7 +53,7 @@ public class CliTest {
     
     @Test
     public void testCliQueryWithExternal() {
-        System.setProperty("param_lookAtInternalTests", "org.testah");
+        System.setProperty(PARAM_LOOK_AT_INTERNAL_TESTS, ORG_TESTAH);
         System.setProperty("param_lookAtExternalTests", "test.groovy");
         final String[] args = { "query" };
         final Cli cli = new Cli();

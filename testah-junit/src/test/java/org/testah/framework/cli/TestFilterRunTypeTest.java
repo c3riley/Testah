@@ -7,8 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
-import org.testah.framework.annotations.TestCase;
-import org.testah.framework.annotations.TestPlan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +14,7 @@ import java.util.Set;
 
 public class TestFilterRunTypeTest {
 
+    private static final String TEST_RUN_TYPE = "TEST_RunType";
     private Params paramsBeforeTest;
 
     @Before
@@ -29,25 +28,26 @@ public class TestFilterRunTypeTest {
         final TestFilter filter = new TestFilter();
         TestCaseDto meta = new TestCaseDto().setRunTypes(new ArrayList<String>());
         TS.params().setFilterByTestType(null);
-        meta.getRunTypes().add("TEST_RunType");
+        meta.getRunTypes().add(TEST_RUN_TYPE);
 
         TS.params().setFilterByRunType(null);
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithRunTypeOnly"));
+        String testCaseName = "TestWithRunTypeOnly";
+        Assert.assertEquals(true, filter.filterTestCase(meta, testCaseName));
 
         TS.params().setFilterByRunType("");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithRunTypeOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, testCaseName));
 
-        TS.params().setFilterByRunType("TEST_RunType");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithRunTypeOnly"));
+        TS.params().setFilterByRunType(TEST_RUN_TYPE);
+        Assert.assertEquals(true, filter.filterTestCase(meta, testCaseName));
 
         TS.params().setFilterByRunType("~TEST_RunType");
-        Assert.assertEquals(false, filter.filterTestCase(meta, "TestWithRunTypeOnly"));
+        Assert.assertEquals(false, filter.filterTestCase(meta, testCaseName));
 
         TS.params().setFilterByRunType("Test1, test2, TEST_RunType");
-        Assert.assertEquals(true, filter.filterTestCase(meta, "TestWithRunTypeOnly"));
+        Assert.assertEquals(true, filter.filterTestCase(meta, testCaseName));
 
         TS.params().setFilterByRunType("Test1, test2,~TEST_RunType");
-        Assert.assertEquals(false, filter.filterTestCase(meta, "TestWithRunTypeOnly"));
+        Assert.assertEquals(false, filter.filterTestCase(meta, testCaseName));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class TestFilterRunTypeTest {
         Assert.assertEquals(expectedTest3, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
             .size());
 
-        TS.params().setFilterByRunType("TEST_RunType");
+        TS.params().setFilterByRunType(TEST_RUN_TYPE);
         Assert.assertEquals(expectedTest4, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
             .size());
     }
@@ -90,80 +90,4 @@ public class TestFilterRunTypeTest {
     public void tearDown() {
         TS.setParams(paramsBeforeTest);
     }
-
-}
-
-@TestPlan()
-class TestPlanWithRunTypeDefault {
-
-}
-
-@TestPlan(runTypes = {})
-class TestPlanWithRunTypeEmpty {
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-}
-
-@TestPlan(runTypes = {""})
-class TestPlanWithRunTypeEmptyString {
-
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-
-}
-
-@TestPlan(runTypes = {"TEST_RunType"})
-class TestPlanWithRunType {
-    @TestCase()
-    public void test1() {
-    }
-
-    ;
-
-    @TestCase(runTypes = {"TEST_RunType"})
-    public void test2() {
-    }
-
-    ;
-
-}
-
-@TestPlan(runTypes = {"TEST_RunType", "TEST_RunType1", "TEST_RunType2", "TEST_RunType3"})
-class TestPlanWithManyRunTypes {
-    @TestCase(runTypes = {})
-    public void test1() {
-    }
-
-    ;
-
-    @TestCase(runTypes = {""})
-    public void test2() {
-    }
-
-    ;
-
-    @TestCase(runTypes = {"TEST_RunType"})
-    public void test3() {
-    }
-
-    ;
-
-    @TestCase(runTypes = {"TEST_RunType", "TEST_RunType1", "TEST_RunType2", "TEST_RunType3"})
-    public void test4() {
-    }
-
-    ;
-
-    @TestCase()
-    public void test5() {
-    }
-
-    ;
-
 }
