@@ -26,8 +26,8 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
     // Always server time (GMT)
     private static final ZoneId zoneId = ZoneId.of("GMT");
 
-    private Long startTime = 0L;
-    private Long endTime = 0L;
+    private Long startTime;
+    private Long endTime;
     private String baseUrl;
     private String username;
     private String password;
@@ -69,6 +69,9 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
      */
     @Override
     public void push(List<ResponseDto> responses) throws Exception {
+        startTime = 0L;
+        endTime = 0L;
+
         // Always use server time (GMT)
         final String collectionTime = getDateTimeString(LocalDateTime.now(zoneId));
         StringBuilder payloadBuilder = new StringBuilder();
