@@ -66,6 +66,7 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
      */
     @Override
     public void push(List<ResponseDto> responses) throws Exception {
+        // reset the start and end time for a chunk of requests so that the elapsed time is computed properly
         startTime = 0L;
         endTime = 0L;
 
