@@ -894,11 +894,12 @@ public class VerboseAsserts {
 
     /**
      * Use Hamcrest matcher for assert.
+     * @param <T> generic type
      * @param message assert message
      * @param expected expected object
      * @param matcher Hamcrest matcher
      */
-    public void assertThat(final String message, final Object expected, final Matcher<Object> matcher) {
+    public <T> void assertThat(final String message, final T expected, final Matcher<? super T> matcher) {
         try {
             MatcherAssert.assertThat(message, expected, matcher);
         } catch (AssertionError e) {
@@ -911,10 +912,11 @@ public class VerboseAsserts {
 
     /**
      * Use Hamcrest matcher for assert.
+     * @param <T> generic type
      * @param expected expected object
      * @param matcher Hamcrest matcher
      */
-    public void assertThat(final Object expected, final Matcher<Object> matcher) {
+    public <T> void assertThat(final T expected, final Matcher<? super T> matcher) {
         assertThat("", expected, matcher);
     }
 
