@@ -11,7 +11,7 @@ apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 group = 'org.testah'
-version = '0.9.17'
+version = '0.9.18'
 
 buildscript {
     repositories {
