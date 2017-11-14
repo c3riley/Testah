@@ -144,7 +144,7 @@ public class Params {
      */
     @Comment(info = "Browser value allowed: ")
     @Arg(dest = "browser")
-    private BrowserType browser = BrowserType.FIREFOX;
+    private BrowserType browser = BrowserType.CHROME;
 
     /**
      * The envir.
