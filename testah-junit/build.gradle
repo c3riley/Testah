@@ -11,7 +11,7 @@ apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 group = 'org.testah'
-version = '0.9.20'
+version = '0.9.21'
 
 buildscript {
     repositories {
@@ -114,6 +114,9 @@ dependencies {
             if (it.requested.name == 'commons-logging') {
 
             }
+        }
+        resolutionStrategy {
+            force 'com.google.guava:guava:23.5-jre' // updated to 23.5-jre
         }
     }
 }

@@ -343,8 +343,8 @@ public abstract class AbstractBrowser<T> {
         } else if (TS.params().getBrowser() == BrowserType.JBROWSER) {
             return new JBrowserDriverBrowser().start();
         } else {
-            TS.log().debug("No Browser Match Found defaulting to Firefox");
-            return new FirefoxBrowser().start();
+            TS.log().debug("No Browser Match Found defaulting to Chrome");
+            return new GoogleChromeBrowser().start();
         }
     }
 
