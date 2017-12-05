@@ -11,7 +11,7 @@ apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 group = 'org.testah'
-version = '0.9.19'
+version = '0.9.20'
 
 buildscript {
     repositories {
@@ -33,8 +33,10 @@ def getEnvirVariable = {
         }
         return value
     }
-
-    throw new Exception("Missing env MAVEN_REPO_TO_USE")
+    else {
+        System.out.println("Missing env MAVEN_REPO_TO_USE. Using /tmp instead");
+        value = "file:///tmp"
+    }
 }
 
 uploadArchives {

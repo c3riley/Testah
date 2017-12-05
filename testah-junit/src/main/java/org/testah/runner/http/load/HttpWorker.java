@@ -10,6 +10,10 @@ import akka.actor.UntypedActor;
 
 public class HttpWorker extends UntypedActor {
 
+    /**
+     * Wrapper of UntypedActor.onReceive(...).
+     * @see akka.actor.UntypedActor#onReceive(java.lang.Object)
+     */
     public void onReceive(final Object arg0) throws Exception {
         AbstractHttpWrapper httpWrapper = HttpAkkaRunner.getInstance().getHttpWrapper();
         if (arg0 instanceof AbstractRequestDto) {

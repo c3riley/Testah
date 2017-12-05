@@ -1,17 +1,30 @@
 package org.testah.runner.performance;
 
+import org.testah.TS;
+
 public class TestRunProperties {
-    private Integer numberOfChunks = 2500;
-    private Long runDuration = 48 * 3600 * 1000L;
+    protected final Integer defaultNumberOfChunks = 2500;
+    protected final Long defaultRunDuration = 48 * 3600 * 1000L;
+    protected final Integer defaultChunkSize = 10;
+    protected final Integer defaultNumberOfAkkaThreads = 3;
+    protected final Long defaultMillisBetweenChunks = 3000L;
+    private Integer numberOfChunks;
+    private Long runDuration;
     private Long stopTime = null;
-    private Integer chunkSize = 10;
-    private Integer numberOfAkkaThreads = 3;
-    private Long millisBetweenChunks = 3000L;
+    private Integer chunkSize;
+    private Integer numberOfAkkaThreads;
+    private Long millisBetweenChunks;
     private boolean isVerbose = false;
     private String serviceUnderTest;
     private String domain;
     private String testClass;
     private String testMethod;
+
+    protected TestRunProperties(String serviceUnderTest, String testClass, String testMethod) {
+        this.serviceUnderTest = serviceUnderTest;
+        this.testClass = testClass;
+        this.testMethod = testMethod;
+    }
 
     /**
      * Constructor.
@@ -40,6 +53,7 @@ public class TestRunProperties {
         this.chunkSize = chunkSize;
         this.numberOfChunks = numberOfChunks;
         this.millisBetweenChunks = millisBetweenChunks;
+        this.runDuration = this.defaultRunDuration;
     }
 
     /**
@@ -54,10 +68,21 @@ public class TestRunProperties {
     /**
      * Set the number of chunks of requests to be generated.
      *
-     * @param numberOfChunks the numberOfChunks to set
+     * @param numberOfChunks the number of chunks as String
+     * @return this object
+     */
+    public TestRunProperties setNumberOfChunks(String numberOfChunks) {
+        return setNumberOfChunks(Integer.parseInt(numberOfChunks));
+    }
+
+    /**
+     * Set the number of chunks of requests to be generated.
+     *
+     * @param numberOfChunks the number of chunks to set
      * @return this object
      */
     public TestRunProperties setNumberOfChunks(int numberOfChunks) {
+        TS.log().info("Setting numberOfChunks to " + numberOfChunks);
         this.numberOfChunks = numberOfChunks;
         return this;
     }
@@ -74,10 +99,21 @@ public class TestRunProperties {
     /**
      * Set the duration in milliseconds for the test to run.
      *
-     * @param runDuration the runDuration to set
+     * @param runDuration the run duration as a String
+     * @return this object
+     */
+    public TestRunProperties setRunDuration(String runDuration) {
+        return setRunDuration(Long.parseLong(runDuration));
+    }
+
+    /**
+     * Set the duration in milliseconds for the test to run.
+     *
+     * @param runDuration the run duration to set
      * @return this object
      */
     public TestRunProperties setRunDuration(long runDuration) {
+        TS.log().info("Setting runDuration to " + runDuration);
         this.runDuration = runDuration;
         return this;
     }
@@ -101,6 +137,7 @@ public class TestRunProperties {
      * @return this object
      */
     public TestRunProperties setStopTime(long stopTime) {
+        TS.log().info("Setting stopTime to " + stopTime);
         this.stopTime = stopTime;
         return this;
     }
@@ -117,10 +154,21 @@ public class TestRunProperties {
     /**
      * Set the number of requests in one chunk of requests.
      *
+     * @param chunkSize the chunk size as a String
+     * @return this object
+     */
+    public TestRunProperties setChunkSize(String chunkSize) {
+        return setChunkSize(Integer.parseInt(chunkSize));
+    }
+
+    /**
+     * Set the number of requests in one chunk of requests.
+     *
      * @param chunkSize the chunkSize to set
      * @return this object
      */
     public TestRunProperties setChunkSize(int chunkSize) {
+        TS.log().info("Setting chunkSize to " + chunkSize);
         this.chunkSize = chunkSize;
         return this;
     }
@@ -137,10 +185,21 @@ public class TestRunProperties {
     /**
      * Set the number of Akka threads.
      *
-     * @param numberOfAkkaThreads the numberOfAkkaThreads to set
+     * @param numberOfAkkaThreads the number of Akka threads as a String
+     * @return this object
+     */
+    public TestRunProperties setNumberOfAkkaThreads(String numberOfAkkaThreads) {
+        return setNumberOfAkkaThreads(Integer.parseInt(numberOfAkkaThreads));
+    }
+
+    /**
+     * Set the number of Akka threads.
+     *
+     * @param numberOfAkkaThreads the number of Akka threads to set
      * @return this object
      */
     public TestRunProperties setNumberOfAkkaThreads(int numberOfAkkaThreads) {
+        TS.log().info("Setting numberOfAkkaThreads to " + numberOfAkkaThreads);
         this.numberOfAkkaThreads = numberOfAkkaThreads;
         return this;
     }
@@ -148,7 +207,7 @@ public class TestRunProperties {
     /**
      * Get the pause time in milliseconds between chunks of requests.
      *
-     * @return the millisBetweenChunks
+     * @return the milliseconds between chunks
      */
     public long getMillisBetweenChunks() {
         return millisBetweenChunks;
@@ -157,10 +216,21 @@ public class TestRunProperties {
     /**
      * Set the pause time in milliseconds between chunks of requests.
      *
-     * @param millisBetweenChunks the millisBetweenChunks to set
+     * @param millisBetweenChunks the milliseconds between chunks as a String
+     * @return this object
+     */
+    public TestRunProperties setMillisBetweenChunks(String millisBetweenChunks) {
+        return setMillisBetweenChunks(Long.parseLong(millisBetweenChunks));
+    }
+
+    /**
+     * Set the pause time in milliseconds between chunks of requests.
+     *
+     * @param millisBetweenChunks the milliseconds between chunks to set
      * @return this object
      */
     public TestRunProperties setMillisBetweenChunks(long millisBetweenChunks) {
+        TS.log().info("Setting millisBetweenChunks to " + millisBetweenChunks);
         this.millisBetweenChunks = millisBetweenChunks;
         return this;
     }
@@ -181,6 +251,7 @@ public class TestRunProperties {
      * @return this object
      */
     public TestRunProperties setVerbose(boolean isVerbose) {
+        TS.log().info("Setting isVerbose to " + isVerbose);
         this.isVerbose = isVerbose;
         return this;
     }
@@ -216,7 +287,13 @@ public class TestRunProperties {
         return domain;
     }
 
+    /**
+     * Set the domain for the service under test in the test run properties.
+     * @param domain service domain
+     * @return this object
+     */
     public TestRunProperties setDomain(String domain) {
+        TS.log().info("Setting domain to " + domain);
         this.domain = domain;
         return this;
     }
