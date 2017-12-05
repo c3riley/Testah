@@ -113,6 +113,9 @@ dependencies {
 
             }
         }
+        resolutionStrategy {
+            force 'com.google.guava:guava:23.5-jre' // updated to 23.5-jre
+        }
     }
 }
 
