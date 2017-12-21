@@ -20,6 +20,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+
 /**
  * The Class TestFilter.
  */
@@ -72,26 +75,21 @@ public class TestFilter {
      * @param testClassesMetFiltersToUse the test classes met filters to use
      * @return the list
      */
-    public List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter, final List<Class<
-        ?>> testClassesMetFiltersToUse)
-    {
+    private List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter, final List<Class<
+            ?>> testClassesMetFiltersToUse) {
 
         final Params filterParams = TS.params();
 
         if (null != testClassesToFilter) {
 
             TestPlan meta;
-            String filter = null;
+
 
             boolean filterByUuid = isFilterOn(TS.params().getFilterById());
 
             Boolean filterByIgnoreKnownProblem = null;
             if (isFilterOn(TS.params().getFilterIgnoreKnownProblem())) {
-                if ("true".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
-                    filterByIgnoreKnownProblem = true;
-                } else {
-                    filterByIgnoreKnownProblem = false;
-                }
+                filterByIgnoreKnownProblem = equalsIgnoreCase("true", TS.params().getFilterIgnoreKnownProblem());
             }
             boolean filterByComponent = isFilterOn(TS.params().getFilterByComponent());
 
@@ -110,7 +108,7 @@ public class TestFilter {
             boolean filterByTestPlanNameStartsWith = isFilterOn(TS.params().getFilterByTestPlanNameStartsWith());
 
             for (final Class<?> test : testClassesToFilter) {
-
+                String filter;
                 meta = test.getAnnotation(TestPlan.class);
 
                 if (null == meta) {
@@ -142,7 +140,7 @@ public class TestFilter {
                 if (filterByTestType) {
                     if (!isFilterByTestType(meta.testType())) {
                         TS.log().trace(
-                            "test[" + test.getName() + "] filtered out by isFilterByTestType[" + TS.params().getFilterByTestType() + "]");
+                                "test[" + test.getName() + "] filtered out by isFilterByTestType[" + TS.params().getFilterByTestType() + "]");
                         continue;
                     }
                 }
@@ -187,7 +185,7 @@ public class TestFilter {
             }
             TS.log().info(Cli.BAR_LONG);
             TS.log().info(String.format("%s TestPlan Classes To Run: ( %d of %d )", Cli.BAR_WALL,
-                testClassesMetFiltersToUse.size(), testClassesToFilter.size()));
+                    testClassesMetFiltersToUse.size(), testClassesToFilter.size()));
             TS.log().info(Cli.BAR_WALL);
             for (final Class<?> test : testClassesMetFiltersToUse) {
                 TS.log().info(Cli.BAR_WALL + " " + test.getName());
@@ -216,7 +214,6 @@ public class TestFilter {
 
         if (null != meta) {
 
-            String filter = null;
 
             final boolean filterByUuid = isFilterOn(TS.params().getFilterById());
             final boolean filterByComponent = isFilterOn(TS.params().getFilterByComponent());
@@ -230,6 +227,7 @@ public class TestFilter {
                 filterByTestType = false;
             }
 
+            String filter;
             if (filterByUuid) {
                 filter = filterParams.getFilterById();
                 if (!isFilterById(meta.getId(), filter)) {
@@ -301,7 +299,7 @@ public class TestFilter {
      * @param test the test
      * @return true, if is filter test name starts with
      */
-    public boolean isFilterTestNameStartsWith(final Class<?> test) {
+    private boolean isFilterTestNameStartsWith(final Class<?> test) {
         return isFilterTestNameStartsWith(test, TS.params().getFilterByTestPlanNameStartsWith());
     }
 
@@ -312,11 +310,8 @@ public class TestFilter {
      * @param startsWith the starts with
      * @return true, if is filter test name starts with
      */
-    public boolean isFilterTestNameStartsWith(final Class<?> test, final String startsWith) {
-        if (null != startsWith && startsWith.length() > 0) {
-            return test.getName().startsWith(startsWith);
-        }
-        return true;
+    private boolean isFilterTestNameStartsWith(final Class<?> test, final String startsWith) {
+        return null == startsWith || startsWith.length() <= 0 || test.getName().startsWith(startsWith);
     }
 
     /**
@@ -325,11 +320,8 @@ public class TestFilter {
      * @param testType the test type
      * @return true, if is filter by test type
      */
-    public boolean isFilterByTestType(final TestType testType) {
-        if (testType != TS.params().getFilterByTestType()) {
-            return false;
-        }
-        return true;
+    private boolean isFilterByTestType(final TestType testType) {
+        return testType == TS.params().getFilterByTestType();
     }
 
     /**
@@ -339,7 +331,7 @@ public class TestFilter {
      * @param values the values
      * @return true, if is filter by id
      */
-    public boolean isFilterById(final int id, final String values) {
+    private boolean isFilterById(final int id, final String values) {
         for (final String value : values.split(",")) {
             try {
                 if (Integer.parseInt(value) == id) {
@@ -362,18 +354,17 @@ public class TestFilter {
     private boolean isFilterCheckOk(final List<String> lst, final String values) {
         if (null != values && values.length() > 0) {
             boolean rtn = false;
-            String valueToCompare;
             for (final String value : values.split(",")) {
-                valueToCompare = value.trim();
+                final String valueToCompare = trimToEmpty(value);
                 if (value.startsWith("~")) {
-                    String valueToCompareMatch = valueToCompare.replace("~", "");
-                    if (lst.stream().anyMatch(str -> str.equalsIgnoreCase(valueToCompareMatch))) {
+                    final String valueToCompareMatch = valueToCompare.replace("~", "");
+                    if (lst.stream().anyMatch(str -> equalsIgnoreCase(str, valueToCompareMatch))) {
                         return false; // Fail Not, failed filter
                     } else {
                         rtn = true; // Passed initially, still a Not could be
                         // used
                     }
-                } else if (lst.contains(valueToCompare)) {
+                } else if (lst.stream().anyMatch(anyMatch -> equalsIgnoreCase(valueToCompare, anyMatch))) {
                     rtn = true; // Passed initially, still a Not could be used
                 }
             }
@@ -418,7 +409,7 @@ public class TestFilter {
      * @param internalClass the internal class
      * @return the int
      */
-    public int loadCompiledTestClase(final String internalClass) {
+    private int loadCompiledTestClase(final String internalClass) {
         if (null != internalClass && internalClass.length() > 0) {
             final Reflections reflections = new Reflections(internalClass);
             Set<Class<?>> lst = reflections.getTypesAnnotatedWith(TestPlan.class);
@@ -429,21 +420,11 @@ public class TestFilter {
     }
 
     /**
-     * Load test plans.
-     *
-     * @param testValue the test value
-     * @return the test filter
-     */
-    public TestFilter loadTestPlans(final String testValue) {
-        return loadUncompiledTestPlans(testValue);
-    }
-
-    /**
      * Load un-compiled test plans.
      *
      * @return the test filter
      */
-    public TestFilter loadUncompiledTestPlans() {
+    private TestFilter loadUncompiledTestPlans() {
         return loadUncompiledTestPlans(TS.params().getLookAtExternalTests());
     }
 
@@ -453,24 +434,20 @@ public class TestFilter {
      * @param externalValue the external value
      * @return the test filter
      */
-    public TestFilter loadUncompiledTestPlans(final String externalValue) {
+    private TestFilter loadUncompiledTestPlans(final String externalValue) {
         try {
             // final String externalValue =
             // TS.params().getLookAtExternalTests();
 
             if (null != externalValue && externalValue.length() > 0) {
                 final List<File> files = new ArrayList<>();
-                try (
-                    final GroovyClassLoader loader =
-                        (GroovyClassLoader) AccessController.doPrivileged(new PrivilegedAction<Object>() {
-                            final ClassLoader parent = this.getClass().getClassLoader();
+                try (final GroovyClassLoader loader = (GroovyClassLoader) AccessController.doPrivileged(new PrivilegedAction<Object>() {
+                    final ClassLoader parent = this.getClass().getClassLoader();
 
-                            public Object run() {
-                                return new GroovyClassLoader(parent);
-                            }
-                        });
-                )
-                {
+                    public Object run() {
+                        return new GroovyClassLoader(parent);
+                    }
+                })) {
 
                     for (final String path : externalValue.split(",")) {
 
@@ -482,8 +459,8 @@ public class TestFilter {
                         if (!externalTests.exists()) {
                             if (loadCompiledTestClase(path) == 0) {
                                 TS.log().error(
-                                    "Param LookAtExternalTests is set to a class/file/directory not found: "
-                                        + externalTests.getAbsolutePath());
+                                        "Param LookAtExternalTests is set to a class/file/directory not found: "
+                                                + externalTests.getAbsolutePath());
                             }
                         } else if (externalTests.isDirectory()) {
                             files.addAll(FileUtils.getFilesRecurse(externalTests, "(.?)*\\.groovy"));
@@ -525,33 +502,12 @@ public class TestFilter {
     }
 
     /**
-     * Sets the test classes.
-     *
-     * @param testClasses the new test classes
-     * @return the test filter
-     */
-    public TestFilter setTestClasses(final Set<Class<?>> testClasses) {
-        this.testClasses = testClasses;
-        return this;
-    }
-
-    /**
      * Reset test classes met filters.
      *
      * @return the test filter
      */
     public TestFilter resetTestClassesMetFilters() {
         testClassesMetFilters.clear();
-        return this;
-    }
-
-    /**
-     * Reset test classes.
-     *
-     * @return the test filter
-     */
-    public TestFilter resetTestClasses() {
-        testClasses.clear();
         return this;
     }
 
