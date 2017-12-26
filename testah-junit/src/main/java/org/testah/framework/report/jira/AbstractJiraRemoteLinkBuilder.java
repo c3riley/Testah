@@ -34,7 +34,7 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
     }
 
     protected AbstractJiraRemoteLinkBuilder(final String icon1Url16x16, final String icon2Url16x16) {
-        this.icon1Url16x16 = icon2Url16x16;
+        this.icon1Url16x16 = icon1Url16x16;
         this.icon2Url16x16 = icon2Url16x16;
     }
 
@@ -49,9 +49,9 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
     protected RemoteIssueLinkDto getBaseRemoteIssueLinkDto(final String relationship, final String linkType, final String name,
                                                            final String summary, final String title,
                                                            final String url, final String iconTitle, final String icon2Title,
-                                                           final String icon2Url) {
+                                                           final String icon2Url, final String source) {
         RemoteIssueLinkDto remote = new RemoteIssueLinkDto();
-        remote.setGlobalId(relationship + "-" + name);
+        remote.setGlobalId(relationship + "-" + source);
         remote.setApplication(getApplication(linkType, name));
         remote.setRelationship(relationship);
         remote.setObject(getRemoteIssueLink(summary, title, url, iconTitle, icon2Title, icon2Url));
@@ -107,7 +107,7 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
         return lastTestPlanDtoUsed;
     }
 
-    protected void setLastTestPlanDtoUsed(final TestPlanDto lastTestPlanDtoUsed) {
+    public void setLastTestPlanDtoUsed(final TestPlanDto lastTestPlanDtoUsed) {
         this.lastTestPlanDtoUsed = lastTestPlanDtoUsed;
     }
 
@@ -117,7 +117,14 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
 
     protected String getSourceLinkToUse() {
         String sourceUrl = validateUrl(TS.params().getSourceUrl(), "IssueGetting_param_sourceUrl");
-        return sourceUrl + (sourceUrl.endsWith("/") ? "" : "/") + getLastTestPlanDtoUsed().getSource().replace(".", "/");
+        return sourceUrl + (sourceUrl.endsWith("/") ? "" : "/") + getSourceWithSlash(getLastTestPlanDtoUsed().getSource());
+    }
+
+    protected String getSourceWithSlash(final String source) {
+        if (StringUtils.isEmpty(source)) {
+            return source;
+        }
+        return source.replace(".", "/");
     }
 
     protected String validateUrl(String link, final String errorTip) {
