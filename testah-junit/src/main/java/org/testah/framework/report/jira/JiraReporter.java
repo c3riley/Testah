@@ -31,7 +31,8 @@ public class JiraReporter {
 
     /**
      * Create or update issue.
-     * @param testPlan the test plan
+     *
+     * @param testPlan          the test plan
      * @param remoteLinkBuilder JiraRemoteLinkBuilder
      */
     public void createOrUpdateTestPlanRemoteLink(final TestPlanDto testPlan, final JiraRemoteLinkBuilder remoteLinkBuilder) {
@@ -54,7 +55,7 @@ public class JiraReporter {
                         createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
                     } else {
                         updateRemoteLink(relatedId, remoteLink.getId(),
-                            remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
+                                remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
                     }
                 }
             }
@@ -67,12 +68,12 @@ public class JiraReporter {
                                 createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
                             } else {
                                 updateRemoteLink(relatedId, remoteLink.getId(),
-                                    remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
+                                        remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
                             }
                         }
                     }
-                    if (null != testCase.getRelatedLinks() && !testCase.getRelatedLinks().isEmpty()) {
-                        for (final String relatedId : testCase.getRelatedLinks()) {
+                    if (null != testCase.getRelatedIds() && !testCase.getRelatedIds().isEmpty()) {
+                        for (final String relatedId : testCase.getRelatedIds()) {
                             remoteLink = getRemoteLinkForGlobalId(relatedId, testCase.getSource());
                             if (null == remoteLink) {
                                 createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
@@ -86,25 +87,38 @@ public class JiraReporter {
         }
     }
 
+    protected void createOrUpdateTestCases(final List<TestPlanDto> testPlan) {
+
+    }
+
+    protected void createOrUpdateTestPlan(final TestPlanDto testPlan) {
+
+    }
+
+
+
+
     private <T> T addAuthHeader(final AbstractRequestDto<T> request) {
         return request.addBasicAuth(TS.params().getJiraUserName(), TS.params().getJiraPassword());
     }
 
     /**
      * Get remote links.
+     *
      * @param issue the issue
      * @return list of remote issue link
      */
     public List<RemoteIssueLinkDto> getRemoteLinks(final String issue) {
         GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue
-            + "/remotelink");
+                + "/remotelink");
         return TS.http().doRequest(addAuthHeader(get.withJson())).getResponse(new TypeReference<List<RemoteIssueLinkDto>>() {
         });
     }
 
     /**
      * Get remote link for global id.
-     * @param issue the issue
+     *
+     * @param issue    the issue
      * @param globalId global id
      * @return remote issue link for global id
      */
@@ -121,7 +135,8 @@ public class JiraReporter {
 
     /**
      * Create a remote issue link.
-     * @param issue the issue
+     *
+     * @param issue      the issue
      * @param remoteLink remote link to create
      * @return remote issue link
      */
@@ -135,8 +150,9 @@ public class JiraReporter {
 
     /**
      * Update a remote issue link.
-     * @param issue the issue
-     * @param id the issue id
+     *
+     * @param issue      the issue
+     * @param id         the issue id
      * @param remoteLink remote issue link
      * @return response of HTTP request
      */
