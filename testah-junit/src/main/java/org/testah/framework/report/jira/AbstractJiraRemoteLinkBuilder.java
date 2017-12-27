@@ -1,6 +1,6 @@
 package org.testah.framework.report.jira;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
@@ -235,10 +235,7 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
      * @return the source with slash
      */
     protected String getSourceWithSlash(final String source) {
-        if (StringUtils.isEmpty(source)) {
-            return source;
-        }
-        return source.replace(".", "/");
+        return StringUtils.replace(source, ".", "/");
     }
 
     /**
@@ -253,7 +250,7 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
         if (StringUtils.isEmpty(link)) {
             return "http://noLinkFoundToUsePlease.com/?errorTip=" + errorTip;
         }
-        if (!link.toLowerCase().startsWith("http")) {
+        if (!StringUtils.startsWithIgnoreCase(link, "http")) {
             link = "http://" + link;
         }
         return link;
