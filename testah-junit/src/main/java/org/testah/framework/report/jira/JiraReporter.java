@@ -87,17 +87,6 @@ public class JiraReporter {
         }
     }
 
-    protected void createOrUpdateTestCases(final List<TestPlanDto> testPlan) {
-
-    }
-
-    protected void createOrUpdateTestPlan(final TestPlanDto testPlan) {
-
-    }
-
-
-
-
     private <T> T addAuthHeader(final AbstractRequestDto<T> request) {
         return request.addBasicAuth(TS.params().getJiraUserName(), TS.params().getJiraPassword());
     }
