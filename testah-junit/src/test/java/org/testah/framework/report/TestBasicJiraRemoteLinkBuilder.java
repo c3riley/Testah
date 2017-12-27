@@ -1,4 +1,4 @@
-package org.testah.framework.report.performance;
+package org.testah.framework.report;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,6 +18,9 @@ public class TestBasicJiraRemoteLinkBuilder {
     private BasicJiraRemoteLinkBuilder builder;
     private TestPlanDto basicTp;
 
+    /**
+     * Sets .
+     */
     @Before
     public void setup() {
         builder = new BasicJiraRemoteLinkBuilder("test.ico");
