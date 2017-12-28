@@ -45,8 +45,12 @@ public class StepAction extends StepActionDto {
      * @return the step action dto
      */
     public StepActionDto add() {
+        return add(true);
+    }
+
+    public StepActionDto add(final boolean writeToLog) {
         if (null != TS.params() && TS.params().isRecordSteps()) {
-            AbstractTestPlan.addStepAction(this);
+            AbstractTestPlan.addStepAction(this, writeToLog);
         }
         return this;
     }

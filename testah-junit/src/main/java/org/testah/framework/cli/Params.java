@@ -132,6 +132,10 @@ public class Params {
     @Arg(dest = "jiraPassword")
     private String jiraPassword = "";
 
+    @Comment(info = "If No TS.asserts were found, so status is null, show tests as ignored")
+    @Arg(dest = "resultIgnoredIfNoAssertsFound")
+    private boolean resultIgnoredIfNoAssertsFound = true;
+
     @Comment(info = "Url base to where the class can be read, can point to source control, or testcase mgmt system")
     @Arg(dest = "sourceUrl")
     private String sourceUrl = "";
@@ -1310,6 +1314,15 @@ public class Params {
     public void setJiraPassword(final String jiraPassword) {
         TS.addMask(jiraPassword);
         this.jiraPassword = jiraPassword;
+    }
+
+    public boolean isResultIgnoredIfNoAssertsFound() {
+        return resultIgnoredIfNoAssertsFound;
+    }
+
+    public Params setResultIgnoredIfNoAssertsFound(final boolean resultIgnoredIfNoAssertsFound) {
+        this.resultIgnoredIfNoAssertsFound = resultIgnoredIfNoAssertsFound;
+        return this;
     }
 
     public String getSourceUrl() {

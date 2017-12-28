@@ -68,10 +68,10 @@
             <property name="tokens" value="LITERAL_IF, LITERAL_ELSE" />
         </module>
 
-        <!-- Requires curly brace on same line except if multi-line definition -->
+        <!-- Requires curly brace on same line except if multi-line definition
         <module name="LeftCurly">
             <property name="option" value="nlow"/>
-        </module>
+        </module>-->
 
         <!-- Allowances for the closing curly brace to be on the same line -->
         <module name="RightCurly">

@@ -140,7 +140,8 @@ public class TestFilter {
                 if (filterByTestType) {
                     if (!isFilterByTestType(meta.testType())) {
                         TS.log().trace(
-                                "test[" + test.getName() + "] filtered out by isFilterByTestType[" + TS.params().getFilterByTestType() + "]");
+                                "test[" + test.getName() + "] filtered out by isFilterByTestType["
+                                        + TS.params().getFilterByTestType() + "]");
                         continue;
                     }
                 }

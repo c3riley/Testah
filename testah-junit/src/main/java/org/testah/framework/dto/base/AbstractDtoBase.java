@@ -45,6 +45,11 @@ public abstract class AbstractDtoBase<T> {
         return TS.util().toJson(getSelf());
     }
 
+    /**
+     * Clone will return a new identical copy of the current object.
+     *
+     * @return Return this.
+     */
     @SuppressWarnings("unchecked")
     @JsonIgnore
     public T clone() {
