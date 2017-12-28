@@ -62,7 +62,8 @@ public class VerboseAsserts {
             runnableAssertBlock.run();
             return TS.asserts().pass("Passed Custom Assert Block");
         } catch (Throwable throwable) {
-            TS.asserts().fail("Failed Custom Assert Block - " + throwable.getMessage());
+            TS.asserts().fail("Failed Custom Assert Block - "
+                    + (null == throwable.getMessage() ? throwable.toString() : throwable.getMessage()));
         }
         return false;
     }
