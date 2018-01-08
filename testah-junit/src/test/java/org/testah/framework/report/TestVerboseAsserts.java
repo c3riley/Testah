@@ -1,9 +1,10 @@
 package org.testah.framework.report;
 
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.testah.TS;
+
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 public class TestVerboseAsserts {
 
@@ -39,4 +40,30 @@ public class TestVerboseAsserts {
         TS.asserts().that(doublePrimitive, lessThanOrEqualTo(doublePrimitive));
         TS.asserts().that(intPrimitive, lessThanOrEqualTo(intPrimitive));
     }
+
+    @Test
+    public void testCustomAssertPass() {
+        TS.asserts().customAssert(() -> {
+            Assert.assertTrue("expecting to pass", true);
+        });
+
+        TS.asserts().customAssert("custom assert desc", () -> {
+            Assert.assertTrue("expecting to pass", true);
+        });
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCustomAssertFail() {
+        TS.asserts().customAssert(() -> {
+            Assert.assertTrue("expecting to fail", false);
+        });
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCustomAssertFailWithMessage() {
+        TS.asserts().customAssert("custom assert desc", () -> {
+            Assert.assertTrue("expecting to fail", false);
+        });
+    }
+
 }

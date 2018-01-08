@@ -53,6 +53,21 @@ public class VerboseAsserts {
         this.throwExceptionOnFail = throwExceptionOnFail;
     }
 
+    public boolean customAssert(final Runnable runnableAssertBlock) {
+        return customAssert("", runnableAssertBlock);
+    }
+
+    public boolean customAssert(final String message, final Runnable runnableAssertBlock) {
+        try {
+            runnableAssertBlock.run();
+            return TS.asserts().pass("Passed Custom Assert Block");
+        } catch (Throwable throwable) {
+            TS.asserts().fail("Failed Custom Assert Block - "
+                    + (null == throwable.getMessage() ? throwable.toString() : throwable.getMessage()));
+        }
+        return false;
+    }
+
     /**
      * Starts with.
      *
@@ -63,7 +78,7 @@ public class VerboseAsserts {
      */
     public boolean startsWith(final String message, final String stringToCheck, final String expectedPrefix) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to startWith " + expectedPrefix,
-            stringToCheck.startsWith(expectedPrefix));
+                stringToCheck.startsWith(expectedPrefix));
     }
 
     /**
@@ -76,7 +91,7 @@ public class VerboseAsserts {
      */
     public boolean endsWith(final String message, final String stringToCheck, final String expectedSuffix) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to endsWith " + expectedSuffix,
-            stringToCheck.endsWith(expectedSuffix));
+                stringToCheck.endsWith(expectedSuffix));
     }
 
     /**
@@ -89,7 +104,7 @@ public class VerboseAsserts {
      */
     public boolean contains(final String message, final String stringToCheck, final String expectedValueToContain) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to contain " + expectedValueToContain,
-            stringToCheck.contains(expectedValueToContain));
+                stringToCheck.contains(expectedValueToContain));
     }
 
     /**
@@ -102,7 +117,7 @@ public class VerboseAsserts {
      */
     public boolean sizeEquals(final String message, final String objectToCheckSizeOrLenthOf, final int expectedSize) {
         return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLenthOf
-            + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
+                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
     }
 
     /**
@@ -115,7 +130,7 @@ public class VerboseAsserts {
      */
     public boolean notEndsWith(final String message, final String stringToCheck, final String expectedSuffix) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to endsWith " + expectedSuffix,
-            stringToCheck.endsWith(expectedSuffix));
+                stringToCheck.endsWith(expectedSuffix));
     }
 
     /**
@@ -128,7 +143,7 @@ public class VerboseAsserts {
      */
     public boolean notContains(final String message, final String stringToCheck, final String expectedValueToContain) {
         return this.isFalse(message + " - expected String[" + stringToCheck + "] to contain " + expectedValueToContain,
-            stringToCheck.contains(expectedValueToContain));
+                stringToCheck.contains(expectedValueToContain));
     }
 
     /**
@@ -140,10 +155,9 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean notSizeEquals(final String message, final Object objectToCheckSizeOrLenthOf,
-                                 final int expectedSize)
-    {
+                                 final int expectedSize) {
         return this.notEquals(message + " - expected Object[" + objectToCheckSizeOrLenthOf
-            + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
+                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
     }
 
     /**
@@ -171,50 +185,88 @@ public class VerboseAsserts {
             return actual;
         } else {
             throw new RuntimeException("Issue with object to Check for isEmpty Assert, object must be String, "
-               + "ArrayList, Set, List or HashMap");
+                    + "ArrayList, Set, List or HashMap");
         }
     }
 
     // final JsonNode jsonNode=new ObjectMapper().valueToTree(tp);
 
     /**
-     * Same json.
+     * Same json uses JSONAssert.
      *
+     * @param expected the expected object will be converted to JSONObject
+     * @param actual   the actual object will be converted to JSONObject
+     * @return the boolean if true
+     */
+    public boolean sameJson(final Object expected, final Object actual) {
+        return sameJson("", expected, actual, true);
+    }
+
+    /**
+     * Same json uses JSONAssert.
+     *
+     * @param message  the message
      * @param expected the expected
      * @param actual   the actual
      * @return true, if successful
      */
-    // final JSONAssert.
-    public boolean sameJson(final Object expected, final Object actual) {
-        return sameJson(expected, actual, true);
+    public boolean sameJson(final String message, final Object expected, final Object actual) {
+        return sameJson(message, expected, actual, true);
+
     }
 
     /**
-     * Same json.
+     * Same json boolean.
      *
      * @param expected the expected
      * @param actual   the actual
      * @param strict   the strict
-     * @return true, if successful
+     * @return the boolean
      */
     public boolean sameJson(final Object expected, final Object actual, final boolean strict) {
-        final JSONObject expectedJsonNode = new JSONObject(expected);
-        final JSONObject actualJsonNode = new JSONObject(actual);
-        return sameJson(expectedJsonNode, actualJsonNode, strict);
+        return sameJson("", expected, actual, strict);
     }
 
     /**
      * Same json.
      *
+     * @param message  the message
      * @param expected the expected
      * @param actual   the actual
      * @param strict   the strict
      * @return true, if successful
      */
+    public boolean sameJson(final String message, final Object expected, final Object actual, final boolean strict) {
+        final JSONObject expectedJsonNode = new JSONObject(expected);
+        final JSONObject actualJsonNode = new JSONObject(actual);
+        return sameJson(message, expectedJsonNode, actualJsonNode, strict);
+    }
+
+    /**
+     * Same json boolean.
+     *
+     * @param expected the expected
+     * @param actual   the actual
+     * @param strict   the strict
+     * @return the boolean
+     */
     public boolean sameJson(final JSONObject expected, final JSONObject actual, final boolean strict) {
+        return sameJson("", expected, actual, strict);
+    }
+
+    /**
+     * Same json.
+     *
+     * @param message  the message
+     * @param expected the expected
+     * @param actual   the actual
+     * @param strict   the strict
+     * @return true, if successful
+     */
+    public boolean sameJson(final String message, final JSONObject expected, final JSONObject actual, final boolean strict) {
         try {
             JSONAssert.assertEquals(expected, actual, strict);
-            return addAssertHistory("", true, "assertSameJson", expected, actual);
+            return addAssertHistory(message, true, "assertSameJson", expected, actual);
         } catch (final Exception e) {
             final boolean rtn = addAssertHistory("", false, "assertSame", expected.toString(), actual.toString(), e);
             if (getThrowExceptionOnFail()) {
@@ -232,16 +284,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean same(final Object expected, final Object actual) {
-        try {
-            Assert.assertSame(expected, actual);
-            return addAssertHistory("", true, "assertSame", expected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertSame", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return same("", expected, actual);
     }
 
     /**
@@ -271,16 +314,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean fail() {
-        try {
-            Assert.fail();
-            return addAssertHistory("", false, "fail", null, null);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "fail", null, null, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return fail("");
     }
 
     /**
@@ -292,9 +326,9 @@ public class VerboseAsserts {
     public boolean fail(final String message) {
         try {
             Assert.fail(message);
-            return addAssertHistory(message, false, "fail", null, null);
+            return addAssertHistory(message, false, "fail", "", "");
         } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory(message, false, "fail", null, null, e);
+            final boolean rtn = addAssertHistory(message, false, "fail", "", "", e);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
@@ -304,6 +338,7 @@ public class VerboseAsserts {
 
     /**
      * Critical failure.
+     *
      * @param message message string
      */
     public void critical(final String message) {
@@ -894,10 +929,11 @@ public class VerboseAsserts {
 
     /**
      * Use Hamcrest matcher for assert.
-     * @param <T> generic type
-     * @param message assert message
+     *
+     * @param <T>      generic type
+     * @param message  assert message
      * @param expected expected object
-     * @param matcher Hamcrest matcher
+     * @param matcher  Hamcrest matcher
      */
     public <T> void assertThat(final String message, final T expected, final Matcher<? super T> matcher) {
         try {
@@ -912,9 +948,10 @@ public class VerboseAsserts {
 
     /**
      * Use Hamcrest matcher for assert.
-     * @param <T> generic type
+     *
+     * @param <T>      generic type
      * @param expected expected object
-     * @param matcher Hamcrest matcher
+     * @param matcher  Hamcrest matcher
      */
     public <T> void assertThat(final T expected, final Matcher<? super T> matcher) {
         assertThat("", expected, matcher);
@@ -1263,8 +1300,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final String message, final double[] expected, final double[] actual,
-                               final double arg3)
-    {
+                               final double arg3) {
         try {
             Assert.assertArrayEquals(message, expected, actual, arg3);
             return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
@@ -1410,8 +1446,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final String message, final float[] expecteds, final float[] actuals,
-                               final float delta)
-    {
+                               final float delta) {
         try {
             Assert.assertArrayEquals(message, expecteds, actuals, delta);
             return addAssertHistory(message, true, "assertArrayEquals", expecteds, actuals);
@@ -1606,7 +1641,7 @@ public class VerboseAsserts {
             return actual;
         } else {
             throw new RuntimeException("Issue with object to Check for isEmpty Assert, object must be String, "
-               + "ArrayList, Set, List or HashMap");
+                    + "ArrayList, Set, List or HashMap");
         }
     }
 
@@ -1635,7 +1670,7 @@ public class VerboseAsserts {
         try {
             message = message + " - actual[" + actual + "] is greater than " + valueToBeGreaterThan;
             Assert.assertTrue(message,
-                valueToBeGreaterThan < actual);
+                    valueToBeGreaterThan < actual);
             return addAssertHistory(message, true, "isGreaterThan", valueToBeGreaterThan, actual);
         } catch (final AssertionError e) {
             final boolean rtn = addAssertHistory(message, false, "isGreaterThan", valueToBeGreaterThan, actual, e);
@@ -1658,7 +1693,7 @@ public class VerboseAsserts {
         try {
             message = message + " - actual[" + actual + "] is less than " + valueToBeLessThan;
             Assert.assertTrue(message,
-                valueToBeLessThan > actual);
+                    valueToBeLessThan > actual);
             return addAssertHistory(message, true, "isLessThan", valueToBeLessThan, actual);
         } catch (final AssertionError e) {
             final boolean rtn = addAssertHistory(message, false, "isLessThan", valueToBeLessThan, actual, e);
@@ -1686,7 +1721,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean pass(final String message) {
-        return addAssertHistory(message, true, "pass", null, null, null);
+        return addAssertHistory(message, true, "pass", true, true, null);
     }
 
     /**
@@ -1700,8 +1735,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean addAssertHistory(final String message, final Boolean status, final String assertMethod,
-                                    final Object expected, final Object actual)
-    {
+                                    final Object expected, final Object actual) {
         return addAssertHistory(message, status, assertMethod, expected, actual, null);
     }
 
@@ -1717,12 +1751,11 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean addAssertHistory(final String message, final Boolean status, final String assertMethod,
-                                    final Object expected, final Object actual, final Throwable exception)
-    {
+                                    final Object expected, final Object actual, final Throwable exception) {
         if (isVerifyOnly()) {
-            StepAction.createVerifyResult(message, status, assertMethod, expected, actual, exception).add();
+            StepAction.createVerifyResult(message, status, assertMethod, expected, actual, exception).add(false);
         } else {
-            StepAction.createAssertResult(message, status, assertMethod, expected, actual, exception).add();
+            StepAction.createAssertResult(message, status, assertMethod, expected, actual, exception).add(false);
         }
 
         return status;

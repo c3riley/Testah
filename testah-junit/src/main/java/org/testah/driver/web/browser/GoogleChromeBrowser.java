@@ -26,11 +26,11 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     private ChromeDriverService service = null;
 
     /*
-     * (non-Javadoc)
+     * (non-Javadoc).
      *
      * @see
      * org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.
-     * selenium.remote.DesiredCapabilities)
+     * selenium.remote.DesiredCapabilities).
      */
     public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
         if (null == service) {
@@ -41,9 +41,9 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     }
 
     /*
-     * (non-Javadoc)
+     * (non-Javadoc).
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
+     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay().
      */
     public GoogleChromeBrowser getDriverBinay() {
         ChromeDriverManager.getInstance().setup();
@@ -51,9 +51,9 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     }
 
     /*
-     * (non-Javadoc)
+     * (non-Javadoc).
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#startService()
+     * @see org.testah.driver.web.browser.AbstractBrowser#startService().
      */
     public GoogleChromeBrowser startService() throws IOException {
         service = new ChromeDriverService.Builder().usingDriverExecutable(new File(getChromePath())).usingAnyFreePort()
@@ -63,9 +63,9 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     }
 
     /*
-     * (non-Javadoc)
+     * (non-Javadoc).
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities()
+     * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities().
      */
     public DesiredCapabilities createCapabilities() {
         final DesiredCapabilities capabilities = DesiredCapabilities.chrome();
@@ -93,7 +93,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     /**
      * Gets the chrome path.
      *
-     * @return the chrome path
+     * @return the chrome path.
      */
     private String getChromePath() {
 
@@ -151,9 +151,9 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     }
 
     /*
-     * (non-Javadoc)
+     * (non-Javadoc).
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#stopService()
+     * @see org.testah.driver.web.browser.AbstractBrowser#stopService().
      */
     public GoogleChromeBrowser stopService() throws IOException {
         if (null != service) {
