@@ -84,6 +84,11 @@ public abstract class AbstractTestPlan {
      */
     private TestRule globalTimeout = Timeout.millis(100000L);
 
+    /**
+     * Gets global timeout.
+     *
+     * @return the global timeout
+     */
     public TestRule getGlobalTimeout() {
         return globalTimeout;
     }
@@ -247,6 +252,11 @@ public abstract class AbstractTestPlan {
     @Rule
     public TestRule chain = RuleChain.outerRule(watchman2).around(initialize).around(name).around(filter);
 
+    /**
+     * Gets chain.
+     *
+     * @return the chain
+     */
     public TestRule getChain() {
         return chain;
     }

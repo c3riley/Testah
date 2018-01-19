@@ -1,6 +1,7 @@
 package org.testah.framework.cli;
 
 import groovy.lang.GroovyClassLoader;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.helpers.FileUtils;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.reflections.Reflections;
@@ -83,7 +84,6 @@ public class TestFilter {
         if (null != testClassesToFilter) {
 
             TestPlan meta;
-
 
             boolean filterByUuid = isFilterOn(TS.params().getFilterById());
 
@@ -215,7 +215,6 @@ public class TestFilter {
 
         if (null != meta) {
 
-
             final boolean filterByUuid = isFilterOn(TS.params().getFilterById());
             final boolean filterByComponent = isFilterOn(TS.params().getFilterByComponent());
             final boolean filterByDevice = isFilterOn(TS.params().getFilterByDevice());
@@ -312,7 +311,15 @@ public class TestFilter {
      * @return true, if is filter test name starts with
      */
     private boolean isFilterTestNameStartsWith(final Class<?> test, final String startsWith) {
-        return null == startsWith || startsWith.length() <= 0 || test.getName().startsWith(startsWith);
+        if (StringUtils.isEmpty(startsWith)) {
+            return true;
+        }
+        return Arrays.stream(StringUtils.split(startsWith, ","))
+                .filter(prefix ->
+                        StringUtils.startsWithIgnoreCase(
+                                (StringUtils.contains(prefix, ".") ? test.getCanonicalName() : test.getSimpleName()),
+                                prefix.trim())
+                ).findFirst().isPresent();
     }
 
     /**

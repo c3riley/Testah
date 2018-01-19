@@ -19,6 +19,12 @@ public class StepAction extends StepActionDto {
         return new StepAction();
     }
 
+    /**
+     * Add step action dto.
+     *
+     * @param stepAction the step action
+     * @return the step action dto
+     */
     public static StepActionDto add(final StepActionDto stepAction) {
         if (null != TS.params() && TS.params().isRecordSteps()) {
             AbstractTestPlan.addStepAction(stepAction);
@@ -48,6 +54,12 @@ public class StepAction extends StepActionDto {
         return add(true);
     }
 
+    /**
+     * Add step action dto.
+     *
+     * @param writeToLog the write to log
+     * @return the step action dto
+     */
     public StepActionDto add(final boolean writeToLog) {
         if (null != TS.params() && TS.params().isRecordSteps()) {
             AbstractTestPlan.addStepAction(this, writeToLog);
@@ -153,6 +165,16 @@ public class StepAction extends StepActionDto {
         return createInfo(message1, message2, message3, autoLog, false);
     }
 
+    /**
+     * Create info step action.
+     *
+     * @param message1     the message 1
+     * @param message2     the message 2
+     * @param message3     the message 3
+     * @param autoLog      the auto log
+     * @param takeSnapShot the take snap shot
+     * @return the step action
+     */
     public static StepAction createInfo(final String message1, final String message2, final String message3,
                                         final boolean autoLog, final boolean takeSnapShot)
     {
@@ -200,16 +222,28 @@ public class StepAction extends StepActionDto {
         return step;
     }
 
+    /**
+     * Screenshot step action.
+     *
+     * @param message the message
+     * @return the step action
+     */
     public static StepAction screenshot(final String message) {
         return createInfo(message, "", "", true, true);
     }
 
+    /**
+     * Screenshot step action.
+     *
+     * @return the step action
+     */
     public static StepAction screenshot() {
         return screenshot("");
     }
 
     /**
      * Add a screen snapshot to a step action.
+     *
      * @param stepAction the StepAction to which to add a screen snapshot
      * @return the updated StepAction
      */

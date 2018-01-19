@@ -9,7 +9,7 @@ public class OptionCall {
     @Test
     public void test() throws Exception {
 
-        TS.http().addCustomTestHeader("option-test").doRequest(new OptionRequestDto("http://www.testah.com"));
+        TS.http().addCustomTestHeader("option-test").doRequest(new OptionRequestDto("http://www.testah.com")).assertStatus();
 
     }
 

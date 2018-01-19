@@ -162,6 +162,11 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         return null;
     }
 
+    /**
+     * logBrowerInfo will log info about the browser session
+     *
+     * @return returns class instance
+     */
     @Override
     public AbstractBrowser<GoogleChromeBrowser> logBrowerInfo() {
         // TODO Auto-generated method stub

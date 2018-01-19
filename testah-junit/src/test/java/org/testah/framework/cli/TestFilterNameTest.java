@@ -2,6 +2,8 @@ package org.testah.framework.cli;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,13 +13,6 @@ import org.testah.TS;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.is;
-
-
 
 public class TestFilterNameTest {
 
@@ -35,29 +30,28 @@ public class TestFilterNameTest {
         final TestFilter filter = new TestFilter();
 
         TS.params().setFilterByTestPlanNameStartsWith("TestPlanWith, TestFilterTestTypeTest, TestResultIgnoredIfNoAssertsFound");
-        assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
-                .size(), is(greaterThanOrEqualTo(30)));
+        MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
+                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(30)));
 
         TS.params().setFilterByTestPlanNameStartsWith("org.");
-        assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
-                .size(), is(greaterThanOrEqualTo(48)));
+        MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
+                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(48)));
 
         TS.params().setFilterByTestPlanNameStartsWith("org.testah.framework.cli");
-        assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
-                .size(), is(greaterThanOrEqualTo(30)));
+        MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
+                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(30)));
 
         TS.params().setFilterByTestPlanNameStartsWith("TestPlanWith");
-        assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
-                .size(), is(greaterThanOrEqualTo(28)));
-
+        MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
+                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(28)));
 
         TS.params().setFilterByTestPlanNameStartsWith("Test");
-        assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
-                .size(), is(greaterThanOrEqualTo(28)));
+        MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
+                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(28)));
 
         TS.params().setFilterByTestPlanNameStartsWith("zNoTest");
-        assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
-                .size(), is(equalTo(0)));
+        MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
+                .size(), Matchers.is(Matchers.equalTo(0)));
 
     }
 
@@ -69,7 +63,7 @@ public class TestFilterNameTest {
 
         testFilterName(1, 1, 0, 1, TestPlanWithManyTags.class);
 
-        testFilterName(4, 4, 4, 4, TestPlanWithTag.class, TestPlanWithManyTags.class,
+        testFilterName(4, 4, 5, 5, TestPlanWithTag.class, TestPlanWithManyTags.class,
                 TestPlanWithTagDefault.class, TestPlanWithTagEmpty.class,
                 TestPlanWithTagEmptyString.class, CliTest.class);
 
@@ -82,9 +76,9 @@ public class TestFilterNameTest {
         List<Class<?>> classesList = ImmutableList.copyOf(Arrays.asList(classesToAdd));
 
         Class<?> firstClass = classesList.get(0);
-        Class<?> secondClass = classesList.size() > 1 ? classesList.get(1) : null;
 
-        TS.params().setFilterByTestPlanNameStartsWith(firstClass.getName());
+
+        TS.params().setFilterByTestPlanNameStartsWith(firstClass.getCanonicalName());
         Assert.assertEquals(expectedTest1, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
                 .size());
 
@@ -92,16 +86,17 @@ public class TestFilterNameTest {
         Assert.assertEquals(expectedTest2, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
                 .size());
 
+        Class<?> secondClass = classesList.size() > 1 ? classesList.get(1) : null;
         if (null != secondClass) {
-            TS.params().setFilterByTestPlanNameStartsWith(firstClass.getName() + ", " + secondClass.getName());
+            TS.params().setFilterByTestPlanNameStartsWith(firstClass.getCanonicalName() + ", " + secondClass.getName());
             Assert.assertEquals(expectedTest3, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
                     .size());
 
             TS.params().setFilterByTestPlanNameStartsWith(firstClass.getSimpleName() + ", " + secondClass.getSimpleName());
             Assert.assertEquals(expectedTest4, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
                     .size());
-
-            TS.params().setFilterByTestPlanNameStartsWith(firstClass.getName() + ", " + secondClass.getSimpleName());
+            TS.log().info(firstClass.getCanonicalName() + ", " + secondClass.getSimpleName());
+            TS.params().setFilterByTestPlanNameStartsWith(firstClass.getCanonicalName() + ", " + secondClass.getSimpleName());
             Assert.assertEquals(expectedTest4, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
                     .size());
         }

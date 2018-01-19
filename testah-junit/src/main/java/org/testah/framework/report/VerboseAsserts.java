@@ -53,10 +53,23 @@ public class VerboseAsserts {
         this.throwExceptionOnFail = throwExceptionOnFail;
     }
 
+    /**
+     * Custom assert boolean.
+     *
+     * @param runnableAssertBlock the runnable assert block
+     * @return the boolean
+     */
     public boolean customAssert(final Runnable runnableAssertBlock) {
         return customAssert("", runnableAssertBlock);
     }
 
+    /**
+     * Custom assert boolean.
+     *
+     * @param message             the message
+     * @param runnableAssertBlock the runnable assert block
+     * @return the boolean
+     */
     public boolean customAssert(final String message, final Runnable runnableAssertBlock) {
         try {
             runnableAssertBlock.run();

@@ -16,8 +16,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Abstract dto base.
+ *
+ * @param <T> the type parameter
+ */
 public abstract class AbstractDtoBase<T> {
 
+    /**
+     * The constant MSG_UNKNOWN_JSON_PROP_FOUND.
+     */
     @JsonIgnore
     public static final String MSG_UNKNOWN_JSON_PROP_FOUND = "@@@ Found Unknown Json Field @@@";
     @JsonIgnore
@@ -27,6 +35,9 @@ public abstract class AbstractDtoBase<T> {
     @JsonIgnore
     private List<String> toStringListOfFieldsToExclude = null;
 
+    /**
+     * Instantiates a new Abstract dto base.
+     */
     public AbstractDtoBase() {
 
     }
@@ -40,6 +51,11 @@ public abstract class AbstractDtoBase<T> {
         return (T) this;
     }
 
+    /**
+     * To json string.
+     *
+     * @return the string
+     */
     @JsonIgnore
     public String toJson() {
         return TS.util().toJson(getSelf());
@@ -61,6 +77,11 @@ public abstract class AbstractDtoBase<T> {
         }
     }
 
+    /**
+     * Gets class path.
+     *
+     * @return the class path
+     */
     @JsonIgnore
     public String getClassPath() {
         return getSelf().getClass().getCanonicalName();
@@ -70,6 +91,12 @@ public abstract class AbstractDtoBase<T> {
         return toString(ToStringStyle.JSON_STYLE);
     }
 
+    /**
+     * To string string.
+     *
+     * @param style the style
+     * @return the string
+     */
     public String toString(final ToStringStyle style) {
         ReflectionToStringBuilder toStringBuilder = new ReflectionToStringBuilder(this, style);
         toStringBuilder.setExcludeFieldNames(getToStringListOfFieldsToExclude().stream().toArray(String[]::new));
@@ -80,6 +107,12 @@ public abstract class AbstractDtoBase<T> {
         return EqualsBuilder.reflectionEquals(getSelf(), obj);
     }
 
+    /**
+     * Equals verbose boolean.
+     *
+     * @param obj the obj
+     * @return the boolean
+     */
     @JsonIgnore
     public boolean equalsVerbose(final Object obj) {
         try {
@@ -96,23 +129,48 @@ public abstract class AbstractDtoBase<T> {
         return HashCodeBuilder.reflectionHashCode(getSelf());
     }
 
+    /**
+     * Assert equals abstract dto base.
+     *
+     * @param actual the actual
+     * @return the abstract dto base
+     * @throws JSONException the json exception
+     */
     @JsonIgnore
     public AbstractDtoBase<T> assertEquals(final AbstractDtoBase<?> actual) throws JSONException {
         return assertEquals(((AbstractDtoBase<?>) actual).toJson());
     }
 
+    /**
+     * Assert equals abstract dto base.
+     *
+     * @param actualJson the actual json
+     * @return the abstract dto base
+     * @throws JSONException the json exception
+     */
     @JsonIgnore
     public AbstractDtoBase<T> assertEquals(final String actualJson) throws JSONException {
         JSONAssert.assertEquals(this.toJson(), actualJson, true);
         return this;
     }
 
+    /**
+     * Gets additional properties.
+     *
+     * @return the additional properties
+     */
     @JsonIgnore
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
     }
 
+    /**
+     * Sets additional property.
+     *
+     * @param name  the name
+     * @param value the value
+     */
     @JsonAnySetter
     public void setAdditionalProperty(final String name, final Object value) {
         TS.log().warn(String.format(MSG_UNKNOWN_JSON_PROP_FOUND + ": %s - Dto Class: %s", name,
@@ -124,27 +182,53 @@ public abstract class AbstractDtoBase<T> {
         this.additionalProperties.put(name, value);
     }
 
+    /**
+     * Is allow unknown boolean.
+     *
+     * @return the boolean
+     */
     @JsonIgnore
     protected boolean isAllowUnknown() {
         return allowUnknown;
     }
 
+    /**
+     * Sets allow unknown.
+     *
+     * @param allowUnknown the allow unknown
+     * @return the allow unknown
+     */
     @JsonIgnore
     protected T setAllowUnknown(final boolean allowUnknown) {
         this.allowUnknown = allowUnknown;
         return getSelf();
     }
 
+    /**
+     * Gets to string style.
+     *
+     * @return the to string style
+     */
     @JsonIgnore
     public ToStringStyle getToStringStyle() {
         return toStringStyle;
     }
 
+    /**
+     * Sets to string style.
+     *
+     * @param toStringStyle the to string style
+     */
     @JsonIgnore
     public void setToStringStyle(final ToStringStyle toStringStyle) {
         this.toStringStyle = toStringStyle;
     }
 
+    /**
+     * Gets to string list of fields to exclude.
+     *
+     * @return the to string list of fields to exclude
+     */
     @JsonIgnore
     public List<String> getToStringListOfFieldsToExclude() {
         if (null == toStringListOfFieldsToExclude) {
@@ -157,6 +241,11 @@ public abstract class AbstractDtoBase<T> {
         return toStringListOfFieldsToExclude;
     }
 
+    /**
+     * Sets to string list of fields to exclude.
+     *
+     * @param toStringListOfFieldsToExclude the to string list of fields to exclude
+     */
     @JsonIgnore
     public void setToStringListOfFieldsToExclude(final List<String> toStringListOfFieldsToExclude) {
         this.toStringListOfFieldsToExclude = toStringListOfFieldsToExclude;
