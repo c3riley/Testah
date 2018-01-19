@@ -3,6 +3,7 @@ package org.testah.framework.cli;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.testah.TS;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,5 +47,6 @@ public class ParamsTest {
         Assert.assertEquals("world", System.getProperty("PROP_TEST_AA2", NA_N));
         System.getProperties().remove("PROP_TEST_AA2");
     }
+
 
 }

@@ -1,7 +1,5 @@
 package org.testah.framework.cli;
 
-import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
-
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -30,6 +28,8 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 
+import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
+
 /**
  * The Class Cli.
  */
@@ -53,7 +53,7 @@ public class Cli {
     /**
      * The Constant version.
      */
-    public static final String version = "0.9.20";
+    public static final String version = "0.9.25";
 
     /**
      * The Constant BAR_LONG.

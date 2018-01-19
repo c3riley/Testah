@@ -233,14 +233,29 @@ public class TS {
         return;
     }
 
+    /**
+     * Gets mask values.
+     *
+     * @return the mask values
+     */
     public static HashMap<String, String> getMaskValues() {
         return maskValues;
     }
 
+    /**
+     * Add mask.
+     *
+     * @param valueToMask the value to mask
+     */
     public static void addMask(final String valueToMask) {
         maskValues.put(valueToMask, "*masked*");
     }
 
+    /**
+     * Gets test plan reporter.
+     *
+     * @return the test plan reporter
+     */
     public static TestPlanReporter getTestPlanReporter() {
         if (null == _testPlanReporter) {
             _testPlanReporter = new TestPlanReporter();
@@ -248,10 +263,18 @@ public class TS {
         return _testPlanReporter;
     }
 
+    /**
+     * Sets test plan reporter.
+     *
+     * @param testPlanReporter the test plan reporter
+     */
     public static void setTestPlanReporter(final TestPlanReporter testPlanReporter) {
         _testPlanReporter = testPlanReporter;
     }
 
+    /**
+     * Tear down.
+     */
     public static void tearDown() {
         cleanUpThreadLocal(_browser);
         cleanUpThreadLocal(_statefulData);

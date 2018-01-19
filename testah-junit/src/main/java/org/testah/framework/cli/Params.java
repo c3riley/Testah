@@ -132,6 +132,14 @@ public class Params {
     @Arg(dest = "jiraPassword")
     private String jiraPassword = "";
 
+    @Comment(info = "If No TS.asserts were found, so status is null, show tests as ignored")
+    @Arg(dest = "resultIgnoredIfNoAssertsFound")
+    private boolean resultIgnoredIfNoAssertsFound = true;
+
+    @Comment(info = "Url base to where the class can be read, can point to source control, or testcase mgmt system")
+    @Arg(dest = "sourceUrl")
+    private String sourceUrl = "";
+
     /**
      * The num concurrent threads.
      */
@@ -164,7 +172,7 @@ public class Params {
      * The default wait time.
      */
     @Comment(
-        info = "Default Wait time, determines the length of the loop, is not in seconds, works with the default pause time")
+            info = "Default Wait time, determines the length of the loop, is not in seconds, works with the default pause time")
     @Arg(dest = "defaultWaitTime")
     private int defaultWaitTime = 10;
 
@@ -179,7 +187,7 @@ public class Params {
      * The look at internal tests.
      */
     @Comment(
-        info = "Provide a value for the base level where tests can be found in the project, if empty will not run tests in jar")
+            info = "Provide a value for the base level where tests can be found in the project, if empty will not run tests in jar")
     @Arg(dest = "lookAtInternalTests")
     private String lookAtInternalTests = "org.testah";
 
@@ -187,7 +195,7 @@ public class Params {
      * The look at external tests.
      */
     @Comment(info = "Provide a path where to look for external uncompiled Test Classes, "
-        + "can be stored as .java or .groovy, can supply a directory or specific file")
+            + "can be stored as .java or .groovy, can supply a directory or specific file")
     @Arg(dest = "lookAtExternalTests")
     private String lookAtExternalTests = "";
 
@@ -202,8 +210,8 @@ public class Params {
      * The throw exception on fail.
      */
     @Comment(
-        info = "Should the System work as normal JUnit and stop a test case method on first fail, if false will continue to end "
-            + "then check for any fails")
+            info = "Should the System work as normal JUnit and stop a test case method on first fail, if false will continue to end "
+                    + "then check for any fails")
     @Arg(dest = "throwExceptionOnFail")
     private boolean throwExceptionOnFail = true;
 
@@ -211,7 +219,7 @@ public class Params {
      * The web driver_user agent value.
      */
     @Comment(
-        info = "[BAR1]Webdriver properties[BAR2]Override Browser UserAgent property, allows tests to act as mobile device, etc")
+            info = "[BAR1]Webdriver properties[BAR2]Override Browser UserAgent property, allows tests to act as mobile device, etc")
     @Arg(dest = "webDriver_userAgentValue")
     private String webDriverUserAgentValue = "";
 
@@ -226,7 +234,7 @@ public class Params {
      * The web driver_default remote uri.
      */
     @Comment(
-        info = "If Use Remote Driver is True, value will be used to connect to a Webdriver Grid, can be local or remote")
+            info = "If Use Remote Driver is True, value will be used to connect to a Webdriver Grid, can be local or remote")
     @Arg(dest = "webDriver_defaultRemoteUri")
     private String webDriverDefaultRemoteUri = "http://localhost:4444/wd/hub";
 
@@ -241,7 +249,7 @@ public class Params {
      * The web driver_phantom js driver binary.
      */
     @Comment(
-        info = "Add a path to the Phantomjs Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
+            info = "Add a path to the Phantomjs Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
     @Arg(dest = "webDriver_PhantomJsDriverBinary")
     private String webDriverPhantomJsDriverBinary = "";
 
@@ -249,7 +257,7 @@ public class Params {
      * The web driver_chrome driver binary.
      */
     @Comment(
-        info = "Add a path to the Chrome Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
+            info = "Add a path to the Chrome Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
     @Arg(dest = "webDriver_ChromeDriverBinary")
     private String webDriverChromeDriverBinary = "";
 
@@ -257,7 +265,7 @@ public class Params {
      * The output.
      */
     @Comment(
-        info = "[BAR1]Reporting Properties[BAR2]Folder to write output to, if empty will be {user dir}/testahOutput")
+            info = "[BAR1]Reporting Properties[BAR2]Folder to write output to, if empty will be {user dir}/testahOutput")
     @Arg(dest = "output")
     private String output = "";
 
@@ -300,8 +308,8 @@ public class Params {
      * The send json test data to service.
      */
     @Comment(
-        info = "Should the Runner Post info to a service in Json Format. If Uri is supplied it will attempt to send "
-            + "the json info as a List of 1 to many TestPlans")
+            info = "Should the Runner Post info to a service in Json Format. If Uri is supplied it will attempt to send "
+                    + "the json info as a List of 1 to many TestPlans")
     @Arg(dest = "sendJsonTestDataToService")
     private String sendJsonTestDataToService = "";
 
@@ -323,8 +331,8 @@ public class Params {
      * The run info_version id.
      */
     @Comment(
-        info = "[BAR1]Run Info Properties[BAR2]Version Id is a value that can be used to tell what version the test is "
-            + "testing against. Can be passed runtime via -Dtestah.versionId=login-0.0.2")
+            info = "[BAR1]Run Info Properties[BAR2]Version Id is a value that can be used to tell what version the test is "
+                    + "testing against. Can be passed runtime via -Dtestah.versionId=login-0.0.2")
     @Arg(dest = "runInfo_versionId")
     private String runInfoVersionId = "";
 
@@ -332,8 +340,8 @@ public class Params {
      * The run info_build number.
      */
     @Comment(
-        info = "Build Number is a value that can be used to tell what build the test is testing against. "
-            + "Can be passed runtime via -Dtestah.buildNumber=login-0.0.2")
+            info = "Build Number is a value that can be used to tell what build the test is testing against. "
+                    + "Can be passed runtime via -Dtestah.buildNumber=login-0.0.2")
     @Arg(dest = "runInfo_buildNumber")
     private String runInfoBuildNumber = "";
 
@@ -341,8 +349,8 @@ public class Params {
      * The run info_run id.
      */
     @Comment(
-        info = "Run Id is a value that can be used to group many differnt results together. "
-            + "Can be passed runtime via -Dtestah.runId=run23")
+            info = "Run Id is a value that can be used to group many differnt results together. "
+                    + "Can be passed runtime via -Dtestah.runId=run23")
     @Arg(dest = "runInfo_runId")
     private String runInfoRunId = "";
 
@@ -350,8 +358,8 @@ public class Params {
      * The run location.
      */
     @Comment(
-        info = "Run Location is a way to tell where the test ran, can be local machine name, or Jenkins Job Url. "
-            + "Can be passed runtime via -Dtestah.runLocation=local")
+            info = "Run Location is a way to tell where the test ran, can be local machine name, or Jenkins Job Url. "
+                    + "Can be passed runtime via -Dtestah.runLocation=local")
     @Arg(dest = "runInfo_runLocation")
     private String runLocation = "localhost";
 
@@ -359,8 +367,8 @@ public class Params {
      * The run type.
      */
     @Comment(
-        info = "Run Type is a way to tell what type of run the test execution was involed in, smoke, regression, other. "
-            + "Can be passed runtime via -Dtestah.runType=smoke")
+            info = "Run Type is a way to tell what type of run the test execution was involed in, smoke, regression, other. "
+                    + "Can be passed runtime via -Dtestah.runType=smoke")
     @Arg(dest = "runInfo_runType")
     private String runType = "";
 
@@ -368,8 +376,8 @@ public class Params {
      * The usefilter schema.
      */
     @Comment(
-        info = "[BAR1]Filter Properties[BAR2]Filter Schema To Use. Leave empty to not apply fitlers, to use default filter, "
-            + "set value to DEFAULT.  You can also create your own, like REG, or SMOKE")
+            info = "[BAR1]Filter Properties[BAR2]Filter Schema To Use. Leave empty to not apply fitlers, to use default filter, "
+                    + "set value to DEFAULT.  You can also create your own, like REG, or SMOKE")
     @Arg(dest = "usefilterSchema")
     private String usefilterSchema = "DEFAULT";
 
@@ -377,8 +385,8 @@ public class Params {
      * The filter by platform.
      */
     @Comment(
-        info = "Filter using the Platform metadata field. Can be a comma seperated list of values that a test must match. "
-            + "Value can use the (~) for [Must Not Have], any match will be excluded.")
+            info = "Filter using the Platform metadata field. Can be a comma seperated list of values that a test must match. "
+                    + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByPlatform")
     private String filterByPlatform = "";
 
@@ -386,8 +394,8 @@ public class Params {
      * The filter by device.
      */
     @Comment(
-        info = "Filter using the Device metadata field. Can be a comma seperated list of values that a test must match. "
-            + "Value can use the (~) for [Must Not Have], any match will be excluded.")
+            info = "Filter using the Device metadata field. Can be a comma seperated list of values that a test must match. "
+                    + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByDevice")
     private String filterByDevice = "";
 
@@ -395,8 +403,8 @@ public class Params {
      * The filter by component.
      */
     @Comment(
-        info = "Filter using the Component metadata field. Can be a comma seperated list of values that a test must match. "
-            + "Value can use the (~) for [Must Not Have], any match will be excluded.")
+            info = "Filter using the Component metadata field. Can be a comma seperated list of values that a test must match. "
+                    + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByComponent")
     private String filterByComponent = "";
 
@@ -404,8 +412,8 @@ public class Params {
      * The filter by run type.
      */
     @Comment(
-        info = "Filter using the RunType metadata field. Can be a comma seperated list of values that a test must match. "
-            + "Value can use the (~) for [Must Not Have], any match will be excluded.")
+            info = "Filter using the RunType metadata field. Can be a comma seperated list of values that a test must match. "
+                    + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByRunType")
     private String filterByRunType = "";
 
@@ -413,8 +421,8 @@ public class Params {
      * The filter ignore known problem.
      */
     @Comment(
-        info = "Filter Using The @KnownProblem Annotation.  True means testplan/testcase must not be a known problem. "
-            + "False means must be a known problem. Empty means do not use filter.")
+            info = "Filter Using The @KnownProblem Annotation.  True means testplan/testcase must not be a known problem. "
+                    + "False means must be a known problem. Empty means do not use filter.")
     @Arg(dest = "filterIgnoreKnownProblem")
     private String filterIgnoreKnownProblem = "";
 
@@ -422,8 +430,8 @@ public class Params {
      * The filter by tag.
      */
     @Comment(
-        info = "Filter using the Tag metadata field. Can be a comma seperated list of values that a test must match. "
-            + "Value can use the (~) for [Must Not Have], any match will be excluded.")
+            info = "Filter using the Tag metadata field. Can be a comma seperated list of values that a test must match. "
+                    + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByTag")
     private String filterByTag = "";
 
@@ -1306,6 +1314,23 @@ public class Params {
     public void setJiraPassword(final String jiraPassword) {
         TS.addMask(jiraPassword);
         this.jiraPassword = jiraPassword;
+    }
+
+    public boolean isResultIgnoredIfNoAssertsFound() {
+        return resultIgnoredIfNoAssertsFound;
+    }
+
+    public Params setResultIgnoredIfNoAssertsFound(final boolean resultIgnoredIfNoAssertsFound) {
+        this.resultIgnoredIfNoAssertsFound = resultIgnoredIfNoAssertsFound;
+        return this;
+    }
+
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    public void setSourceUrl(final String sourceUrl) {
+        this.sourceUrl = sourceUrl;
     }
 
     public HashMap<String, String> getOther() {

@@ -1,5 +1,6 @@
 package org.testah.driver.http;
 
+import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HeaderElementIterator;
 import org.apache.http.HttpEntity;
@@ -37,6 +38,7 @@ import org.apache.http.impl.io.DefaultHttpRequestWriterFactory;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.io.HttpMessageParserFactory;
 import org.apache.http.io.HttpMessageWriterFactory;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
@@ -169,6 +171,13 @@ public abstract class AbstractHttpWrapper {
      */
     private PoolingHttpClientConnectionManager connManager;
 
+    private Header customTestHeader = null;
+
+    /**
+     * Gets self.
+     *
+     * @return the self
+     */
     protected abstract AbstractHttpWrapper getSelf();
 
     /**
@@ -202,8 +211,7 @@ public abstract class AbstractHttpWrapper {
     public ResponseDto doRequestWithAssert(final AbstractRequestDto<?> request, final ResponseDto expected) {
         final ResponseDto response = doRequest(request);
         if (TS.asserts().notNull("preformRequestWithAssert actual response is not null", response)
-            && TS.asserts().notNull("preformRequestWithAssert expected response is not null", expected))
-        {
+                && TS.asserts().notNull("preformRequestWithAssert expected response is not null", expected)) {
             response.assertStatus(expected.getStatusCode());
         }
         return response;
@@ -303,8 +311,7 @@ public abstract class AbstractHttpWrapper {
      * @return the response dto
      */
     public ResponseDto doRequest(final AbstractRequestDto<?> request, final boolean verbose,
-                                 final boolean ignoreHttpError)
-    {
+                                 final boolean ignoreHttpError) {
         try {
             final HttpClientContext context = HttpClientContext.create();
             if (null != cookieStore) {
@@ -316,13 +323,16 @@ public abstract class AbstractHttpWrapper {
                 context.setCredentialsProvider(request.getCredentialsProvider());
             }
 
+            if (null != getCustomTestHeader()) {
+                request.addHeader(getCustomTestHeader());
+            }
+
             final ResponseDto responseDto = new ResponseDto().setStart();
             if (verbose) {
                 AbstractTestPlan.addStepAction(request.createRequestInfoStep(), false);
             }
             try (final CloseableHttpResponse response = (CloseableHttpResponse) getHttpClient()
-                .execute(request.getHttpRequestBase(), context))
-            {
+                    .execute(request.getHttpRequestBase(), context)) {
                 final HttpEntity entity = response.getEntity();
                 responseDto.setEnd().setStatusCode(response.getStatusLine().getStatusCode());
                 responseDto.setStatusText(response.getStatusLine().getReasonPhrase());
@@ -345,7 +355,7 @@ public abstract class AbstractHttpWrapper {
             TS.log().error(e);
             if (!ignoreHttpError) {
                 TS.asserts().equalsTo("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
-                    e.getMessage());
+                        e.getMessage());
             }
             return new ResponseDto(-1).setStatusText(e.toString()).setResponseBody(e.toString());
         }
@@ -386,9 +396,9 @@ public abstract class AbstractHttpWrapper {
      */
     public RequestConfig getRequestConfigDefault() {
         final RequestConfig defaultRequestConfig = RequestConfig.custom().setCookieSpec(getCookieSpecs())
-            .setExpectContinueEnabled(true)
-            .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
-            .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC)).build();
+                .setExpectContinueEnabled(true)
+                .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
+                .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC)).build();
         return defaultRequestConfig;
     }
 
@@ -442,12 +452,12 @@ public abstract class AbstractHttpWrapper {
 
         if (null != getDefaultConnectionTimeout()) {
             rcb.setSocketTimeout(getDefaultConnectionTimeout()).setConnectTimeout(getDefaultConnectionTimeout())
-                .setConnectionRequestTimeout(getDefaultConnectionTimeout());
+                    .setConnectionRequestTimeout(getDefaultConnectionTimeout());
         }
 
         rcb.setCookieSpec(CookieSpecs.DEFAULT).setExpectContinueEnabled(true)
-            .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
-            .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
+                .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
+                .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
         return setRequestConfig(rcb.build());
     }
 
@@ -496,8 +506,7 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setResponseParserFactory(
-        final HttpMessageParserFactory<HttpResponse> responseParserFactory)
-    {
+            final HttpMessageParserFactory<HttpResponse> responseParserFactory) {
         this.responseParserFactory = responseParserFactory;
         return getSelf();
     }
@@ -561,7 +570,7 @@ public abstract class AbstractHttpWrapper {
 
             public InetAddress[] resolve(final String host) throws UnknownHostException {
                 if (host.equalsIgnoreCase("localhost")) {
-                    return new InetAddress[] {InetAddress.getByAddress(new byte[] {127, 0, 0, 1})};
+                    return new InetAddress[]{InetAddress.getByAddress(new byte[]{127, 0, 0, 1})};
                 } else {
                     return super.resolve(host);
                 }
@@ -588,8 +597,7 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setRequestWriterFactory(
-        final HttpMessageWriterFactory<HttpRequest> requestWriterFactory)
-    {
+            final HttpMessageWriterFactory<HttpRequest> requestWriterFactory) {
         this.requestWriterFactory = requestWriterFactory;
         return getSelf();
     }
@@ -602,14 +610,13 @@ public abstract class AbstractHttpWrapper {
      * @throws KeyStoreException        the key store exception
      */
     public AbstractHttpWrapper setConnectionManagerPoolingAdvanced()
-        throws NoSuchAlgorithmException, KeyStoreException
-    {
+            throws NoSuchAlgorithmException, KeyStoreException {
 
         final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory = new ManagedHttpClientConnectionFactory(
-            requestWriterFactory, responseParserFactory);
+                requestWriterFactory, responseParserFactory);
 
         final PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(
-            setSocketFactoryRegistry().getSocketFactoryRegistry(), connFactory, dnsResolver);
+                setSocketFactoryRegistry().getSocketFactoryRegistry(), connFactory, dnsResolver);
 
         connManager.setDefaultMaxPerRoute(getDefaultMaxPerRoute());
         connManager.setMaxTotal(getDefaultPoolSize());
@@ -644,8 +651,8 @@ public abstract class AbstractHttpWrapper {
      */
     public AbstractHttpWrapper setSocketFactoryRegistry() {
         return setSocketFactoryRegistry(RegistryBuilder.<ConnectionSocketFactory>create()
-            .register("http", PlainConnectionSocketFactory.INSTANCE)
-            .register("https", new SSLConnectionSocketFactory(getSslcontext())).build());
+                .register("http", PlainConnectionSocketFactory.INSTANCE)
+                .register("https", new SSLConnectionSocketFactory(getSslcontext())).build());
     }
 
     /**
@@ -695,13 +702,13 @@ public abstract class AbstractHttpWrapper {
      *
      * @return the abstract http wrapper
      */
-    // http://www.baeldung.com/httpclient-connection-management
+// http://www.baeldung.com/httpclient-connection-management
     public AbstractHttpWrapper setConnectionKeepAliveStrategy() {
         final ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
 
             public long getKeepAliveDuration(final HttpResponse response, final HttpContext context) {
                 final HeaderElementIterator it = new BasicHeaderElementIterator(
-                    response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+                        response.headerIterator(HTTP.CONN_KEEP_ALIVE));
                 while (it.hasNext()) {
                     final HeaderElement he = it.nextElement();
                     final String param = he.getName();
@@ -723,8 +730,7 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setConnectionKeepAliveStrategy(
-        final ConnectionKeepAliveStrategy connectionKeepAliveStrategy)
-    {
+            final ConnectionKeepAliveStrategy connectionKeepAliveStrategy) {
         this.connectionKeepAliveStrategy = connectionKeepAliveStrategy;
         return getSelf();
     }
@@ -1094,6 +1100,11 @@ public abstract class AbstractHttpWrapper {
         return getSelf();
     }
 
+    /**
+     * Gets ssl socket factory.
+     *
+     * @return the ssl socket factory
+     */
     public org.apache.http.conn.ssl.SSLConnectionSocketFactory getSslSocketFactory() {
         if (null == sslSocketFactory) {
             this.sslSocketFactory = getDefaultSslConnectionSocketFactory();
@@ -1101,8 +1112,61 @@ public abstract class AbstractHttpWrapper {
         return sslSocketFactory;
     }
 
+    /**
+     * Sets ssl socket factory.
+     *
+     * @param sslSocketFactory the ssl socket factory
+     */
     public void setSslSocketFactory(final org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory) {
         this.sslSocketFactory = sslSocketFactory;
     }
 
+    /**
+     * Add custom test header abstract http wrapper.
+     *
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper addCustomTestHeader() {
+        return addCustomTestHeader("testah-e2e");
+    }
+
+    /**
+     * Add custom test header abstract http wrapper.
+     *
+     * @param value the value
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper addCustomTestHeader(final String value) {
+        customTestHeader = new BasicHeader("X-Application-Id", value);
+        return this;
+    }
+
+    /**
+     * Gets custom test header.
+     *
+     * @return the custom test header
+     */
+    public Header getCustomTestHeader() {
+        return customTestHeader;
+    }
+
+    /**
+     * Clear custom test header abstract http wrapper.
+     *
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper clearCustomTestHeader() {
+        return setCustomTestHeader(null);
+    }
+
+    /**
+     * Sets custom test header.
+     *
+     * @param customTestHeader the custom test header
+     * @return the custom test header
+     */
+    public AbstractHttpWrapper setCustomTestHeader(final Header customTestHeader) {
+        this.customTestHeader = customTestHeader;
+        return this;
+    }
 }

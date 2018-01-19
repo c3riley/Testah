@@ -1,8 +1,5 @@
 package org.testah.driver.http.requests;
 
-import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
-import static org.apache.http.HttpStatus.SC_OK;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
@@ -30,8 +27,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+import static org.apache.http.HttpStatus.SC_OK;
+
 /**
  * The Class AbstractRequestDto.
+ *
+ * @param <T> the type parameter
  */
 public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequestDto<T>> {
 
@@ -380,6 +382,12 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         return httpRequestBase.getURI().toString();
     }
 
+    /**
+     * Sets payload.
+     *
+     * @param payload the payload
+     * @return the payload
+     */
     public T setPayload(String payload) {
         try {
             if (null == payload) {
@@ -391,6 +399,12 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         }
     }
 
+    /**
+     * Sets payload.
+     *
+     * @param payload the payload
+     * @return the payload
+     */
     public T setPayload(final Object payload) {
         try {
             if (null == payload) {
@@ -404,6 +418,12 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         }
     }
 
+    /**
+     * Sets payload.
+     *
+     * @param payload the payload
+     * @return the payload
+     */
     public T setPayload(final HttpEntity payload) {
         try {
             if (null != payload) {
@@ -419,11 +439,23 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         return getSelf();
     }
 
+    /**
+     * Sets payload.
+     *
+     * @param payload the payload
+     * @return the payload
+     */
     public T setPayload(final byte[] payload) {
         setContentType("application/octet-stream");
         return setPayload(new ByteArrayEntity(payload));
     }
 
+    /**
+     * Sets entity.
+     *
+     * @param payload the payload
+     * @return the entity
+     */
     protected abstract T setEntity(final HttpEntity payload);
 
     /**

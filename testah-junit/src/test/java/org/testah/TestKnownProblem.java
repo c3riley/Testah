@@ -15,6 +15,7 @@ public class TestKnownProblem {
         Assert.assertEquals("test", k.description());
         Assert.assertEquals(new String[]{}, k.linkedIds());
         Assert.assertEquals(TypeOfKnown.DEFECT, k.typeOfKnown());
+
     }
 
 }

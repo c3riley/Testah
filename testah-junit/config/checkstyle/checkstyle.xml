@@ -68,10 +68,10 @@
             <property name="tokens" value="LITERAL_IF, LITERAL_ELSE" />
         </module>
 
-        <!-- Requires curly brace on same line except if multi-line definition -->
+        <!-- Requires curly brace on same line except if multi-line definition
         <module name="LeftCurly">
             <property name="option" value="nlow"/>
-        </module>
+        </module>-->
 
         <!-- Allowances for the closing curly brace to be on the same line -->
         <module name="RightCurly">
@@ -202,10 +202,10 @@
         </module>
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="VariableDeclarationUsageDistance"/>
-        <module name="CustomImportOrder">
+        <!--<module name="CustomImportOrder">
             <property name="separateLineBetweenGroups" value="true"/>
             <property name="customImportOrderRules" value="STATIC###THIRD_PARTY_PACKAGE"/>
-        </module>
+        </module>-->
         <module name="MethodParamPad"/>
 
         <!-- Allow spaces in if statements and calls, but don't require them (that's why it's commented out -->
