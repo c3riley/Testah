@@ -53,7 +53,7 @@ public class Cli {
     /**
      * The Constant version.
      */
-    public static final String version = "0.9.25";
+    public static final String version = "0.10.0";
 
     /**
      * The Constant BAR_LONG.
@@ -103,7 +103,7 @@ public class Cli {
     public Cli getArgumentParser(final String[] args) {
 
         final ArgumentParser parser = ArgumentParsers.newArgumentParser("Testah").defaultHelp(true)
-            .description("Testah CLI running Automated Tests for Browser and Http").epilog("").version(version);
+                .description("Testah CLI running Automated Tests for Browser and Http").epilog("").version(version);
 
         parser.addArgument("-v", "--version").action(Arguments.version()).setDefault(version);
 
@@ -111,23 +111,23 @@ public class Cli {
 
         final Subparser run = subparsers.addParser("run").help("run help");
         run.addArgument("-b", "--browser").setDefault(opt.getBrowser()).type(enumStringType(BrowserType.class))
-            .help("foo help");
+                .help("foo help");
         run.addArgument("-t", "--test").setDefault("").type(String.class)
-            .help("Deprecated - Same as --lookAtExternalTests");
+                .help("Deprecated - Same as --lookAtExternalTests");
         run.addArgument("-i", "--lookAtInternalTests").setDefault(opt.getLookAtInternalTests()).type(String.class)
-            .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
+                .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
         run.addArgument("-e", "--lookAtExternalTests").setDefault(opt.getLookAtExternalTests()).type(String.class).help(
-            "lookAtExternalTests is a path to a test file, java or groovy, or a comma seperated like, regex, for directory path");
+                "lookAtExternalTests is a path to a test file, java or groovy, or a comma seperated like, regex, for directory path");
 
         final Subparser query = subparsers.addParser("query").help("query help");
         query.addArgument("--file").required(false).action(Arguments.store()).dest("queryResults")
-            .setDefault(Params.getUserDir());
+                .setDefault(Params.getUserDir());
         query.addArgument("--includeMeta").required(false).action(Arguments.storeTrue()).dest("includeMeta");
         query.addArgument("--show").required(false).action(Arguments.storeTrue()).dest("showInConsole");
         query.addArgument("-i", "--lookAtInternalTests").setDefault(opt.getLookAtInternalTests()).type(String.class)
-            .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
+                .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
         query.addArgument("-e", "--lookAtExternalTests").setDefault(opt.getLookAtExternalTests()).type(String.class)
-            .help("lookAtExternalTests is a path to a test file, java or groovy, or a comma seperated like, regex, for directory path");
+                .help("lookAtExternalTests is a path to a test file, java or groovy, or a comma seperated like, regex, for directory path");
 
         final Subparser create = subparsers.addParser("create").help("create help");
         create.addArgument("--prop", "--properties").required(false).action(Arguments.storeTrue()).dest("prop");
@@ -177,7 +177,7 @@ public class Cli {
             } else {
                 TS.log().debug(Cli.BAR_LONG);
                 TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ "
-                    + ParamLoader.getDefaultPropFilePath() + " ]");
+                        + ParamLoader.getDefaultPropFilePath() + " ]");
                 TS.log().debug(Cli.BAR_LONG);
             }
 
@@ -211,7 +211,7 @@ public class Cli {
             return;
         }
         final List<ResultDto> results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
-            getTestPlanFilter().getTestClassesMetFilters());
+                getTestPlanFilter().getTestClassesMetFilters());
 
         int totalTestCases = 0;
         int totalTestCasesFailed = 0;
@@ -293,18 +293,18 @@ public class Cli {
             final HashMap<String, TestPlanDto> testPlans = new HashMap<>();
             for (final Class<?> test : getTestPlanFilter().getTestClassesMetFilters()) {
                 testPlans
-                    .put(test.getCanonicalName(),
-                        TestDtoHelper
-                            .createTestPlanDto(test, test.getAnnotation(TestPlan.class),
-                                test.getAnnotation(KnownProblem.class))
-                            .setRunTime(null).setRunInfo(null));
+                        .put(test.getCanonicalName(),
+                                TestDtoHelper
+                                        .createTestPlanDto(test, test.getAnnotation(TestPlan.class),
+                                                test.getAnnotation(KnownProblem.class))
+                                        .setRunTime(null).setRunInfo(null));
 
                 for (final Method method : test.getDeclaredMethods()) {
                     if (null != method.getAnnotation(TestCase.class)) {
                         testPlans.get(test.getCanonicalName())
-                            .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
-                                method.getAnnotation(TestCase.class), method.getAnnotation(KnownProblem.class),
-                                test.getAnnotation(TestPlan.class)).setRunTime(null));
+                                .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
+                                        method.getAnnotation(TestCase.class), method.getAnnotation(KnownProblem.class),
+                                        test.getAnnotation(TestPlan.class)).setRunTime(null));
                     }
                 }
             }
@@ -313,7 +313,7 @@ public class Cli {
 
         FileUtils.writeStringToFile(results, TS.util().toJson(resultObject), Charset.forName("UTF-8"));
         TS.log().info("Query Results: Found[" + getTestPlanFilter().getTestClassesMetFilters().size() + "] "
-            + results.getAbsolutePath());
+                + results.getAbsolutePath());
 
         if (res.getBoolean("showInConsole")) {
             TS.log().info(TS.util().toJson(resultObject));
@@ -379,21 +379,21 @@ public class Cli {
     public static void writeOutTestah() {
         System.out.println("\n" + Cli.BAR_LONG);
         System.out.println(
-            "      _____________                    _                                         ============");
+                "      _____________                    _                                         ============");
         System.out.println(
-            "     /_____  _____/      ________     | |                                       =======/\\==||");
+                "     /_____  _____/      ________     | |                                       =======/\\==||");
         System.out.println(
-            "          | |           /___ ___/     | |                                      =======/  \\=||");
+                "          | |           /___ ___/     | |                                      =======/  \\=||");
         System.out.println(
-            "          | |   ___    __  | |        | |                                     =======/    \\||");
+                "          | |   ___    __  | |        | |                                     =======/    \\||");
         System.out.println(
-            "          | |  / __|  (    | |  ___   | |___                                  =======\\    /||");
+                "          | |  / __|  (    | |  ___   | |___                                  =======\\    /||");
         System.out.println(
-            "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
+                "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
         System.out.println(
-            "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
+                "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
         System.out.println("=======================================================[Version: " + Cli.version
-            + "]======================");
+                + "]======================");
 
         System.out.println(Cli.BAR_LONG);
     }

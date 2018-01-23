@@ -1,6 +1,5 @@
 package org.testah.driver.http.requests;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -16,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 import org.testah.TS;
 import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
+import org.testah.driver.http.HttpAuthUtil;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.base.AbstractDtoBase;
@@ -205,7 +205,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         if (null == headers) {
             return null;
         }
-        return headers.toArray(new Header[] {});
+        return headers.toArray(new Header[]{});
     }
 
     /**
@@ -279,8 +279,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T setBasicAuthCredentials(final String userName, final String password,
-                                     final AuthScope authScope)
-    {
+                                     final AuthScope authScope) {
         credentialsProvider = new BasicCredentialsProvider();
         final UsernamePasswordCredentials creds = new UsernamePasswordCredentials(userName, password);
         credentialsProvider.setCredentials(authScope, creds);
@@ -295,10 +294,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T addBasicAuth(final String userName, final String password) {
-        final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName(
-            "UTF-8")));
-        addHeader("Authorization", "Basic " + encoding);
-        return getSelf();
+        return addHeader(new HttpAuthUtil().setUserName(userName).setPassword(password).useEncodingUtf8().createBasicAuthHeader());
     }
 
     /**
@@ -309,10 +305,12 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T addBasicAuthHeader(final String userName, final String password) {
-        final String encoding = Base64.encodeBase64String((userName + ":" + password).getBytes(Charset.forName(
-            "ISO-8859-1")));
-        addHeader(new BasicHeader("Authorization", "Basic " + encoding));
-        return getSelf();
+        return addBasicAuthHeader(userName, password, false);
+    }
+
+    public T addBasicAuthHeader(final String userName, final String password, final boolean useMask) {
+        return addHeader(new HttpAuthUtil().setUserName(userName).setPassword(password).useEncodingIso()
+                .setUseMask(useMask).createBasicAuthHeader());
     }
 
     /**
@@ -323,9 +321,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T addBasicAuthHeaderWithMask(final String userName, final String password) {
-        TS.addMask(userName);
-        TS.addMask(password);
-        return addBasicAuthHeader(userName, password);
+        return addBasicAuthHeader(userName, password, true);
     }
 
     /**
@@ -515,9 +511,9 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     public StepActionDto createRequestInfoStep() {
         StepActionDto stepAction = null;
         stepAction = StepAction.createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
-            "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
-                : Arrays.toString(headers.toArray())),
-            getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+                "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
+                        : Arrays.toString(headers.toArray())),
+                getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         printComplete();
         return stepAction;
     }

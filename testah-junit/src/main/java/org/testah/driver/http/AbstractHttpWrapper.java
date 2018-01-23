@@ -61,6 +61,7 @@ import java.net.UnknownHostException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -171,7 +172,7 @@ public abstract class AbstractHttpWrapper {
      */
     private PoolingHttpClientConnectionManager connManager;
 
-    private Header customTestHeader = null;
+    private HashMap<String, Header> customHeaders = new HashMap<String, Header>();
 
     /**
      * Gets self.
@@ -323,8 +324,11 @@ public abstract class AbstractHttpWrapper {
                 context.setCredentialsProvider(request.getCredentialsProvider());
             }
 
-            if (null != getCustomTestHeader()) {
-                request.addHeader(getCustomTestHeader());
+            if (!getCustomHeaders().isEmpty()) {
+                TS.log().trace("adding custom headers");
+                getCustomHeaders().values().forEach(value -> {
+                    request.addHeader(value);
+                });
             }
 
             final ResponseDto responseDto = new ResponseDto().setStart();
@@ -702,7 +706,7 @@ public abstract class AbstractHttpWrapper {
      *
      * @return the abstract http wrapper
      */
-// http://www.baeldung.com/httpclient-connection-management
+    // http://www.baeldung.com/httpclient-connection-management
     public AbstractHttpWrapper setConnectionKeepAliveStrategy() {
         final ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
 
@@ -1137,8 +1141,7 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper addCustomTestHeader(final String value) {
-        customTestHeader = new BasicHeader("X-Application-Id", value);
-        return this;
+        return addCustomHeader("X-Application-Id", value);
     }
 
     /**
@@ -1146,8 +1149,8 @@ public abstract class AbstractHttpWrapper {
      *
      * @return the custom test header
      */
-    public Header getCustomTestHeader() {
-        return customTestHeader;
+    public HashMap<String, Header> getCustomHeaders() {
+        return customHeaders;
     }
 
     /**
@@ -1156,17 +1159,89 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper clearCustomTestHeader() {
-        return setCustomTestHeader(null);
+        getCustomHeaders().clear();
+        return getSelf();
+    }
+
+    /**
+     * Add custom header abstract http wrapper.
+     *
+     * @param name  the name
+     * @param value the value
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper addCustomHeader(final String name, final String value) {
+        return addCustomHeader(new BasicHeader("X-Application-Id", (value == null ? "" : value)));
     }
 
     /**
      * Sets custom test header.
      *
-     * @param customTestHeader the custom test header
+     * @param customHeader the custom test header
      * @return the custom test header
      */
-    public AbstractHttpWrapper setCustomTestHeader(final Header customTestHeader) {
-        this.customTestHeader = customTestHeader;
-        return this;
+    public AbstractHttpWrapper addCustomHeader(final Header customHeader) {
+        getCustomHeaders().put(customHeader.getName(), customHeader);
+        return getSelf();
     }
+
+    /**
+     * Remove custom header abstract http wrapper.
+     *
+     * @param name the name
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper removeCustomHeader(final String name) {
+        getCustomHeaders().remove(name);
+        return getSelf();
+    }
+
+    /**
+     * Add basic auth abstract http wrapper.
+     *
+     * @param userName the user name
+     * @param password the password
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper addBasicAuth(final String userName, final String password) {
+        return addBasicAuth(userName, password, HttpAuthUtil.UTF8_ENCODING);
+
+    }
+
+    /**
+     * Add basic auth abstract http wrapper.
+     *
+     * @param userName the user name
+     * @param password the password
+     * @param encoding the encoding
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper addBasicAuth(final String userName, final String password, final String encoding) {
+        return addBasicAuth(userName, password, encoding, true);
+
+    }
+
+    /**
+     * Add basic auth abstract http wrapper.
+     *
+     * @param userName the user name
+     * @param password the password
+     * @param encoding the encoding
+     * @param useMask  the use mask
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper addBasicAuth(final String userName, final String password, final String encoding, final boolean useMask) {
+        return addCustomHeader(new HttpAuthUtil().setUserName(userName).setPassword(password).useEncodingUtf8().setUseMask(useMask)
+                .createBasicAuthHeader());
+    }
+
+    /**
+     * Remove basic auth abstract http wrapper.
+     *
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper removeBasicAuth() {
+        return removeCustomHeader(HttpAuthUtil.HEADER_NAME);
+    }
+
 }
