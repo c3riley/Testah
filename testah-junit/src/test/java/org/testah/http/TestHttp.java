@@ -1,7 +1,6 @@
 package org.testah.http;
 
 import org.apache.http.client.ClientProtocolException;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.testah.TS;
@@ -19,11 +18,6 @@ import java.io.IOException;
 
 @TestPlan(description = "test Http")
 public class TestHttp extends HttpTestPlan {
-
-    @Before
-    public void setup() {
-        //TS.http().doPost("http://www.google.com", null);
-    }
 
     @TestCase
     @Test

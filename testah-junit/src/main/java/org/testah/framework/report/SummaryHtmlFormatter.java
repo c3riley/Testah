@@ -50,6 +50,10 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
         context.put("GoogleChart",
             getGoogleChart(counts.get(TestStatus.FAILED), counts.get(TestStatus.PASSED), counts.get(TestStatus.IGNORE)));
 
+        context.put("htmlPath","");
+
+
+
         return context;
     }
 
