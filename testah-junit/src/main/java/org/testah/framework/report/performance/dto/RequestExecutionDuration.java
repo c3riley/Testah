@@ -169,6 +169,7 @@ public class RequestExecutionDuration {
     }
 
     /**
+     * Get the aggregation.
      * @return the type
      */
     public String getAggregation() {

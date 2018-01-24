@@ -309,7 +309,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public <T> T getResponse(final Class<T> valueType) {
         try {
-            TS.log().debug("Gettting Response as " + valueType.getCanonicalName());
+            TS.log().debug("Getting reesponse as " + valueType.getCanonicalName());
             return TS.util().getMap().readValue(responseBody, valueType);
         } catch (final Exception e) {
             TS.log().debug("Issue getting object from body: " + responseBody);
@@ -326,7 +326,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public <T> T getResponse(final TypeReference<T> valueType) {
         try {
-            TS.log().debug("Gettting Response as TypeReference: " + valueType.toString());
+            TS.log().debug("Getting response as TypeReference: " + valueType.toString());
             return TS.util().getMap().readValue(responseBody, valueType);
         } catch (final Exception e) {
             TS.log().debug("Issue getting object from body: " + responseBody);

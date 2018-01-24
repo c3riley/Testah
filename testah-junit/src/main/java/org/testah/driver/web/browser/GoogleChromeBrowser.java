@@ -163,7 +163,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     }
 
     /**
-     * logBrowerInfo will log info about the browser session
+     * logBrowerInfo will log info about the browser session.
      *
      * @return returns class instance
      */
