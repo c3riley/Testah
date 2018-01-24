@@ -1171,7 +1171,7 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper addCustomHeader(final String name, final String value) {
-        return addCustomHeader(new BasicHeader("X-Application-Id", (value == null ? "" : value)));
+        return addCustomHeader(new BasicHeader(name, (value == null ? "" : value)));
     }
 
     /**
@@ -1236,11 +1236,21 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
+     * Add bearer auth abstract http wrapper.
+     *
+     * @param token the token
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper addBearerAuth(final String token) {
+        return addCustomHeader(new HttpAuthUtil().createBearerAuthHeader(token));
+    }
+
+    /**
      * Remove basic auth abstract http wrapper.
      *
      * @return the abstract http wrapper
      */
-    public AbstractHttpWrapper removeBasicAuth() {
+    public AbstractHttpWrapper removeAuth() {
         return removeCustomHeader(HttpAuthUtil.HEADER_NAME);
     }
 
