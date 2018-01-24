@@ -186,8 +186,8 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
         return null;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * Close the async HTTP client.
      *
      * @see java.io.Closeable#close()
      */
