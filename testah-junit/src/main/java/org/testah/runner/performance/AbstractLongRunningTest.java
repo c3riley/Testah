@@ -24,8 +24,10 @@ public abstract class AbstractLongRunningTest {
         List<ResponseDto> responses;
         runProps.setDomain(loadTestDataGenerator.getDomain());
 
+        TS.log().info(runProps.toString());
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
-        while (System.currentTimeMillis() < runProps.getStopTime()) {
+        long timeleft = runProps.getStopTime() - System.currentTimeMillis();
+        while (timeleft > 0 ) {
             List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues =
                 loadTestDataGenerator.generateRequests(runProps.getChunkSize(), runProps.getNumberOfChunks());
             for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues) {
@@ -42,7 +44,9 @@ public abstract class AbstractLongRunningTest {
                     System.gc();
 
                     Thread.sleep(runProps.getMillisBetweenChunks());
-                    if (System.currentTimeMillis() >= runProps.getStopTime()) {
+                    timeleft = runProps.getStopTime() - System.currentTimeMillis();
+                    TS.log().info("Time left (ms): " + timeleft);
+                    if (timeleft <= 0) {
                         return;
                     }
                 } catch (Throwable t) {
