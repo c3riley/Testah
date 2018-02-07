@@ -323,6 +323,7 @@ public class TestRunProperties {
         return this;
     }
 
+    @Override
     public String toString() {
         runDurationAsDuration = Duration.ofMillis(runDuration);
         getStopDateTime();
