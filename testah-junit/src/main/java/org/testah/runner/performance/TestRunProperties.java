@@ -1,5 +1,12 @@
 package org.testah.runner.performance;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.testah.TS;
 
 public class TestRunProperties {
@@ -9,8 +16,10 @@ public class TestRunProperties {
     protected final Integer defaultNumberOfAkkaThreads = 3;
     protected final Long defaultMillisBetweenChunks = 3000L;
     private Integer numberOfChunks;
-    private Long runDuration;
+    private Long runDuration = null;
+    private Duration runDurationAsDuration = null;
     private Long stopTime = null;
+    private LocalDateTime stopDateTime = null;
     private Integer chunkSize;
     private Integer numberOfAkkaThreads;
     private Long millisBetweenChunks;
@@ -128,6 +137,18 @@ public class TestRunProperties {
             stopTime = System.currentTimeMillis() + runDuration;
         }
         return stopTime;
+    }
+
+    /**
+     * Get the time as LocalDateTime until the test will run.
+     *
+     * @return the stopDateTime
+     */
+    public LocalDateTime getStopDateTime() {
+        if(stopDateTime == null) {
+            stopDateTime = Instant.ofEpochMilli(getStopTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+        return stopDateTime;
     }
 
     /**
@@ -287,6 +308,10 @@ public class TestRunProperties {
         return domain;
     }
 
+    public String getRuntime() {
+        return runDurationAsDuration.toString();
+    }
+
     /**
      * Set the domain for the service under test in the test run properties.
      * @param domain service domain
@@ -296,5 +321,12 @@ public class TestRunProperties {
         TS.log().info("Setting domain to " + domain);
         this.domain = domain;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        runDurationAsDuration = Duration.ofMillis(runDuration);
+        getStopDateTime();
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }
