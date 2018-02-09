@@ -24,4 +24,10 @@ public class ChunkStatsLogPublisher implements ExecutionStatsPublisher {
         // no pretty print to save space in log file
         TS.log().info(new ObjectMapper().writeValueAsString((ChunkStats) chunkStats));
     }
+
+    @Override
+    public void cleanup()
+    {
+        // no post processing required
+    }
 }

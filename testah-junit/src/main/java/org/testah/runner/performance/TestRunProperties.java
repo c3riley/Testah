@@ -145,7 +145,7 @@ public class TestRunProperties {
      * @return the stopDateTime
      */
     public LocalDateTime getStopDateTime() {
-        if(stopDateTime == null) {
+        if (stopDateTime == null) {
             stopDateTime = Instant.ofEpochMilli(getStopTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
         }
         return stopDateTime;
