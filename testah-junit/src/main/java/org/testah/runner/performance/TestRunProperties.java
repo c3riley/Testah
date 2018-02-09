@@ -323,9 +323,11 @@ public class TestRunProperties {
         return this;
     }
 
+    @Override
     public String toString() {
         runDurationAsDuration = Duration.ofMillis(runDuration);
         getStopDateTime();
         return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }
+
