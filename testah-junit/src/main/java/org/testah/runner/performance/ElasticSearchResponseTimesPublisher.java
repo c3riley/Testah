@@ -231,4 +231,10 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
     public static String getDateTimeString(long milliseconds, ZoneId zoneId) {
         return Instant.ofEpochMilli(milliseconds).atZone(zoneId).toLocalDateTime().format(dateTimeFormatter);
     }
+
+    @Override
+    public void cleanup()
+    {
+        // no post processing required
+    }
 }
