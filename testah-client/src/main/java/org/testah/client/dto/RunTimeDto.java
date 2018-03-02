@@ -10,9 +10,15 @@ public class RunTimeDto {
 
     /** The start time. */
     private Long startTime = null;
+
+    /** The start date. */
+    private Date startDate = null;
     
     /** The end time. */
     private Long endTime   = null;
+
+    /** The end date. */
+    private Date endDate = null;
     
     /** The duration. */
     private long duration  = 0L;
@@ -30,7 +36,9 @@ public class RunTimeDto {
      * @return the run time dto
      */
     public RunTimeDto start() {
-        return start(new Date().getTime());
+        Date startDate = new Date();
+        this.startDate = startDate;
+        return start(startDate.getTime());
 
     }
 
@@ -51,7 +59,9 @@ public class RunTimeDto {
      * @return the run time dto
      */
     public RunTimeDto stop() {
-        return stop(new Date().getTime());
+        Date endDate = new Date();
+        this.endDate = endDate;
+        return stop(endDate.getTime());
     }
 
     /**
