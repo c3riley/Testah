@@ -115,12 +115,12 @@ public class RunTimeDto {
      *
      * @return the start date
      */
-    public Date getStartDate() { return startDate; }
+    public String getStartDate() { return startDate.toString(); }
 
     /**
      * Gets the end date.
      * @return the end date
      */
-    public Date getEndDate() { return endDate; }
+    public String getEndDate() { return endDate.toString(); }
 
 }
