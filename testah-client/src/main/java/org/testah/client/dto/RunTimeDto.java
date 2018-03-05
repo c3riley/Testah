@@ -110,4 +110,17 @@ public class RunTimeDto {
         return endTime;
     }
 
+    /**
+     * Gets the start date.
+     *
+     * @return the start date
+     */
+    public Date getStartDate() { return startDate; }
+
+    /**
+     * Gets the end date.
+     * @return the end date
+     */
+    public Date getEndDate() { return endDate; }
+
 }
