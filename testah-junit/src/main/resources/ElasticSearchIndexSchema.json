@@ -1,0 +1,287 @@
+{
+  "mappings": {
+    "tests":{
+      "properties": {
+        "runTime": {
+          "properties": {
+            "duration": {
+              "type": "long"
+            },
+            "endDate": {
+              "type": "date"
+            },
+            "endTime": {
+              "type": "long"
+            },
+            "startDate": {
+              "type": "date"
+            },
+            "startTime": {
+              "type": "long"
+            }
+          }
+        },
+        "testCases": {
+          "type": "nested",
+          "properties": {
+            "runTime": {
+              "properties": {
+                "duration": {
+                  "type": "long"
+                },
+                "endDate": {
+                  "type": "date"
+                },
+                "endTime": {
+                  "type": "long"
+                },
+                "startDate": {
+                  "type": "date"
+                },
+                "startTime": {
+                  "type": "long"
+                }
+              }
+            },
+            "testSteps": {
+              "properties": {
+                "stepActions": {
+                  "type": "nested",
+                  "properties": {
+                    "testStepActionType": {
+                      "type": "keyword"
+                    },
+                    "description": {
+                      "type": "text"
+                    },
+                    "message1": {
+                      "type": "text"
+                    },
+                    "message2": {
+                      "type": "text"
+                    },
+                    "message3": {
+                      "type": "text"
+                    },
+                    "status": {
+                      "type": "boolean"
+                    },
+                    "statusEnum": {
+                      "type": "text"
+                    },
+                    "actionName": {
+                      "type": "text"
+                    },
+                    "exceptionString": {
+                      "type": "text"
+                    },
+                    "snapShotPath": {
+                      "type": "text"
+                    },
+                    "htmlSnapShotPath": {
+                      "type": "text"
+                    }
+                  }
+                },
+                "runtime": {
+                  "type": "keyword"
+                },
+                "status": {
+                  "type": "boolean"
+                },
+                "statusEnum": {
+                  "type": "keyword"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "text"
+                },
+                "description": {
+                  "type": "text"
+                },
+                "exceptionMessage": {
+                  "type": "text"
+                }
+              }
+            },
+            "status": {
+              "type": "boolean"
+            },
+            "statusEnum": {
+              "type": "keyword"
+            },
+            "dataValue": {
+              "type": "text"
+            },
+            "id": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "text"
+            },
+            "description": {
+              "type": "text"
+            },
+            "relatedLinks": {
+              "type": "text"
+            },
+            "relatedIds": {
+              "type": "text"
+            },
+            "tags": {
+              "type": "text"
+            },
+            "knownProblem": {
+              "properties": {
+                "linkedIds": {
+                  "type": "text"
+                },
+                "description": {
+                  "type": "text"
+                },
+                "typeOfKnown": {
+                  "type": "text"
+                }
+              }
+            },
+            "testType": {
+              "type": "keyword"
+            },
+            "source": {
+              "type": "keyword"
+            },
+            "components": {
+              "type": "text"
+            },
+            "devices": {
+              "type": "text"
+            },
+            "platforms": {
+              "type": "text"
+            },
+            "runTypes": {
+              "type": "text"
+            },
+            "owner": {
+              "type": "keyword"
+            },
+            "exceptions": {
+              "type": "text"
+            }
+          }
+        },
+        "status": {
+          "type": "boolean"
+        },
+        "statusEnum": {
+          "type": "text"
+        },
+        "runInfo": {
+          "properties": {
+            "id": {
+              "type": "keyword"
+            },
+            "runType": {
+              "type": "keyword"
+            },
+            "versionId": {
+              "type": "keyword"
+            },
+            "runLocation": {
+              "type": "keyword"
+            },
+            "buildNumber": {
+              "type": "keyword"
+            },
+            "pass": {
+              "type": "integer"
+            },
+            "fail": {
+              "type": "integer"
+            },
+            "ignore": {
+              "type": "integer"
+            },
+            "total": {
+              "type": "integer"
+            },
+            "reportFilePath": {
+              "properties": {
+                "txt": {
+                  "type": "text"
+                },
+                "xml": {
+                  "type": "text"
+                },
+                "html": {
+                  "type": "text"
+                }
+              }
+            },
+            "runTimeProperties": {
+              "properties": {
+                "builtOn": {
+                  "type": "text"
+                }
+              }
+            }
+          }
+        },
+        "id": {
+          "type": "long"
+        },
+        "name": {
+          "type": "text"
+        },
+        "description": {
+          "type": "text"
+        },
+        "relatedLinks": {
+          "type": "text"
+        },
+        "relatedIds": {
+          "type": "text"
+        },
+        "tags": {
+          "type": "text"
+        },
+        "knownProblem": {
+          "properties": {
+            "linkedIds": {
+              "type": "text"
+            },
+            "description": {
+              "type": "text"
+            },
+            "typeOfKnown": {
+              "type": "text"
+            }
+          }
+        },
+        "testType": {
+          "type": "keyword"
+        },
+        "source": {
+          "type": "keyword"
+        },
+        "components": {
+          "type": "text"
+        },
+        "devices": {
+          "type": "text"
+        },
+        "platforms": {
+          "type": "text"
+        },
+        "runTypes": {
+          "type": "text"
+        },
+        "owner": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
