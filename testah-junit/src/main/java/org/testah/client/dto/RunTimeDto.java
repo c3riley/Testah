@@ -1,5 +1,9 @@
 package org.testah.client.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang.StringUtils;
+import org.testah.TS;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -10,8 +14,9 @@ import java.util.TimeZone;
 public class RunTimeDto {
 
     /**
-     * Date format
+     * Date format.
      */
+    @JsonIgnore
     private SimpleDateFormat dateFormat;
 
     /**
@@ -43,8 +48,12 @@ public class RunTimeDto {
      * Instantiates a new run time dto.
      */
     public RunTimeDto() {
-        this.dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSZ");
-        this.dateFormat.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+        this.dateFormat = new SimpleDateFormat(TS.params().getTimeFormat());
+        if (StringUtils.isEmpty(TS.params().getTimezone())) {
+            this.dateFormat.setTimeZone(TimeZone.getDefault());
+        } else {
+            this.dateFormat.setTimeZone(TimeZone.getTimeZone(TS.params().getTimezone()));
+        }
     }
 
     /**
@@ -127,15 +136,21 @@ public class RunTimeDto {
     }
 
     /**
-     * Returns the start date in the preset dateformat
-     * @return
+     * Returns the start date in the preset dateformat.
+     *
+     * @return start date
      */
-    public String getStartDate() { return this.dateFormat.format(this.startDate); }
+    public String getStartDate() {
+        return this.dateFormat.format(this.startDate);
+    }
 
     /**
-     * Returns the end date in the preset dateformat
-     * @return
+     * Returns the end date in the preset dateformat.
+     *
+     * @return end date
      */
-    public String getEndDate() { return this.dateFormat.format(this.endDate); }
+    public String getEndDate() {
+        return this.dateFormat.format(this.endDate);
+    }
 
 }

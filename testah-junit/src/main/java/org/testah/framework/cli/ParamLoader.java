@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.PropertiesConfigurationLayout;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.Level;
 import org.testah.TS;
 import org.testah.framework.annotations.Comment;
@@ -22,7 +23,6 @@ import java.util.Properties;
  * The Class ParamLoader.
  */
 public class ParamLoader {
-
 
     /**
      * Jacoco instrumentation adds Field $jacocoData that is picked up and added to the Testah properties if not explicitly excluded.
@@ -75,7 +75,7 @@ public class ParamLoader {
      *
      * @return the params
      */
-    @SuppressWarnings( {"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Params loadParamValues() {
 
         final Params params = new Params();
@@ -155,15 +155,19 @@ public class ParamLoader {
                             if (field.getType().isAssignableFrom(String.class)) {
                                 field.set(params, propValue);
                             } else if (field.getType().isAssignableFrom(int.class)) {
-                                field.setInt(params, Integer.parseInt((String) propValue));
+                                if (StringUtils.isEmpty((String) propValue)) {
+                                    field.setInt(params, -1);
+                                } else {
+                                    field.setInt(params, Integer.parseInt((String) propValue));
+                                }
                             } else if (field.getType().isAssignableFrom(Long.class)) {
                                 field.set(params, (Long.parseLong((String) propValue)));
                             } else if (field.getType().isAssignableFrom(boolean.class)) {
                                 field.setBoolean(params, Boolean.parseBoolean((String) propValue));
                             } else if (field.getType().isAssignableFrom(HashMap.class)) {
                                 field.set(params, mapper.readValue((String) propValue,
-                                    new TypeReference<HashMap<String, String>>() {
-                                    }));
+                                        new TypeReference<HashMap<String, String>>() {
+                                        }));
                             } else if (field.getType().isAssignableFrom(Boolean.class)) {
                                 TS.log().info(field.getName());
                                 if (0 == propValue.toString().trim().length()) {
@@ -192,7 +196,7 @@ public class ParamLoader {
                 }
             } else {
                 TS.log().warn("Issue loading custom properties[" + f.getAbsolutePath()
-                    + "] - was not found, will create one for the next runs use");
+                        + "] - was not found, will create one for the next runs use");
                 try {
                     paramsFromProperties.save(f);
                 } catch (final Exception e) {
@@ -215,6 +219,7 @@ public class ParamLoader {
 
     /**
      * Set system properties from file.
+     *
      * @param localPropFile file with system properties
      */
     public void injectLocalProperties(final File localPropFile) {
@@ -276,9 +281,9 @@ public class ParamLoader {
         final PropertiesConfiguration defaultConfig = new PropertiesConfiguration();
         final PropertiesConfigurationLayout layout = defaultConfig.getLayout();
         layout.setHeaderComment(Cli.BAR_LONG + "\nTestah Properties - version: " + Cli.version + " - File Created: "
-            + TS.util().now()
-            + "\nNo values are required. Leaving a key empty will not use the value, turning the property off."
-            + "\n" + Cli.BAR_LONG);
+                + TS.util().now()
+                + "\nNo values are required. Leaving a key empty will not use the value, turning the property off."
+                + "\n" + Cli.BAR_LONG);
         boolean accessible;
         final Params params = new Params();
         Comment comment = null;
@@ -300,10 +305,10 @@ public class ParamLoader {
                     comment = f.getAnnotation(Comment.class);
                     if (null != comment) {
                         commentValue = comment.info().replace("[BAR1]", "\n\n" + Cli.BAR_SHORT + "\n").replace("[BAR2]",
-                            "\n" + Cli.BAR_SHORT + "\n\n");
+                                "\n" + Cli.BAR_SHORT + "\n\n");
                         if (f.getType().isEnum()) {
                             layout.setComment(propName,
-                                commentValue + "values: " + Arrays.toString(f.getType().getEnumConstants()));
+                                    commentValue + "values: " + Arrays.toString(f.getType().getEnumConstants()));
                         } else {
                             layout.setComment(propName, commentValue);
                         }

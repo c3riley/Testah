@@ -101,7 +101,7 @@ public class TestBrowser extends BrowserTestPlan {
         TS.asserts().notNull(lst.get(0));
         TS.asserts().equalsTo(By.id("hplogo"), lst.get(0).getBy());
         TS.asserts().notNull(lst.get(0).getDriverWebElement());
-        TS.asserts().notNull("src value is not null", lst.get(0).getAttribute("src"));
+        TS.asserts().notNull("style value is not null", lst.get(0).getAttribute("style"));
     }
 
     @TestCase
@@ -111,7 +111,7 @@ public class TestBrowser extends BrowserTestPlan {
         TS.asserts().notNull(e);
         TS.asserts().equalsTo(By.id("hplogo"), e.getBy());
         TS.asserts().notNull(e.getDriverWebElement());
-        TS.asserts().notNull("src value is not null", e.getAttribute("src"));
+        TS.asserts().notNull("style value is not null", e.getAttribute("style"));
     }
 
     @Ignore
