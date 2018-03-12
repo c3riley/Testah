@@ -215,6 +215,18 @@ public class Params {
     @Arg(dest = "throwExceptionOnFail")
     private boolean throwExceptionOnFail = true;
 
+    @Comment(
+            info = "timezone to use for runtime data, if empty will use system default. "
+                    + "If supplied should be string representation of timezone like America/New_York")
+    @Arg(dest = "timezone")
+    private String timezone = null;
+
+    @Comment(
+            info = "timeFormat to use for runtime data, if empty will use default. "
+                    + "If supplied should be string representation of timezone like yyyy-MM-dd'T'HH:mm:ss.SSZ")
+    @Arg(dest = "timeFormat")
+    private String timeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSZ";
+
     /**
      * The web driver_user agent value.
      */
@@ -260,6 +272,14 @@ public class Params {
             info = "Add a path to the Chrome Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
     @Arg(dest = "webDriver_ChromeDriverBinary")
     private String webDriverChromeDriverBinary = "";
+
+    @Comment(info = "Default window Width to open browser window to. If emtpy then browser will be maximized")
+    @Arg(dest = "windowWidth")
+    private int windowWidth = 1366;
+
+    @Comment(info = "Default window Height to open browser window to. If emtpy then browser will be maximized")
+    @Arg(dest = "windowHeight")
+    private int windowHeight = 1000;
 
     /**
      * The output.
@@ -1371,4 +1391,35 @@ public class Params {
         this.useJsonFormatter = useJsonFormatter;
     }
 
+    public int getWindowWidth() {
+        return windowWidth;
+    }
+
+    public void setWindowWidth(final int windowWidth) {
+        this.windowWidth = windowWidth;
+    }
+
+    public int getWindowHeight() {
+        return windowHeight;
+    }
+
+    public void setWindowHeight(final int windowHeight) {
+        this.windowHeight = windowHeight;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(final String timezone) {
+        this.timezone = timezone;
+    }
+
+    public String getTimeFormat() {
+        return timeFormat;
+    }
+
+    public void setTimeFormat(final String timeFormat) {
+        this.timeFormat = timeFormat;
+    }
 }
