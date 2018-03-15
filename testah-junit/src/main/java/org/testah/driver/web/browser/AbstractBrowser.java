@@ -2,6 +2,7 @@ package org.testah.driver.web.browser;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -25,6 +26,8 @@ import java.util.List;
 /**
  * The Class AbstractBrowser wraps Webdriver Api implementation with many
  * macrotized methods to reduce code in tests.
+ *
+ * @param <T> the type parameter
  */
 public abstract class AbstractBrowser<T> {
 
@@ -475,7 +478,7 @@ public abstract class AbstractBrowser<T> {
                 startService();
                 driver = getWebDriver(capabilities);
             }
-            this.maximize();
+            this.setWindowSize();
         } catch (final Exception e) {
             throw new RuntimeException("Issue Stating browser", e);
         }
@@ -500,6 +503,7 @@ public abstract class AbstractBrowser<T> {
 
     /**
      * Create parent directory for screenshots.
+     *
      * @param directoryPath parent directory
      * @return parent directory of screenshot directories
      */
@@ -511,6 +515,7 @@ public abstract class AbstractBrowser<T> {
 
     /**
      * Get the intended path to the screenshot path.
+     *
      * @param screenshot file
      * @return new path to screenshot file
      */
@@ -856,6 +861,36 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
+     * Sets window size. Use the default values from TS.params(), if not found maximize window.
+     *
+     * @return the window size
+     */
+    public AbstractBrowser<T> setWindowSize() {
+        return setWindowSize(TS.params().getWindowWidth(), TS.params().getWindowHeight());
+    }
+
+    /**
+     * Sets window size, if width or height is 0 or less just maximize window.
+     *
+     * @param width  the width
+     * @param height the height
+     * @return the window size
+     */
+    public AbstractBrowser<T> setWindowSize(final Integer width, final Integer height) {
+        try {
+            if (width > 0 && height > 0) {
+                driver.manage().window().setSize(new Dimension(width, height));
+            } else {
+                TS.log().debug("Unable to set size as value is null, will maximize window instead");
+                this.maximize();
+            }
+        } catch (final Exception e) {
+            TS.log().warn(String.format("Issue with setting window size - width: %d height: %d", width, height), e);
+        }
+        return getSelf();
+    }
+
+    /**
      * Back.
      *
      * @return the abstract browser
@@ -1039,6 +1074,11 @@ public abstract class AbstractBrowser<T> {
         return getSelf();
     }
 
+    /**
+     * Log brower info abstract browser.
+     *
+     * @return the abstract browser
+     */
     public abstract AbstractBrowser<T> logBrowerInfo();
 
 }
