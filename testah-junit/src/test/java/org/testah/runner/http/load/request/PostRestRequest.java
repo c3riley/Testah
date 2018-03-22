@@ -12,6 +12,11 @@ public class PostRestRequest extends AbstractPerformanceRestRequest {
     private final List<Long> longList;
     private final TestServiceClient client = new TestServiceClient();
 
+    /**
+     * Constructor.
+     * @param stringList list of strings
+     * @param longList list of longs
+     */
     public PostRestRequest(List<String> stringList, List<Long> longList) {
         super(stringList, longList);
         this.stringList = stringList;

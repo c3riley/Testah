@@ -20,6 +20,11 @@ public abstract class TestDataGenerator {
 
     public abstract String getDomain() throws Exception;
 
+    /**
+     * Add a request to the request list.
+     * @param request http request
+     * @return true if more requests need to be added to reach the requested number of requests
+     */
     public boolean addRequest(AbstractRequestDto<?> request) {
         boolean keepGoing = false;
         if (requestList.size() < totalRequests)
