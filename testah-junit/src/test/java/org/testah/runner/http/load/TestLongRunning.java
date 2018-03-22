@@ -50,16 +50,15 @@ public class TestLongRunning extends AbstractLongRunningTest {
         String testClass = this.getClass().getSimpleName();
         String testMethod = Thread.currentThread().getStackTrace()[1].getMethodName();
         TestRunProperties runProps =
-                        new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, chunkSize,
-                                        numberOfChunks, millisBetweenChunks);
+                        new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, millisBetweenChunks);
         ElasticSearchResponseTimesPublisher elasticSearchExecutionStatsPublisher =
                         new ElasticSearchResponseTimesPublisher(baseUrl, index, type, username, password, runProps).setVerbose(true);
         ChunkStatsLogPublisher chunkStatsLogPublisher = new ChunkStatsLogPublisher();
 
-        setupWiremock(elasticSearchExecutionStatsPublisher, new TestServiceGetRequestGenerator().getDomain(),
+        setupWiremock(elasticSearchExecutionStatsPublisher, new TestServiceGetRequestGenerator(chunkSize, numberOfChunks).getDomain(),
                         testMethod, expectedStatusCodes);
 
-        executeTest(new TestServiceGetRequestGenerator(),
+        executeTest(new TestServiceGetRequestGenerator(chunkSize, numberOfChunks),
                         runProps
                         .setVerbose(true)
                         .setRunDuration(runDuration),
@@ -74,15 +73,15 @@ public class TestLongRunning extends AbstractLongRunningTest {
         String testClass = this.getClass().getSimpleName();
         String testMethod = Thread.currentThread().getStackTrace()[1].getMethodName();
         TestRunProperties runProps =
-            new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, chunkSize, numberOfChunks, millisBetweenChunks);
+            new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, millisBetweenChunks);
         ElasticSearchResponseTimesPublisher elasticSearchExecutionStatsPublisher =
             new ElasticSearchResponseTimesPublisher(baseUrl, index, type, username, password, runProps).setVerbose(true);
         ChunkStatsLogPublisher chunkStatsLogPublisher = new ChunkStatsLogPublisher();
 
-        setupWiremock(elasticSearchExecutionStatsPublisher, new TestServicePostRequestGenerator().getDomain(),
+        setupWiremock(elasticSearchExecutionStatsPublisher, new TestServicePostRequestGenerator(chunkSize, numberOfChunks).getDomain(),
                         testMethod, expectedStatusCodes);
 
-        executeTest(new TestServicePostRequestGenerator(),
+        executeTest(new TestServicePostRequestGenerator(chunkSize, numberOfChunks),
                         runProps
                         .setVerbose(true)
                         .setRunDuration(runDuration),
