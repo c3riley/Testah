@@ -1,7 +1,6 @@
 package org.testah.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.xpath.operations.Bool;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.framework.dto.base.AbstractDtoBase;
