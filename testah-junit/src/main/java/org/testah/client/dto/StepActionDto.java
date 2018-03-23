@@ -1,6 +1,7 @@
 package org.testah.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.xpath.operations.Bool;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.framework.dto.base.AbstractDtoBase;
@@ -153,10 +154,11 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Gets the exception string.
      *
+     * @param onlyReturnIfStatusFalse return the exception or not
      * @return the exception string
      */
-    public String getExceptionString() {
-        if (null == exception) {
+    public String getExceptionString(boolean onlyReturnIfStatusFalse) {
+        if (null == exception || (onlyReturnIfStatusFalse && (status != null && status.equals(Boolean.TRUE)))) {
             return null;
         }
         if (null == exceptionString) {
@@ -165,6 +167,10 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
             exceptionString = sWriter.toString().replace("\t", "");
         }
         return exceptionString;
+    }
+
+    public String getExceptionString() {
+        return getExceptionString(true);
     }
 
     /**
