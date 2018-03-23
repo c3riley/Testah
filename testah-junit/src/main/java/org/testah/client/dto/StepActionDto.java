@@ -153,10 +153,11 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Gets the exception string.
      *
+     * @param onlyReturnIfStatusFalse return the exception or not
      * @return the exception string
      */
-    public String getExceptionString() {
-        if (null == exception) {
+    public String getExceptionString(boolean onlyReturnIfStatusFalse) {
+        if (null == exception || (onlyReturnIfStatusFalse && (status != null && status.equals(Boolean.TRUE)))) {
             return null;
         }
         if (null == exceptionString) {
@@ -165,6 +166,10 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
             exceptionString = sWriter.toString().replace("\t", "");
         }
         return exceptionString;
+    }
+
+    public String getExceptionString() {
+        return getExceptionString(true);
     }
 
     /**
