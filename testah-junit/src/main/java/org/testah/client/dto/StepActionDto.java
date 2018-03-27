@@ -159,7 +159,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     public String getExceptionString(boolean isReturningJsonObject) {
         if (null == exception) {
             return null;
-        } else if (isReturningJsonObject && status.equals(Boolean.TRUE)) {
+        } else if (isReturningJsonObject && (status == null || status.equals(Boolean.TRUE))) {
             return null;
         } else {
             if (null == exceptionString) {
