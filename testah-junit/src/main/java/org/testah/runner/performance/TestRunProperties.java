@@ -42,8 +42,6 @@ public class TestRunProperties {
      * @param testClass           test plan name
      * @param testMethod          test method name
      * @param numberOfAkkaThreads number of Akka threads
-     * @param chunkSize           size of request chunks
-     * @param numberOfChunks      number of chunks
      * @param millisBetweenChunks time to pause between chunks
      */
     public TestRunProperties(
@@ -51,16 +49,12 @@ public class TestRunProperties {
         String testClass,
         String testMethod,
         int numberOfAkkaThreads,
-        int chunkSize,
-        int numberOfChunks,
         long millisBetweenChunks)
     {
         this.serviceUnderTest = serviceUnderTest;
         this.testClass = testClass;
         this.testMethod = testMethod;
         this.numberOfAkkaThreads = numberOfAkkaThreads;
-        this.chunkSize = chunkSize;
-        this.numberOfChunks = numberOfChunks;
         this.millisBetweenChunks = millisBetweenChunks;
         this.runDuration = this.defaultRunDuration;
     }

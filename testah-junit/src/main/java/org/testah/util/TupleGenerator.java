@@ -61,7 +61,7 @@ public class TupleGenerator {
         return distinctTuples;
     }
 
-    // recursively increment the index in each of the lists; idx is the index of the list,
+    // recursively increment the index in each of the lists; idx is the index of the list, 
     private void increment(int idx) {
         // if the position in the current list is in range after increase...
         if (tuple.get(idx) < sizes.get(idx) - 1) {
