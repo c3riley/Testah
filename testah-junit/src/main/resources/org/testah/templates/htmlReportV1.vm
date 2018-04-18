@@ -301,7 +301,7 @@
                             <tr id='Step_$step.getId()_$blockNumber' style='display: none;'>
                                 <td colspan='5'>
 <pre>
-    $!stepAction.getExceptionString()
+    $!stepAction.getExceptionString(false)
 </pre>
                                 </td>
                             </tr>

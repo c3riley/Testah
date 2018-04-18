@@ -153,18 +153,27 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     /**
      * Gets the exception string.
      *
+     * @param isReturningJsonObject Used when the testplan object will be a json object
      * @return the exception string
      */
-    public String getExceptionString() {
+    public String getExceptionString(boolean isReturningJsonObject) {
         if (null == exception) {
             return null;
+        } else if (isReturningJsonObject && (status == null || status.equals(Boolean.TRUE))) {
+            return null;
+        } else {
+            if (null == exceptionString) {
+                final StringWriter sWriter = new StringWriter();
+                exception.printStackTrace(new PrintWriter(sWriter));
+                exceptionString = sWriter.toString().replace("\t", "");
+            }
         }
-        if (null == exceptionString) {
-            final StringWriter sWriter = new StringWriter();
-            exception.printStackTrace(new PrintWriter(sWriter));
-            exceptionString = sWriter.toString().replace("\t", "");
-        }
+
         return exceptionString;
+    }
+
+    public String getExceptionString() {
+        return getExceptionString(true);
     }
 
     /**
