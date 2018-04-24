@@ -70,7 +70,7 @@ public class TestBasicJiraRemoteLinkBuilder {
         Assert.assertEquals(false, remoteLink.getObject().getStatus().getResolved());
         Assert.assertEquals("test.ico", remoteLink.getObject().getStatus().getIcon().getUrl16x16());
         Assert.assertEquals(
-                "http://noLinkFoundToUsePlease.com/?errorTip=IssueGetting_param_sourceUrl/com/test/BasicTestPlan",
+                "http://noLinkFoundToUsePlease.com/?errorTip=IssueGetting_param_sourceUrl/com/test/BasicTestPlan.java",
                 remoteLink.getObject().getStatus().getIcon().getLink());
         Assert.assertEquals("Basic Testplan",
                 remoteLink.getObject().getStatus().getIcon().getTitle());
@@ -95,7 +95,7 @@ public class TestBasicJiraRemoteLinkBuilder {
         Assert.assertEquals(false, remoteLink.getObject().getStatus().getResolved());
         Assert.assertEquals("test.ico", remoteLink.getObject().getStatus().getIcon().getUrl16x16());
         Assert.assertEquals(
-                "http://noLinkFoundToUsePlease.com/?errorTip=IssueGetting_param_sourceUrl/com/test/BasicTestPlan",
+                "http://noLinkFoundToUsePlease.com/?errorTip=IssueGetting_param_sourceUrl/com/test/BasicTestPlan.java",
                 remoteLink.getObject().getStatus().getIcon().getLink());
         Assert.assertEquals("This is a known Problem", remoteLink.getObject().getStatus().getIcon().getTitle());
         Assert.assertEquals("DEFECT-Basic Testplan", remoteLink.getApplication().getName());
@@ -120,7 +120,7 @@ public class TestBasicJiraRemoteLinkBuilder {
         Assert.assertEquals(false, remoteLink.getObject().getStatus().getResolved());
         Assert.assertEquals("test.ico", remoteLink.getObject().getStatus().getIcon().getUrl16x16());
         Assert.assertEquals(
-                "http://noLinkFoundToUsePlease.com/?errorTip=IssueGetting_param_sourceUrl/com/test/BasicTestPlan",
+                "http://noLinkFoundToUsePlease.com/?errorTip=IssueGetting_param_sourceUrl/com/test/BasicTestPlan.java",
                 remoteLink.getObject().getStatus().getIcon().getLink());
         Assert.assertEquals("Basic Testcase",
                 remoteLink.getObject().getStatus().getIcon().getTitle());
@@ -146,7 +146,7 @@ public class TestBasicJiraRemoteLinkBuilder {
         Assert.assertEquals(false, remoteLink.getObject().getStatus().getResolved());
         Assert.assertEquals("test.ico", remoteLink.getObject().getStatus().getIcon().getUrl16x16());
         Assert.assertEquals(
-                "http://noLinkFoundToUsePlease.com/?errorTip=IssueGetting_param_sourceUrl/com/test/BasicTestPlan",
+                "http://noLinkFoundToUsePlease.com/?errorTip=IssueGetting_param_sourceUrl/com/test/BasicTestPlan.java",
                 remoteLink.getObject().getStatus().getIcon().getLink());
         Assert.assertEquals("This is a known Problem", remoteLink.getObject().getStatus().getIcon().getTitle());
         Assert.assertEquals("DEFECT-Basic Testcase", remoteLink.getApplication().getName());
