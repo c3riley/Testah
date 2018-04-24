@@ -41,7 +41,10 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
      */
     public static final String ISSUE_LINK_TYPE_KNOWNPROBLEM_TESTCASE = "E2E KP Testcase";
 
-    private String fileExt = "java";
+    /**
+     * Test test class file extension, include the . with it, ex: .java
+     */
+    private String fileExt = ".java";
 
     private TestPlanDto lastTestPlanDtoUsed = null;
 
@@ -228,7 +231,7 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
     protected String getSourceLinkToUse() {
         String sourceUrl = validateUrl(TS.params().getSourceUrl(), "IssueGetting_param_sourceUrl");
         return sourceUrl + (sourceUrl.endsWith("/") ? "" : "/")
-                + getSourceWithSlash(getLastTestPlanDtoUsed().getSource()) + "." + getFileExt();
+                + getSourceWithSlash(getLastTestPlanDtoUsed().getSource()) + getFileExt();
     }
 
     /**
