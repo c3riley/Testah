@@ -1,6 +1,7 @@
 package org.testah.framework.report.jira;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.lang3.StringUtils;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
@@ -11,9 +12,11 @@ import org.testah.driver.http.requests.PutRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.report.jira.dto.RemoteIssueLinkDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class JiraReporter {
+public class JiraReporter
+{
 
     private final String baseUrl;
     private static final String apiUrl = "rest/api/latest";
@@ -21,7 +24,8 @@ public class JiraReporter {
     /**
      * Constructor.
      */
-    public JiraReporter() {
+    public JiraReporter()
+    {
         if (TS.params().getJiraUrl().endsWith("/")) {
             this.baseUrl = TS.params().getJiraUrl() + apiUrl;
         } else {
@@ -35,27 +39,32 @@ public class JiraReporter {
      * @param testPlan          the test plan
      * @param remoteLinkBuilder JiraRemoteLinkBuilder
      */
-    public void createOrUpdateTestPlanRemoteLink(final TestPlanDto testPlan, final JiraRemoteLinkBuilder remoteLinkBuilder) {
+    public void createOrUpdateTestPlanRemoteLink(final TestPlanDto testPlan, final JiraRemoteLinkBuilder remoteLinkBuilder)
+    {
         if (TS.params().isUseJiraRemoteLink() && TS.params().getJiraUrl().length() > 0) {
             RemoteIssueLinkDto remoteLink;
             if (!testPlan.getRelatedIds().isEmpty()) {
                 for (final String relatedId : testPlan.getRelatedIds()) {
-                    remoteLink = getRemoteLinkForGlobalId(relatedId, testPlan.getSource());
-                    if (null == remoteLink) {
-                        createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestPlanResult(testPlan));
-                    } else {
-                        updateRemoteLink(relatedId, remoteLink.getId(), remoteLinkBuilder.getRemoteLinkForTestPlanResult(testPlan));
+                    if (!StringUtils.isEmpty(relatedId)) {
+                        remoteLink = getRemoteLinkForGlobalId(relatedId, testPlan.getSource());
+                        if (null == remoteLink) {
+                            createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestPlanResult(testPlan));
+                        } else {
+                            updateRemoteLink(relatedId, remoteLink.getId(), remoteLinkBuilder.getRemoteLinkForTestPlanResult(testPlan));
+                        }
                     }
                 }
             }
             if (null != testPlan.getKnownProblem()) {
                 for (final String relatedId : testPlan.getKnownProblem().getLinkedIds()) {
-                    remoteLink = getRemoteLinkForGlobalId(relatedId, testPlan.getSource());
-                    if (null == remoteLink) {
-                        createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
-                    } else {
-                        updateRemoteLink(relatedId, remoteLink.getId(),
-                                remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
+                    if (!StringUtils.isEmpty(relatedId)) {
+                        remoteLink = getRemoteLinkForGlobalId(relatedId, testPlan.getSource());
+                        if (null == remoteLink) {
+                            createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
+                        } else {
+                            updateRemoteLink(relatedId, remoteLink.getId(),
+                                    remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
+                        }
                     }
                 }
             }
@@ -63,22 +72,26 @@ public class JiraReporter {
                 for (final TestCaseDto testCase : testPlan.getTestCases()) {
                     if (null != testCase.getKnownProblem() && null != testCase.getKnownProblem().getLinkedIds()) {
                         for (final String relatedId : testCase.getKnownProblem().getLinkedIds()) {
-                            remoteLink = getRemoteLinkForGlobalId(relatedId, testCase.getSource());
-                            if (null == remoteLink) {
-                                createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
-                            } else {
-                                updateRemoteLink(relatedId, remoteLink.getId(),
-                                        remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
+                            if (!StringUtils.isEmpty(relatedId)) {
+                                remoteLink = getRemoteLinkForGlobalId(relatedId, testCase.getSource());
+                                if (null == remoteLink) {
+                                    createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
+                                } else {
+                                    updateRemoteLink(relatedId, remoteLink.getId(),
+                                            remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
+                                }
                             }
                         }
                     }
                     if (null != testCase.getRelatedIds() && !testCase.getRelatedIds().isEmpty()) {
                         for (final String relatedId : testCase.getRelatedIds()) {
-                            remoteLink = getRemoteLinkForGlobalId(relatedId, testCase.getSource());
-                            if (null == remoteLink) {
-                                createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
-                            } else {
-                                updateRemoteLink(relatedId, remoteLink.getId(), remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
+                            if (!StringUtils.isEmpty(relatedId)) {
+                                remoteLink = getRemoteLinkForGlobalId(relatedId, testCase.getSource());
+                                if (null == remoteLink) {
+                                    createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
+                                } else {
+                                    updateRemoteLink(relatedId, remoteLink.getId(), remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
+                                }
                             }
                         }
                     }
@@ -87,7 +100,8 @@ public class JiraReporter {
         }
     }
 
-    private <T> T addAuthHeader(final AbstractRequestDto<T> request) {
+    private <T> T addAuthHeader(final AbstractRequestDto<T> request)
+    {
         return request.addBasicAuth(TS.params().getJiraUserName(), TS.params().getJiraPassword());
     }
 
@@ -97,11 +111,21 @@ public class JiraReporter {
      * @param issue the issue
      * @return list of remote issue link
      */
-    public List<RemoteIssueLinkDto> getRemoteLinks(final String issue) {
-        GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue
-                + "/remotelink");
-        return TS.http().doRequest(addAuthHeader(get.withJson())).getResponse(new TypeReference<List<RemoteIssueLinkDto>>() {
-        });
+    public List<RemoteIssueLinkDto> getRemoteLinks(final String issue)
+    {
+        try {
+            if (!StringUtils.isEmpty(issue)) {
+                GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue
+                        + "/remotelink");
+                return TS.http().doRequest(addAuthHeader(get.withJson())).getResponse(new TypeReference<List<RemoteIssueLinkDto>>()
+
+                {
+                });
+            }
+        } catch (Exception e) {
+            TS.log().error(e);
+        }
+        return new ArrayList<RemoteIssueLinkDto>();
     }
 
     /**
@@ -111,7 +135,8 @@ public class JiraReporter {
      * @param globalId global id
      * @return remote issue link for global id
      */
-    public RemoteIssueLinkDto getRemoteLinkForGlobalId(final String issue, final String globalId) {
+    public RemoteIssueLinkDto getRemoteLinkForGlobalId(final String issue, final String globalId)
+    {
         if (null != issue && null != globalId) {
             for (RemoteIssueLinkDto link : getRemoteLinks(issue)) {
                 if (link.getGlobalId().equals(globalId)) {
@@ -129,10 +154,17 @@ public class JiraReporter {
      * @param remoteLink remote link to create
      * @return remote issue link
      */
-    public RemoteIssueLinkDto createRemoteLink(final String issue, final RemoteIssueLinkDto remoteLink) {
-        if (null != remoteLink) {
-            PostRequestDto post = new PostRequestDto(baseUrl + "/issue/" + issue + "/remotelink", remoteLink);
-            return TS.http().doRequest(addAuthHeader(post.withJson())).getResponse(RemoteIssueLinkDto.class);
+    public RemoteIssueLinkDto createRemoteLink(final String issue, final RemoteIssueLinkDto remoteLink)
+    {
+        try {
+            if (!StringUtils.isEmpty(issue)) {
+                if (null != remoteLink) {
+                    PostRequestDto post = new PostRequestDto(baseUrl + "/issue/" + issue + "/remotelink", remoteLink);
+                    return TS.http().doRequest(addAuthHeader(post.withJson())).getResponse(RemoteIssueLinkDto.class);
+                }
+            }
+        } catch (Exception e) {
+            TS.log().error(e);
         }
         return null;
     }
@@ -145,10 +177,17 @@ public class JiraReporter {
      * @param remoteLink remote issue link
      * @return response of HTTP request
      */
-    public ResponseDto updateRemoteLink(final String issue, final int id, final RemoteIssueLinkDto remoteLink) {
-        if (null != remoteLink) {
-            PutRequestDto put = new PutRequestDto(baseUrl + "/issue/" + issue + "/remotelink/" + id, remoteLink);
-            return TS.http().doRequest(addAuthHeader(put.withJson()));
+    public ResponseDto updateRemoteLink(final String issue, final int id, final RemoteIssueLinkDto remoteLink)
+    {
+        try {
+            if (!StringUtils.isEmpty(issue)) {
+                if (null != remoteLink) {
+                    PutRequestDto put = new PutRequestDto(baseUrl + "/issue/" + issue + "/remotelink/" + id, remoteLink);
+                    return TS.http().doRequest(addAuthHeader(put.withJson()));
+                }
+            }
+        } catch (Exception e) {
+            TS.log().error(e);
         }
         return null;
     }
