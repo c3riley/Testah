@@ -1,5 +1,6 @@
 package org.testah.runner;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.driver.http.requests.GetRequestDto;
@@ -35,6 +36,7 @@ public class TestHttpAkkaRunner {
         akkaRunner.runAndReport(5, new GetRequestDto("http://www.google.com"), 5);
     }
 
+    @Ignore
     @Test
     public void happyPathPostChangingPayload() {
         final int totalNumberOfPosts = 4;
@@ -87,6 +89,7 @@ public class TestHttpAkkaRunner {
         TS.asserts().equalsTo(values, responseValues);
     }
 
+    @Ignore
     @Test
     public void happyPathGetChangingPath() {
         final int totalNumberOfGets = 4;
