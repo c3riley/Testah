@@ -54,6 +54,7 @@ public class Cli
     /**
      * The Constant version.
      */
+
     public static final String version = "0.10.13";
 
     /**
