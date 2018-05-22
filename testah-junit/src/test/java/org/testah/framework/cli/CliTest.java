@@ -1,12 +1,12 @@
 package org.testah.framework.cli;
 
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-
-import java.io.File;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.File;
+
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 public class CliTest {
     
@@ -27,6 +27,14 @@ public class CliTest {
         cli.getArgumentParser(args);
         Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), greaterThanOrEqualTo(50));
         Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), greaterThanOrEqualTo(46));
+    }
+
+    @Test(expected=RuntimeException.class)
+    public void testCliRunClassInitializationError() {
+        System.setProperty(PARAM_LOOK_AT_INTERNAL_TESTS, "org.testah.framework.cli.initialization");
+        final String[] args = { "run" };
+        final Cli cli = new Cli();
+        cli.getArgumentParser(args);
     }
     
     @Test
