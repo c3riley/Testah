@@ -7,6 +7,7 @@ import org.testah.framework.annotations.TestPlan;
 public class InitializationFailure {
 
     public final static boolean throwError = true;
+
     private final static String failure = getFailure();
 
     @TestCase()
