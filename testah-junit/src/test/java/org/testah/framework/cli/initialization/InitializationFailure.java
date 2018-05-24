@@ -6,7 +6,8 @@ import org.testah.framework.annotations.TestPlan;
 @TestPlan(components = {"TEST_COMPONENT"})
 public class InitializationFailure {
 
-    public static boolean throwError = true;
+    public final static boolean throwError = true;
+
     private final static String failure = getFailure();
 
     @TestCase()
