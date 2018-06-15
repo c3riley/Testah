@@ -28,8 +28,7 @@ public abstract class AbstractLongRunningTest {
         long timeleft = runProps.getStopTime() - System.currentTimeMillis();
         try {
             while (timeleft > 0) {
-                List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = loadTestDataGenerator
-                        .generateRequests(runProps.getChunkSize(), runProps.getNumberOfChunks());
+                List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = loadTestDataGenerator.generateRequests();
                 for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues) {
                     try {
                         responses = akkaRunner.runAndReport(runProps.getNumberOfAkkaThreads(), concurrentLinkedQueue,

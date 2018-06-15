@@ -2,38 +2,31 @@ package org.testah.runner.http.load;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.testah.driver.http.requests.AbstractRequestDto;
-import org.testah.driver.http.requests.PostRequestDto;
+import org.testah.runner.http.load.request.PostRestRequest;
 import org.testah.runner.performance.TestDataGenerator;
 
 import com.google.common.collect.Lists;
 
-public class TestServicePostRequestGenerator extends TestServiceClient implements TestDataGenerator {
+public class TestServicePostRequestGenerator extends TestDataGenerator {
+    private final List<String> stringList = Arrays.asList("xxxAxxx", "xxxBxxx", "xxxCxxx", "xxxDxxx");
+    private final List<Long> longList = Arrays.asList(1L, 2L);
+
+    TestServicePostRequestGenerator(int chunkSize, int numberOfChunks) {
+        super(chunkSize, numberOfChunks);
+    }
 
     @Override
-    public List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> generateRequests(int chunkSize, int numberOfChunks) throws Exception {
-        List<AbstractRequestDto<?>> postRequests = new ArrayList<>();
-        int totalRequests = chunkSize * numberOfChunks;
-
-        final int requestsPerStatusCode = 3;
-        int requestCount = 0;
-        String[] payloads = {"xxxAxxx", "xxxBxxx", "xxxCxxx", "xxxDxxx"};
-        done:
-        for (int request = 0; request < requestsPerStatusCode; request++) {
-            for (String payload : payloads) {
-                postRequests.add(new PostRequestDto(getUrlPost()).setPayload(payload));
-                requestCount++;
-                if (requestCount > totalRequests) {
-                    break done;
-                }
-            }
-        }
+    public List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> generateRequests() throws Exception {
+        PostRestRequest postRestRequest = new PostRestRequest(stringList, longList);
+        while (addRequest(postRestRequest.next())) {}
 
         List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = new ArrayList<>();
-        for (List<AbstractRequestDto<?>> postRequestSublist : Lists.partition(postRequests, chunkSize)) {
+        for (List<AbstractRequestDto<?>> postRequestSublist : Lists.partition(getRequestList(), getChunkSize())) {
             concurrentLinkedQueues.add(new ConcurrentLinkedQueue<AbstractRequestDto<?>>(postRequestSublist));
         }
         return concurrentLinkedQueues;
@@ -41,6 +34,6 @@ public class TestServicePostRequestGenerator extends TestServiceClient implement
 
     @Override
     public String getDomain() throws Exception {
-        return new URL(getUrlPost()).getHost();
+        return new URL(new TestServiceClient().getUrlPost()).getHost();
     }
 }

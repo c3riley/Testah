@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     compile localGroovy()
-    compile 'org.testah:testah-junit:0.6.12'
+    compile 'org.testah:testah-junit:0.10.13'
 }
 ```
 

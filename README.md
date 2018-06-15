@@ -20,8 +20,9 @@ dependencies {
 
 # Development
 
-To build Testah projects, execute the following command within their respective root folders. With the use of the gradle wrapper, this will download the appropriate version of gradle to build with. Then clean the target directory, build the project, and run the tests.
+To build Testah projects, execute the following command within the testah-junit folder. With the use of the gradle wrapper, this will download the appropriate version of gradle to build with. Then clean the target directory, build the project, and run the tests.
 
 ```
+cd testah-junit
 ./gradlew clean build
 ```

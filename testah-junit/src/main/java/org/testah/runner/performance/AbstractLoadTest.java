@@ -69,7 +69,7 @@ public abstract class AbstractLoadTest {
 
         while (System.currentTimeMillis() < runProps.getStopTime()) {
             List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues =
-                loadTestDataGenerator.generateRequests(runProps.getChunkSize(), 1);
+                loadTestDataGenerator.generateRequests();
             for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues) {
                 try {
                     responses = akkaRunner.runAndReport(runProps.getNumberOfAkkaThreads(), concurrentLinkedQueue, runProps.isVerbose());

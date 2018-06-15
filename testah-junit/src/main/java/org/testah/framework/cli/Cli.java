@@ -8,6 +8,7 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.testah.TS;
 import org.testah.client.dto.TestPlanDto;
 import org.testah.client.enums.BrowserType;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,8 +35,7 @@ import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
 /**
  * The Class Cli.
  */
-public class Cli
-{
+public class Cli {
 
     /**
      * The res.
@@ -54,7 +55,8 @@ public class Cli
     /**
      * The Constant version.
      */
-    public static final String version = "0.10.4";
+
+    public static final String version = "0.11.0";
 
     /**
      * The Constant BAR_LONG.
@@ -78,12 +80,10 @@ public class Cli
     /**
      * Instantiates a new cli.
      */
-    public Cli()
-    {
+    public Cli() {
 
         String propFilePath = System.getenv("TESTAH_PROP");
-        if (null == propFilePath)
-        {
+        if (null == propFilePath) {
             propFilePath = System.getProperty("TESTAH_PROP", ParamLoader.getDefaultPropFilePath());
         }
 
@@ -92,8 +92,7 @@ public class Cli
 
     }
 
-    public Subparser addOptions(final Subparser sub)
-    {
+    public Subparser addOptions(final Subparser sub) {
 
         return sub;
     }
@@ -104,8 +103,7 @@ public class Cli
      * @param args the args
      * @return the argument parser
      */
-    public Cli getArgumentParser(final String[] args)
-    {
+    public Cli getArgumentParser(final String[] args) {
 
         final ArgumentParser parser = ArgumentParsers.newArgumentParser("Testah").defaultHelp(true)
                 .description("Testah CLI running Automated Tests for Browser and Http").epilog("").version(version);
@@ -140,16 +138,13 @@ public class Cli
 
         writeOutTestah();
 
-        try
-        {
-            if (null != args)
-            {
+        try {
+            if (null != args) {
                 res = parser.parseArgs(args);
                 parser.parseArgs(args, opt);
                 TS.setParams(opt);
                 String externalTest = res.getString("test");
-                if (null == externalTest || externalTest.length() == 0)
-                {
+                if (null == externalTest || externalTest.length() == 0) {
                     externalTest = res.getString("lookAtExternalTests");
                 }
 
@@ -160,45 +155,36 @@ public class Cli
                 TS.log().info(Cli.BAR_WALL + "CLI Inputs - " + res);
                 TS.log().debug(Cli.BAR_LONG);
                 final String subProcess = res.getString("subparserName");
-                if (null != res.getString("subparserName"))
-                {
-                    try
-                    {
-                        if (subProcess.equalsIgnoreCase("run"))
-                        {
+                if (null != res.getString("subparserName")) {
+                    try {
+                        if (subProcess.equalsIgnoreCase("run")) {
 
                             processRun();
 
-                        } else if (subProcess.equalsIgnoreCase("query"))
-                        {
+                        } else if (subProcess.equalsIgnoreCase("query")) {
 
                             processQuery();
 
-                        } else if (subProcess.equalsIgnoreCase("create"))
-                        {
+                        } else if (subProcess.equalsIgnoreCase("create")) {
 
                             processCreate();
 
-                        } else
-                        {
+                        } else {
                             throw new RuntimeException("Unknown SubParser: " + subProcess);
                         }
-                    } catch (final Exception e)
-                    {
+                    } catch (final Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
 
-            } else
-            {
+            } else {
                 TS.log().debug(Cli.BAR_LONG);
                 TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ "
                         + ParamLoader.getDefaultPropFilePath() + " ]");
                 TS.log().debug(Cli.BAR_LONG);
             }
 
-        } catch (final ArgumentParserException e)
-        {
+        } catch (final ArgumentParserException e) {
             parser.handleError(e);
             throw new RuntimeException(e);
         }
@@ -209,10 +195,8 @@ public class Cli
     /**
      * Process create.
      */
-    public void processCreate()
-    {
-        if (res.getBoolean("prop"))
-        {
+    public void processCreate() {
+        if (res.getBoolean("prop")) {
             paramLoader.overwriteDefaultConfig();
         }
     }
@@ -220,15 +204,14 @@ public class Cli
     /**
      * Process run.
      */
-    public void processRun()
-    {
+    public void processRun() {
 
+        List<String> initializationErrorFailures = new ArrayList<>();
         this.setTestPlanFilter(new TestFilter());
         getTestPlanFilter().filterTestPlansToRun();
 
         final TestahJUnitRunner junitRunner = new TestahJUnitRunner();
-        if (isUnderTest())
-        {
+        if (isUnderTest()) {
             return;
         }
         final List<ResultDto> results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
@@ -240,40 +223,48 @@ public class Cli
         int totalTestCasesIgnored = 0;
         int totalTestPlans = 0;
 
-        if (null != results)
-        {
+        if (null != results) {
             totalTestPlans = results.size();
             TS.log().info(Cli.BAR_LONG);
             TS.log().info(Cli.BAR_WALL + "TestPlan Result(s):");
 
             TS.util().pause(1000L, "Waiting for TestsPlans to complete");
-            for (final ResultDto result : results)
-            {
+            for (final ResultDto result : results) {
 
-                if (null != result.getTestPlan())
-                {
+                if (null != result.getTestPlan()) {
                     result.getTestPlan().getRunInfo().recalc(result.getTestPlan());
                     totalTestCases += result.getTestPlan().getRunInfo().getTotal();
                     totalTestCasesFailed += result.getTestPlan().getRunInfo().getFail();
                     totalTestCasesPassed += result.getTestPlan().getRunInfo().getPass();
                     totalTestCasesIgnored += result.getTestPlan().getRunInfo().getIgnore();
-                } else
-                {
-                    TS.log().error("Testplan is null, for " + result.getJunitResult().getFailures());
+                } else {
+                    TS.log().error("Testplan is null, looking at junit result for " + result.getJunitResult().getFailures());
+
+                    if (null != result.getJunitResult()) {
+                        if (null != result.getJunitResult().getFailures()) {
+                            result.getJunitResult().getFailures().forEach(failure -> {
+                                if (StringUtils.startsWithIgnoreCase(failure.toString(), "initializationError")) {
+                                    initializationErrorFailures.add(result.getJunitResult().getFailures().toString());
+                                }
+                            });
+                        } else {
+                            totalTestCases += result.getJunitResult().getRunCount();
+                            totalTestCasesFailed += result.getJunitResult().getFailureCount();
+                            totalTestCasesPassed += result.getJunitResult().getRunCount() -
+                                    (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
+                            totalTestCasesIgnored += result.getJunitResult().getIgnoreCount();
+                        }
+                    }
                 }
             }
-            for (final ResultDto result : results)
-            {
-                if (null != result.getTestPlan())
-                {
+            for (final ResultDto result : results) {
+                if (null != result.getTestPlan()) {
                     TS.getTestPlanReporter().reportResults(result.getTestPlan(), false, this.opt.getOutput());
                 }
             }
 
-            for (final ResultDto result : results)
-            {
-                if (null != result.getTestPlan())
-                {
+            for (final ResultDto result : results) {
+                if (null != result.getTestPlan()) {
                     System.out.println("" + result.getTestPlan().getRunInfo().getReportFilePath().get("html"));
                 }
             }
@@ -290,15 +281,18 @@ public class Cli
         TS.log().info(Cli.BAR_LONG);
 
         File summaryHtml = new SummaryHtmlFormatter(results).createReport().getReportFile();
-        if (TS.params().isAutoOpenHtmlReport())
-        {
+        if (TS.params().isAutoOpenHtmlReport()) {
             new TestPlanReporter().openReport(summaryHtml.getAbsolutePath());
         }
         AbstractTestPlan.tearDownTestah();
 
-        if (totalTestCasesFailed > 0)
-        {
+        if (totalTestCasesFailed > 0) {
             throw new RuntimeException("There are test failures " + totalTestCasesFailed);
+        }
+
+        if (!initializationErrorFailures.isEmpty()) {
+            throw new RuntimeException("There are test failures due to test classes not being able to load: "
+                    + initializationErrorFailures);
         }
     }
 
@@ -307,28 +301,22 @@ public class Cli
      *
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public void processQuery() throws IOException
-    {
+    public void processQuery() throws IOException {
         this.setTestPlanFilter(new TestFilter());
         File results = new File(res.getString("queryResults"));
-        if (results.isDirectory())
-        {
+        if (results.isDirectory()) {
             TS.log().trace("results mkdirs: " + results.mkdirs());
             results = new File(results, "queryResults.json");
-        } else
-        {
-            if (null != results.getParentFile())
-            {
+        } else {
+            if (null != results.getParentFile()) {
                 TS.log().trace("results.getParentFile() mkdirs: " + results.getParentFile().mkdirs());
             }
         }
         getTestPlanFilter().filterTestPlansToRun();
         Object resultObject = testPlanFilter.getTestClassesMetFilters();
-        if (res.getBoolean("includeMeta"))
-        {
+        if (res.getBoolean("includeMeta")) {
             final HashMap<String, TestPlanDto> testPlans = new HashMap<>();
-            for (final Class<?> test : getTestPlanFilter().getTestClassesMetFilters())
-            {
+            for (final Class<?> test : getTestPlanFilter().getTestClassesMetFilters()) {
                 testPlans
                         .put(test.getCanonicalName(),
                                 TestDtoHelper
@@ -336,10 +324,8 @@ public class Cli
                                                 test.getAnnotation(KnownProblem.class))
                                         .setRunTime(null).setRunInfo(null));
 
-                for (final Method method : test.getDeclaredMethods())
-                {
-                    if (null != method.getAnnotation(TestCase.class))
-                    {
+                for (final Method method : test.getDeclaredMethods()) {
+                    if (null != method.getAnnotation(TestCase.class)) {
                         testPlans.get(test.getCanonicalName())
                                 .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
                                         method.getAnnotation(TestCase.class), method.getAnnotation(KnownProblem.class),
@@ -354,8 +340,7 @@ public class Cli
         TS.log().info("Query Results: Found[" + getTestPlanFilter().getTestClassesMetFilters().size() + "] "
                 + results.getAbsolutePath());
 
-        if (res.getBoolean("showInConsole"))
-        {
+        if (res.getBoolean("showInConsole")) {
             TS.log().info(TS.util().toJson(resultObject));
         }
 
@@ -366,8 +351,7 @@ public class Cli
      *
      * @return the res
      */
-    public Namespace getRes()
-    {
+    public Namespace getRes() {
         return res;
     }
 
@@ -377,8 +361,7 @@ public class Cli
      * @param res the new res
      * @return the cli
      */
-    public Cli setRes(final Namespace res)
-    {
+    public Cli setRes(final Namespace res) {
         this.res = res;
         return this;
     }
@@ -388,8 +371,7 @@ public class Cli
      *
      * @return the param loader
      */
-    public ParamLoader getParamLoader()
-    {
+    public ParamLoader getParamLoader() {
         return paramLoader;
     }
 
@@ -398,24 +380,20 @@ public class Cli
      *
      * @return the opt
      */
-    public Params getOpt()
-    {
+    public Params getOpt() {
         return opt;
     }
 
-    public Cli setOpt(final Params opt)
-    {
+    public Cli setOpt(final Params opt) {
         this.opt = opt;
         return this;
     }
 
-    public TestFilter getTestPlanFilter()
-    {
+    public TestFilter getTestPlanFilter() {
         return testPlanFilter;
     }
 
-    public Cli setTestPlanFilter(final TestFilter testPlanFilter)
-    {
+    public Cli setTestPlanFilter(final TestFilter testPlanFilter) {
         this.testPlanFilter = testPlanFilter;
         return this;
     }
@@ -423,8 +401,7 @@ public class Cli
     /**
      * Write out testah.
      */
-    public static void writeOutTestah()
-    {
+    public static void writeOutTestah() {
         System.out.println("\n" + Cli.BAR_LONG);
         System.out.println(
                 "      _____________                    _                                         ============");
@@ -446,13 +423,11 @@ public class Cli
         System.out.println(Cli.BAR_LONG);
     }
 
-    public boolean isUnderTest()
-    {
+    public boolean isUnderTest() {
         return underTest;
     }
 
-    public Cli setUnderTest(final boolean underTest)
-    {
+    public Cli setUnderTest(final boolean underTest) {
         this.underTest = underTest;
         return this;
     }
