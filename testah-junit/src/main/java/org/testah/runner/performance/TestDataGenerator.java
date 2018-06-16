@@ -43,7 +43,15 @@ public abstract class TestDataGenerator {
         return chunkSize;
     }
 
-    public List<AbstractRequestDto<?>> getRequestList() {
+    protected List<AbstractRequestDto<?>> getRequestList() {
         return requestList;
     }
+
+    /**
+     * @param requestList the requestList to set
+     */
+    protected void setRequestList(List<AbstractRequestDto<?>> requestList) {
+        this.requestList = requestList;
+    }
+
 }
