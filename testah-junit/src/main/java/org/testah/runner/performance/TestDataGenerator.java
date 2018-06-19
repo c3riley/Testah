@@ -46,4 +46,13 @@ public abstract class TestDataGenerator {
     public List<AbstractRequestDto<?>> getRequestList() {
         return requestList;
     }
+
+    /**
+     * Set the list of requests.
+     * @param requestList the requestList to set
+     */
+    protected void setRequestList(List<AbstractRequestDto<?>> requestList) {
+        this.requestList = requestList;
+    }
+
 }
