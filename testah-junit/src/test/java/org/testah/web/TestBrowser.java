@@ -11,6 +11,7 @@ import org.testah.driver.web.browser.FirefoxBrowser;
 import org.testah.driver.web.browser.GoogleChromeBrowser;
 import org.testah.driver.web.browser.PhantomJsBrowser;
 import org.testah.driver.web.element.AbstractWebElementWrapper;
+import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.BrowserTestPlan;
@@ -18,6 +19,7 @@ import org.testah.framework.testPlan.BrowserTestPlan;
 import java.io.File;
 import java.util.List;
 
+@KnownProblem
 @TestPlan
 public class TestBrowser extends BrowserTestPlan {
     

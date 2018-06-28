@@ -52,6 +52,7 @@ import org.testah.driver.http.requests.GetRequestDto;
 import org.testah.driver.http.requests.PostRequestDto;
 import org.testah.driver.http.requests.PutRequestDto;
 import org.testah.driver.http.response.ResponseDto;
+import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
 import javax.net.ssl.SSLContext;
@@ -174,6 +175,9 @@ public abstract class AbstractHttpWrapper {
 
     private HashMap<String, Header> customHeaders = new HashMap<String, Header>();
 
+
+    private VerboseAsserts verboseAsserts;
+
     /**
      * Gets self.
      *
@@ -211,8 +215,8 @@ public abstract class AbstractHttpWrapper {
      */
     public ResponseDto doRequestWithAssert(final AbstractRequestDto<?> request, final ResponseDto expected) {
         final ResponseDto response = doRequest(request);
-        if (TS.asserts().notNull("preformRequestWithAssert actual response is not null", response)
-                && TS.asserts().notNull("preformRequestWithAssert expected response is not null", expected)) {
+        if (getVerboseAsserts().notNull("preformRequestWithAssert actual response is not null", response)
+                && getVerboseAsserts().notNull("preformRequestWithAssert expected response is not null", expected)) {
             response.assertStatus(expected.getStatusCode());
         }
         return response;
@@ -358,7 +362,7 @@ public abstract class AbstractHttpWrapper {
         } catch (final IOException e) {
             TS.log().error(e);
             if (!ignoreHttpError) {
-                TS.asserts().equalsTo("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
+                getVerboseAsserts().equalsTo("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
                         e.getMessage());
             }
             return new ResponseDto(-1).setStatusText(e.toString()).setResponseBody(e.toString());
@@ -1252,6 +1256,41 @@ public abstract class AbstractHttpWrapper {
      */
     public AbstractHttpWrapper removeAuth() {
         return removeCustomHeader(HttpAuthUtil.HEADER_NAME);
+    }
+
+    /**
+     * Sets verbose asserts.
+     * Defaults verboseAsserts to a new instance of verboseAsserts
+     *
+     * @return the verbose asserts
+     */
+    public AbstractHttpWrapper setVerboseAsserts() {
+        this.verboseAsserts = new VerboseAsserts();
+        return getSelf();
+    }
+
+    /**
+     * Sets verbose asserts.
+     *
+     * @param verboseAsserts the verbose asserts
+     * @return the verbose asserts
+     */
+    public AbstractHttpWrapper setVerboseAsserts(final VerboseAsserts verboseAsserts) {
+        this.verboseAsserts = verboseAsserts;
+        return getSelf();
+    }
+
+    /**
+     * Gets verbose asserts.
+     * If Null, will use TS.asserts() as default
+     *
+     * @return the verbose asserts
+     */
+    public VerboseAsserts getVerboseAsserts() {
+        if (this.verboseAsserts == null) {
+            this.verboseAsserts = TS.asserts();
+        }
+        return this.verboseAsserts;
     }
 
 }

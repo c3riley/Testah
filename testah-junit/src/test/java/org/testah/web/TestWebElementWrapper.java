@@ -6,10 +6,12 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.testah.TS;
 import org.testah.driver.web.element.AbstractWebElementWrapper;
+import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.BrowserTestPlan;
 
+@KnownProblem
 @TestPlan
 public class TestWebElementWrapper extends BrowserTestPlan {
 
