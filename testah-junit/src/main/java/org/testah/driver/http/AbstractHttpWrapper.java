@@ -87,7 +87,7 @@ public abstract class AbstractHttpWrapper {
     private int defaultConnectionTimeout = 5000;
 
     /**
-     * The verbose.
+     * The verbose.getDefaultConnectionTimeout
      */
     private boolean verbose = true;
 

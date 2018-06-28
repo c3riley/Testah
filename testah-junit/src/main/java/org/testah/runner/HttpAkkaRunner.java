@@ -1,9 +1,13 @@
 package org.testah.runner;
 
-import akka.actor.*;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
+import akka.actor.UntypedActor;
+import akka.actor.UntypedActorFactory;
 import org.testah.TS;
 import org.testah.driver.http.AbstractHttpWrapper;
-import org.testah.driver.http.HttpWrapperV1;
+import org.testah.driver.http.HttpWrapperV2;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.http.load.HttpActor;
@@ -113,7 +117,7 @@ public class HttpAkkaRunner {
                 return null;
             }
 
-            httpWrapper = new HttpWrapperV1();
+            httpWrapper = new HttpWrapperV2();
             httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
 
             final ActorSystem system = ActorSystem.create("HttpAkkaRunner");
@@ -158,7 +162,7 @@ public class HttpAkkaRunner {
                 return null;
             }
             numOfRequestsToMake = concurrentLinkedQueue.size();
-            httpWrapper = new HttpWrapperV1();
+            httpWrapper = new HttpWrapperV2();
             httpWrapper.setVerbose(isVerbose);
             httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
 
@@ -193,7 +197,7 @@ public class HttpAkkaRunner {
      */
     public AbstractHttpWrapper getHttpWrapper() {
         if (null == httpWrapper) {
-            final AbstractHttpWrapper httpWrapperTmp = new HttpWrapperV1();
+            final AbstractHttpWrapper httpWrapperTmp = new HttpWrapperV2();
             httpWrapperTmp.setVerbose(false);
             httpWrapperTmp.setConnectManagerDefaultPooling().setHttpClient();
             httpWrapper = httpWrapperTmp;
