@@ -1,10 +1,11 @@
-package org.testah;
+package org.testah.framework.report;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.testah.TS;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.HttpTestPlan;
@@ -50,5 +51,7 @@ public class TestVerboseAssert extends HttpTestPlan {
         TS.asserts().isEmpty("", new HashMap<String, String>().keySet());
 
     }
+
+
 
 }

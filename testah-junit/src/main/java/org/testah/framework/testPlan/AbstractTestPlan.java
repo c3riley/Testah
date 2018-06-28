@@ -221,6 +221,9 @@ public abstract class AbstractTestPlan {
 
         protected void starting(final Description desc) {
             if (!didTestPlanStart()) {
+
+                setUpThreadLocals();
+
                 TS.log().info("TESTPLAN started:" + desc.getTestClass().getName() + " - thread[" + Thread.currentThread().getId() + "]");
                 final TestPlan testPlan = desc.getTestClass().getAnnotation(TestPlan.class);
                 if (null == desc.getTestClass().getAnnotation(TestPlan.class)) {
@@ -266,6 +269,7 @@ public abstract class AbstractTestPlan {
      */
     @BeforeClass
     public static void setupAbstractTestPlan() {
+        setUpThreadLocals();
     }
 
     /**
