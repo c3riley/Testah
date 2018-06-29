@@ -1700,14 +1700,11 @@ public class VerboseAsserts {
             notNull("Check valueToBeGreaterThan is not null", valueToBeGreaterThan);
             notNull("Check actual is not null", actual);
 
-            BigDecimal bdValueToBeGreaterThan = new BigDecimal(valueToBeGreaterThan.toString());
-            BigDecimal bdActual = new BigDecimal(actual.toString());
-
-            message = message + " - actual[" + bdActual.toPlainString() + "] is greater than " + bdValueToBeGreaterThan.toPlainString();
+            message = message + " - actual[" + actual.toPlainString() + "] " + assertMethod + " " + valueToBeGreaterThan.toPlainString();
             if (allowEqualTo) {
-                Assert.assertTrue(message, bdValueToBeGreaterThan.compareTo(bdActual) >= 0);
+                Assert.assertTrue(message, actual.compareTo(valueToBeGreaterThan) >= 0);
             } else {
-                Assert.assertTrue(message, bdValueToBeGreaterThan.compareTo(bdActual) > 0);
+                Assert.assertTrue(message, actual.compareTo(valueToBeGreaterThan) > 0);
             }
             return addAssertHistory(message, true, assertMethod, valueToBeGreaterThan, actual);
         } catch (final AssertionError e) {
@@ -1741,18 +1738,16 @@ public class VerboseAsserts {
 
     public boolean isLessThan(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual, final boolean allowEqualTo) {
         String assertMethod = (allowEqualTo ? "isLessThanOrEqualTo" : "isLessThan");
+
+        notNull("Check valueToBeLessThan is not null", valueToBeLessThan);
+        notNull("Check actual is not null", actual);
+
         try {
-            notNull("Check valueToBeLessThan is not null", valueToBeLessThan);
-            notNull("Check actual is not null", actual);
-
-            BigDecimal bdValueToBeLessThan = new BigDecimal(valueToBeLessThan.toString());
-            BigDecimal bdActual = new BigDecimal(actual.toString());
-
-            message = message + " - actual[" + bdActual.toPlainString() + "] is less than " + bdValueToBeLessThan.toPlainString();
+            message = message + " - actual[" + actual.toPlainString() + "] " + assertMethod + " " + valueToBeLessThan.toPlainString();
             if (allowEqualTo) {
-                Assert.assertTrue(message, bdValueToBeLessThan.compareTo(bdActual) <= 0);
+                Assert.assertTrue(message, actual.compareTo(valueToBeLessThan) <= 0);
             } else {
-                Assert.assertTrue(message, bdValueToBeLessThan.compareTo(bdActual) < 0);
+                Assert.assertTrue(message, actual.compareTo(valueToBeLessThan) < 0);
             }
             return addAssertHistory(message, true, assertMethod, valueToBeLessThan, actual);
         } catch (final AssertionError e) {

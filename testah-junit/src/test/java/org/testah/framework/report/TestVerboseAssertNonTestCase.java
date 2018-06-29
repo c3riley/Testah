@@ -11,10 +11,10 @@ public class TestVerboseAssertNonTestCase {
 
     private HashMap<Number, Number> getNumberData() {
         HashMap<Number, Number> numbers = new HashMap<>();
-        numbers.put(3, 2);
-        numbers.put(3.0, 2.0);
-        numbers.put(3L, 2L);
-        numbers.put(3f, 2f);
+        numbers.put(2, 3);
+        numbers.put(2.0, 3.0);
+        numbers.put(2L, 4L);
+        numbers.put(2f, 3f);
         return numbers;
     }
 
