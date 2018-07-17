@@ -3,12 +3,7 @@ package org.testah.util;
 import org.apache.maven.wagon.util.IoUtils;
 import org.testah.TS;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 
 /**
  * The Class BashUtil.

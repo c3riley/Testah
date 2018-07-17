@@ -11,11 +11,7 @@ import org.joda.time.format.PeriodFormat;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
@@ -280,7 +276,7 @@ public class TestahUtil {
     /**
      * Download file.
      *
-     * @param urlToUse the url to use
+     * @param urlToUse       the url to use
      * @param destinationDir the target directory
      * @return the file
      */

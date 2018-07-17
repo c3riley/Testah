@@ -1,18 +1,14 @@
 package org.testah.runner;
 
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Props;
-import akka.actor.UntypedActor;
-import akka.actor.UntypedActorFactory;
+import akka.actor.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.testah.TS;
 import org.testah.framework.dto.ResultDto;
 import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.runner.testPlan.TestPlanActor;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The Class TestahJUnitRunner.
@@ -21,6 +17,10 @@ public class TestahJUnitRunner {
 
     private static boolean inUse = false;
 
+    public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> junitTestPlanClasses) {
+        return runTests(numConcurrent, junitTestPlanClasses, true);
+    }
+
     /**
      * Run tests.
      *
@@ -28,10 +28,14 @@ public class TestahJUnitRunner {
      * @param junitTestPlanClasses the junit test plan classes
      * @return the list
      */
-    public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> junitTestPlanClasses) {
+    public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> junitTestPlanClasses, final boolean onlyUniqueTests) {
         setInUse(true);
         if (null != junitTestPlanClasses) {
-            return runTests(numConcurrent, new HashSet<Class<?>>(junitTestPlanClasses));
+            if (onlyUniqueTests) {
+                return runTestsInternal(numConcurrent, Lists.newArrayList(Sets.newHashSet(junitTestPlanClasses)));
+            } else {
+                return runTestsInternal(numConcurrent, junitTestPlanClasses);
+            }
         }
         setInUse(false);
         return null;
@@ -44,7 +48,7 @@ public class TestahJUnitRunner {
      * @param junitTestPlanClasses the junit test plan classes
      * @return the list
      */
-    private List<ResultDto> runTests(final int numConcurrent, final Set<Class<?>> junitTestPlanClasses) {
+    private List<ResultDto> runTestsInternal(final int numConcurrent, final List<Class<?>> junitTestPlanClasses) {
         try {
             if (null == junitTestPlanClasses || junitTestPlanClasses.size() == 0) {
                 TS.log().warn("No TestPlans Found to Run!");

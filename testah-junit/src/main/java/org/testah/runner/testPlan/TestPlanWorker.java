@@ -9,6 +9,7 @@ public class TestPlanWorker extends UntypedActor {
 
     /**
      * Override the onReceive method in Untyped Actor.
+     *
      * @see akka.actor.UntypedActor#onReceive(java.lang.Object)
      */
     public void onReceive(final Object arg0) throws Exception {

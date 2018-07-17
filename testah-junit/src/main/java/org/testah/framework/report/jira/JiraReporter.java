@@ -15,8 +15,7 @@ import org.testah.framework.report.jira.dto.RemoteIssueLinkDto;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JiraReporter
-{
+public class JiraReporter {
 
     private final String baseUrl;
     private static final String apiUrl = "rest/api/latest";
@@ -24,8 +23,7 @@ public class JiraReporter
     /**
      * Constructor.
      */
-    public JiraReporter()
-    {
+    public JiraReporter() {
         if (TS.params().getJiraUrl().endsWith("/")) {
             this.baseUrl = TS.params().getJiraUrl() + apiUrl;
         } else {
@@ -39,8 +37,7 @@ public class JiraReporter
      * @param testPlan          the test plan
      * @param remoteLinkBuilder JiraRemoteLinkBuilder
      */
-    public void createOrUpdateTestPlanRemoteLink(final TestPlanDto testPlan, final JiraRemoteLinkBuilder remoteLinkBuilder)
-    {
+    public void createOrUpdateTestPlanRemoteLink(final TestPlanDto testPlan, final JiraRemoteLinkBuilder remoteLinkBuilder) {
         if (TS.params().isUseJiraRemoteLink() && TS.params().getJiraUrl().length() > 0) {
             RemoteIssueLinkDto remoteLink;
             if (!testPlan.getRelatedIds().isEmpty()) {
@@ -90,7 +87,8 @@ public class JiraReporter
                                 if (null == remoteLink) {
                                     createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
                                 } else {
-                                    updateRemoteLink(relatedId, remoteLink.getId(), remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
+                                    updateRemoteLink(relatedId, remoteLink.getId(),
+                                            remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
                                 }
                             }
                         }
@@ -100,8 +98,7 @@ public class JiraReporter
         }
     }
 
-    private <T> T addAuthHeader(final AbstractRequestDto<T> request)
-    {
+    private <T> T addAuthHeader(final AbstractRequestDto<T> request) {
         return request.addBasicAuth(TS.params().getJiraUserName(), TS.params().getJiraPassword());
     }
 
@@ -111,8 +108,7 @@ public class JiraReporter
      * @param issue the issue
      * @return list of remote issue link
      */
-    public List<RemoteIssueLinkDto> getRemoteLinks(final String issue)
-    {
+    public List<RemoteIssueLinkDto> getRemoteLinks(final String issue) {
         try {
             if (!StringUtils.isEmpty(issue)) {
                 GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue
@@ -135,8 +131,7 @@ public class JiraReporter
      * @param globalId global id
      * @return remote issue link for global id
      */
-    public RemoteIssueLinkDto getRemoteLinkForGlobalId(final String issue, final String globalId)
-    {
+    public RemoteIssueLinkDto getRemoteLinkForGlobalId(final String issue, final String globalId) {
         if (null != issue && null != globalId) {
             for (RemoteIssueLinkDto link : getRemoteLinks(issue)) {
                 if (link.getGlobalId().equals(globalId)) {
@@ -154,8 +149,7 @@ public class JiraReporter
      * @param remoteLink remote link to create
      * @return remote issue link
      */
-    public RemoteIssueLinkDto createRemoteLink(final String issue, final RemoteIssueLinkDto remoteLink)
-    {
+    public RemoteIssueLinkDto createRemoteLink(final String issue, final RemoteIssueLinkDto remoteLink) {
         try {
             if (!StringUtils.isEmpty(issue)) {
                 if (null != remoteLink) {
@@ -177,8 +171,7 @@ public class JiraReporter
      * @param remoteLink remote issue link
      * @return response of HTTP request
      */
-    public ResponseDto updateRemoteLink(final String issue, final int id, final RemoteIssueLinkDto remoteLink)
-    {
+    public ResponseDto updateRemoteLink(final String issue, final int id, final RemoteIssueLinkDto remoteLink) {
         try {
             if (!StringUtils.isEmpty(issue)) {
                 if (null != remoteLink) {

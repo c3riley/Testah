@@ -1,17 +1,17 @@
 package org.testah.runner.performance;
 
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import org.joda.time.DateTime;
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.HttpAkkaRunner;
 import org.testah.runner.performance.dto.LoadTestSequenceDto;
+
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class AbstractLoadTest {
     private static final String RUN_LOG_MESSAGE = "Executing step %d of %d with : threads=%d, chunksize=%d, duration=%d minutes";
@@ -20,9 +20,8 @@ public abstract class AbstractLoadTest {
     private TestRunProperties runProps;
     private List<ExecutionStatsPublisher> publishers;
 
-    protected void initialize(TestDataGenerator loadTestDataGenerator, TestRunProperties runProps, ExecutionStatsPublisher... publishers) 
-            throws Exception
-    {
+    protected void initialize(TestDataGenerator loadTestDataGenerator, TestRunProperties runProps, ExecutionStatsPublisher... publishers)
+            throws Exception {
         this.loadTestDataGenerator = loadTestDataGenerator;
         this.runProps = runProps;
         this.runProps.setDomain(loadTestDataGenerator.getDomain());
@@ -32,7 +31,7 @@ public abstract class AbstractLoadTest {
     protected void runTest(String resourceFile) throws Exception {
         LoadTestSequenceDto[] loadTestSequence =
                 TS.util().getMap().readValue(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(resourceFile),
-                        Charset.forName("UTF-8")),
+                                Charset.forName("UTF-8")),
                         LoadTestSequenceDto[].class);
         Arrays.stream(loadTestSequence).forEach(step -> {
             TS.log().info(String.format(RUN_LOG_MESSAGE,
@@ -54,10 +53,11 @@ public abstract class AbstractLoadTest {
     }
 
     /**
-     * Execute the HTTP requests, gather and publish the statistics. A concrete test may have multiple 
+     * Execute the HTTP requests, gather and publish the statistics. A concrete test may have multiple
      * calls to ramp up, steady level and ramp down.
-     * @param numThreads number of Akka threads
-     * @param chunkSize number of bundled requests
+     *
+     * @param numThreads          number of Akka threads
+     * @param chunkSize           number of bundled requests
      * @param timeIntervalMinutes time to run requests
      * @throws Exception when HTTP request generation fails
      */
@@ -69,7 +69,7 @@ public abstract class AbstractLoadTest {
 
         while (System.currentTimeMillis() < runProps.getStopTime()) {
             List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues =
-                loadTestDataGenerator.generateRequests();
+                    loadTestDataGenerator.generateRequests();
             for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues) {
                 try {
                     responses = akkaRunner.runAndReport(runProps.getNumberOfAkkaThreads(), concurrentLinkedQueue, runProps.isVerbose());

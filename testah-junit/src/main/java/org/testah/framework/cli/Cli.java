@@ -2,11 +2,7 @@ package org.testah.framework.cli;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
-import net.sourceforge.argparse4j.inf.ArgumentParser;
-import net.sourceforge.argparse4j.inf.ArgumentParserException;
-import net.sourceforge.argparse4j.inf.Namespace;
-import net.sourceforge.argparse4j.inf.Subparser;
-import net.sourceforge.argparse4j.inf.Subparsers;
+import net.sourceforge.argparse4j.inf.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.testah.TS;
@@ -56,7 +52,7 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "1.0.1";
+    public static final String version = "1.1.0";
 
     /**
      * The Constant BAR_LONG.
@@ -250,8 +246,8 @@ public class Cli {
                         } else {
                             totalTestCases += result.getJunitResult().getRunCount();
                             totalTestCasesFailed += result.getJunitResult().getFailureCount();
-                            totalTestCasesPassed += result.getJunitResult().getRunCount() -
-                                    (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
+                            totalTestCasesPassed += result.getJunitResult().getRunCount()
+                                    - (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
                             totalTestCasesIgnored += result.getJunitResult().getIgnoreCount();
                         }
                     }

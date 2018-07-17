@@ -1,18 +1,8 @@
 package org.testah.framework.testPlan;
 
-import org.junit.AfterClass;
-import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.Test.None;
-import org.junit.rules.ExternalResource;
-import org.junit.rules.RuleChain;
-import org.junit.rules.TestName;
-import org.junit.rules.TestRule;
-import org.junit.rules.TestWatcher;
-import org.junit.rules.Timeout;
+import org.junit.rules.*;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.slf4j.MDC;

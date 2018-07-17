@@ -3,13 +3,7 @@ package org.testah.util.database;
 import org.testah.TS;
 import org.testah.util.database.dto.SqlExecutionDto;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,20 +12,21 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
 
     /**
      * Constructor.
+     *
      * @param databaseName name of database
-     * @param host host name
-     * @param port database part
-     * @param dbUser db user name
-     * @param dbPassword db password
+     * @param host         host name
+     * @param port         database part
+     * @param dbUser       db user name
+     * @param dbPassword   db password
      */
     public PostgresDatabase(final String databaseName, final String host, final int port, final String dbUser,
-                            final String dbPassword)
-    {
+                            final String dbPassword) {
         super(databaseName, host, port, dbUser, dbPassword);
     }
 
     /**
-     *  Get the database connection.
+     * Get the database connection.
+     *
      * @see org.testah.util.database.AbstractDatabaseUtil#getConnection()
      */
     public Connection getConnection() throws SQLException {
@@ -42,6 +37,7 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
 
     /**
      * Check if driver is loaded.
+     *
      * @see org.testah.util.database.AbstractDatabaseUtil#isDriverLoaded()
      */
     public boolean isDriverLoaded() throws Exception {
@@ -58,6 +54,7 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
 
     /**
      * Execute SQL query.
+     *
      * @param sql the SQL query string
      * @return the SQL response as a map
      * @throws SQLException query execution fails
@@ -70,14 +67,14 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
 
     /**
      * Execute SQL query.
-     * @param sql the SQL query string
+     *
+     * @param sql  the SQL query string
      * @param conn database connection
      * @return the SQL response as a map
      * @throws SQLException query execution fails
      */
     public List<HashMap<String, Object>> execuateSelectSql(final String sql, final Connection conn)
-        throws SQLException
-    {
+            throws SQLException {
         if (null == sql || !sql.toLowerCase().startsWith("select")) {
             throw new RuntimeException("execuateSelectSql can only use Select sql statement!");
         }
@@ -103,6 +100,7 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
 
     /**
      * Execute SQL query.
+     *
      * @param sql the SQL query string
      * @return the SQL response
      * @throws SQLException query execution fails
@@ -115,7 +113,8 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
 
     /**
      * Execute SQL query.
-     * @param sql the SQL query string
+     *
+     * @param sql  the SQL query string
      * @param conn database connection
      * @return the SQL response
      * @throws SQLException query execution fails

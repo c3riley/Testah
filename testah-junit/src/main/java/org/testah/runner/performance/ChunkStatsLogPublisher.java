@@ -1,13 +1,12 @@
 package org.testah.runner.performance;
 
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testah.TS;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.report.performance.dto.ChunkStats;
 import org.testah.runner.http.load.HttpAkkaStats;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 
 public class ChunkStatsLogPublisher implements ExecutionStatsPublisher {
 
@@ -26,8 +25,7 @@ public class ChunkStatsLogPublisher implements ExecutionStatsPublisher {
     }
 
     @Override
-    public void cleanup()
-    {
+    public void cleanup() {
         // no post processing required
     }
 }

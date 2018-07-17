@@ -1,12 +1,6 @@
 package org.testah.driver.http;
 
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
-import org.apache.http.HeaderElementIterator;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
+import org.apache.http.*;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.AuthSchemes;
@@ -46,11 +40,7 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.testah.TS;
-import org.testah.driver.http.requests.AbstractRequestDto;
-import org.testah.driver.http.requests.DeleteRequestDto;
-import org.testah.driver.http.requests.GetRequestDto;
-import org.testah.driver.http.requests.PostRequestDto;
-import org.testah.driver.http.requests.PutRequestDto;
+import org.testah.driver.http.requests.*;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.testPlan.AbstractTestPlan;

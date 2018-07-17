@@ -13,15 +13,15 @@ public abstract class AbstractDatabaseUtil {
 
     /**
      * Constructor.
+     *
      * @param databaseName name of database
-     * @param host database host name
-     * @param port database port
-     * @param dbUser database user name
-     * @param dbPassword database password
+     * @param host         database host name
+     * @param port         database port
+     * @param dbUser       database user name
+     * @param dbPassword   database password
      */
     public AbstractDatabaseUtil(final String databaseName, final String host, final int port, final String dbUser,
-                                final String dbPassword)
-    {
+                                final String dbPassword) {
         this.databaseName = databaseName;
         this.host = host;
         this.port = port;

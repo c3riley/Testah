@@ -324,6 +324,15 @@ public class Params {
     @Arg(dest = "autoOpenHtmlReport")
     private boolean autoOpenHtmlReport = true;
 
+
+    /**
+     * The unique Report Name.
+     */
+    @Comment(info = "Should the reports use unique names.  If the test report runner is used, it is on by default, "
+            + "else is false and will cause reports to get overridden each run.")
+    @Arg(dest = "uniqueReportName")
+    private boolean uniqueReportName = false;
+
     /**
      * The send json test data to service.
      */
@@ -1421,5 +1430,13 @@ public class Params {
 
     public void setTimeFormat(final String timeFormat) {
         this.timeFormat = timeFormat;
+    }
+
+    public boolean isUniqueReportName() {
+        return uniqueReportName;
+    }
+
+    public void setUniqueReportName(final boolean uniqueReportName) {
+        this.uniqueReportName = uniqueReportName;
     }
 }

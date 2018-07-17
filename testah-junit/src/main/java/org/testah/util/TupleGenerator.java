@@ -19,7 +19,7 @@ public class TupleGenerator {
 
     /**
      * Constructor.
-     * 
+     *
      * @param listSizes size of each list
      */
     public TupleGenerator(int... listSizes) {
@@ -42,7 +42,7 @@ public class TupleGenerator {
      * </pre>
      * etc. Eventually, <code>next()</code> start over again with
      * <code>0,0,0</code>.
-     * 
+     *
      * @return the next combination of indices.
      */
     public List<Integer> nextTuple() {
@@ -54,7 +54,7 @@ public class TupleGenerator {
 
     /**
      * Get the number of unique combinations (the product of all list sizes).
-     * 
+     *
      * @return the number of distinct combinations
      */
     public int countDistinct() {

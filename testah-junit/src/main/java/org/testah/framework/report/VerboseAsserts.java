@@ -1672,28 +1672,72 @@ public class VerboseAsserts {
         return isFalse(message + " - Is Empty", actual);
     }
 
-    public boolean isGreaterThan(String message, final Number valueToBeGreaterThan, final Number actual) {
-        return isGreaterThan(message, valueToBeGreaterThan, actual, false);
-    }
 
+    /**
+     * Is greater than or equal to boolean.
+     *
+     * @param message              the message
+     * @param valueToBeGreaterThan the value to be greater than
+     * @param actual               the actual
+     * @return the boolean
+     */
     public boolean isGreaterThanOrEqualTo(String message, final Number valueToBeGreaterThan, final Number actual) {
         return isGreaterThan(message, valueToBeGreaterThan, actual, true);
     }
 
-    public boolean isGreaterThan(String message, final Number valueToBeGreaterThan, final Number actual, final boolean allowEqualTo) {
-        return isGreaterThan(message, new BigDecimal(valueToBeGreaterThan.toString()), new BigDecimal(actual.toString()), allowEqualTo);
-    }
 
-    public boolean isGreaterThan(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual) {
-        return isGreaterThan("", valueToBeGreaterThan, actual, false);
-    }
-
+    /**
+     * Is greater than or equal to boolean.
+     *
+     * @param message              the message
+     * @param valueToBeGreaterThan the value to be greater than
+     * @param actual               the actual
+     * @return the boolean
+     */
     public boolean isGreaterThanOrEqualTo(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual) {
         return isGreaterThan("", valueToBeGreaterThan, actual, true);
 
     }
 
-    private boolean isGreaterThan(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual, final boolean allowEqualTo) {
+    /**
+     * Is greater than boolean.
+     *
+     * @param message              the message
+     * @param valueToBeGreaterThan the value to be greater than
+     * @param actual               the actual
+     * @param allowEqualTo         the allow equal to
+     * @return the boolean
+     */
+    public boolean isGreaterThan(String message, final Number valueToBeGreaterThan, final Number actual, final boolean allowEqualTo) {
+        return isGreaterThan(message, new BigDecimal(valueToBeGreaterThan.toString()), new BigDecimal(actual.toString()), allowEqualTo);
+    }
+
+    /**
+     * Is greater than boolean.
+     *
+     * @param message              the message
+     * @param valueToBeGreaterThan the value to be greater than
+     * @param actual               the actual
+     * @return the boolean
+     */
+    public boolean isGreaterThan(String message, final Number valueToBeGreaterThan, final Number actual) {
+        return isGreaterThan(message, valueToBeGreaterThan, actual, false);
+    }
+
+    /**
+     * Is greater than boolean.
+     *
+     * @param message              the message
+     * @param valueToBeGreaterThan the value to be greater than
+     * @param actual               the actual
+     * @return the boolean
+     */
+    public boolean isGreaterThan(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual) {
+        return isGreaterThan("", valueToBeGreaterThan, actual, false);
+    }
+
+    private boolean isGreaterThan(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual,
+                                  final boolean allowEqualTo) {
         String assertMethod = (allowEqualTo ? "isGreaterThanOrEqualTo" : "isGreaterThan");
         try {
 
@@ -1716,26 +1760,79 @@ public class VerboseAsserts {
         }
     }
 
-    public boolean isLessThan(String message, final Number valueToBeLessThan, final Number actual) {
-        return isLessThan(message, valueToBeLessThan, actual, false);
-    }
-
+    /**
+     * Is less than or equal to boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @return the boolean
+     */
     public boolean isLessThanOrEqualTo(String message, final Number valueToBeLessThan, final Number actual) {
         return isLessThan(message, valueToBeLessThan, actual, true);
     }
 
-    public boolean isLessThan(String message, final Number valueToBeLessThan, final Number actual, final boolean allowEqualTo) {
-        return isLessThan(message, new BigDecimal(valueToBeLessThan.toString()), new BigDecimal(actual.toString()), allowEqualTo);
-    }
 
-    public boolean isLessThan(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual) {
-        return isLessThan(message, valueToBeLessThan, actual, false);
-    }
-
+    /**
+     * Is less than or equal to boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @return the boolean
+     */
     public boolean isLessThanOrEqualTo(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual) {
         return isLessThan(message, valueToBeLessThan, actual, true);
     }
 
+    /**
+     * Is less than boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @return the boolean
+     */
+    public boolean isLessThan(String message, final Number valueToBeLessThan, final Number actual) {
+        return isLessThan(message, valueToBeLessThan, actual, false);
+    }
+
+
+    /**
+     * Is less than boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @param allowEqualTo      the allow equal to
+     * @return the boolean
+     */
+    public boolean isLessThan(String message, final Number valueToBeLessThan, final Number actual, final boolean allowEqualTo) {
+        return isLessThan(message, new BigDecimal(valueToBeLessThan.toString()), new BigDecimal(actual.toString()), allowEqualTo);
+    }
+
+    /**
+     * Is less than boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @return the boolean
+     */
+    public boolean isLessThan(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual) {
+        return isLessThan(message, valueToBeLessThan, actual, false);
+    }
+
+
+    /**
+     * Is less than boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @param allowEqualTo      the allow equal to
+     * @return the boolean
+     */
     public boolean isLessThan(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual, final boolean allowEqualTo) {
         String assertMethod = (allowEqualTo ? "isLessThanOrEqualTo" : "isLessThan");
 
@@ -1764,7 +1861,6 @@ public class VerboseAsserts {
      *
      * @return true, if successful
      */
-
     public boolean pass() {
         return pass("");
     }

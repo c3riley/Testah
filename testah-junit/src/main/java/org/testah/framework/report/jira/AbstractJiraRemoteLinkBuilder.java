@@ -4,12 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
-import org.testah.framework.report.jira.dto.Application;
-import org.testah.framework.report.jira.dto.Icon;
-import org.testah.framework.report.jira.dto.Icon2;
-import org.testah.framework.report.jira.dto.RemoteIssueLinkDto;
-import org.testah.framework.report.jira.dto.RemoteIssueLinkObject;
-import org.testah.framework.report.jira.dto.Status;
+import org.testah.framework.report.jira.dto.*;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
 /**
@@ -268,13 +263,11 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
 
     }
 
-    public String getFileExt()
-    {
+    public String getFileExt() {
         return fileExt;
     }
 
-    public void setFileExt(final String fileExt)
-    {
+    public void setFileExt(final String fileExt) {
         this.fileExt = fileExt;
     }
 
