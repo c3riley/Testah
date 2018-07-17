@@ -278,7 +278,7 @@ public class TestCaseDto {
 
     /**
      * Gets the assertion error.
-     * 
+     *
      * <p>throws Assertion Error for Errors in the steps
      */
     @JsonIgnore

@@ -18,6 +18,7 @@ public class TestPlanActor extends UntypedActor {
 
     /**
      * Constructor.
+     *
      * @param nrOfWorkers number of workders
      */
     public TestPlanActor(final int nrOfWorkers) {
@@ -28,6 +29,7 @@ public class TestPlanActor extends UntypedActor {
 
     /**
      * Override onReceive in UntypedActor.
+     *
      * @see akka.actor.UntypedActor#onReceive(java.lang.Object)
      */
     @SuppressWarnings("unchecked")
@@ -39,6 +41,10 @@ public class TestPlanActor extends UntypedActor {
             for (final Class<?> test : (Set<Class<?>>) message) {
                 workerRouter.tell(test, getSelf());
             }
+        } else if (message instanceof List) {
+            for (final Class<?> test : (List<Class<?>>) message) {
+                workerRouter.tell(test, getSelf());
+            }
         } else {
             for (int start = 0; start < nrOfWorkers; start++) {
                 workerRouter.tell(message, getSelf());
@@ -48,6 +54,7 @@ public class TestPlanActor extends UntypedActor {
 
     /**
      * Get the worker router.
+     *
      * @return the worker router
      */
     public ActorRef getWorkerRouter() {
@@ -56,6 +63,7 @@ public class TestPlanActor extends UntypedActor {
 
     /**
      * Get the results.
+     *
      * @return list of results
      */
     public static List<ResultDto> getResults() {
@@ -67,6 +75,7 @@ public class TestPlanActor extends UntypedActor {
 
     /**
      * Check it results is null.
+     *
      * @return return true if not null
      */
     public static boolean isResultsInUse() {

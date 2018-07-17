@@ -79,8 +79,7 @@ public class StepAction extends StepActionDto {
      * @return the step action
      */
     public static StepAction createAssertResult(final String message, final Boolean status, final String assertMethod,
-                                                final Object expected, final Object actual, final Throwable exception)
-    {
+                                                final Object expected, final Object actual, final Throwable exception) {
         final StepAction step = new StepAction();
         step.setActionName(assertMethod);
         step.setMessage1(message);
@@ -94,7 +93,7 @@ public class StepAction extends StepActionDto {
             step.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());
         }
         TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message + " - expected[" + expected
-            + "] actual[" + actual + "]");
+                + "] actual[" + actual + "]");
         if (null != step.getExceptionString()) {
             TS.log().trace("Exception Related to above Assert\n" + step.getExceptionString());
         }
@@ -113,8 +112,7 @@ public class StepAction extends StepActionDto {
      * @return the step action
      */
     public static StepAction createVerifyResult(final String message, final Boolean status, final String assertMethod,
-                                                final Object expected, final Object actual, final Throwable exception)
-    {
+                                                final Object expected, final Object actual, final Throwable exception) {
         final StepAction step = new StepAction();
         step.setActionName(assertMethod);
         step.setMessage1(message + " - " + status);
@@ -125,7 +123,7 @@ public class StepAction extends StepActionDto {
         step.setTestStepActionType(TestStepActionType.VERIFY);
 
         TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " + status + " - " + message + " - expected[" + expected
-            + "] actual[" + actual + "]");
+                + "] actual[" + actual + "]");
         return step;
     }
 
@@ -160,8 +158,7 @@ public class StepAction extends StepActionDto {
      * @return the step action
      */
     public static StepAction createInfo(final String message1, final String message2, final String message3,
-                                        final boolean autoLog)
-    {
+                                        final boolean autoLog) {
         return createInfo(message1, message2, message3, autoLog, false);
     }
 
@@ -176,8 +173,7 @@ public class StepAction extends StepActionDto {
      * @return the step action
      */
     public static StepAction createInfo(final String message1, final String message2, final String message3,
-                                        final boolean autoLog, final boolean takeSnapShot)
-    {
+                                        final boolean autoLog, final boolean takeSnapShot) {
         final StepAction step = new StepAction();
         step.setMessage1(message1);
         step.setMessage2(message2);

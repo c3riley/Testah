@@ -1,8 +1,8 @@
 package org.testah.framework.report;
 
-import java.io.File;
-import java.util.HashMap;
-
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testah.TS;
 import org.testah.client.dto.TestPlanDto;
 import org.testah.driver.http.requests.PostRequestDto;
@@ -14,9 +14,8 @@ import org.testah.framework.report.jira.JiraReporter;
 import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.runner.testPlan.TestPlanActor;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.util.HashMap;
 
 /**
  * The Class TestPlanReporter.
@@ -48,7 +47,7 @@ public class TestPlanReporter {
         if (null == testPlan) {
             TS.log().info(Cli.BAR_LONG);
             TS.log().info(
-                Cli.BAR_WALL + "No Tests Ran, could be due to use of filters, for details turn on trace logging");
+                    Cli.BAR_WALL + "No Tests Ran, could be due to use of filters, for details turn on trace logging");
 
             if (null != ignored) {
                 ignored.forEach((k, v) -> TS.log().info(Cli.BAR_WALL + "" + v + " - " + k));
@@ -59,20 +58,20 @@ public class TestPlanReporter {
         try {
             testPlan.getRunInfo().setIgnore(AbstractTestPlan.getIgnoredTests().size());
             testPlan.getRunInfo()
-                .setTotal(testPlan.getRunInfo().getFail() + testPlan.getRunInfo().getPass() + testPlan.getRunInfo().getIgnore());
+                    .setTotal(testPlan.getRunInfo().getFail() + testPlan.getRunInfo().getPass() + testPlan.getRunInfo().getIgnore());
             testPlan.getRunInfo().getRunTimeProperties().put("builtOn", TS.params().getComputerName());
         } catch (final Exception e) {
             TS.log().trace(e);
         }
 
-        if (TestPlanActor.isResultsInUse()) {
+        if (TestPlanActor.isResultsInUse() || TS.params().isUniqueReportName()) {
             filename += "_" + testPlan.getSource().replace(".", "_") + "_" + TS.util().nowUnique();
         }
         final org.testah.client.dto.RunInfoDto ri = testPlan.getRunInfo();
         System.out.println("\n\n\n");
         TS.log().info(Cli.BAR_LONG);
         TS.log().info(Cli.BAR_WALL + "TestPlan[" + testPlan.getSource() + " (thread:" + Thread.currentThread().getId() + ") Status: "
-            + testPlan.getStatusEnum());
+                + testPlan.getStatusEnum());
         TS.log().info(Cli.BAR_WALL + "Passed: " + ri.getPass());
         TS.log().info(Cli.BAR_WALL + "Failed: " + ri.getFail());
         TS.log().info(Cli.BAR_WALL + "Ignore/NA/FilteredOut: " + ri.getIgnore());
@@ -113,7 +112,7 @@ public class TestPlanReporter {
                 jiraReporter.createOrUpdateTestPlanRemoteLink(testPlan, this.getJiraRemoteLinkBuilder());
             } else {
                 TS.log().warn("Use Jira is On, but JiraRemoteLinkBuilder is not set, can set ex: "
-                    + "TS.getTestPlanReporter().setJiraRemoteLinkBuilder(jiraRemoteLinkBuilder);");
+                        + "TS.getTestPlanReporter().setJiraRemoteLinkBuilder(jiraRemoteLinkBuilder);");
             }
         }
         if (null == TS.params().getSendJsonTestDataToService() || TS.params().getSendJsonTestDataToService().length() > 0) {
@@ -122,19 +121,19 @@ public class TestPlanReporter {
                 map.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
                 TS.log().info(Cli.BAR_WALL + "Posting Data: ");
                 final ResponseDto response = TS.http().doRequest(
-                    new PostRequestDto(TS.params().getSendJsonTestDataToService(), AbstractTestPlan.getTestPlan())
-                        .withJsonUTF8(),
-                    false).print(true);
+                        new PostRequestDto(TS.params().getSendJsonTestDataToService(), AbstractTestPlan.getTestPlan())
+                                .withJsonUTF8(),
+                        false).print(true);
                 TS.log().trace("Request Payload:\n" + response.getRequestUsed().getPayloadString());
                 TS.log().trace("Response Body:\n" + response.getResponseBody());
                 try {
                     final HashMap<String, String> values = TS.util().getMap().readValue(response.getResponseBody(),
-                        new TypeReference<HashMap<String, String>>() {
-                        });
+                            new TypeReference<HashMap<String, String>>() {
+                            });
                     if (null != values.get("message")) {
                         final HashMap<Integer, String> ids = TS.util().getMap().readValue(values.get("message"),
-                            new TypeReference<HashMap<Integer, String>>() {
-                            });
+                                new TypeReference<HashMap<Integer, String>>() {
+                                });
                         TS.log().info(Cli.BAR_LONG);
                         TS.log().info(Cli.BAR_WALL + "Ids From TMS");
                         ids.forEach((k, v) -> TS.log().info("ID[ " + k + " ] - " + v));
@@ -145,7 +144,7 @@ public class TestPlanReporter {
 
             } catch (final Exception e) {
                 TS.log().warn("Issue posting data to declared service: " + TS.params().getSendJsonTestDataToService(),
-                    e);
+                        e);
             }
         }
 

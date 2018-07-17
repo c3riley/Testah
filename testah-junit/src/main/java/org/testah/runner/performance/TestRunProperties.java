@@ -1,13 +1,13 @@
 package org.testah.runner.performance;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import org.testah.TS;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.testah.TS;
 
 public class TestRunProperties {
     protected final Integer defaultNumberOfChunks = 2500;
@@ -45,12 +45,11 @@ public class TestRunProperties {
      * @param millisBetweenChunks time to pause between chunks
      */
     public TestRunProperties(
-        String serviceUnderTest,
-        String testClass,
-        String testMethod,
-        int numberOfAkkaThreads,
-        long millisBetweenChunks)
-    {
+            String serviceUnderTest,
+            String testClass,
+            String testMethod,
+            int numberOfAkkaThreads,
+            long millisBetweenChunks) {
         this.serviceUnderTest = serviceUnderTest;
         this.testClass = testClass;
         this.testMethod = testMethod;
@@ -308,6 +307,7 @@ public class TestRunProperties {
 
     /**
      * Set the domain for the service under test in the test run properties.
+     *
      * @param domain service domain
      * @return this object
      */

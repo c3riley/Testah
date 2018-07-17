@@ -1,10 +1,9 @@
 package org.testah.framework.report.performance.dto;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.testah.runner.http.load.HttpAkkaStats;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.testah.runner.http.load.HttpAkkaStats;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class StatsDetails {
@@ -30,24 +29,26 @@ public class StatsDetails {
 
     /**
      * Constructor for holder of basic overall statistical execution of a chunk of requests.
+     *
      * @param stats overall execution data for a chunk of requests
      */
     public StatsDetails(HttpAkkaStats stats) {
         this.setMean(stats.getAvgDuration()).setCount((long) stats.getTotalResponses())
-            .setMax(stats.getLongestDuration()).setMin(stats.getShortestDuration())
-            .setPct90((long) stats.getStatsDuration().getPercentile(percentile90))
-            .setStd((long) stats.getStatsDuration().getStandardDeviation());
+                .setMax(stats.getLongestDuration()).setMin(stats.getShortestDuration())
+                .setPct90((long) stats.getStatsDuration().getPercentile(percentile90))
+                .setStd((long) stats.getStatsDuration().getStandardDeviation());
     }
 
     /**
      * Constructor for holder of basic overall statistical execution of a chunk of requests.
+     *
      * @param stats execution data for a chunk of requests related to a status code
      */
     public StatsDetails(DescriptiveStatistics stats) {
         this.setMean((long) stats.getMean()).setCount(stats.getN())
-            .setMax((long) stats.getMax()).setMin((long) stats.getMin())
-            .setPct90((long) stats.getPercentile(percentile90))
-            .setStd((long) stats.getStandardDeviation());
+                .setMax((long) stats.getMax()).setMin((long) stats.getMin())
+                .setPct90((long) stats.getPercentile(percentile90))
+                .setStd((long) stats.getStandardDeviation());
     }
 
     @JsonProperty("count")

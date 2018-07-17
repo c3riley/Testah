@@ -1,8 +1,8 @@
 package org.testah.runner.performance;
 
-import java.util.List;
-
 import org.testah.driver.http.response.ResponseDto;
+
+import java.util.List;
 
 public interface ExecutionStatsPublisher {
 

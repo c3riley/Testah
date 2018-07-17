@@ -1,10 +1,10 @@
 package org.testah.runner.performance;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.util.TupleGenerator;
+
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractPerformanceRestRequest {
     public AbstractPerformanceRestRequest(List<?>... lists) {
@@ -17,6 +17,7 @@ public abstract class AbstractPerformanceRestRequest {
 
     /**
      * Get the number of distinct tuples.
+     *
      * @return count of distinct tuples
      */
     public int countDistinct() {

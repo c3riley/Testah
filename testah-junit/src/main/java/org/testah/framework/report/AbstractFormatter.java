@@ -7,11 +7,7 @@ import org.apache.velocity.app.VelocityEngine;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.Charset;
 
 /**
@@ -111,7 +107,7 @@ public abstract class AbstractFormatter {
         }
         final int size = TS.getMaskValues().keySet().size();
         return StringUtils.replaceEach(report, TS.getMaskValues().keySet().toArray(new String[size]),
-            TS.getMaskValues().values().toArray(new String[size]));
+                TS.getMaskValues().values().toArray(new String[size]));
     }
 
     /**

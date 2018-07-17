@@ -22,13 +22,13 @@ public abstract class TestDataGenerator {
 
     /**
      * Add a request to the request list.
+     *
      * @param request http request
      * @return true if more requests need to be added to reach the requested number of requests
      */
     public boolean addRequest(AbstractRequestDto<?> request) {
         boolean keepGoing = false;
-        if (requestList.size() < totalRequests)
-        {
+        if (requestList.size() < totalRequests) {
             keepGoing = true;
             requestList.add(request);
         }
@@ -49,6 +49,7 @@ public abstract class TestDataGenerator {
 
     /**
      * Set the list of requests.
+     *
      * @param requestList the requestList to set
      */
     protected void setRequestList(List<AbstractRequestDto<?>> requestList) {

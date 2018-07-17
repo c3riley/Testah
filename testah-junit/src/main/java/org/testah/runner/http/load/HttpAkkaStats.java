@@ -1,14 +1,13 @@
 package org.testah.runner.http.load;
 
+import com.google.common.primitives.Doubles;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.testah.driver.http.response.ResponseDto;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.testah.driver.http.response.ResponseDto;
-
-import com.google.common.primitives.Doubles;
 
 public class HttpAkkaStats {
 
@@ -22,6 +21,7 @@ public class HttpAkkaStats {
 
     /**
      * Constructor. Takes the provided responses to generate execution statistics.
+     *
      * @param responses list of service responses
      */
     public HttpAkkaStats(final List<ResponseDto> responses) {
@@ -55,6 +55,7 @@ public class HttpAkkaStats {
 
     /**
      * Get the number of responses grouped by HTTP status code.
+     *
      * @return map of number of responses per status code
      */
     public Map<Integer, Integer> getStatusCodes() {
@@ -67,6 +68,7 @@ public class HttpAkkaStats {
 
     /**
      * Get the number of registered responses.
+     *
      * @return number of all responses
      */
     public int getTotalResponses() {
@@ -75,6 +77,7 @@ public class HttpAkkaStats {
 
     /**
      * Get the time stamp in milliseconds of the first response.
+     *
      * @return the start timestamp
      */
     public Long getStartTime() {
@@ -83,6 +86,7 @@ public class HttpAkkaStats {
 
     /**
      * Get the time stamp in milliseconds of the last response.
+     *
      * @return the last response time stamp
      */
     public Long getEndTime() {
@@ -91,6 +95,7 @@ public class HttpAkkaStats {
 
     /**
      * Get the elapsed time in milliseconds for the requests.
+     *
      * @return the elapsed time
      */
     public Long getDuration() {
@@ -99,6 +104,7 @@ public class HttpAkkaStats {
 
     /**
      * Get the average duration of a request.
+     *
      * @return the mean duration in milliseconds
      */
     public Long getAvgDuration() {
@@ -107,6 +113,7 @@ public class HttpAkkaStats {
 
     /**
      * Get the shortest duration of a request.
+     *
      * @return the shortest duration of a request
      */
     public Long getShortestDuration() {
@@ -115,6 +122,7 @@ public class HttpAkkaStats {
 
     /**
      * Get the longest duration of a request.
+     *
      * @return the longest duration of a request
      */
     public Long getLongestDuration() {
@@ -123,6 +131,7 @@ public class HttpAkkaStats {
 
     /**
      * Get the list of durations of all the requests in the completed order.
+     *
      * @return the list of all durations
      */
     public List<Long> getDurations() {
@@ -131,6 +140,7 @@ public class HttpAkkaStats {
 
     /**
      * Return the org.apache.commons.math3.stat.descriptive.DescriptiveStatistics object build from all durations for additional statistical data.
+     *
      * @return DescriptiveStatistics object build from all durations
      */
     public DescriptiveStatistics getStatsDuration() {
@@ -139,6 +149,7 @@ public class HttpAkkaStats {
 
     /**
      * Return the org.apache.commons.math3.stat.descriptive.DescriptiveStatistics object build for each HTTP code for additional statistical data.
+     *
      * @return map DescriptiveStatistics of durations for each HTTP status code
      */
     public Map<Integer, DescriptiveStatistics> getStatsDurationPerStatus() {

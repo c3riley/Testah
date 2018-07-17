@@ -18,6 +18,7 @@ public class RequestExecutionDuration {
 
     /**
      * Constructor.
+     *
      * @param aggregation either 'chunk' or 'single'
      */
     public RequestExecutionDuration(String aggregation) {
@@ -26,6 +27,7 @@ public class RequestExecutionDuration {
 
     /**
      * Get the time stamp for the request.
+     *
      * @return the timestamp
      */
     public String getTimestamp() {
@@ -34,6 +36,7 @@ public class RequestExecutionDuration {
 
     /**
      * Set the time stamp for the request.
+     *
      * @param timestamp the timestamp to set
      * @return this object
      */
@@ -44,6 +47,7 @@ public class RequestExecutionDuration {
 
     /**
      * Get the collection time stamp. This can be used to group the response times for a chunk of requests.
+     *
      * @return the collection time
      */
     public String getCollectionTime() {
@@ -52,6 +56,7 @@ public class RequestExecutionDuration {
 
     /**
      * Set the collection time stamp. This is the time when the data for one chunk of requests was collected.
+     *
      * @param timestamp the collection time to set
      * @return this object
      */
@@ -62,6 +67,7 @@ public class RequestExecutionDuration {
 
     /**
      * Get the name of the service to which the requests are sent.
+     *
      * @return the service
      */
     public String getService() {
@@ -70,6 +76,7 @@ public class RequestExecutionDuration {
 
     /**
      * Set the name of the service to which the requests are sent.
+     *
      * @param service the service to set
      * @return this object
      */
@@ -80,6 +87,7 @@ public class RequestExecutionDuration {
 
     /**
      * Get the domain name of the service url to which the requests are sent.
+     *
      * @return the domain
      */
     public String getDomain() {
@@ -88,6 +96,7 @@ public class RequestExecutionDuration {
 
     /**
      * Set the domain name of the service url to which the requests are sent.
+     *
      * @param domain the domain to set
      * @return this object
      */
@@ -98,6 +107,7 @@ public class RequestExecutionDuration {
 
     /**
      * Get the name of the test class/plan.
+     *
      * @return the testClass
      */
     public String getTestClass() {
@@ -106,6 +116,7 @@ public class RequestExecutionDuration {
 
     /**
      * Set the name of the test class/plan.
+     *
      * @param testClass the testClass to set
      * @return this object
      */
@@ -116,6 +127,7 @@ public class RequestExecutionDuration {
 
     /**
      * Get the name of the test method/case.
+     *
      * @return the testMethod
      */
     public String getTestMethod() {
@@ -124,6 +136,7 @@ public class RequestExecutionDuration {
 
     /**
      * Set the name of the test method/case.
+     *
      * @param testMethod the testMethod to set
      * @return this object
      */
@@ -134,6 +147,7 @@ public class RequestExecutionDuration {
 
     /**
      * Get the request status code.
+     *
      * @return the statusCode
      */
     public Integer getStatusCode() {
@@ -142,6 +156,7 @@ public class RequestExecutionDuration {
 
     /**
      * Set the request status code.
+     *
      * @param statusCode the statusCode to set
      * @return this object
      */
@@ -152,6 +167,7 @@ public class RequestExecutionDuration {
 
     /**
      * Get the duration of the request.
+     *
      * @return the duration
      */
     public long getDuration() {
@@ -160,6 +176,7 @@ public class RequestExecutionDuration {
 
     /**
      * Set the duration of the request.
+     *
      * @param duration the duration to set
      * @return this object
      */
@@ -170,6 +187,7 @@ public class RequestExecutionDuration {
 
     /**
      * Get the aggregation.
+     *
      * @return the type
      */
     public String getAggregation() {
