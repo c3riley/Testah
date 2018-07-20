@@ -94,5 +94,8 @@ public class TestahJUnitRunner {
     private static void setInUse(final boolean inUse) {
         TestahJUnitRunner.inUse = inUse;
         TestPlanActor.resetResults();
+        if(inUse) {
+            TestPlanActor.getResults();
+        }
     }
 }
