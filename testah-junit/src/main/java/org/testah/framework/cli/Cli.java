@@ -52,7 +52,7 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "1.1.1";
+    public static final String version = "1.1.2";
 
     /**
      * The Constant BAR_LONG.
