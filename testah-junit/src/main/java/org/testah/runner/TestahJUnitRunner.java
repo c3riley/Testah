@@ -30,14 +30,17 @@ public class TestahJUnitRunner {
      */
     public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> junitTestPlanClasses, final boolean onlyUniqueTests) {
         setInUse(true);
-        if (null != junitTestPlanClasses) {
-            if (onlyUniqueTests) {
-                return runTestsInternal(numConcurrent, Lists.newArrayList(Sets.newHashSet(junitTestPlanClasses)));
-            } else {
-                return runTestsInternal(numConcurrent, junitTestPlanClasses);
+        try {
+            if (null != junitTestPlanClasses) {
+                if (onlyUniqueTests) {
+                    return runTestsInternal(numConcurrent, Lists.newArrayList(Sets.newHashSet(junitTestPlanClasses)));
+                } else {
+                    return runTestsInternal(numConcurrent, junitTestPlanClasses);
+                }
             }
+        } finally {
+            setInUse(false);
         }
-        setInUse(false);
         return null;
     }
 
@@ -66,7 +69,7 @@ public class TestahJUnitRunner {
 
             TestPlanActor.resetResults();
             //Setup thread locals to be used
-            AbstractTestPlan.setUpThreadLocals();
+            AbstractTestPlan.setUpThreadLocals(true);
 
             master.tell(junitTestPlanClasses, master);
 

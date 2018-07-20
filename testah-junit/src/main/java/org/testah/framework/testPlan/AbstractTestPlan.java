@@ -710,10 +710,15 @@ public abstract class AbstractTestPlan {
         return this;
     }
 
+    public static void setUpThreadLocals() {
+        setUpThreadLocals(false);
+    }
+
     /**
      * Set up ThreadLocals.
      */
-    public static void setUpThreadLocals() {
+    public static void setUpThreadLocals(final boolean override) {
+        if(override || !TestahJUnitRunner.isInUse())
         testPlan = new ThreadLocal<>();
         testCase = new ThreadLocal<>();
         testStep = new ThreadLocal<>();
