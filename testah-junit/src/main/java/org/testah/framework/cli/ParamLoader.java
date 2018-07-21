@@ -118,9 +118,13 @@ public class ParamLoader {
                     }
                 });
 
-                String filterSchema = (String) config.getProperty("param_usefilterSchema");
+                final Object filterSchemaObj = config.getProperty("param_usefilterSchema");
+                String filterSchema = null;
+                if (filterSchemaObj instanceof String) {
+                    filterSchema = (String) config.getProperty("param_usefilterSchema");
+                }
                 if (null == filterSchema || filterSchema.length() == 0) {
-                    filterSchema = "NOT_USED";
+                    filterSchema = "DEFAULT";
                 }
 
                 config.getKeys().forEachRemaining(value -> {
@@ -204,7 +208,7 @@ public class ParamLoader {
                 }
             }
         } catch (final ConfigurationException e) {
-            TS.log().warn("Issues with testah.properties");
+            TS.log().warn("Issues with testah.properties", e);
         }
         params.mkOutput();
         return params;
