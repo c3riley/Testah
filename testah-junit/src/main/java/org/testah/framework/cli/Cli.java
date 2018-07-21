@@ -51,8 +51,7 @@ public class Cli {
     /**
      * The Constant version.
      */
-
-    public static final String version = "1.1.2";
+    public static final String version = "1.1.3";
 
     /**
      * The Constant BAR_LONG.
@@ -73,6 +72,8 @@ public class Cli {
 
     private boolean underTest = false;
 
+    private static boolean running = false;
+
     /**
      * Instantiates a new cli.
      */
@@ -88,6 +89,12 @@ public class Cli {
 
     }
 
+    /**
+     * Add options subparser.
+     *
+     * @param sub the sub
+     * @return the subparser
+     */
     public Subparser addOptions(final Subparser sub) {
 
         return sub;
@@ -135,6 +142,7 @@ public class Cli {
         writeOutTestah();
 
         try {
+            setRunning(true);
             if (null != args) {
                 res = parser.parseArgs(args);
                 parser.parseArgs(args, opt);
@@ -183,9 +191,10 @@ public class Cli {
         } catch (final ArgumentParserException e) {
             parser.handleError(e);
             throw new RuntimeException(e);
+        } finally {
+            setRunning(false);
         }
         return this;
-
     }
 
     /**
@@ -255,7 +264,7 @@ public class Cli {
             }
             for (final ResultDto result : results) {
                 if (null != result.getTestPlan()) {
-                    TS.getTestPlanReporter().reportResults(result.getTestPlan(), false, this.opt.getOutput());
+                    TS.getTestPlanReporter().reportResults(result.getTestPlan(), false, this.opt.getOutput(), true);
                 }
             }
 
@@ -380,15 +389,32 @@ public class Cli {
         return opt;
     }
 
+    /**
+     * Sets opt.
+     *
+     * @param opt the opt
+     * @return the opt
+     */
     public Cli setOpt(final Params opt) {
         this.opt = opt;
         return this;
     }
 
+    /**
+     * Gets test plan filter.
+     *
+     * @return the test plan filter
+     */
     public TestFilter getTestPlanFilter() {
         return testPlanFilter;
     }
 
+    /**
+     * Sets test plan filter.
+     *
+     * @param testPlanFilter the test plan filter
+     * @return the test plan filter
+     */
     public Cli setTestPlanFilter(final TestFilter testPlanFilter) {
         this.testPlanFilter = testPlanFilter;
         return this;
@@ -419,12 +445,41 @@ public class Cli {
         System.out.println(Cli.BAR_LONG);
     }
 
+    /**
+     * Is under test boolean for use with unit tests testing cli class.
+     *
+     * @return the boolean
+     */
     public boolean isUnderTest() {
         return underTest;
     }
 
+    /**
+     * Sets under test for use with unit tests testing cli class.
+     *
+     * @param underTest the under test
+     * @return the under test
+     */
     public Cli setUnderTest(final boolean underTest) {
         this.underTest = underTest;
         return this;
+    }
+
+    /**
+     * Is running boolean indicates if cli is processing a request.
+     *
+     * @return the boolean
+     */
+    public static boolean isRunning() {
+        return running;
+    }
+
+    /**
+     * Sets running.
+     *
+     * @param running the running
+     */
+    private static void setRunning(final boolean running) {
+        Cli.running = running;
     }
 }
