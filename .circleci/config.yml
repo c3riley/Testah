@@ -41,11 +41,7 @@ jobs:
       # - run: curl http://localhost:4444/status  
       # run tests!
       
-      - run:
-        name: Creating Dummy Artifacts
-        command: |
-          cd testah-junit
-          ./gradlew build
+      - run: cd testah-junit && ./gradlew build
 
 
           
