@@ -30,7 +30,7 @@ jobs:
           - v1-dependencies-{{ checksum "build.gradle" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-      - run: cd testah-junit && ./gradlew dependencies
+      #- run: cd testah-junit && ./gradlew dependencies
 
       - save_cache:
           paths:
@@ -38,11 +38,11 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
         
       # - run: docker run -d --name selenoid -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/config/:/etc/selenoid/:ro aerokube/selenoid:latest-release
-      - run: curl http://localhost:4444/status  
+      # - run: curl http://localhost:4444/status  
       # run tests!
       - run: cd testah-junit && ./gradlew build
-      - store_artifacts:
-          path: **/reports/**/*
+      #- store_artifacts:
+      #    path: **/reports/**/*
       - store_artifacts:
           path: **/*.log
 
