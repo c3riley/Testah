@@ -38,18 +38,18 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
           
       - run: mkdir test-reports
-      #- run:
+      # - run:
       #    name: Download Selenium
       #    command: |
       #      curl -O http://selenium-release.storage.googleapis.com/3.5/selenium-server-standalone-3.5.3.jar
-      #- run:
+      # - run:
       #    name: Start Selenium
       #    command: |
       #      java -jar selenium-server-standalone-3.5.3.jar -log test-reports/selenium.log
       #    background: true  
-      #- run: cat test-reports/selenium.log
+      # - run: cat test-reports/selenium.log
       # - run: docker run -d --name selenoid -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/config/:/etc/selenoid/:ro aerokube/selenoid:latest-release
-       - run: curl http://localhost:4444/status  
+      - run: curl http://localhost:4444/status  
       # run tests!
       
       - run: cd testah-junit && ./gradlew build
