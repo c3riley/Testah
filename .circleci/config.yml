@@ -13,7 +13,7 @@ jobs:
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: selenoid/chrome
-      # - image: selenium/standalone-chrome:3.1.0
+      - image: selenium/standalone-chrome:3.1.0
     working_directory: ~/repo
 
     environment:
@@ -38,18 +38,18 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
           
       - run: mkdir test-reports
-      - run:
-          name: Download Selenium
-          command: |
-            curl -O http://selenium-release.storage.googleapis.com/3.5/selenium-server-standalone-3.5.3.jar
-      - run:
-          name: Start Selenium
-          command: |
-            java -jar selenium-server-standalone-3.5.3.jar -log test-reports/selenium.log
-          background: true  
-      - run: cat test-reports/selenium.log
+      #- run:
+      #    name: Download Selenium
+      #    command: |
+      #      curl -O http://selenium-release.storage.googleapis.com/3.5/selenium-server-standalone-3.5.3.jar
+      #- run:
+      #    name: Start Selenium
+      #    command: |
+      #      java -jar selenium-server-standalone-3.5.3.jar -log test-reports/selenium.log
+      #    background: true  
+      #- run: cat test-reports/selenium.log
       # - run: docker run -d --name selenoid -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/config/:/etc/selenoid/:ro aerokube/selenoid:latest-release
-      # - run: curl http://localhost:4444/status  
+       - run: curl http://localhost:4444/status  
       # run tests!
       
       - run: cd testah-junit && ./gradlew build
@@ -57,4 +57,7 @@ jobs:
       # Save artifacts
       - type: store_test_results
         path: /home/circleci/repo/testah-junit/build/reports/tests/test/index.html
+        
+      - type: store_results
+        path: /home/circleci/repo/testah-junit/testah.log
           
