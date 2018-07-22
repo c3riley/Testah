@@ -13,7 +13,7 @@ jobs:
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: selenoid/chrome
-      - image: selenium/standalone-chrome:3.1.0
+      # - image: selenium/standalone-chrome:3.1.0
     working_directory: ~/repo
 
     environment:
@@ -37,7 +37,7 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
           
-      - run: mkdir test-reports  
+      - run: mkdir test-reports
       - run:
           name: Download Selenium
           command: |
@@ -47,12 +47,12 @@ jobs:
           command: |
             java -jar selenium-server-standalone-3.5.3.jar -log test-reports/selenium.log
           background: true  
-
+      - run: cat test-reports/selenium.log
       # - run: docker run -d --name selenoid -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/config/:/etc/selenoid/:ro aerokube/selenoid:latest-release
       # - run: curl http://localhost:4444/status  
       # run tests!
       
-      - run: cd testah-junit && xvfb-run ./gradlew build
+      - run: cd testah-junit && ./gradlew build
 
       # Save artifacts
       - type: store_test_results
