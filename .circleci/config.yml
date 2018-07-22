@@ -52,7 +52,7 @@ jobs:
       # - run: curl http://localhost:4444/status  
       # run tests!
       
-      - run: cd testah-junit && ./gradlew build
+      - run: export filter_DEFAULT_filterByRunType=~FIREFOX && cd testah-junit && ./gradlew build
 
       - type: store_artifacts
         path: /home/circleci/repo/testah-junit/testah.log

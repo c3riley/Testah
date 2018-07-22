@@ -480,7 +480,7 @@ public abstract class AbstractBrowser<T> {
             }
             this.setWindowSize();
         } catch (final Exception e) {
-            throw new RuntimeException("Issue Stating browser", e);
+            throw new RuntimeException("Issue Starting browser", e);
         }
         return getSelf();
     }
