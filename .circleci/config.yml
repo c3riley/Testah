@@ -36,7 +36,8 @@ jobs:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
-        
+          
+      - run: mkdir test-reports  
       - run:
           name: Download Selenium
           command: |
