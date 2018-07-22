@@ -30,8 +30,8 @@ jobs:
           - v1-dependencies-{{ checksum "build.gradle" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
-      - run: ./testah-junit/gradlew dependencies
+      - run: cd testah-junit
+      - run: ./gradlew dependencies
 
       - save_cache:
           paths:
@@ -39,7 +39,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
         
       # run tests!
-      - run: ./testah-junit/gradlew build -x test
+      - run: ./gradlew build -x test
 
 
 
