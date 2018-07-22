@@ -49,7 +49,7 @@ jobs:
       #    background: true  
       # - run: cat test-reports/selenium.log
       # - run: docker run -d --name selenoid -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/config/:/etc/selenoid/:ro aerokube/selenoid:latest-release
-      - run: curl http://localhost:4444/status  
+      # - run: curl http://localhost:4444/status  
       # run tests!
       
       - run: cd testah-junit && ./gradlew build
