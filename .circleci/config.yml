@@ -52,7 +52,7 @@ jobs:
       # - run: curl http://localhost:4444/status  
       # run tests!
       
-      - run: cd testah-junit && ./gradlew build
+      - run: cd testah-junit && xvfb-run ./gradlew build
 
       # Save artifacts
       - type: store_test_results
