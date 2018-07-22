@@ -47,8 +47,3 @@ jobs:
           cd testah-junit
           ./gradlew build
           
-      - store_artifacts:
-          path: **/reports/**/*
-      
-      - store_artifacts:
-          path: **/*.log
