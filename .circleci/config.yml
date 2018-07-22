@@ -12,8 +12,8 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-      - image: selenoid/chrome
-
+      # - image: selenoid/chrome
+      - image: selenium/standalone-chrome:3.1.0
     working_directory: ~/repo
 
     environment:
@@ -37,9 +37,9 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
         
-      - run: docker run -d --name selenoid -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/config/:/etc/selenoid/:ro aerokube/selenoid:latest-release
-      - run: curl http://localhost:4444/status  
+      # - run: docker run -d --name selenoid -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/config/:/etc/selenoid/:ro aerokube/selenoid:latest-release
+      # - run: curl http://localhost:4444/status  
       # run tests!
-      - run: cd testah-junit && ./gradlew build -x test
+      - run: cd testah-junit && ./gradlew build
       
 
