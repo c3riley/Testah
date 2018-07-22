@@ -41,7 +41,7 @@ jobs:
       - run: curl http://localhost:4444/status  
       # run tests!
       - run: cd testah-junit && ./gradlew build
-      - store_test_results:
+      - store_artifacts:
           path: **/reports/**/*
       - store_artifacts:
           path: **/*.log
