@@ -54,8 +54,8 @@ jobs:
       
       - run: cd testah-junit && ./gradlew build
 
-      - store_artifacts:
-          path: /home/circleci/repo/testah-junit/testah.log
+      - type: store_artifacts
+        path: /home/circleci/repo/testah-junit/testah.log
       
       # Save artifacts
       - type: store_test_results
