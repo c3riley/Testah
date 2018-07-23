@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -12,12 +13,12 @@ import org.testah.TS;
 import org.testah.framework.cli.Params;
 
 import java.io.*;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -250,7 +251,6 @@ public class TestahUtil {
         return new File(Params.addUserDir(relativePath));
     }
 
-
     /**
      * Download file.
      *
@@ -398,11 +398,64 @@ public class TestahUtil {
      */
     public String getResourceAsString(final String path) {
         try (InputStream is = getClass().getResourceAsStream(path)) {
-            return IOUtils.toString(is, Charset.forName("UTF-8"));
+            if (is != null) {
+                return IOUtils.toString(is, Charset.forName("UTF-8"));
+            }
         } catch (IOException e) {
             TS.log().error(e);
-            return null;
         }
+        TS.log().debug("Resource[" + path + "] not found via getClass().getResourceAsStream");
+        return null;
+    }
+
+    /**
+     * Gets resource folder file.
+     *
+     * @param folder   the folder
+     * @param fileName the file name
+     * @return the resource folder file
+     */
+    public File getResourceFolderFile(final String folder, final String fileName) {
+        final List<File> files = getResourceFolderFiles(folder);
+        Optional<File> fileFound = files.stream().filter(file -> StringUtils.equalsIgnoreCase(file.getName(), fileName)).findFirst();
+        if (fileFound.isPresent()) {
+            return fileFound.get();
+        }
+        return null;
+    }
+
+    /**
+     * Gets resource folder files.
+     *
+     * @param folder the folder
+     * @return the resource folder files
+     */
+    public List<File> getResourceFolderFiles(final String folder) {
+        return getResourceFolderFiles(folder, true);
+    }
+
+    /**
+     * Gets resource folder files.
+     *
+     * @param folder             the folder
+     * @param excludeDirectories the exclude directories
+     * @return the resource folder files
+     */
+    public List<File> getResourceFolderFiles(final String folder, final boolean excludeDirectories) {
+        final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        //guard against path starting with a slash
+        final URL url = loader.getResource(StringUtils.replacePattern(folder, "^/+", ""));
+        if (url != null) {
+            final String path = url.getPath();
+            if (path != null) {
+                final File[] arrayOfFiles = new File(path).listFiles();
+                if (arrayOfFiles != null) {
+                    return Arrays.asList(arrayOfFiles).stream().filter(file -> !excludeDirectories
+                            || !file.isDirectory()).collect(Collectors.toList());
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 
 }

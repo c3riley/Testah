@@ -1,6 +1,10 @@
 package org.testah.runner;
 
-import akka.actor.*;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
+import akka.actor.UntypedActor;
+import akka.actor.UntypedActorFactory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.testah.TS;
@@ -17,6 +21,13 @@ public class TestahJUnitRunner {
 
     private static boolean inUse = false;
 
+    /**
+     * Run tests list.
+     *
+     * @param numConcurrent        the num concurrent
+     * @param junitTestPlanClasses the junit test plan classes
+     * @return the list
+     */
     public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> junitTestPlanClasses) {
         return runTests(numConcurrent, junitTestPlanClasses, true);
     }
@@ -26,6 +37,7 @@ public class TestahJUnitRunner {
      *
      * @param numConcurrent        the num concurrent
      * @param junitTestPlanClasses the junit test plan classes
+     * @param onlyUniqueTests      the only unique tests
      * @return the list
      */
     public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> junitTestPlanClasses, final boolean onlyUniqueTests) {
@@ -87,6 +99,11 @@ public class TestahJUnitRunner {
         }
     }
 
+    /**
+     * Is in use boolean.
+     *
+     * @return the boolean
+     */
     public static boolean isInUse() {
         return inUse;
     }
@@ -94,7 +111,7 @@ public class TestahJUnitRunner {
     private static void setInUse(final boolean inUse) {
         TestahJUnitRunner.inUse = inUse;
         TestPlanActor.resetResults();
-        if(inUse) {
+        if (inUse) {
             TestPlanActor.getResults();
         }
     }

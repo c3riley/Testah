@@ -30,18 +30,20 @@ public class TestPlanReporter {
      * @param testPlan the test plan
      */
     public void reportResults(final TestPlanDto testPlan) {
-        reportResults(testPlan, TS.params().isAutoOpenHtmlReport(), TS.params().getOutput());
+        reportResults(testPlan, TS.params().isAutoOpenHtmlReport(), TS.params().getOutput(), TS.params().isUniqueReportName());
     }
 
     /**
      * Report results.
      *
-     * @param testPlan       the test plan
-     * @param autoOpenReport should report get opened in default browser
-     * @param outputDir      output directory to use
+     * @param testPlan        the test plan
+     * @param autoOpenReport  should report get opened in default browser
+     * @param outputDir       output directory to use
+     * @param uniqueFileNames the unique file names
      * @return TestPlanDto returned with recaled info
      */
-    public TestPlanDto reportResults(final TestPlanDto testPlan, final boolean autoOpenReport, final String outputDir) {
+    public TestPlanDto reportResults(final TestPlanDto testPlan, final boolean autoOpenReport, final String outputDir,
+                                     final boolean uniqueFileNames) {
         String filename = "results";
         final HashMap<String, String> ignored = AbstractTestPlan.getIgnoredTests();
         if (null == testPlan) {
@@ -64,7 +66,7 @@ public class TestPlanReporter {
             TS.log().trace(e);
         }
 
-        if (TestPlanActor.isResultsInUse() || TS.params().isUniqueReportName()) {
+        if (TestPlanActor.isResultsInUse() || uniqueFileNames) {
             filename += "_" + testPlan.getSource().replace(".", "_") + "_" + TS.util().nowUnique();
         }
         final org.testah.client.dto.RunInfoDto ri = testPlan.getRunInfo();
@@ -177,10 +179,20 @@ public class TestPlanReporter {
         }
     }
 
+    /**
+     * Gets jira remote link builder.
+     *
+     * @return the jira remote link builder
+     */
     public JiraRemoteLinkBuilder getJiraRemoteLinkBuilder() {
         return jiraRemoteLinkBuilder;
     }
 
+    /**
+     * Sets jira remote link builder.
+     *
+     * @param jiraRemoteLinkBuilder the jira remote link builder
+     */
     public void setJiraRemoteLinkBuilder(final JiraRemoteLinkBuilder jiraRemoteLinkBuilder) {
         this.jiraRemoteLinkBuilder = jiraRemoteLinkBuilder;
     }

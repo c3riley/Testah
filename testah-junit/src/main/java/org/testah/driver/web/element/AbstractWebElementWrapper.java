@@ -265,7 +265,7 @@ public abstract class AbstractWebElementWrapper {
         } catch (final Exception e) {
             TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
         }
-        return this;
+        return getSelf();
     }
 
     /**
@@ -281,7 +281,7 @@ public abstract class AbstractWebElementWrapper {
         } catch (final Exception e) {
             TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
         }
-        return this;
+        return getSelf();
     }
 
     /**
@@ -909,7 +909,7 @@ public abstract class AbstractWebElementWrapper {
         for (int count = 0; count < 10; count++) {
             try {
                 if (isDisplayed(false)) {
-                    return this;
+                    return getSelf();
                 }
             } catch (Exception e) {
                 TS.log().debug("Had issue going to scroll. Attempt: " + count);

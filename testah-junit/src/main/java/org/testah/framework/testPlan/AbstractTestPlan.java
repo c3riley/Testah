@@ -710,12 +710,17 @@ public abstract class AbstractTestPlan {
         return this;
     }
 
+    /**
+     * Sets up thread locals.
+     */
     public static void setUpThreadLocals() {
         setUpThreadLocals(false);
     }
 
     /**
      * Set up ThreadLocals.
+     *
+     * @param override the override
      */
     public static void setUpThreadLocals(final boolean override) {
         if (override || !TestahJUnitRunner.isInUse()) {
