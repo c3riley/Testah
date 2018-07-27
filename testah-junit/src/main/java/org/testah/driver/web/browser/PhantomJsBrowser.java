@@ -42,10 +42,11 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
         return this;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * start Service.
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#startService()
+     * @return PhantomJsBrowser
+     * @throws IOException thrown is issue starting service
      */
     public PhantomJsBrowser startService() throws IOException {
         service = new PhantomJSDriverService.Builder().usingPhantomJSExecutable(new File(getPhantomJsBinPath()))
@@ -54,10 +55,9 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
         return this;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities()
+    /**
+     * create Capabilities.
+     * @return DesiredCapabilities
      */
     public DesiredCapabilities createCapabilities() {
         final DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
@@ -99,10 +99,10 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.testah.driver.web.browser.AbstractBrowser#stopService()
+    /**
+     * stop Service.
+     * @return PhantomJsBrowser
+     * @throws IOException thrown if issue stopping service
      */
     public PhantomJsBrowser stopService() throws IOException {
         if (null != service) {

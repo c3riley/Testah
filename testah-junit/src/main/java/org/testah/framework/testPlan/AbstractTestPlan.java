@@ -301,21 +301,11 @@ public abstract class AbstractTestPlan {
      * Clean up all Threadlocal.
      */
     public static void cleanUpTestplanThreadLocal() {
-        cleanUpThreadLocal(testPlan);
-        cleanUpThreadLocal(testCase);
-        cleanUpThreadLocal(testStep);
-        cleanUpThreadLocal(testPlanStart);
-        cleanUpThreadLocal(ignoredTests);
-    }
-
-    private static void cleanUpThreadLocal(final ThreadLocal<?> threadLocal) {
-        try {
-            if (null != threadLocal) {
-                threadLocal.remove();
-            }
-        } catch (final Exception e) {
-            TS.log().warn("Trying to remove thread local", e);
-        }
+        TS.cleanUpThreadLocal(testPlan);
+        TS.cleanUpThreadLocal(testCase);
+        TS.cleanUpThreadLocal(testStep);
+        TS.cleanUpThreadLocal(testPlanStart);
+        TS.cleanUpThreadLocal(ignoredTests);
     }
 
     /**

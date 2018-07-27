@@ -1,5 +1,6 @@
 package org.testah.framework.report;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.json.JSONObject;
@@ -8,6 +9,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
+import org.testah.framework.report.asserts.AssertStrings;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -37,12 +39,15 @@ public class VerboseAsserts {
      */
     private boolean isVerifyOnly = false;
 
+    private AssertStrings assertStrings;
+
     /**
      * Instantiates a new verbose asserts.
      */
     public VerboseAsserts() {
         setRecordSteps(TS.params().isRecordSteps());
         throwExceptionOnFail = TS.params().isThrowExceptionOnFail();
+        this.assertStrings = new AssertStrings(this);
     }
 
     /**
@@ -61,7 +66,7 @@ public class VerboseAsserts {
      * @return the boolean
      */
     public boolean customAssert(final Runnable runnableAssertBlock) {
-        return customAssert("", runnableAssertBlock);
+        return customAssert("Custom Assert Block", runnableAssertBlock);
     }
 
     /**
@@ -74,12 +79,14 @@ public class VerboseAsserts {
     public boolean customAssert(final String message, final Runnable runnableAssertBlock) {
         try {
             runnableAssertBlock.run();
-            return TS.asserts().pass("Passed Custom Assert Block");
-        } catch (Throwable throwable) {
-            TS.asserts().fail("Failed Custom Assert Block - "
-                    + (null == throwable.getMessage() ? throwable.toString() : throwable.getMessage()));
+            return addAssertHistory(message, true, "customAssert", true, true);
+        } catch (final Throwable e) {
+            final boolean rtn = addAssertHistory(message, false, "customAssert", true, false, e);
+            if (getThrowExceptionOnFail()) {
+                throw e;
+            }
+            return rtn;
         }
-        return false;
     }
 
     /**
@@ -92,7 +99,21 @@ public class VerboseAsserts {
      */
     public boolean startsWith(final String message, final String stringToCheck, final String expectedPrefix) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to startWith " + expectedPrefix,
-                stringToCheck.startsWith(expectedPrefix));
+                StringUtils.startsWith(stringToCheck, expectedPrefix));
+    }
+
+    /**
+     * Starts with ignore case boolean.
+     *
+     * @param message        the message
+     * @param stringToCheck  the string to check
+     * @param expectedPrefix the expected prefix
+     * @return the boolean
+     */
+    public boolean startsWithIgnoreCase(final String message, final String stringToCheck, final String expectedPrefix) {
+        return this.isTrue(message + " - expected String[" + stringToCheck + "] to "
+                        + "startsWithIgnoreCase " + expectedPrefix,
+                StringUtils.startsWithIgnoreCase(stringToCheck, expectedPrefix));
     }
 
     /**
@@ -105,7 +126,20 @@ public class VerboseAsserts {
      */
     public boolean endsWith(final String message, final String stringToCheck, final String expectedSuffix) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to endsWith " + expectedSuffix,
-                stringToCheck.endsWith(expectedSuffix));
+                StringUtils.endsWith(stringToCheck, expectedSuffix));
+    }
+
+    /**
+     * Ends with ignore case boolean.
+     *
+     * @param message        the message
+     * @param stringToCheck  the string to check
+     * @param expectedSuffix the expected suffix
+     * @return the boolean
+     */
+    public boolean endsWithIgnoreCase(final String message, final String stringToCheck, final String expectedSuffix) {
+        return this.isTrue(message + " - expected String[" + stringToCheck + "] to endsWithIgnoreCase " + expectedSuffix,
+                StringUtils.endsWithIgnoreCase(stringToCheck, expectedSuffix));
     }
 
     /**
@@ -118,7 +152,21 @@ public class VerboseAsserts {
      */
     public boolean contains(final String message, final String stringToCheck, final String expectedValueToContain) {
         return this.isTrue(message + " - expected String[" + stringToCheck + "] to contain " + expectedValueToContain,
-                stringToCheck.contains(expectedValueToContain));
+                StringUtils.contains(stringToCheck, expectedValueToContain));
+    }
+
+    /**
+     * Contains ignore case boolean.
+     *
+     * @param message                the message
+     * @param stringToCheck          the string to check
+     * @param expectedValueToContain the expected value to contain
+     * @return the boolean
+     */
+    public boolean containsIgnoreCase(final String message, final String stringToCheck, final String expectedValueToContain) {
+        return this.isTrue(message + " - expected String[" + stringToCheck + "] to "
+                        + "containsIgnoreCase " + expectedValueToContain,
+                StringUtils.containsIgnoreCase(stringToCheck, expectedValueToContain));
     }
 
     /**
@@ -129,9 +177,9 @@ public class VerboseAsserts {
      * @param expectedSize               the expected size
      * @return true, if successful
      */
-    public boolean sizeEquals(final String message, final String objectToCheckSizeOrLenthOf, final int expectedSize) {
+    public boolean sizeEquals(final String message, final Object objectToCheckSizeOrLenthOf, final int expectedSize) {
         return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLenthOf
-                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
+                + "] to have a size/length of " + expectedSize, expectedSize, getSize(objectToCheckSizeOrLenthOf));
     }
 
     /**
@@ -143,8 +191,22 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean notEndsWith(final String message, final String stringToCheck, final String expectedSuffix) {
-        return this.isTrue(message + " - expected String[" + stringToCheck + "] to endsWith " + expectedSuffix,
-                stringToCheck.endsWith(expectedSuffix));
+        return this.isFalse(message + " - expected String[" + stringToCheck + "] to endsWith " + expectedSuffix,
+                StringUtils.endsWith(stringToCheck, expectedSuffix));
+    }
+
+    /**
+     * Not ends with ignore case boolean.
+     *
+     * @param message        the message
+     * @param stringToCheck  the string to check
+     * @param expectedSuffix the expected suffix
+     * @return the boolean
+     */
+    public boolean notEndsWithIgnoreCase(final String message, final String stringToCheck, final String expectedSuffix) {
+        return this.isFalse(message + " - expected String[" + stringToCheck + "] to "
+                        + "notEndsWithIgnoreCase " + expectedSuffix,
+                StringUtils.endsWithIgnoreCase(stringToCheck, expectedSuffix));
     }
 
     /**
@@ -157,7 +219,21 @@ public class VerboseAsserts {
      */
     public boolean notContains(final String message, final String stringToCheck, final String expectedValueToContain) {
         return this.isFalse(message + " - expected String[" + stringToCheck + "] to contain " + expectedValueToContain,
-                stringToCheck.contains(expectedValueToContain));
+                StringUtils.contains(stringToCheck, expectedValueToContain));
+    }
+
+    /**
+     * Not contains ignore case boolean.
+     *
+     * @param message                the message
+     * @param stringToCheck          the string to check
+     * @param expectedValueToContain the expected value to contain
+     * @return the boolean
+     */
+    public boolean notContainsIgnoreCase(final String message, final String stringToCheck, final String expectedValueToContain) {
+        return this.isFalse(message + " - expected String[" + stringToCheck + "] to "
+                        + "notContainsIgnoreCase " + expectedValueToContain,
+                StringUtils.containsIgnoreCase(stringToCheck, expectedValueToContain));
     }
 
     /**
@@ -181,6 +257,9 @@ public class VerboseAsserts {
      * @return the size
      */
     private int getSize(final Object objectToCheck) {
+        if (!notNull("Check the getSize objectToCheck is not null", objectToCheck)) {
+            return -1;
+        }
         Integer actual = null;
         if (objectToCheck instanceof String) {
             actual = ((String) objectToCheck).length();
@@ -281,7 +360,7 @@ public class VerboseAsserts {
         try {
             JSONAssert.assertEquals(expected, actual, strict);
             return addAssertHistory(message, true, "assertSameJson", expected, actual);
-        } catch (final Exception e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory("", false, "assertSame", expected.toString(), actual.toString(), e);
             if (getThrowExceptionOnFail()) {
                 throw new AssertionError(e);
@@ -313,7 +392,7 @@ public class VerboseAsserts {
         try {
             Assert.assertSame(message, expected, actual);
             return addAssertHistory(message, true, "assertSame", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertSame", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -341,7 +420,7 @@ public class VerboseAsserts {
         try {
             Assert.fail(message);
             return addAssertHistory(message, false, "fail", "", "");
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "fail", "", "", e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -373,7 +452,7 @@ public class VerboseAsserts {
         try {
             Assert.assertNotNull(message, actual);
             return addAssertHistory(message, true, "assertNotNull", true, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertNotNull", true, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -403,7 +482,7 @@ public class VerboseAsserts {
         try {
             Assert.assertNull(message, actual);
             return addAssertHistory(message, true, "assertNull", null, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertNull", null, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -434,7 +513,7 @@ public class VerboseAsserts {
         try {
             Assert.assertNotSame(message, expected, actual);
             return addAssertHistory(message, true, "assertNotSame", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertNotSame", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -454,7 +533,7 @@ public class VerboseAsserts {
         try {
             Assert.assertNotSame(expected, actual);
             return addAssertHistory("", true, "assertNotSame", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory("", false, "assertNotSame", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -630,6 +709,8 @@ public class VerboseAsserts {
 
     /**
      * Equals to ignore case.
+     * Converts to lowercase both using StringUtils, then does assertEquals.
+     * Will write the exact values into the desc to help.
      *
      * @param message  the message
      * @param expected the expected
@@ -638,11 +719,35 @@ public class VerboseAsserts {
      */
     public boolean equalsToIgnoreCase(final String message, final String expected, final String actual) {
         try {
-            Assert.assertNotNull(message + " - make sure value is not null for expected", expected);
-            Assert.assertTrue(message, expected.equalsIgnoreCase(actual));
+            Assert.assertEquals(message + " - expected[" + expected + "] == actual[" + actual + "]",
+                    StringUtils.lowerCase(expected), StringUtils.lowerCase(actual));
             return addAssertHistory(message, true, "equalsToIgnoreCase", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "equalsToIgnoreCase", expected, actual, e);
+            if (getThrowExceptionOnFail()) {
+                throw e;
+            }
+            return rtn;
+        }
+    }
+
+
+    /**
+     * Equals to multiline string boolean.
+     *
+     * @param message  the message
+     * @param expected the expected
+     * @param actual   the actual
+     * @return the boolean
+     */
+    public boolean equalsToMultilineString(final String message, final String expected, final String actual) {
+        try {
+            Assert.assertEquals(message + " - expected[" + expected + "] == actual[" + actual + "]",
+                    StringUtils.lowerCase(expected), StringUtils.lowerCase(actual));
+            return addAssertHistory(message, true, "equalsTo", expected, actual);
+        } catch (final Throwable e) {
+            final boolean rtn = addAssertHistory(message, false, "equalsTo", expected, actual, e);
+            assertStrings.deepAssert(expected, actual);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
@@ -672,8 +777,31 @@ public class VerboseAsserts {
             Assert.assertNotNull(message + " - File cannot be null", actual);
             Assert.assertTrue("Checking if file exits[" + actual.getAbsolutePath() + "] - " + message, actual.exists());
             return addAssertHistory(message, true, "equalsToIgnoreCase", true, actual.exists());
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "equalsToIgnoreCase", true, false, e);
+            if (getThrowExceptionOnFail()) {
+                throw e;
+            }
+            return rtn;
+        }
+    }
+
+    /**
+     * Equals to boolean.
+     *
+     * @param message  the message
+     * @param expected the expected
+     * @param actual   the actual
+     * @return the boolean
+     */
+    public boolean equalsTo(final String message, final String expected, final String actual) {
+        try {
+            Assert.assertEquals(message + " - expected[" + expected + "] == actual[" + actual + "]",
+                    StringUtils.lowerCase(expected), StringUtils.lowerCase(actual));
+            return addAssertHistory(message, true, "equalsTo", expected, actual);
+        } catch (final Throwable e) {
+            final boolean rtn = addAssertHistory(message, false, "equalsTo", expected, actual, e);
+            assertStrings.addStepForStringDifferences(expected, actual);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
@@ -693,7 +821,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(message, expected, actual, expected / 10000.0);
             return addAssertHistory(message, true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -713,7 +841,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(expected, actual);
             return addAssertHistory("", true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -734,7 +862,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -754,7 +882,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(expected, actual);
             return addAssertHistory("", true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -776,7 +904,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(message, expected, actual, arg3);
             return addAssertHistory(message, true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -797,7 +925,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -817,7 +945,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(expected, actual);
             return addAssertHistory("", true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -838,7 +966,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(expected, actual, delta);
             return addAssertHistory("", true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -859,7 +987,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(expected, actual, delta);
             return addAssertHistory("", true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -881,7 +1009,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(message, expected, actual, arg3);
             return addAssertHistory(message, true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -902,7 +1030,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -922,7 +1050,7 @@ public class VerboseAsserts {
         try {
             Assert.assertEquals(expected, actual);
             return addAssertHistory("", true, "assertEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -982,7 +1110,7 @@ public class VerboseAsserts {
         try {
             Assert.assertFalse(message, actual);
             return addAssertHistory(message, true, "assertFalse", false, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertFalse", false, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1012,7 +1140,7 @@ public class VerboseAsserts {
         try {
             Assert.assertTrue(message, actual);
             return addAssertHistory(message, true, "assertTrue", true, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertTrue", true, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1039,16 +1167,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean notEquals(final Object expected, final Object actual) {
-        try {
-            Assert.assertNotEquals(expected, actual);
-            return addAssertHistory("", true, "assertNotEquals", expected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertNotEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return notEquals("", expected, actual);
     }
 
     /**
@@ -1063,7 +1182,7 @@ public class VerboseAsserts {
         try {
             Assert.assertNotEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertNotEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertNotEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1081,16 +1200,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean notEquals(final float unexpected, final float actual, final float delta) {
-        try {
-            Assert.assertNotEquals(unexpected, actual, delta);
-            return addAssertHistory("", true, "assertNotEquals", unexpected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertNotEquals", unexpected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return notEquals("", unexpected, actual, delta);
     }
 
     /**
@@ -1099,14 +1209,14 @@ public class VerboseAsserts {
      * @param message  the message
      * @param expected the expected
      * @param actual   the actual
-     * @param arg3     the arg3
+     * @param delta    the delta
      * @return true, if successful
      */
-    public boolean notEquals(final String message, final float expected, final float actual, final float arg3) {
+    public boolean notEquals(final String message, final float expected, final float actual, final float delta) {
         try {
-            Assert.assertNotEquals(message, expected, actual, arg3);
+            Assert.assertNotEquals(message, expected, actual, delta);
             return addAssertHistory(message, true, "assertNotEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertNotEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1121,14 +1231,14 @@ public class VerboseAsserts {
      * @param message  the message
      * @param expected the expected
      * @param actual   the actual
-     * @param arg3     the arg3
+     * @param delta    the delta
      * @return true, if successful
      */
-    public boolean notEquals(final String message, final double expected, final double actual, final double arg3) {
+    public boolean notEquals(final String message, final double expected, final double actual, final double delta) {
         try {
-            Assert.assertNotEquals(message, expected, actual, arg3);
+            Assert.assertNotEquals(message, expected, actual, delta);
             return addAssertHistory(message, true, "assertNotEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertNotEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1145,16 +1255,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean notEquals(final long expected, final long actual) {
-        try {
-            Assert.assertNotEquals(expected, actual);
-            return addAssertHistory("", true, "assertNotEquals", expected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertNotEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return notEquals("", expected, actual);
     }
 
     /**
@@ -1166,16 +1267,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean notEquals(final double unexpected, final double actual, final double delta) {
-        try {
-            Assert.assertNotEquals(unexpected, actual, delta);
-            return addAssertHistory("", true, "assertNotEquals", unexpected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertNotEquals", unexpected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return notEquals("", unexpected, actual, delta);
     }
 
     /**
@@ -1190,7 +1282,7 @@ public class VerboseAsserts {
         try {
             Assert.assertNotEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertNotEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertNotEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1208,16 +1300,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public <T> boolean that(final T actual, final Matcher<? super T> matcher) {
-        try {
-            Assert.assertThat(actual, matcher);
-            return addAssertHistory("", true, "assertThat", actual, matcher);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertThat", actual, matcher, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return that("", actual, matcher);
     }
 
     /**
@@ -1233,7 +1316,7 @@ public class VerboseAsserts {
         try {
             Assert.assertThat(message, actual, matcher);
             return addAssertHistory(message, true, "assertThat", actual, matcher);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertThat", actual, matcher, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1254,7 +1337,7 @@ public class VerboseAsserts {
         try {
             Assert.assertArrayEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1271,16 +1354,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final byte[] expected, final byte[] actual) {
-        try {
-            Assert.assertArrayEquals(expected, actual);
-            return addAssertHistory("", true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return arrayEquals("", expected, actual);
     }
 
     /**
@@ -1295,7 +1369,7 @@ public class VerboseAsserts {
         try {
             Assert.assertArrayEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1318,7 +1392,7 @@ public class VerboseAsserts {
         try {
             Assert.assertArrayEquals(message, expected, actual, arg3);
             return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1339,7 +1413,7 @@ public class VerboseAsserts {
         try {
             Assert.assertArrayEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1356,16 +1430,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final Object[] expected, final Object[] actual) {
-        try {
-            Assert.assertArrayEquals(expected, actual);
-            return addAssertHistory("", true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return arrayEquals("", expected, actual);
     }
 
     /**
@@ -1380,7 +1445,7 @@ public class VerboseAsserts {
         try {
             Assert.assertArrayEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1397,16 +1462,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final boolean[] expected, final boolean[] actual) {
-        try {
-            Assert.assertArrayEquals(expected, actual);
-            return addAssertHistory("", true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return arrayEquals("", expected, actual);
     }
 
     /**
@@ -1417,16 +1473,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final long[] expected, final long[] actual) {
-        try {
-            Assert.assertArrayEquals(expected, actual);
-            return addAssertHistory("", true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return arrayEquals("", expected, actual);
     }
 
     /**
@@ -1438,16 +1485,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final double[] expecteds, final double[] actuals, final double delta) {
-        try {
-            Assert.assertArrayEquals(expecteds, actuals, delta);
-            return addAssertHistory("", true, "assertArrayEquals", expecteds, actuals);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expecteds, actuals, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return arrayEquals("", expecteds, actuals, delta);
     }
 
     /**
@@ -1464,7 +1502,7 @@ public class VerboseAsserts {
         try {
             Assert.assertArrayEquals(message, expecteds, actuals, delta);
             return addAssertHistory(message, true, "assertArrayEquals", expecteds, actuals);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expecteds, actuals, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1482,16 +1520,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final float[] expecteds, final float[] actuals, final float delta) {
-        try {
-            Assert.assertArrayEquals(expecteds, actuals, delta);
-            return addAssertHistory("", true, "assertArrayEquals", expecteds, actuals);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expecteds, actuals, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return arrayEquals("", expecteds, actuals, delta);
     }
 
     /**
@@ -1502,16 +1531,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final char[] expected, final char[] actual) {
-        try {
-            Assert.assertArrayEquals(expected, actual);
-            return addAssertHistory("", true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return arrayEquals("", expected, actual);
     }
 
     /**
@@ -1526,7 +1546,7 @@ public class VerboseAsserts {
         try {
             Assert.assertArrayEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1543,16 +1563,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final short[] expected, final short[] actual) {
-        try {
-            Assert.assertArrayEquals(expected, actual);
-            return addAssertHistory("", true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return arrayEquals("", expected, actual);
     }
 
     /**
@@ -1567,7 +1578,7 @@ public class VerboseAsserts {
         try {
             Assert.assertArrayEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1584,16 +1595,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean arrayEquals(final int[] expected, final int[] actual) {
-        try {
-            Assert.assertArrayEquals(expected, actual);
-            return addAssertHistory("", true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return arrayEquals("", expected, actual);
     }
 
     /**
@@ -1608,7 +1610,7 @@ public class VerboseAsserts {
         try {
             Assert.assertArrayEquals(message, expected, actual);
             return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1751,7 +1753,7 @@ public class VerboseAsserts {
                 Assert.assertTrue(message, actual.compareTo(valueToBeGreaterThan) > 0);
             }
             return addAssertHistory(message, true, assertMethod, valueToBeGreaterThan, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, assertMethod, valueToBeGreaterThan, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1847,7 +1849,7 @@ public class VerboseAsserts {
                 Assert.assertTrue(message, actual.compareTo(valueToBeLessThan) < 0);
             }
             return addAssertHistory(message, true, assertMethod, valueToBeLessThan, actual);
-        } catch (final AssertionError e) {
+        } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, assertMethod, valueToBeLessThan, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
@@ -1985,6 +1987,7 @@ public class VerboseAsserts {
      */
     public void setVerifyOnly(final boolean isVerifyOnly) {
         this.isVerifyOnly = isVerifyOnly;
+        setThrowExceptionOnFail(false);
     }
 
 }
