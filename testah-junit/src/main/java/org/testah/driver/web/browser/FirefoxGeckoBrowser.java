@@ -44,10 +44,10 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
         return this;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * create Capabilities.
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities()
+     * @return DesiredCapabilities
      */
     public DesiredCapabilities createCapabilities() {
         final DesiredCapabilities capabilities = DesiredCapabilities.firefox();
@@ -86,9 +86,10 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
         return this;
     }
 
-    /*
-     * logBrowerInfo will log info about the browser session
-     * @return returns class instance
+    /**
+     * log Brower Info.
+     *
+     * @return FirefoxGeckoBrowser
      */
     public AbstractBrowser<FirefoxGeckoBrowser> logBrowerInfo() {
         try {
