@@ -354,11 +354,25 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void equalsTo() {
+    public void equalsToMultilineString() {
+        Assert.assertTrue(va.equalsToMultilineString("", "this is a test", "this is a test"));
+        Assert.assertFalse(va.equalsToMultilineString("", "this is a test 1", "this is a test 2"));
+
+        Assert.assertTrue(va.equalsToMultilineString("", "this \nis\n a \ntest", "this \nis\n a \ntest"));
+        Assert.assertFalse(va.equalsToMultilineString("", "this \nis\n a \ntest 1", "this \nis\n a \ntest 2"));
+
+        Assert.assertTrue(va.equalsToMultilineString("", "", ""));
+        String nullString = null;
+        Assert.assertTrue(va.equalsToMultilineString("", null, nullString));
     }
 
     @Test
-    public void equalsTo1() {
+    public void equalsTo() {
+        Assert.assertTrue(va.equalsTo("", "this is a test", "this is a test"));
+        Assert.assertFalse(va.equalsTo("", "this is a test 1", "this is a test 2"));
+        Assert.assertTrue(va.equalsTo("", "", ""));
+        String nullString = null;
+        Assert.assertTrue(va.equalsTo("", null, nullString));
     }
 
     @Test

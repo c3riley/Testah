@@ -9,6 +9,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
+import org.testah.framework.report.asserts.AssertStrings;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -38,12 +39,15 @@ public class VerboseAsserts {
      */
     private boolean isVerifyOnly = false;
 
+    private AssertStrings assertStrings;
+
     /**
      * Instantiates a new verbose asserts.
      */
     public VerboseAsserts() {
         setRecordSteps(TS.params().isRecordSteps());
         throwExceptionOnFail = TS.params().isThrowExceptionOnFail();
+        this.assertStrings = new AssertStrings(this);
     }
 
     /**
@@ -727,6 +731,30 @@ public class VerboseAsserts {
         }
     }
 
+
+    /**
+     * Equals to multiline string boolean.
+     *
+     * @param message  the message
+     * @param expected the expected
+     * @param actual   the actual
+     * @return the boolean
+     */
+    public boolean equalsToMultilineString(final String message, final String expected, final String actual) {
+        try {
+            Assert.assertEquals(message + " - expected[" + expected + "] == actual[" + actual + "]",
+                    StringUtils.lowerCase(expected), StringUtils.lowerCase(actual));
+            return addAssertHistory(message, true, "equalsTo", expected, actual);
+        } catch (final Throwable e) {
+            final boolean rtn = addAssertHistory(message, false, "equalsTo", expected, actual, e);
+            assertStrings.deepAssert(expected, actual);
+            if (getThrowExceptionOnFail()) {
+                throw e;
+            }
+            return rtn;
+        }
+    }
+
     /**
      * Assert file exists.
      *
@@ -751,6 +779,29 @@ public class VerboseAsserts {
             return addAssertHistory(message, true, "equalsToIgnoreCase", true, actual.exists());
         } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "equalsToIgnoreCase", true, false, e);
+            if (getThrowExceptionOnFail()) {
+                throw e;
+            }
+            return rtn;
+        }
+    }
+
+    /**
+     * Equals to boolean.
+     *
+     * @param message  the message
+     * @param expected the expected
+     * @param actual   the actual
+     * @return the boolean
+     */
+    public boolean equalsTo(final String message, final String expected, final String actual) {
+        try {
+            Assert.assertEquals(message + " - expected[" + expected + "] == actual[" + actual + "]",
+                    StringUtils.lowerCase(expected), StringUtils.lowerCase(actual));
+            return addAssertHistory(message, true, "equalsTo", expected, actual);
+        } catch (final Throwable e) {
+            final boolean rtn = addAssertHistory(message, false, "equalsTo", expected, actual, e);
+            assertStrings.addStepForStringDifferences(expected, actual);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
