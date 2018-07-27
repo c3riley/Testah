@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-//TODO finish all unit basic unit tests
-
 public class VerboseAssertsTest {
 
     private VerboseAsserts va;
