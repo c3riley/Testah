@@ -24,12 +24,12 @@ public class TestChunkStats {
         HttpAkkaStats httpAkkaStats = new HttpAkkaStats(responses);
         ChunkStats chunkStats = new ChunkStats(httpAkkaStats);
 
-        TS.asserts().equalsTo("elapased time", elapsedTime, chunkStats.getElapsedTime());
+        TS.asserts().equalsTo("elapsed time", elapsedTime, chunkStats.getElapsedTime());
         TS.asserts().equalsTo("number of data points", Long.valueOf(responses.size()), chunkStats.getOverallStats().getCount());
         TS.asserts().equalsTo("longest duration", Long.valueOf(510), chunkStats.getOverallStats().getMax());
         TS.asserts().equalsTo("shortest duration", Long.valueOf(190), chunkStats.getOverallStats().getMin());
         TS.asserts().equalsTo("average duration", Long.valueOf(350), chunkStats.getOverallStats().getMean());
-        TS.asserts().equalsTo("90th percentail", Long.valueOf(507), chunkStats.getOverallStats().getPct90());
+        TS.asserts().equalsTo("90th percentile", Long.valueOf(507), chunkStats.getOverallStats().getPct90());
         TS.asserts().equalsTo("standard deviation", Long.valueOf(117), chunkStats.getOverallStats().getStd());
 
         for (Integer statusCode : statusCodes) {
@@ -37,7 +37,7 @@ public class TestChunkStats {
             TS.asserts().equalsTo("longest duration", Long.valueOf(statusCode + 10), statsDetails.getMax());
             TS.asserts().equalsTo("shortest duration", Long.valueOf(statusCode - 10), statsDetails.getMin());
             TS.asserts().equalsTo("average duration", Long.valueOf(statusCode), statsDetails.getMean());
-            TS.asserts().equalsTo("90th percentail", Long.valueOf(statusCode + 10), statsDetails.getPct90());
+            TS.asserts().equalsTo("90th percentile", Long.valueOf(statusCode + 10), statsDetails.getPct90());
             TS.asserts().equalsTo("standard deviation", Long.valueOf(10), statsDetails.getStd());
         }
     }

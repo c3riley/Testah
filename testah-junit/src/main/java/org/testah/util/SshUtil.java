@@ -168,7 +168,7 @@ public class SshUtil {
             channel.connect();
             for (final String command : commands) {
                 if (verbose) {
-                    StepAction.createInfo("Running Shell Commnad", command);
+                    StepAction.createInfo("Running Shell Command", command);
                 }
                 if (isAutoAddMergeFields()) {
                     commander.println(command + mergeStreams);

@@ -95,7 +95,7 @@ public abstract class AbstractTestPlan {
 
         protected void before() throws Throwable {
             filterTest(description);
-            initlizeTest();
+            initializeTest();
         }
 
         protected void after() {
@@ -106,9 +106,9 @@ public abstract class AbstractTestPlan {
     };
 
     /**
-     * Initlize test.
+     * Initialize test.
      */
-    public abstract void initlizeTest();
+    public abstract void initializeTest();
 
     /**
      * Tear down test.
@@ -142,7 +142,7 @@ public abstract class AbstractTestPlan {
             addIgnoredTest(name, "METADATA_FILTER");
             setAssumeTrue(true);
             Assume.assumeTrue("Filtered out, For details use Trace level logging"
-                    + "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
+                    + "\nCheck your filter settings in Testah.properties for filter_DEFAULT_filterIgnoreKnownProblem", false);
         }
 
         if (null != TS.params().getFilterIgnoreKnownProblem()) {
@@ -151,14 +151,14 @@ public abstract class AbstractTestPlan {
                     setAssumeTrue(true);
                     addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
                     Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description()
-                            + "\nCheck your filter settings in Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem", false);
+                            + "\nCheck your filter settings in Testah.properties for filter_DEFAULT_filterIgnoreKnownProblem", false);
                 }
             } else if ("false".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                 setAssumeTrue(true);
                 addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
                 Assume.assumeTrue(
                         "Filtered out, KnownProblem Not found and is required\nCheck your filter settings in "
-                                + "Testah.propeties for filter_DEFAULT_filterIgnoreKnownProblem",
+                                + "Testah.properties for filter_DEFAULT_filterIgnoreKnownProblem",
                         false);
             }
         }
@@ -170,7 +170,7 @@ public abstract class AbstractTestPlan {
     private TestWatcher watchman2 = new TestWatcher() {
 
         protected void failed(final Throwable e, final Description description) {
-            StepAction.createAssertResult("Unexpected Error occured", false, "UnhandledExceptionFoundByJUnit", "",
+            StepAction.createAssertResult("Unexpected Error occurred", false, "UnhandledExceptionFoundByJUnit", "",
                     e.getMessage(), e).add();
 
             TS.log().error("TESTCASE Status: failed", e);
@@ -706,7 +706,7 @@ public abstract class AbstractTestPlan {
      */
     public AbstractTestPlan resetTestCase(final String reasonWhy) {
         getTestCase().getTestSteps().clear();
-        getTestStepThreadLocal().set(new TestStepDto("Reseting TestCase And Going To Retry", reasonWhy).start());
+        getTestStepThreadLocal().set(new TestStepDto("Resetting TestCase And Going To Retry", reasonWhy).start());
         return this;
     }
 

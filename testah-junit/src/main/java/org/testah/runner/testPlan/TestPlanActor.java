@@ -19,7 +19,7 @@ public class TestPlanActor extends UntypedActor {
     /**
      * Constructor.
      *
-     * @param nrOfWorkers number of workders
+     * @param nrOfWorkers number of workers
      */
     public TestPlanActor(final int nrOfWorkers) {
         this.nrOfWorkers = nrOfWorkers;

@@ -27,7 +27,7 @@ public class TestHttpAkkaStats {
         TS.asserts().equalsTo("shortest duration", 190L, httpAkkaStats.getShortestDuration().longValue());
         TS.asserts().equalsTo("average duration", 350, httpAkkaStats.getAvgDuration().longValue());
         TS.asserts().equalsTo("start time", now, httpAkkaStats.getStartTime().longValue());
-        TS.asserts().equalsTo("elapased time", elapsedTime, httpAkkaStats.getDuration().longValue());
+        TS.asserts().equalsTo("elapsed time", elapsedTime, httpAkkaStats.getDuration().longValue());
         TS.asserts().equalsTo("end time", now + elapsedTime, httpAkkaStats.getEndTime().longValue());
 
         DescriptiveStatistics descriptiveStatistics = httpAkkaStats.getStatsDuration();

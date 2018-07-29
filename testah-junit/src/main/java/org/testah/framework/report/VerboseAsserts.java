@@ -125,13 +125,13 @@ public class VerboseAsserts {
      * Size equals.
      *
      * @param message                    the message
-     * @param objectToCheckSizeOrLenthOf the object to check size or lenth of
+     * @param objectToCheckSizeOrLengthOf the object to check size or length of
      * @param expectedSize               the expected size
      * @return true, if successful
      */
-    public boolean sizeEquals(final String message, final String objectToCheckSizeOrLenthOf, final int expectedSize) {
-        return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLenthOf
-                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
+    public boolean sizeEquals(final String message, final String objectToCheckSizeOrLengthOf, final int expectedSize) {
+        return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLengthOf
+                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLengthOf), expectedSize);
     }
 
     /**
@@ -164,14 +164,14 @@ public class VerboseAsserts {
      * Not size equals.
      *
      * @param message                    the message
-     * @param objectToCheckSizeOrLenthOf the object to check size or lenth of
+     * @param objectToCheckSizeOrLengthOf the object to check size or length of
      * @param expectedSize               the expected size
      * @return true, if successful
      */
-    public boolean notSizeEquals(final String message, final Object objectToCheckSizeOrLenthOf,
+    public boolean notSizeEquals(final String message, final Object objectToCheckSizeOrLengthOf,
                                  final int expectedSize) {
-        return this.notEquals(message + " - expected Object[" + objectToCheckSizeOrLenthOf
-                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLenthOf), expectedSize);
+        return this.notEquals(message + " - expected Object[" + objectToCheckSizeOrLengthOf
+                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLengthOf), expectedSize);
     }
 
     /**
@@ -357,7 +357,7 @@ public class VerboseAsserts {
      */
     public void critical(final String message) {
         TS.log().fatal(Cli.BAR_LONG);
-        TS.log().fatal(String.format("%s Critical Issue Occured and test should be stopped! Message[%s]", Cli.BAR_WALL, message));
+        TS.log().fatal(String.format("%s Critical Issue Occurred and test should be stopped! Message[%s]", Cli.BAR_WALL, message));
         TS.log().fatal(Cli.BAR_LONG);
         addAssertHistory(message, false, "critical", null, null, null);
     }
@@ -1432,17 +1432,17 @@ public class VerboseAsserts {
     /**
      * Array equals.
      *
-     * @param expecteds the expecteds
-     * @param actuals   the actuals
+     * @param expectedAry the expectedAry
+     * @param actualAry   the actualAry
      * @param delta     the delta
      * @return true, if successful
      */
-    public boolean arrayEquals(final double[] expecteds, final double[] actuals, final double delta) {
+    public boolean arrayEquals(final double[] expectedAry, final double[] actualAry, final double delta) {
         try {
-            Assert.assertArrayEquals(expecteds, actuals, delta);
-            return addAssertHistory("", true, "assertArrayEquals", expecteds, actuals);
+            Assert.assertArrayEquals(expectedAry, actualAry, delta);
+            return addAssertHistory("", true, "assertArrayEquals", expectedAry, actualAry);
         } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expecteds, actuals, e);
+            final boolean rtn = addAssertHistory("", false, "assertArrayEquals", expectedAry, actualAry, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
@@ -1931,11 +1931,11 @@ public class VerboseAsserts {
     }
 
     /**
-     * Only verfiy.
+     * Only verify.
      *
      * @return the verbose asserts
      */
-    public VerboseAsserts onlyVerfiy() {
+    public VerboseAsserts onlyVerify() {
         this.recordSteps = false;
         this.throwExceptionOnFail = false;
         this.setVerifyOnly(true);

@@ -10,7 +10,7 @@ import org.testah.framework.testPlan.BrowserTestPlan;
 @TestPlan(
     platforms = "SimpleTestPlatforms",
     components = "SimpleTestComponents",
-    devices = "SimpleTestDevicess",
+    devices = "SimpleTestDevices",
     relatedIds = "TEST_ID",
     relatedLinks = "HTTP_TEST_LINK",
     tags = "TEST_TAG",

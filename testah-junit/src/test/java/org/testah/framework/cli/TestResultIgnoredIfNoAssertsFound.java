@@ -29,7 +29,7 @@ public class TestResultIgnoredIfNoAssertsFound extends HttpTestPlan {
     @Override
     public void doOnPass() {
         if (!expectPass) {
-            throw new AssertionError("Didnt expect test to show as passed!");
+            throw new AssertionError("Didn't expect test to show as passed!");
         }
     }
 

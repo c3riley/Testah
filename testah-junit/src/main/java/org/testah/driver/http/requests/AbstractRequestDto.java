@@ -592,7 +592,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      */
     public T setUploadResourceFile(final String pathToResource) throws IOException {
         final String fileContent = TS.util().getResourceAsString(pathToResource);
-        TS.asserts().notNull("setUploadResourceFile makue sure value is not null", fileContent);
+        TS.asserts().notNull("setUploadResourceFile make sure value is not null", fileContent);
         return setUpload(fileContent.getBytes(Charset.forName("UTF-8")));
     }
 

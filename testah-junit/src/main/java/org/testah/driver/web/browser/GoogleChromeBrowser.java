@@ -37,9 +37,9 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     /*
      * (non-Javadoc).
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay().
+     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary().
      */
-    public GoogleChromeBrowser getDriverBinay() {
+    public GoogleChromeBrowser getDriverBinary() {
         ChromeDriverManager.getInstance().setup();
         return this;
     }
@@ -96,7 +96,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
             if (null == binPath || binPath.length() == 0 || !(new File(binPath)).exists()) {
                 final File downloadDestinationDir = TS.util().getDownloadDestinationDirectory("drivers");
                 final File unZipDestination = new File(downloadDestinationDir, "chrome");
-                File webDriverExecutable = findWebriverExecutable(unZipDestination);
+                File webDriverExecutable = findWebdriverExecutable(unZipDestination);
                 if (null == webDriverExecutable) {
                     String urlSource = "https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip";
                     if (Params.isWindows()) {
@@ -107,7 +107,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
                     final File zip = TS.util().downloadFile(urlSource, downloadDestinationDir);
                     TS.util().unZip(zip, unZipDestination);
                     cleanupDownloads(downloadDestinationDir);
-                    webDriverExecutable = findWebriverExecutable(unZipDestination);
+                    webDriverExecutable = findWebdriverExecutable(unZipDestination);
                 } else {
                     TS.log().info("WebDriver executable already downloaded : " + webDriverExecutable.getAbsolutePath());
                 }
@@ -126,14 +126,14 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         return ChromeDriverManager.getInstance().getBinaryPath();
     }
 
-    private File findWebriverExecutable(final File driverParentDirectory) {
-        File webriverExecutable = null;
+    private File findWebdriverExecutable(final File driverParentDirectory) {
+        File webdriverExecutable = null;
         if (driverParentDirectory.exists()) {
-            webriverExecutable = Arrays.stream(driverParentDirectory.listFiles((d, s) -> {
+            webdriverExecutable = Arrays.stream(driverParentDirectory.listFiles((d, s) -> {
                 return d.exists() && d.isDirectory() && s.toLowerCase().contains("driver");
             })).findAny().orElse((File) null);
         }
-        return webriverExecutable;
+        return webdriverExecutable;
     }
 
     private void cleanupDownloads(final File downloadDestinationDir) {
@@ -157,12 +157,12 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
     }
 
     /**
-     * logBrowerInfo will log info about the browser session.
+     * logBrowserInfo will log info about the browser session.
      *
      * @return returns class instance
      */
     @Override
-    public AbstractBrowser<GoogleChromeBrowser> logBrowerInfo() {
+    public AbstractBrowser<GoogleChromeBrowser> logBrowserInfo() {
         // TODO Auto-generated method stub
         return null;
     }

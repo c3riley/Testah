@@ -78,7 +78,7 @@ public class TS {
      */
     public static VerboseAsserts verify() {
         if (null == _verify) {
-            _verify = new VerboseAsserts().onlyVerfiy();
+            _verify = new VerboseAsserts().onlyVerify();
         }
         return _verify;
     }

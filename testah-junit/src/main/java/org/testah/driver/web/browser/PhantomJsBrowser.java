@@ -35,9 +35,9 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
     /*
      * (non-Javadoc)
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
+     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary()
      */
-    public PhantomJsBrowser getDriverBinay() {
+    public PhantomJsBrowser getDriverBinary() {
         PhantomJsDriverManager.getInstance().setup();
         return this;
     }
@@ -112,7 +112,7 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
     }
 
     @Override
-    public AbstractBrowser<PhantomJsBrowser> logBrowerInfo() {
+    public AbstractBrowser<PhantomJsBrowser> logBrowserInfo() {
         // TODO Auto-generated method stub
         return null;
     }
