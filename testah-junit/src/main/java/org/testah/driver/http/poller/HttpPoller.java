@@ -61,7 +61,7 @@ public class HttpPoller {
         Long start = new Date().getTime();
         int pollCtr = 0;
         boolean pollCheckPassed = false;
-        boolean exceptionOccured = false;
+        boolean exceptionOccurred = false;
         try {
             for (pollCtr = 1; pollCtr < getMaxPollIteration(); pollCtr++) {
                 try {
@@ -78,7 +78,7 @@ public class HttpPoller {
                     }
                 } catch (Exception e) {
                     TS.log().warn("Issue found during polling - " + e.getMessage());
-                    exceptionOccured = true;
+                    exceptionOccurred = true;
                     throw e;
                 } finally {
                     if (pollCtr == 1) {
@@ -93,7 +93,7 @@ public class HttpPoller {
             }
         } catch (Exception e) {
             TS.log().warn("Issue found during polling - " + e.getMessage());
-            exceptionOccured = true;
+            exceptionOccurred = true;
             throw e;
         } finally {
             if (null != response && null != TS.params()) {
@@ -101,7 +101,7 @@ public class HttpPoller {
             }
             StepAction.createInfo(
                     "Polled for " + pollCtr + " iterations for duration of " + TS.util().getDurationPretty((new Date().getTime()) - start));
-            if (!exceptionOccured && !pollCheckPassed) {
+            if (!exceptionOccurred && !pollCheckPassed) {
                 TS.asserts().fail("Poller went over max iteration allowed[" + pollCtr + "] and the poller check was not true!");
             }
         }

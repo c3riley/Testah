@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Class AbstractWebElementWrapper is designed to wrap Webdriver WebElements and provide for more macrotized methods and chaining for less
+ * The Class AbstractWebElementWrapper is designed to wrap Webdriver WebElements and provide for more methods and chaining for less
  * code in tests.
  */
+@SuppressWarnings("SpellCheckingInspection")
 public abstract class AbstractWebElementWrapper {
 
     /**
@@ -161,7 +162,7 @@ public abstract class AbstractWebElementWrapper {
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper assertNotFound() {
-        TS.asserts().isNull("assertNotfound WebElement[" + by + "]", getDriverWebElement());
+        TS.asserts().isNull("assertNotFound WebElement[" + by + "]", getDriverWebElement());
         return getSelf();
     }
 
@@ -217,7 +218,7 @@ public abstract class AbstractWebElementWrapper {
     public boolean elementIsOk(final String activity, final boolean autoReport) {
         if (null == getDriverWebElement()) {
             final String msg = "Unable to preform activity[" + activity + "], webelement[" + by
-                    + "] is null and not availible.";
+                    + "] is null and not available.";
             if (autoReport) {
                 TS.asserts().notNull(msg, webElement);
             } else {
@@ -238,7 +239,7 @@ public abstract class AbstractWebElementWrapper {
         try {
             return new Actions(driver.getDriver());
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with getActionBuilder for: " + by, e);
         }
         return null;
     }
@@ -263,7 +264,7 @@ public abstract class AbstractWebElementWrapper {
         try {
             getActionBuilder().dragAndDrop(this.getDriverWebElement(), elementToDropOn.getDriverWebElement()).build().perform();
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with getActionBuilder for: " + by, e);
         }
         return getSelf();
     }
@@ -279,7 +280,7 @@ public abstract class AbstractWebElementWrapper {
         try {
             getActionBuilder().dragAndDropBy(this.getDriverWebElement(), xoffset, yoffset);
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with getActionBuilder for: " + by, e);
         }
         return getSelf();
     }
@@ -404,7 +405,7 @@ public abstract class AbstractWebElementWrapper {
             TS.util().pause("getElementsWithIn", count);
         }
         if (autoAssert) {
-            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
+            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] using By[" + locator
                     + "] - error: " + error, true, false);
         }
         return new ArrayList<>();
@@ -455,7 +456,7 @@ public abstract class AbstractWebElementWrapper {
             TS.util().pause("getElementWithIn", count);
         }
         if (autoAssert) {
-            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
+            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] using By[" + locator
                     + "] - error: " + error, true, false);
         }
         return null;
@@ -613,7 +614,7 @@ public abstract class AbstractWebElementWrapper {
                 builder.moveToElement(webElement).build().perform();
             }
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with mouseOver for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with mouseOver for: " + by, e);
         }
         return getSelf();
     }
@@ -630,7 +631,7 @@ public abstract class AbstractWebElementWrapper {
                 builder.moveToElement(webElement).click().build().perform();
             }
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with mouseOver for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with mouseOver for: " + by, e);
         }
         return getSelf();
     }
@@ -651,7 +652,7 @@ public abstract class AbstractWebElementWrapper {
                 }
             }
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with mouseOver for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with mouseOver for: " + by, e);
         }
         return getSelf();
     }

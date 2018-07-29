@@ -24,9 +24,9 @@ public class JBrowserDriverBrowser extends AbstractBrowser<JBrowserDriverBrowser
     /*
      * (non-Javadoc)
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
+     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary()
      */
-    public JBrowserDriverBrowser getDriverBinay() {
+    public JBrowserDriverBrowser getDriverBinary() {
         return this;
     }
 
@@ -66,7 +66,7 @@ public class JBrowserDriverBrowser extends AbstractBrowser<JBrowserDriverBrowser
     }
 
     @Override
-    public AbstractBrowser<JBrowserDriverBrowser> logBrowerInfo() {
+    public AbstractBrowser<JBrowserDriverBrowser> logBrowserInfo() {
         // TODO Auto-generated method stub
         return null;
     }

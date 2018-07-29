@@ -49,7 +49,7 @@ public class TestFilter {
      * @return the list
      */
     public List<Class<?>> filterTestPlansToRun() {
-        loadCompiledTestClase();
+        loadCompiledTestClass();
         loadUncompiledTestPlans();
         return filterTestPlansToRun(getTestClasses(), getTestClassesMetFilters());
     }
@@ -398,22 +398,22 @@ public class TestFilter {
     }
 
     /**
-     * Load compiled test clase.
+     * Load compiled test class.
      *
      * @return the test filter
      */
-    public TestFilter loadCompiledTestClase() {
-        loadCompiledTestClase(TS.params().getLookAtInternalTests());
+    public TestFilter loadCompiledTestClass() {
+        loadCompiledTestClass(TS.params().getLookAtInternalTests());
         return this;
     }
 
     /**
-     * Load compiled test clase.
+     * Load compiled test class.
      *
      * @param internalClass the internal class
      * @return the int
      */
-    private int loadCompiledTestClase(final String internalClass) {
+    private int loadCompiledTestClass(final String internalClass) {
         if (null != internalClass && internalClass.length() > 0) {
             final Reflections reflections = new Reflections(internalClass);
             Set<Class<?>> lst = reflections.getTypesAnnotatedWith(TestPlan.class);
@@ -461,7 +461,7 @@ public class TestFilter {
                         }
 
                         if (!externalTests.exists()) {
-                            if (loadCompiledTestClase(path) == 0) {
+                            if (loadCompiledTestClass(path) == 0) {
                                 TS.log().error(
                                         "Param LookAtExternalTests is set to a class/file/directory not found: "
                                                 + externalTests.getAbsolutePath());
@@ -490,7 +490,7 @@ public class TestFilter {
                 }
             }
         } catch (final RuntimeException e) {
-            TS.log().warn("Issue loading uncompiled Tests, if groovy part of the porject?", e);
+            TS.log().warn("Issue loading uncompiled Tests, if groovy part of the project?", e);
             throw new RuntimeException(e);
         }
         return this;

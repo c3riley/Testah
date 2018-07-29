@@ -59,9 +59,9 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
      * @return the SQL response as a map
      * @throws SQLException query execution fails
      */
-    public List<HashMap<String, Object>> execuateSelectSql(final String sql) throws SQLException {
+    public List<HashMap<String, Object>> executeSelectSol(final String sql) throws SQLException {
         try (Connection conn = getConnection()) {
-            return execuateSelectSql(sql, conn);
+            return executeSelectSol(sql, conn);
         }
     }
 
@@ -73,10 +73,10 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
      * @return the SQL response as a map
      * @throws SQLException query execution fails
      */
-    public List<HashMap<String, Object>> execuateSelectSql(final String sql, final Connection conn)
+    public List<HashMap<String, Object>> executeSelectSol(final String sql, final Connection conn)
             throws SQLException {
         if (null == sql || !sql.toLowerCase().startsWith("select")) {
-            throw new RuntimeException("execuateSelectSql can only use Select sql statement!");
+            throw new RuntimeException("executeSelectSol can only use Select sql statement!");
         }
 
         final List<HashMap<String, Object>> values = new ArrayList<>();

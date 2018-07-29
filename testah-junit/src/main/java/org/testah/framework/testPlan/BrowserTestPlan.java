@@ -9,9 +9,9 @@ import org.junit.BeforeClass;
 public class BrowserTestPlan extends AbstractTestPlan {
 
     /* (non-Javadoc)
-     * @see org.testah.framework.testPlan.AbstractTestPlan#initlizeTest()
+     * @see org.testah.framework.testPlan.AbstractTestPlan#initializeTest()
      */
-    public void initlizeTest() {
+    public void initializeTest() {
 
     }
 

@@ -238,7 +238,7 @@ public class ParamLoader {
                 }
             }
         } catch (final Throwable e) {
-            TS.log().warn("Problem Occured Loading local properties file", e);
+            TS.log().warn("Problem Occurred Loading local properties file", e);
         }
     }
 

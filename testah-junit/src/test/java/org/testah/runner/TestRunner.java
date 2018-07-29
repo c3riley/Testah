@@ -14,7 +14,7 @@ public class TestRunner {
     @Test
     public void testLoadCompiledTests() {
         final TestFilter r = new TestFilter();
-        final Set<Class<?>> classes = r.loadCompiledTestClase().getTestClasses();
+        final Set<Class<?>> classes = r.loadCompiledTestClass().getTestClasses();
         Assert.assertNotNull(classes);
         Assert.assertEquals(5, classes.size());
         TS.util().toJson(classes);

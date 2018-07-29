@@ -54,7 +54,7 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
     /**
      * Instantiates a new Abstract jira remote link builder.
      *
-     * @param icon1Url16x16 the icon 1 url 16 x 16 for use with both icons on the remote link object and status obje ct
+     * @param icon1Url16x16 the icon 1 url 16 x 16 for use with both icons on the remote link object and status object
      */
     protected AbstractJiraRemoteLinkBuilder(final String icon1Url16x16) {
         this(icon1Url16x16, icon1Url16x16);
@@ -235,7 +235,7 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
     }
 
     /**
-     * Gets source with slash. For use with source code mgmt, turn the classpath seperator from dot to slash.
+     * Gets source with slash. For use with source code mgmt, turn the classpath separator from dot to slash.
      *
      * @param source the source is the absolute classpath to the testplan class
      * @return the source with slash
@@ -249,7 +249,7 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
      * Jira requires a valid link, and will fail if it is not.
      *
      * @param link     the link must be a valid link starting with http
-     * @param errorTip the error tip is added as a query parma to the fake link to help know what why fake link is used.
+     * @param errorTip the error tip is added as a query param to the fake link to help know what why fake link is used.
      * @return the string the link or a value that is not empty using a fake link
      */
     protected String validateUrl(String link, final String errorTip) {

@@ -110,7 +110,7 @@ public class TS {
      */
     public static VerboseAsserts verify() {
         if (null == _verify.get()) {
-            setVerify(new VerboseAsserts().onlyVerfiy());
+            setVerify(new VerboseAsserts().onlyVerify());
         }
         return _verify.get();
     }

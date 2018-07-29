@@ -123,7 +123,7 @@ public class Cli {
         run.addArgument("-i", "--lookAtInternalTests").setDefault(opt.getLookAtInternalTests()).type(String.class)
                 .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
         run.addArgument("-e", "--lookAtExternalTests").setDefault(opt.getLookAtExternalTests()).type(String.class).help(
-                "lookAtExternalTests is a path to a test file, java or groovy, or a comma seperated like, regex, for directory path");
+                "lookAtExternalTests is a path to a test file, java or groovy, or a comma separated like, regex, for directory path");
 
         final Subparser query = subparsers.addParser("query").help("query help");
         query.addArgument("--file").required(false).action(Arguments.store()).dest("queryResults")
@@ -133,7 +133,7 @@ public class Cli {
         query.addArgument("-i", "--lookAtInternalTests").setDefault(opt.getLookAtInternalTests()).type(String.class)
                 .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
         query.addArgument("-e", "--lookAtExternalTests").setDefault(opt.getLookAtExternalTests()).type(String.class)
-                .help("lookAtExternalTests is a path to a test file, java or groovy, or a comma seperated like, regex, for directory path");
+                .help("lookAtExternalTests is a path to a test file, java or groovy, or a comma separated like, regex, for directory path");
 
         final Subparser create = subparsers.addParser("create").help("create help");
         create.addArgument("--prop", "--properties").required(false).action(Arguments.storeTrue()).dest("prop");

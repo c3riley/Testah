@@ -29,10 +29,10 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
     /*
      * (non-Javadoc)
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
+     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary()
      */
     @Override
-    public FirefoxBrowser getDriverBinay() {
+    public FirefoxBrowser getDriverBinary() {
         FirefoxDriverManager.getInstance().setup();
         System.setProperty("webdriver.gecko.driver", FirefoxDriverManager.getInstance().getBinaryPath());
         TS.params().setWebDriver_firefoxDriverBinary(FirefoxDriverManager.getInstance().getBinaryPath());
@@ -85,13 +85,13 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
     }
 
     @Override
-    public AbstractBrowser<FirefoxBrowser> logBrowerInfo() {
+    public AbstractBrowser<FirefoxBrowser> logBrowserInfo() {
         try {
             TS.log().trace(
                     "Browser SessionId: " + ((FirefoxDriver) TS.browser().getDriver()).getSessionId().toString());
             TS.util().toJsonPrint(TS.browser().getDriver().manage().getCookies());
         } catch (final Exception e) {
-            TS.log().trace("Issue geting browser info", e);
+            TS.log().trace("Issue getting browser info", e);
         }
         return getSelf();
     }

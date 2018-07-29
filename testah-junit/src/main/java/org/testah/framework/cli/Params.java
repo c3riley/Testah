@@ -202,7 +202,7 @@ public class Params {
     /**
      * The record steps.
      */
-    @Comment(info = "SHould System keep track of all actions occuring during test run")
+    @Comment(info = "Should System keep track of all actions occurring during test run")
     @Arg(dest = "recordSteps")
     private boolean recordSteps = true;
 
@@ -238,7 +238,7 @@ public class Params {
     /**
      * The web driver_use remote driver.
      */
-    @Comment(info = "Use A Remote Dirver to run the Browser with, allows for Grid use")
+    @Comment(info = "Use A Remote Driver to run the Browser with, allows for Grid use")
     @Arg(dest = "webDriver_useRemoteDriver")
     private boolean webDriverUseRemoteDriver = false;
 
@@ -273,11 +273,11 @@ public class Params {
     @Arg(dest = "webDriver_ChromeDriverBinary")
     private String webDriverChromeDriverBinary = "";
 
-    @Comment(info = "Default window Width to open browser window to. If emtpy then browser will be maximized")
+    @Comment(info = "Default window Width to open browser window to. If empty then browser will be maximized")
     @Arg(dest = "windowWidth")
     private int windowWidth = 1366;
 
-    @Comment(info = "Default window Height to open browser window to. If emtpy then browser will be maximized")
+    @Comment(info = "Default window Height to open browser window to. If empty then browser will be maximized")
     @Arg(dest = "windowHeight")
     private int windowHeight = 1000;
 
@@ -352,7 +352,7 @@ public class Params {
     /**
      * The update metadata.
      */
-    @Comment(info = "True will send a flag saying to update the responsitory with metadata.")
+    @Comment(info = "True will send a flag saying to update the repository with metadata.")
     @Arg(dest = "updateMetadata")
     private boolean updateMetadata = true;
 
@@ -378,7 +378,7 @@ public class Params {
      * The run info_run id.
      */
     @Comment(
-            info = "Run Id is a value that can be used to group many differnt results together. "
+            info = "Run Id is a value that can be used to group many different results together. "
                     + "Can be passed runtime via -Dtestah.runId=run23")
     @Arg(dest = "runInfo_runId")
     private String runInfoRunId = "";
@@ -396,7 +396,7 @@ public class Params {
      * The run type.
      */
     @Comment(
-            info = "Run Type is a way to tell what type of run the test execution was involed in, smoke, regression, other. "
+            info = "Run Type is a way to tell what type of run the test execution was involved in, smoke, regression, other. "
                     + "Can be passed runtime via -Dtestah.runType=smoke")
     @Arg(dest = "runInfo_runType")
     private String runType = "";
@@ -405,7 +405,7 @@ public class Params {
      * The usefilter schema.
      */
     @Comment(
-            info = "[BAR1]Filter Properties[BAR2]Filter Schema To Use. Leave empty to not apply fitlers, to use default filter, "
+            info = "[BAR1]Filter Properties[BAR2]Filter Schema To Use. Leave empty to not apply filters, to use default filter, "
                     + "set value to DEFAULT.  You can also create your own, like REG, or SMOKE")
     @Arg(dest = "usefilterSchema")
     private String usefilterSchema = "DEFAULT";
@@ -414,7 +414,7 @@ public class Params {
      * The filter by platform.
      */
     @Comment(
-            info = "Filter using the Platform metadata field. Can be a comma seperated list of values that a test must match. "
+            info = "Filter using the Platform metadata field. Can be a comma separated list of values that a test must match. "
                     + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByPlatform")
     private String filterByPlatform = "";
@@ -423,7 +423,7 @@ public class Params {
      * The filter by device.
      */
     @Comment(
-            info = "Filter using the Device metadata field. Can be a comma seperated list of values that a test must match. "
+            info = "Filter using the Device metadata field. Can be a comma separated list of values that a test must match. "
                     + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByDevice")
     private String filterByDevice = "";
@@ -432,7 +432,7 @@ public class Params {
      * The filter by component.
      */
     @Comment(
-            info = "Filter using the Component metadata field. Can be a comma seperated list of values that a test must match. "
+            info = "Filter using the Component metadata field. Can be a comma separated list of values that a test must match. "
                     + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByComponent")
     private String filterByComponent = "";
@@ -441,7 +441,7 @@ public class Params {
      * The filter by run type.
      */
     @Comment(
-            info = "Filter using the RunType metadata field. Can be a comma seperated list of values that a test must match. "
+            info = "Filter using the RunType metadata field. Can be a comma separated list of values that a test must match. "
                     + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByRunType")
     private String filterByRunType = "";
@@ -459,7 +459,7 @@ public class Params {
      * The filter by tag.
      */
     @Comment(
-            info = "Filter using the Tag metadata field. Can be a comma seperated list of values that a test must match. "
+            info = "Filter using the Tag metadata field. Can be a comma separated list of values that a test must match. "
                     + "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByTag")
     private String filterByTag = "";
@@ -467,21 +467,21 @@ public class Params {
     /**
      * The filter by test plan name starts with.
      */
-    @Comment(info = "Filter by TestPlan Name, TestPlan must start with prefix. Can supply a comma seperated list.")
+    @Comment(info = "Filter by TestPlan Name, TestPlan must start with prefix. Can supply a comma separated list.")
     @Arg(dest = "filterByTestPlanNameStartsWith")
     private String filterByTestPlanNameStartsWith = "";
 
     /**
      * The filter by id.
      */
-    @Comment(info = "Filter by TestPlan Id, TestPlan must match supplied Uuid. Can supply a comma seperated list.")
+    @Comment(info = "Filter by TestPlan Id, TestPlan must match supplied Uuid. Can supply a comma separated list.")
     @Arg(dest = "filterById")
     private String filterById = "";
 
     /**
      * The filter by test type.
      */
-    @Comment(info = "Filter by TestType.  Can supply a comma seperated List.")
+    @Comment(info = "Filter by TestType.  Can supply a comma separated List.")
     @Arg(dest = "filterByTestType")
     private TestType filterByTestType = TestType.AUTOMATED;
 

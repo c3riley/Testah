@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * The Class AbstractBrowser wraps Webdriver Api implementation with many
- * macrotized methods to reduce code in tests.
+ *  methods to reduce code in tests.
  *
  * @param <T> the type parameter
  */
@@ -135,11 +135,11 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Gets the driver binay.
+     * Gets the driver binary.
      *
-     * @return the driver binay
+     * @return the driver binary
      */
-    public abstract AbstractBrowser<T> getDriverBinay();
+    public abstract AbstractBrowser<T> getDriverBinary();
 
     /**
      * Gets the element wait time.
@@ -405,11 +405,11 @@ public abstract class AbstractBrowser<T> {
     /**
      * Run java script.
      *
-     * @param javaSript the java sript
+     * @param javaScript the java script
      * @return the abstract browser
      */
-    public AbstractBrowser<T> runJavaScript(final String javaSript) {
-        getJavaScriptValue(javaSript);
+    public AbstractBrowser<T> runJavaScript(final String javaScript) {
+        getJavaScriptValue(javaScript);
         return getSelf();
     }
 
@@ -468,7 +468,7 @@ public abstract class AbstractBrowser<T> {
             if (remote) {
                 driver = getRemoteDriver(capabilities);
             } else {
-                getDriverBinay();
+                getDriverBinary();
                 startService();
                 driver = getWebDriver(capabilities);
             }
@@ -895,11 +895,11 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Foward.
+     * Forward.
      *
      * @return the abstract browser
      */
-    public AbstractBrowser<T> foward() {
+    public AbstractBrowser<T> forward() {
         driver.navigate().forward();
         return getSelf();
     }
@@ -1069,10 +1069,11 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Log brower info abstract browser.
+     * Log browser info abstract browser.
      *
      * @return the abstract browser
      */
-    public abstract AbstractBrowser<T> logBrowerInfo();
+    public abstract AbstractBrowser<T> logBrowserInfo();
+
 
 }

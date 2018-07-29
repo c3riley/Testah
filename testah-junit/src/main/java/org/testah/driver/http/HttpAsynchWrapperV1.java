@@ -64,13 +64,13 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
     }
 
     /**
-     * Do request aysnch.
+     * Do request asynch.
      *
      * @param request the request
      * @param verbose the verbose
      * @return the future
      */
-    public Future<HttpResponse> doRequestAysnch(final AbstractRequestDto<?> request, final boolean verbose) {
+    public Future<HttpResponse> doRequestAsynch(final AbstractRequestDto<?> request, final boolean verbose) {
         try {
             final HttpClientContext context = HttpClientContext.create();
             if (null != getCookieStore()) {
@@ -101,7 +101,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
                             public void failed(final Exception ex) {
                                 if (verbose) {
                                     AbstractTestPlan.addStepAction(StepAction.createInfo(
-                                            "ERROR - Issue with reques" + request.getHttpRequestBase().getRequestLine(),
+                                            "ERROR - Issue with request " + request.getHttpRequestBase().getRequestLine(),
                                             ex.getMessage()));
                                 }
                             }
@@ -121,7 +121,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
         } catch (final Exception e) {
             TS.log().error(e);
             if (!isIgnoreHttpError()) {
-                TS.asserts().equalsTo("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
+                TS.asserts().equalsTo("Unexpected Exception thrown from preformRequest in IHttpWrapper", "",
                         e.getMessage());
             }
             return null;

@@ -222,8 +222,8 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public File saveToFile(final File downloadFile) throws IOException {
         try (
-                FileOutputStream fileOuputStream = new FileOutputStream(downloadFile)) {
-            fileOuputStream.write(this.getResponseBytes());
+                FileOutputStream fileOutputStream = new FileOutputStream(downloadFile)) {
+            fileOutputStream.write(this.getResponseBytes());
             return downloadFile;
         }
     }
@@ -308,7 +308,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public <T> T getResponse(final Class<T> valueType) {
         try {
-            TS.log().debug("Getting reesponse as " + valueType.getCanonicalName());
+            TS.log().debug("Getting response as " + valueType.getCanonicalName());
             return TS.util().getMap().readValue(responseBody, valueType);
         } catch (final Exception e) {
             TS.log().debug("Issue getting object from body: " + responseBody);
@@ -434,22 +434,22 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * Creates the response info step.
      *
      * @param shortResponseBody the short response body
-     * @param escapdeBody       the escapde body
+     * @param escapeBody       the escape body
      * @param truncate          the truncate
      * @return the step action dto
      */
-    public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapdeBody,
+    public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapeBody,
                                                 final int truncate) {
         StepActionDto stepAction = null;
         if (shortResponseBody) {
             stepAction = StepAction
                     .createInfo(this.getRequestType() + " - Uri: " + getUrl(),
                             "Status: " + getStatusCode() + " [ " + getStatusText() + " ]",
-                            StringUtils.abbreviate(getResponseBody(escapdeBody), truncate), false)
+                            StringUtils.abbreviate(getResponseBody(escapeBody), truncate), false)
                     .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         } else {
             stepAction = StepAction.createInfo(this.getRequestType() + " - Uri: " + getUrl(),
-                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapdeBody), false)
+                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapeBody), false)
                     .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
 
         }

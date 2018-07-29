@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class HttpActor extends UntypedActor {
     private static HashMap<Long, List<ResponseDto>> results = new HashMap<Long, List<ResponseDto>>();
-    public static final int UKNOWN_ERROR_STATUS = 700;
+    public static final int UNKNOWN_ERROR_STATUS = 700;
 
     private final ActorRef workerRouter;
     private final int nrOfWorkers;
@@ -74,7 +74,7 @@ public class HttpActor extends UntypedActor {
 
     private ResponseDto getUnExpectedErrorResponseDto(final Throwable throwable) {
         ResponseDto response = new ResponseDto();
-        response.setStatusCode(UKNOWN_ERROR_STATUS);
+        response.setStatusCode(UNKNOWN_ERROR_STATUS);
         response.setStatusText(String.format("Unexpected Error[%s]", throwable.getMessage()));
         response.setResponseBody(org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(throwable));
         return response;

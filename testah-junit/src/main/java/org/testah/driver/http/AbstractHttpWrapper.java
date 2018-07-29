@@ -352,7 +352,7 @@ public abstract class AbstractHttpWrapper {
         } catch (final IOException e) {
             TS.log().error(e);
             if (!ignoreHttpError) {
-                getVerboseAsserts().equalsTo("Unexpeced Exception thrown from preformRequest in IHttpWrapper", "",
+                getVerboseAsserts().equalsTo("Unexpected Exception thrown from preformRequest in IHttpWrapper", "",
                         e.getMessage());
             }
             return new ResponseDto(-1).setStatusText(e.toString()).setResponseBody(e.toString());

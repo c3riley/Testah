@@ -40,7 +40,7 @@ public class TestPlanReporter {
      * @param autoOpenReport  should report get opened in default browser
      * @param outputDir       output directory to use
      * @param uniqueFileNames the unique file names
-     * @return TestPlanDto returned with recaled info
+     * @return TestPlanDto returned with recalculated info
      */
     public TestPlanDto reportResults(final TestPlanDto testPlan, final boolean autoOpenReport, final String outputDir,
                                      final boolean uniqueFileNames) {

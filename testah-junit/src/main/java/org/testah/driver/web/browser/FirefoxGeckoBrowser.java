@@ -29,9 +29,9 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
     /*
      * (non-Javadoc)
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay()
+     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary()
      */
-    public FirefoxGeckoBrowser getDriverBinay() {
+    public FirefoxGeckoBrowser getDriverBinary() {
         return this;
     }
 
@@ -86,17 +86,17 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
         return this;
     }
 
-    /**
-     * log Brower Info.
-     *
-     * @return FirefoxGeckoBrowser
+    /*
+     * Log Browser Info
+     * logBrowserInfo will log info about the browser session
+     * @return returns class instance
      */
-    public AbstractBrowser<FirefoxGeckoBrowser> logBrowerInfo() {
+    public AbstractBrowser<FirefoxGeckoBrowser> logBrowserInfo() {
         try {
             TS.log().trace("Browser SessionId: " + ((FirefoxDriver) TS.browser().getDriver()).getSessionId().toString());
             TS.util().toJsonPrint(TS.browser().getDriver().manage().getCookies());
         } catch (Exception e) {
-            TS.log().trace("Issue geting browser info", e);
+            TS.log().trace("Issue getting browser info", e);
         }
         return getSelf();
     }

@@ -77,7 +77,7 @@ public abstract class AbstractFormatter {
      */
     public String getReport(final VelocityContext context) {
         if (null == context || null == pathToTemplate) {
-            TS.log().trace("No report context so returing json for testplan info");
+            TS.log().trace("No report context so retuning json for testplan info");
             return getBaseReportObject();
         }
         try {

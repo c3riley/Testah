@@ -68,7 +68,7 @@ public class TestahUtil {
 
         try {
             return map.writeValueAsString(object);
-        } catch (final Exception ingoreFailOnFirstAttempt) {
+        } catch (final Exception ignoreFailOnFirstAttempt) {
             // Very odd bug fails first time then passes
         }
 
@@ -285,8 +285,8 @@ public class TestahUtil {
             TS.log().trace("downloadFileDirectory mkdirs: " + destinationDir.mkdirs());
             final File fileDownLoaded = File.createTempFile("download", "", destinationDir);
             final byte[] fileBytes = TS.http().doGet(urlToUse).getResponseBytes();
-            try (FileOutputStream fileOuputStream = new FileOutputStream(fileDownLoaded)) {
-                fileOuputStream.write(fileBytes);
+            try (FileOutputStream fileOutputStream = new FileOutputStream(fileDownLoaded)) {
+                fileOutputStream.write(fileBytes);
             }
             return fileDownLoaded;
         } catch (final Exception e) {

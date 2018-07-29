@@ -103,7 +103,7 @@ public class StrongSwanClient {
 
         final File socketFile = new File(getSocketFullPath());
         if (!socketFile.exists()) {
-            throw new IOException("Mising socket file:" + getSocketFullPath());
+            throw new IOException("Missing socket file:" + getSocketFullPath());
         }
 
         final AFUNIXSocket sock = AFUNIXSocket.newInstance();

@@ -24,7 +24,7 @@ public class ConsumeEventStream {
     private final String url;
     private String chunkType = "text/event-stream";
     private int waitTimeout = 120;
-    private final Long intervailTime = 1000L;
+    private final Long intervalTime = 1000L;
     private ObjectMapper map = null;
     private List<String> rawMessages = new ArrayList<String>();
     private boolean verbose;
@@ -128,7 +128,7 @@ public class ConsumeEventStream {
                     TS.log().warn(String.format(TIMEOUT_MSG, getWaitTimeout()));
                 }
             }
-            TS.util().pause(getIntervailTime(), "Waiting for SseFeature", ctr);
+            TS.util().pause(getIntervalTime(), "Waiting for SseFeature", ctr);
         }
         if (isVerbose()) {
             printRawMessages();
@@ -215,12 +215,12 @@ public class ConsumeEventStream {
     }
 
     /**
-     * Gets intervail time.
+     * Gets interval time.
      *
-     * @return the intervail time
+     * @return the interval time
      */
-    public Long getIntervailTime() {
-        return intervailTime;
+    public Long getIntervalTime() {
+        return intervalTime;
     }
 
     /**
