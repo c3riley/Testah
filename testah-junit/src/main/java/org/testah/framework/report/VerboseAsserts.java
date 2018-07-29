@@ -177,7 +177,7 @@ public class VerboseAsserts {
      * @param expectedSize               the expected size
      * @return true, if successful
      */
-    public boolean sizeEquals(final String message, final String objectToCheckSizeOrLengthOf, final int expectedSize) {
+    public boolean sizeEquals(final String message, final Object objectToCheckSizeOrLengthOf, final int expectedSize) {
         return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLengthOf
                 + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLengthOf), expectedSize);
     }

@@ -71,7 +71,8 @@ public class AssertStrings {
                 }
                 ctr++;
             }
-            for (int actualLinesMoreThanExpected = ctr; actualLinesMoreThanExpected < actualLineArray.length; actualLinesMoreThanExpected++) {
+            for (int actualLinesMoreThanExpected = ctr; actualLinesMoreThanExpected < actualLineArray.length;
+                 actualLinesMoreThanExpected++) {
                 verboseAsserts.equalsTo(String.format("Checking File Lines[%d] are equal", (actualLinesMoreThanExpected + 1)),
                         "NO_LINE[" + actualLinesMoreThanExpected + "]_IN_EXPECTED_FILE",
                         actualLineArray[ctr++]);
@@ -114,21 +115,21 @@ public class AssertStrings {
         if (null != expected && null != actual) {
             final char[] expectedArray = expected.toCharArray();
             final char[] actualArray = actual.toCharArray();
-            final StringBuilder sb = new StringBuilder();
+            final StringBuilder strBuilder = new StringBuilder();
             int maxIndex = expectedArray.length > actualArray.length ? expectedArray.length : actualArray.length;
             String expectedChar;
             String actualChar;
-            for (int i = 0; i < maxIndex; i++) {
-                expectedChar = getChar(i, expectedArray);
-                actualChar = getChar(i, actualArray);
+            for (int ctr = 0; ctr < maxIndex; ctr++) {
+                expectedChar = getChar(ctr, expectedArray);
+                actualChar = getChar(ctr, actualArray);
 
                 if (StringUtils.equals(expectedChar, actualChar)) {
-                    sb.append(expectedChar + " == " + actualChar + "\n");
+                    strBuilder.append(expectedChar + " == " + actualChar + "\n");
                 } else {
-                    sb.append(expectedChar + " != " + actualChar + "  <error found>\n");
+                    strBuilder.append(expectedChar + " != " + actualChar + "  <error found>\n");
                 }
             }
-            return sb.toString();
+            return strBuilder.toString();
         }
         return null;
     }

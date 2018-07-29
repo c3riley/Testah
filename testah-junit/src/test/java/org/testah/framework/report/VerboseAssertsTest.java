@@ -16,7 +16,7 @@ public class VerboseAssertsTest {
 
     @Before
     public void setUp() throws Exception {
-        va = new VerboseAsserts().onlyVerfiy();
+        va = new VerboseAsserts().onlyVerify();
     }
 
     @After
@@ -633,7 +633,7 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void onlyVerfiy() {
+    public void onlyVerify() {
     }
 
     @Test
