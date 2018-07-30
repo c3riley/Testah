@@ -105,7 +105,7 @@ public class AssertStrings {
 
     /**
      * Gets easy to debug string for string differences. This will generate a message with a line per
-     * char compare and char ashii number to help see the difference, even for hidden control characters.
+     * char compare and char ascii number to help see the difference, even for hidden control characters.
      *
      * @param expected the expected
      * @param actual   the actual
@@ -120,8 +120,8 @@ public class AssertStrings {
             String expectedChar;
             String actualChar;
             for (int ctr = 0; ctr < maxIndex; ctr++) {
-                expectedChar = getChar(ctr, expectedArray);
-                actualChar = getChar(ctr, actualArray);
+                expectedChar = getCharWithAsciiForDebug(ctr, expectedArray);
+                actualChar = getCharWithAsciiForDebug(ctr, actualArray);
 
                 if (StringUtils.equals(expectedChar, actualChar)) {
                     strBuilder.append(expectedChar + " == " + actualChar + "\n");
@@ -141,7 +141,7 @@ public class AssertStrings {
      * @param charArray the char array
      * @return the char
      */
-    public String getChar(final int index, final char[] charArray) {
+    public String getCharWithAsciiForDebug(final int index, final char[] charArray) {
         if (index < charArray.length) {
             return "[ " + CharUtils.toString(charArray[index]) + " ] char[" + (int) charArray[index] + "]";
         }
