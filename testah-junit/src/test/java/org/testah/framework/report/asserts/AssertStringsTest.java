@@ -70,8 +70,8 @@ public class AssertStringsTest {
     @Test
     public void testWithSomeSameLinesAndSomeDifferentLinesSameNumberOfLines()
     {
-        assertStrings.deepAssert(getStringUsedWithNumberOfLines(testLineA, 5) +
-                getStringUsedWithNumberOfLines(testLineB, 2)
+        assertStrings.deepAssert(getStringUsedWithNumberOfLines(testLineA, 5)
+                + getStringUsedWithNumberOfLines(testLineB, 2)
                 + getStringUsedWithNumberOfLines(testLineA, 3), getStringUsedWithNumberOfLines(testLineB, 10));
     }
 
@@ -94,8 +94,8 @@ public class AssertStringsTest {
     @Test
     public void testDiffBetweenStrings()
     {
-        final String expected = "POOLED FUNDS RETURNS BY ASSET CLASS,,,,,,,,,,,,,,,,,";
-        final String actual = "\tPOOLED FUNDS RETURNS BY ASSET CLASS,,,,,,,,,,,,,,,,,";
+        final String expected = " CLASS,,,,,,,,,,,,,,,,,";
+        final String actual = "\t CLASS,,,,,,,,,,,,,,,,,";
 
         String diffString = assertStrings.getEasyToDebugStringForStringDifferences(expected, actual);
         System.out.println(diffString);
