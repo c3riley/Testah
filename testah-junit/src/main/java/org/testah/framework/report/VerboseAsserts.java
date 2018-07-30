@@ -1636,9 +1636,11 @@ public class VerboseAsserts {
      * @return true, if is empty
      */
     public boolean isEmpty(final String message, final Object objectToCheck) {
-        Assert.assertNotNull(message, objectToCheck);
-        final Boolean actual = isEmpty(objectToCheck);
-        return isTrue(message + " - Is Empty[" + objectToCheck + "]", actual);
+        if(notNull(message, objectToCheck)) {
+            final Boolean actual = isEmpty(objectToCheck);
+            return isTrue(message + " - Is Empty[" + objectToCheck + "]", actual);
+        }
+        return false;
     }
 
     /**
@@ -1678,9 +1680,11 @@ public class VerboseAsserts {
      * @return true, if is not empty
      */
     public boolean isNotEmpty(final String message, final Object objectToCheck) {
-        Assert.assertNotNull(message, objectToCheck);
-        final Boolean actual = isEmpty(objectToCheck);
-        return isFalse(message + " - Is Empty", actual);
+        if(notNull(message, objectToCheck)) {
+            final Boolean actual = isEmpty(objectToCheck);
+            return isFalse(message + " - Is Empty", actual);
+        }
+        return false;
     }
 
 

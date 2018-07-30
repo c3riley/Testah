@@ -5,10 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class VerboseAssertsTest {
 
@@ -557,10 +554,49 @@ public class VerboseAssertsTest {
 
     @Test
     public void isEmpty() {
+
+        Assert.assertTrue(va.isEmpty("String", ""));
+        Assert.assertTrue(va.isEmpty("String array", new String[]{}));
+        Assert.assertTrue(va.isEmpty("HashMap", new HashMap<String, String>()));
+        Assert.assertTrue(va.isEmpty("HashSet", new HashSet<String>()));
+        Assert.assertTrue(va.isEmpty("String List", new ArrayList<String>()));
+
+        Assert.assertFalse(va.isEmpty("null", null));
+        Assert.assertFalse(va.isEmpty("String", " "));
+        Assert.assertFalse(va.isEmpty("String", "Not Empty"));
+        Assert.assertFalse(va.isEmpty("String array", new String[]{""}));
+        HashMap<String, String> tempHashMap = new HashMap<>();
+        tempHashMap.put("item", "1");
+        Assert.assertFalse(va.isEmpty("HashMap", tempHashMap));
+        Set<String> tempHashSet = new HashSet<String>();
+        tempHashSet.add("item");
+        Assert.assertFalse(va.isEmpty("HashSet", tempHashSet));
+        List<String> tempList = new ArrayList<String>();
+        tempList.add("item");
+        Assert.assertFalse(va.isEmpty("String List", tempList));
     }
 
     @Test
     public void isNotEmpty() {
+        Assert.assertFalse(va.isNotEmpty("String", ""));
+        Assert.assertFalse(va.isNotEmpty("String array", new String[]{}));
+        Assert.assertFalse(va.isNotEmpty("HashMap", new HashMap<String, String>()));
+        Assert.assertFalse(va.isNotEmpty("HashSet", new HashSet<String>()));
+        Assert.assertFalse(va.isNotEmpty("String List", new ArrayList<String>()));
+        Assert.assertFalse(va.isNotEmpty("null", null));
+
+        Assert.assertTrue(va.isNotEmpty("String", " "));
+        Assert.assertTrue(va.isNotEmpty("String", "Not Empty"));
+        Assert.assertTrue(va.isNotEmpty("String array", new String[]{""}));
+        HashMap<String, String> tempHashMap = new HashMap<>();
+        tempHashMap.put("item", "1");
+        Assert.assertTrue(va.isNotEmpty("HashMap", tempHashMap));
+        Set<String> tempHashSet = new HashSet<String>();
+        tempHashSet.add("item");
+        Assert.assertTrue(va.isNotEmpty("HashSet", tempHashSet));
+        List<String> tempList = new ArrayList<String>();
+        tempList.add("item");
+        Assert.assertTrue(va.isNotEmpty("String List", tempList));
     }
 
     private HashMap<Number, Number> getNumberData() {
