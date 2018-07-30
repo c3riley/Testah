@@ -94,13 +94,13 @@ public class AssertStringsTest {
     @Test
     public void testDiffBetweenStrings()
     {
-        final String expected = " CLASS,,,,,,,,,,,,,,,,,";
-        final String actual = "\t CLASS,,,,,,,,,,,,,,,,,";
+        final String expected = "CLASS,,,,,,,,,,,,,,,,,";
+        final String actual = "\tCLASS,,,,,,,,,,,,,,,,,";
 
         String diffString = assertStrings.getEasyToDebugStringForStringDifferences(expected, actual);
         System.out.println(diffString);
         Assert.assertEquals("Check 1st line with expected difference",
-                diffString.split("\n")[0], "[ P ] char[80] != [ \t ] char[9]  <error found>");
+                diffString.split("\n")[0], "[ C ] char[67] != [ \t ] char[9]  <error found>");
     }
 
     private String getStringUsedWithNumberOfLines(final String lineValue, final int numberOfLines)
