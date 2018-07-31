@@ -3,7 +3,7 @@ package org.testah.runner;
 import akka.actor.*;
 import org.testah.TS;
 import org.testah.driver.http.AbstractHttpWrapper;
-import org.testah.driver.http.HttpWrapperV1;
+import org.testah.driver.http.HttpWrapperV2;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.http.load.HttpActor;
@@ -50,18 +50,17 @@ public class HttpAkkaRunner {
      * @return the list
      */
     public List<ResponseDto> runAndReport(final int numConcurrent, final AbstractRequestDto<?> request,
-                                          final int numOfRequestsToMake)
-    {
+                                          final int numOfRequestsToMake) {
         final List<ResponseDto> responses = runTests(numConcurrent, request, numOfRequestsToMake);
         if (TS.http().isVerbose()) {
             int responseCount = 1;
             for (final ResponseDto response : responses) {
                 TS.log().info(String.format(rptInfo,
-                                responseCount++,
-                                response.getStatusCode(),
-                                response.getStatusText(),
-                                TS.util().toDateString(response.getStart()),
-                                TS.util().toDateString(response.getEnd())));
+                        responseCount++,
+                        response.getStatusCode(),
+                        response.getStatusText(),
+                        TS.util().toDateString(response.getStart()),
+                        TS.util().toDateString(response.getEnd())));
             }
         }
         TS.util().toJsonPrint(new HttpAkkaStats(responses));
@@ -78,18 +77,17 @@ public class HttpAkkaRunner {
      */
     public List<ResponseDto> runAndReport(final int numConcurrent,
                                           final ConcurrentLinkedQueue<?> concurrentLinkedQueue,
-                                          boolean isVerbose)
-    {
+                                          boolean isVerbose) {
         final List<ResponseDto> responses = runTests(numConcurrent, concurrentLinkedQueue, isVerbose);
         if (isVerbose) {
             int responseCount = 1;
             for (final ResponseDto response : responses) {
                 TS.log().info(String.format(rptInfo,
-                    responseCount++,
-                    response.getStatusCode(),
-                    response.getStatusText(),
-                    TS.util().toDateString(response.getStart()),
-                    TS.util().toDateString(response.getEnd())));
+                        responseCount++,
+                        response.getStatusCode(),
+                        response.getStatusText(),
+                        TS.util().toDateString(response.getStart()),
+                        TS.util().toDateString(response.getEnd())));
             }
         }
         return responses;
@@ -104,8 +102,7 @@ public class HttpAkkaRunner {
      * @return the list
      */
     public List<ResponseDto> runTests(final int numConcurrent, final AbstractRequestDto<?> request,
-                                      final int numOfRequestsToMake)
-    {
+                                      final int numOfRequestsToMake) {
         final Long hashId = Thread.currentThread().getId();
         try {
             if (null == request) {
@@ -113,7 +110,7 @@ public class HttpAkkaRunner {
                 return null;
             }
 
-            httpWrapper = new HttpWrapperV1();
+            httpWrapper = new HttpWrapperV2();
             httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
 
             final ActorSystem system = ActorSystem.create("HttpAkkaRunner");
@@ -158,7 +155,7 @@ public class HttpAkkaRunner {
                 return null;
             }
             numOfRequestsToMake = concurrentLinkedQueue.size();
-            httpWrapper = new HttpWrapperV1();
+            httpWrapper = new HttpWrapperV2();
             httpWrapper.setVerbose(isVerbose);
             httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
 
@@ -193,7 +190,7 @@ public class HttpAkkaRunner {
      */
     public AbstractHttpWrapper getHttpWrapper() {
         if (null == httpWrapper) {
-            final AbstractHttpWrapper httpWrapperTmp = new HttpWrapperV1();
+            final AbstractHttpWrapper httpWrapperTmp = new HttpWrapperV2();
             httpWrapperTmp.setVerbose(false);
             httpWrapperTmp.setConnectManagerDefaultPooling().setHttpClient();
             httpWrapper = httpWrapperTmp;

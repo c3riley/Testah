@@ -3,7 +3,7 @@ package org.testah;
 import org.apache.logging.log4j.Logger;
 import org.testah.client.dto.StepActionDto;
 import org.testah.driver.http.AbstractHttpWrapper;
-import org.testah.driver.http.HttpWrapperV1;
+import org.testah.driver.http.HttpWrapperV2;
 import org.testah.driver.web.browser.AbstractBrowser;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.cli.Params;
@@ -206,7 +206,7 @@ public class TS {
      */
     public static AbstractHttpWrapper http() {
         if (null == _http || null == _http.get()) {
-            TS.setHttp(new HttpWrapperV1());
+            TS.setHttp(new HttpWrapperV2());
         }
         return _http.get();
     }

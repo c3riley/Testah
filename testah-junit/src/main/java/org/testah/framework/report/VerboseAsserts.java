@@ -10,6 +10,7 @@ import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1671,22 +1672,87 @@ public class VerboseAsserts {
         return isFalse(message + " - Is Empty", actual);
     }
 
+
     /**
-     * Checks if is greater than.
+     * Is greater than or equal to boolean.
      *
      * @param message              the message
      * @param valueToBeGreaterThan the value to be greater than
      * @param actual               the actual
-     * @return true, if is greater than
+     * @return the boolean
      */
-    public boolean isGreaterThan(String message, final int valueToBeGreaterThan, final int actual) {
+    public boolean isGreaterThanOrEqualTo(String message, final Number valueToBeGreaterThan, final Number actual) {
+        return isGreaterThan(message, valueToBeGreaterThan, actual, true);
+    }
+
+
+    /**
+     * Is greater than or equal to boolean.
+     *
+     * @param message              the message
+     * @param valueToBeGreaterThan the value to be greater than
+     * @param actual               the actual
+     * @return the boolean
+     */
+    public boolean isGreaterThanOrEqualTo(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual) {
+        return isGreaterThan("", valueToBeGreaterThan, actual, true);
+
+    }
+
+    /**
+     * Is greater than boolean.
+     *
+     * @param message              the message
+     * @param valueToBeGreaterThan the value to be greater than
+     * @param actual               the actual
+     * @param allowEqualTo         the allow equal to
+     * @return the boolean
+     */
+    public boolean isGreaterThan(String message, final Number valueToBeGreaterThan, final Number actual, final boolean allowEqualTo) {
+        return isGreaterThan(message, new BigDecimal(valueToBeGreaterThan.toString()), new BigDecimal(actual.toString()), allowEqualTo);
+    }
+
+    /**
+     * Is greater than boolean.
+     *
+     * @param message              the message
+     * @param valueToBeGreaterThan the value to be greater than
+     * @param actual               the actual
+     * @return the boolean
+     */
+    public boolean isGreaterThan(String message, final Number valueToBeGreaterThan, final Number actual) {
+        return isGreaterThan(message, valueToBeGreaterThan, actual, false);
+    }
+
+    /**
+     * Is greater than boolean.
+     *
+     * @param message              the message
+     * @param valueToBeGreaterThan the value to be greater than
+     * @param actual               the actual
+     * @return the boolean
+     */
+    public boolean isGreaterThan(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual) {
+        return isGreaterThan("", valueToBeGreaterThan, actual, false);
+    }
+
+    private boolean isGreaterThan(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual,
+                                  final boolean allowEqualTo) {
+        String assertMethod = (allowEqualTo ? "isGreaterThanOrEqualTo" : "isGreaterThan");
         try {
-            message = message + " - actual[" + actual + "] is greater than " + valueToBeGreaterThan;
-            Assert.assertTrue(message,
-                    valueToBeGreaterThan < actual);
-            return addAssertHistory(message, true, "isGreaterThan", valueToBeGreaterThan, actual);
+
+            notNull("Check valueToBeGreaterThan is not null", valueToBeGreaterThan);
+            notNull("Check actual is not null", actual);
+
+            message = message + " - actual[" + actual.toPlainString() + "] " + assertMethod + " " + valueToBeGreaterThan.toPlainString();
+            if (allowEqualTo) {
+                Assert.assertTrue(message, actual.compareTo(valueToBeGreaterThan) >= 0);
+            } else {
+                Assert.assertTrue(message, actual.compareTo(valueToBeGreaterThan) > 0);
+            }
+            return addAssertHistory(message, true, assertMethod, valueToBeGreaterThan, actual);
         } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory(message, false, "isGreaterThan", valueToBeGreaterThan, actual, e);
+            final boolean rtn = addAssertHistory(message, false, assertMethod, valueToBeGreaterThan, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
@@ -1695,21 +1761,94 @@ public class VerboseAsserts {
     }
 
     /**
-     * Checks if is less than.
+     * Is less than or equal to boolean.
      *
      * @param message           the message
      * @param valueToBeLessThan the value to be less than
      * @param actual            the actual
-     * @return true, if is less than
+     * @return the boolean
      */
-    public boolean isLessThan(String message, final int valueToBeLessThan, final int actual) {
+    public boolean isLessThanOrEqualTo(String message, final Number valueToBeLessThan, final Number actual) {
+        return isLessThan(message, valueToBeLessThan, actual, true);
+    }
+
+
+    /**
+     * Is less than or equal to boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @return the boolean
+     */
+    public boolean isLessThanOrEqualTo(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual) {
+        return isLessThan(message, valueToBeLessThan, actual, true);
+    }
+
+    /**
+     * Is less than boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @return the boolean
+     */
+    public boolean isLessThan(String message, final Number valueToBeLessThan, final Number actual) {
+        return isLessThan(message, valueToBeLessThan, actual, false);
+    }
+
+
+    /**
+     * Is less than boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @param allowEqualTo      the allow equal to
+     * @return the boolean
+     */
+    public boolean isLessThan(String message, final Number valueToBeLessThan, final Number actual, final boolean allowEqualTo) {
+        return isLessThan(message, new BigDecimal(valueToBeLessThan.toString()), new BigDecimal(actual.toString()), allowEqualTo);
+    }
+
+    /**
+     * Is less than boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @return the boolean
+     */
+    public boolean isLessThan(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual) {
+        return isLessThan(message, valueToBeLessThan, actual, false);
+    }
+
+
+    /**
+     * Is less than boolean.
+     *
+     * @param message           the message
+     * @param valueToBeLessThan the value to be less than
+     * @param actual            the actual
+     * @param allowEqualTo      the allow equal to
+     * @return the boolean
+     */
+    public boolean isLessThan(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual, final boolean allowEqualTo) {
+        String assertMethod = (allowEqualTo ? "isLessThanOrEqualTo" : "isLessThan");
+
+        notNull("Check valueToBeLessThan is not null", valueToBeLessThan);
+        notNull("Check actual is not null", actual);
+
         try {
-            message = message + " - actual[" + actual + "] is less than " + valueToBeLessThan;
-            Assert.assertTrue(message,
-                    valueToBeLessThan > actual);
-            return addAssertHistory(message, true, "isLessThan", valueToBeLessThan, actual);
+            message = message + " - actual[" + actual.toPlainString() + "] " + assertMethod + " " + valueToBeLessThan.toPlainString();
+            if (allowEqualTo) {
+                Assert.assertTrue(message, actual.compareTo(valueToBeLessThan) <= 0);
+            } else {
+                Assert.assertTrue(message, actual.compareTo(valueToBeLessThan) < 0);
+            }
+            return addAssertHistory(message, true, assertMethod, valueToBeLessThan, actual);
         } catch (final AssertionError e) {
-            final boolean rtn = addAssertHistory(message, false, "isLessThan", valueToBeLessThan, actual, e);
+            final boolean rtn = addAssertHistory(message, false, assertMethod, valueToBeLessThan, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
@@ -1722,7 +1861,6 @@ public class VerboseAsserts {
      *
      * @return true, if successful
      */
-
     public boolean pass() {
         return pass("");
     }

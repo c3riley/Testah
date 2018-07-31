@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder( {
-    LoadTestSequenceDto.PARAM_STEP,
-    LoadTestSequenceDto.PARAM_THREADS,
-    LoadTestSequenceDto.PARAM_CHUNK_SIZE,
-    LoadTestSequenceDto.PARAM_DURATION_MINUTES
+@JsonPropertyOrder({
+        LoadTestSequenceDto.PARAM_STEP,
+        LoadTestSequenceDto.PARAM_THREADS,
+        LoadTestSequenceDto.PARAM_CHUNK_SIZE,
+        LoadTestSequenceDto.PARAM_DURATION_MINUTES
 })
 public class LoadTestSequenceDto {
 

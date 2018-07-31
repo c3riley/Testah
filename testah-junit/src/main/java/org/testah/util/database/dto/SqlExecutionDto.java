@@ -16,6 +16,7 @@ public class SqlExecutionDto {
 
     /**
      * Constructor.
+     *
      * @param sql SQL string
      */
     public SqlExecutionDto(final String sql) {
@@ -24,6 +25,7 @@ public class SqlExecutionDto {
 
     /**
      * Mark the start of the SQL execution.
+     *
      * @return this object
      */
     public SqlExecutionDto start() {
@@ -33,6 +35,7 @@ public class SqlExecutionDto {
 
     /**
      * Mark the end to the SQL execution.
+     *
      * @return this object
      */
     public SqlExecutionDto end() {
@@ -44,6 +47,7 @@ public class SqlExecutionDto {
 
     /**
      * Get the start date/time.
+     *
      * @return the start date/time
      */
     public Date getStartTime() {
@@ -52,6 +56,7 @@ public class SqlExecutionDto {
 
     /**
      * Set the start date/time.
+     *
      * @param startTime the start date/time
      * @return this object
      */
@@ -62,6 +67,7 @@ public class SqlExecutionDto {
 
     /**
      * Get the end date/time.
+     *
      * @return the end date.
      */
     public Date getEndTime() {
@@ -70,6 +76,7 @@ public class SqlExecutionDto {
 
     /**
      * Set the end time.
+     *
      * @param endTime the end date
      * @return this object
      */
@@ -80,6 +87,7 @@ public class SqlExecutionDto {
 
     /**
      * Get the duration.
+     *
      * @return the duration
      */
     public Long getDuration() {
@@ -88,6 +96,7 @@ public class SqlExecutionDto {
 
     /**
      * Set the duration.
+     *
      * @param duration the duration
      * @return this object
      */
@@ -98,6 +107,7 @@ public class SqlExecutionDto {
 
     /**
      * Get the duration in readable format.
+     *
      * @return the duration
      */
     public String getDurationPretty() {
@@ -106,6 +116,7 @@ public class SqlExecutionDto {
 
     /**
      * Set the duration.
+     *
      * @param durationPretty the duration
      * @return this object
      */
@@ -116,6 +127,7 @@ public class SqlExecutionDto {
 
     /**
      * Get the SQL string.
+     *
      * @return the SQL string
      */
     public String getSql() {
@@ -124,6 +136,7 @@ public class SqlExecutionDto {
 
     /**
      * Get the result count.
+     *
      * @return the result count
      */
     public Integer getResultCount() {
@@ -132,6 +145,7 @@ public class SqlExecutionDto {
 
     /**
      * Set the result count.
+     *
      * @param resultCount the result count
      * @return this object
      */
@@ -142,6 +156,7 @@ public class SqlExecutionDto {
 
     /**
      * Get the update count.
+     *
      * @return update count
      */
     public Integer getUpdateCount() {
@@ -150,6 +165,7 @@ public class SqlExecutionDto {
 
     /**
      * Set the update count.
+     *
      * @param updateCount the count
      * @return this object
      */

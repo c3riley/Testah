@@ -139,7 +139,7 @@ public class TestBrowser extends BrowserTestPlan {
     }
 
     @Test
-    @TestCase(name = "test2")
+    @TestCase(name = "test2", runTypes = "FIREFOX")
     public void testFirefox() {
 
         final FirefoxBrowser b = new FirefoxBrowser();

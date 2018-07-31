@@ -237,6 +237,7 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
 
     /**
      * Get test status enum.
+     *
      * @return test status enum
      */
     public TestStatus getStatusEnum() {

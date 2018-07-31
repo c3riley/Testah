@@ -24,9 +24,10 @@ public class HttpActor extends UntypedActor {
 
     /**
      * Constructor.
-     * @param nrOfWorkers number of Akka workers
+     *
+     * @param nrOfWorkers   number of Akka workers
      * @param numOfAttempts number of attempts
-     * @param hashId Akka actor hash
+     * @param hashId        Akka actor hash
      */
     public HttpActor(final int nrOfWorkers, final int numOfAttempts, final Long hashId) {
         this.hashId = hashId;
@@ -34,11 +35,12 @@ public class HttpActor extends UntypedActor {
         this.nrOfWorkers = nrOfWorkers;
         this.numOfAttempts = numOfAttempts;
         workerRouter = this.getContext()
-            .actorOf(new Props(HttpWorker.class).withRouter(new RoundRobinRouter(nrOfWorkers)), "workerRouter");
+                .actorOf(new Props(HttpWorker.class).withRouter(new RoundRobinRouter(nrOfWorkers)), "workerRouter");
     }
 
     /**
      * Implementation of UntypedActor.onReceiver(...).
+     *
      * @see akka.actor.UntypedActor#onReceive(java.lang.Object)
      */
     @SuppressWarnings("unchecked")
@@ -85,6 +87,7 @@ public class HttpActor extends UntypedActor {
 
     /**
      * Get the responses for a particular Akka actor.
+     *
      * @param hashId of Akka actor
      * @return list of responses
      */
@@ -98,6 +101,7 @@ public class HttpActor extends UntypedActor {
 
     /**
      * Get responses per Akka actor hash.
+     *
      * @return map of hash id to list of responses.
      */
     public static HashMap<Long, List<ResponseDto>> getResults() {

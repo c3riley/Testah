@@ -20,7 +20,7 @@ public class WebElementWrapperV1 extends AbstractWebElementWrapper {
         super(by, webElement, driver);
     }
 
-    protected AbstractWebElementWrapper getSelf() {
+    protected WebElementWrapperV1 getSelf() {
         return this;
     }
 

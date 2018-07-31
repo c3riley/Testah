@@ -1,0 +1,68 @@
+# Java Gradle CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8u171-jdk-node-browsers
+      
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: selenoid/chrome
+      - image: selenium/standalone-chrome:3.1.0
+    working_directory: ~/repo
+
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+    
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      #- run: cd testah-junit && ./gradlew dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+          
+      - run: mkdir test-reports
+      # - run:
+      #    name: Download Selenium
+      #    command: |
+      #      curl -O http://selenium-release.storage.googleapis.com/3.5/selenium-server-standalone-3.5.3.jar
+      # - run:
+      #    name: Start Selenium
+      #    command: |
+      #      java -jar selenium-server-standalone-3.5.3.jar -log test-reports/selenium.log
+      #    background: true  
+      # - run: cat test-reports/selenium.log
+      # - run: docker run -d --name selenoid -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`/config/:/etc/selenoid/:ro aerokube/selenoid:latest-release
+      # - run: curl http://localhost:4444/status  
+      # run tests!
+      
+      - run: echo param_usefilterSchema=DEFAULT > testah-junit/testah.properties
+      - run: echo filter_DEFAULT_filterByRunType=~FIREFOX >> testah-junit/testah.properties
+      - run: echo filter_DEFAULT_filterByTestType=AUTOMATED >> testah-junit/testah.properties
+      
+      - run: cd testah-junit && ./gradlew build
+
+      - type: store_artifacts
+        path: /home/circleci/repo/testah-junit/testah.log
+      
+      # Save artifacts
+      - type: store_test_results
+        path: /home/circleci/repo/testah-junit/build/reports/tests/test/index.html
+
+          

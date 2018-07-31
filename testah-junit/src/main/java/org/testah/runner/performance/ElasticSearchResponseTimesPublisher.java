@@ -49,8 +49,7 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
                                                String type,
                                                String username,
                                                String password,
-                                               TestRunProperties runProps)
-    {
+                                               TestRunProperties runProps) {
         this.password = password;
         this.index = index;
         this.baseUrl = baseUrl;
@@ -80,35 +79,35 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
                 setStartTime(response.getStart());
                 setEndTime(response.getEnd());
                 payloadBuilder
-                    .append(bulkCreateString)
-                    .append(String.format("%s%n", mapper.writeValueAsString(
-                        new RequestExecutionDuration(TYPE_SINGLE_REQUEST)
-                            .setCollectionTime(collectionTime)
-                            .setDomain(runProps.getDomain())
-                            .setDuration(response.getDuration())
-                            .setService(runProps.getServiceUnderTest())
-                            .setTestClass(runProps.getTestClass())
-                            .setTestMethod(runProps.getTestMethod())
-                            // Always use server time (GMT)
-                            .setTimestamp(getDateTimeString(response.getStart(), zoneId))
-                            .setStatusCode(response.getStatusCode())
-                    )));
+                        .append(bulkCreateString)
+                        .append(String.format("%s%n", mapper.writeValueAsString(
+                                new RequestExecutionDuration(TYPE_SINGLE_REQUEST)
+                                        .setCollectionTime(collectionTime)
+                                        .setDomain(runProps.getDomain())
+                                        .setDuration(response.getDuration())
+                                        .setService(runProps.getServiceUnderTest())
+                                        .setTestClass(runProps.getTestClass())
+                                        .setTestMethod(runProps.getTestMethod())
+                                        // Always use server time (GMT)
+                                        .setTimestamp(getDateTimeString(response.getStart(), zoneId))
+                                        .setStatusCode(response.getStatusCode())
+                        )));
             } catch (JsonProcessingException e) {
                 TS.log().info(e);
             }
         });
 
         payloadBuilder
-            .append(bulkCreateString)
-            .append(String.format("%s%n", mapper.writeValueAsString(
-                new RequestExecutionDuration(TYPE_CHUNK_OF_REQUESTS)
-                    .setTimestamp(collectionTime)
-                    .setDomain(runProps.getDomain())
-                    .setDuration(endTime - startTime)
-                    .setService(runProps.getServiceUnderTest())
-                    .setTestClass(runProps.getTestClass())
-                    .setTestMethod(runProps.getTestMethod()))
-            ));
+                .append(bulkCreateString)
+                .append(String.format("%s%n", mapper.writeValueAsString(
+                        new RequestExecutionDuration(TYPE_CHUNK_OF_REQUESTS)
+                                .setTimestamp(collectionTime)
+                                .setDomain(runProps.getDomain())
+                                .setDuration(endTime - startTime)
+                                .setService(runProps.getServiceUnderTest())
+                                .setTestClass(runProps.getTestClass())
+                                .setTestMethod(runProps.getTestMethod()))
+                ));
 
         PostRequestDto postRequestDto = new PostRequestDto(getUploadUrl(), payloadBuilder.toString());
         postRequestDto.setBasicAuthCredentials(username, password).withJson();
@@ -215,7 +214,7 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
     public static String getDateTimeString(LocalDateTime dateTime, ZoneOffset zoneOffset) {
         if (zoneOffset != null) {
             return ZonedDateTime.of(dateTime,
-                ZoneId.systemDefault()).withZoneSameInstant(zoneOffset).toLocalDateTime().format(dateTimeFormatter);
+                    ZoneId.systemDefault()).withZoneSameInstant(zoneOffset).toLocalDateTime().format(dateTimeFormatter);
         } else {
             return dateTime.format(dateTimeFormatter);
         }
@@ -233,8 +232,7 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
     }
 
     @Override
-    public void cleanup()
-    {
+    public void cleanup() {
         // no post processing required
     }
 }

@@ -1,18 +1,8 @@
 package org.testah.framework.testPlan;
 
-import org.junit.AfterClass;
-import org.junit.Assume;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.Test.None;
-import org.junit.rules.ExternalResource;
-import org.junit.rules.RuleChain;
-import org.junit.rules.TestName;
-import org.junit.rules.TestRule;
-import org.junit.rules.TestWatcher;
-import org.junit.rules.Timeout;
+import org.junit.rules.*;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.slf4j.MDC;
@@ -221,6 +211,9 @@ public abstract class AbstractTestPlan {
 
         protected void starting(final Description desc) {
             if (!didTestPlanStart()) {
+
+                setUpThreadLocals();
+
                 TS.log().info("TESTPLAN started:" + desc.getTestClass().getName() + " - thread[" + Thread.currentThread().getId() + "]");
                 final TestPlan testPlan = desc.getTestClass().getAnnotation(TestPlan.class);
                 if (null == desc.getTestClass().getAnnotation(TestPlan.class)) {
@@ -266,6 +259,7 @@ public abstract class AbstractTestPlan {
      */
     @BeforeClass
     public static void setupAbstractTestPlan() {
+        setUpThreadLocals();
     }
 
     /**
@@ -717,13 +711,24 @@ public abstract class AbstractTestPlan {
     }
 
     /**
-     * Set up ThreadLocals.
+     * Sets up thread locals.
      */
     public static void setUpThreadLocals() {
-        testPlan = new ThreadLocal<>();
-        testCase = new ThreadLocal<>();
-        testStep = new ThreadLocal<>();
-        testPlanStart = new ThreadLocal<>();
-        ignoredTests = new ThreadLocal<>();
+        setUpThreadLocals(false);
+    }
+
+    /**
+     * Set up ThreadLocals.
+     *
+     * @param override the override
+     */
+    public static void setUpThreadLocals(final boolean override) {
+        if (override || !TestahJUnitRunner.isInUse()) {
+            testPlan = new ThreadLocal<>();
+            testCase = new ThreadLocal<>();
+            testStep = new ThreadLocal<>();
+            testPlanStart = new ThreadLocal<>();
+            ignoredTests = new ThreadLocal<>();
+        }
     }
 }

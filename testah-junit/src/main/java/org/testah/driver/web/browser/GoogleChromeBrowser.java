@@ -25,13 +25,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
      */
     private ChromeDriverService service = null;
 
-    /*
-     * (non-Javadoc).
-     *
-     * @see
-     * org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.
-     * selenium.remote.DesiredCapabilities).
-     */
+
     public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
         if (null == service) {
             return new ChromeDriver(capabilities);

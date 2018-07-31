@@ -12,7 +12,7 @@ public class ListUtil {
      *
      * @param list        the original list from which to compute the sublists
      * @param subListSize the size of the sublists
-     * @param <T> type of list elements
+     * @param <T>         type of list elements
      * @return list of sublists
      * @throws Exception when trying to create sublists that contain more elements than the original list
      */
@@ -36,7 +36,7 @@ public class ListUtil {
      * @param listOfSubLists list of sublists
      * @param sublist        the current sublist, initially empty.
      * @param subListSize    the size of the sublists
-     * @param <T> type of list elements
+     * @param <T>            type of list elements
      * @return list of sublists
      */
     private static <T> void getSublists(List<T> list, List<T> sublist, int subListSize, List<List<T>> listOfSubLists) {
@@ -62,7 +62,7 @@ public class ListUtil {
      * generated sublists is Sum(k=1..n) n!/((n-k)!*k!).
      *
      * @param list the original list
-     * @param <T> type of list elements
+     * @param <T>  type of list elements
      * @return the list of all sublists
      */
     public static <T> List<List<T>> getAllSublists(List<T> list) {

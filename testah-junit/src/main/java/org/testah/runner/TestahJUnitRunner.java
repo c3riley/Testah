@@ -5,14 +5,14 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.actor.UntypedActorFactory;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.testah.TS;
 import org.testah.framework.dto.ResultDto;
 import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.runner.testPlan.TestPlanActor;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The Class TestahJUnitRunner.
@@ -22,18 +22,37 @@ public class TestahJUnitRunner {
     private static boolean inUse = false;
 
     /**
-     * Run tests.
+     * Run tests list.
      *
      * @param numConcurrent        the num concurrent
      * @param junitTestPlanClasses the junit test plan classes
      * @return the list
      */
     public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> junitTestPlanClasses) {
+        return runTests(numConcurrent, junitTestPlanClasses, true);
+    }
+
+    /**
+     * Run tests.
+     *
+     * @param numConcurrent        the num concurrent
+     * @param junitTestPlanClasses the junit test plan classes
+     * @param onlyUniqueTests      the only unique tests
+     * @return the list
+     */
+    public List<ResultDto> runTests(final int numConcurrent, final List<Class<?>> junitTestPlanClasses, final boolean onlyUniqueTests) {
         setInUse(true);
-        if (null != junitTestPlanClasses) {
-            return runTests(numConcurrent, new HashSet<Class<?>>(junitTestPlanClasses));
+        try {
+            if (null != junitTestPlanClasses) {
+                if (onlyUniqueTests) {
+                    return runTestsInternal(numConcurrent, Lists.newArrayList(Sets.newHashSet(junitTestPlanClasses)));
+                } else {
+                    return runTestsInternal(numConcurrent, junitTestPlanClasses);
+                }
+            }
+        } finally {
+            setInUse(false);
         }
-        setInUse(false);
         return null;
     }
 
@@ -44,7 +63,7 @@ public class TestahJUnitRunner {
      * @param junitTestPlanClasses the junit test plan classes
      * @return the list
      */
-    private List<ResultDto> runTests(final int numConcurrent, final Set<Class<?>> junitTestPlanClasses) {
+    private List<ResultDto> runTestsInternal(final int numConcurrent, final List<Class<?>> junitTestPlanClasses) {
         try {
             if (null == junitTestPlanClasses || junitTestPlanClasses.size() == 0) {
                 TS.log().warn("No TestPlans Found to Run!");
@@ -62,7 +81,7 @@ public class TestahJUnitRunner {
 
             TestPlanActor.resetResults();
             //Setup thread locals to be used
-            AbstractTestPlan.setUpThreadLocals();
+            AbstractTestPlan.setUpThreadLocals(true);
 
             master.tell(junitTestPlanClasses, master);
 
@@ -80,6 +99,11 @@ public class TestahJUnitRunner {
         }
     }
 
+    /**
+     * Is in use boolean.
+     *
+     * @return the boolean
+     */
     public static boolean isInUse() {
         return inUse;
     }
@@ -87,5 +111,8 @@ public class TestahJUnitRunner {
     private static void setInUse(final boolean inUse) {
         TestahJUnitRunner.inUse = inUse;
         TestPlanActor.resetResults();
+        if (inUse) {
+            TestPlanActor.getResults();
+        }
     }
 }

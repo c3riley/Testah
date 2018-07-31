@@ -81,8 +81,7 @@ public abstract class AbstractWebElementWrapper {
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper assertAttributeValue(final String attributeName,
-                                                          final String attributeExpectedValue)
-    {
+                                                          final String attributeExpectedValue) {
         TS.asserts().equalsTo("assertAttributeValue", attributeExpectedValue, getAttribute(attributeName));
         return getSelf();
     }
@@ -218,7 +217,7 @@ public abstract class AbstractWebElementWrapper {
     public boolean elementIsOk(final String activity, final boolean autoReport) {
         if (null == getDriverWebElement()) {
             final String msg = "Unable to preform activity[" + activity + "], webelement[" + by
-                + "] is null and not availible.";
+                    + "] is null and not availible.";
             if (autoReport) {
                 TS.asserts().notNull(msg, webElement);
             } else {
@@ -266,7 +265,7 @@ public abstract class AbstractWebElementWrapper {
         } catch (final Exception e) {
             TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
         }
-        return this;
+        return getSelf();
     }
 
     /**
@@ -282,7 +281,7 @@ public abstract class AbstractWebElementWrapper {
         } catch (final Exception e) {
             TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
         }
-        return this;
+        return getSelf();
     }
 
     /**
@@ -389,8 +388,7 @@ public abstract class AbstractWebElementWrapper {
      * @return the elements with in
      */
     public List<AbstractWebElementWrapper> getElementsWithIn(final By locator, final boolean noWait,
-                                                             final boolean autoAssert)
-    {
+                                                             final boolean autoAssert) {
         assertFound();
         String error = "";
         for (int count = 1; count <= timeout; count++) {
@@ -407,7 +405,7 @@ public abstract class AbstractWebElementWrapper {
         }
         if (autoAssert) {
             TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
-                + "] - error: " + error, true, false);
+                    + "] - error: " + error, true, false);
         }
         return new ArrayList<>();
     }
@@ -441,8 +439,7 @@ public abstract class AbstractWebElementWrapper {
      * @return the element with in
      */
     public AbstractWebElementWrapper getElementWithIn(final By locator, final boolean noWait,
-                                                      final boolean autoAssert)
-    {
+                                                      final boolean autoAssert) {
         assertFound();
         String error = "";
         for (int count = 1; count <= timeout; count++) {
@@ -459,7 +456,7 @@ public abstract class AbstractWebElementWrapper {
         }
         if (autoAssert) {
             TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
-                + "] - error: " + error, true, false);
+                    + "] - error: " + error, true, false);
         }
         return null;
     }
@@ -482,8 +479,7 @@ public abstract class AbstractWebElementWrapper {
      * @return the list of webelements wrapped
      */
     public List<AbstractWebElementWrapper> getListOfWebelementsWrapped(final By locator,
-                                                                       final List<WebElement> webElements)
-    {
+                                                                       final List<WebElement> webElements) {
         final List<AbstractWebElementWrapper> lst = new ArrayList<>();
         if (null != webElements) {
             for (final WebElement e : webElements) {
@@ -529,8 +525,7 @@ public abstract class AbstractWebElementWrapper {
         String rtn = null;
         if (elementIsOk("getText", isAutoReport())) {
             if (webElement.getTagName().equalsIgnoreCase("input")
-                || webElement.getTagName().equalsIgnoreCase("textarea"))
-            {
+                    || webElement.getTagName().equalsIgnoreCase("textarea")) {
                 rtn = webElement.getAttribute("value");
             } else {
                 rtn = webElement.getText();
@@ -775,8 +770,7 @@ public abstract class AbstractWebElementWrapper {
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper waitTillAttributeEquals(final String attributeName, final String value,
-                                                             final int timeout)
-    {
+                                                             final int timeout) {
         for (int count = 1; count <= timeout; count++) {
             if (verifytAttributeValue(attributeName, value)) {
                 break;
@@ -789,7 +783,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Wait till gone will wait up to the timeout, default value pulled from Testah properties, for the element to no longer be found or be
      * displayed. Types of usecases where this would be called is if clicking a close button, and wait for it to go away before moving forward.
-     * 
+     *
      * <p>Once timeout is exceeded or the element is not found or not displated an assert will be triggered since this methods assumes you want it
      * to no longer to be found.
      *
@@ -802,7 +796,7 @@ public abstract class AbstractWebElementWrapper {
     /**
      * Wait till gone will wait up to the timeout for the element to no longer be found or be displayed. Types of usecases where this would be
      * called is if clicking a close button, and wait for it to go away before moving forward.
-     * 
+     *
      * <p>Once timeout is exceeded or the element is not found or not displated an assert will be triggered since this methods assumes you want it
      * to no longer to be found.
      *
@@ -915,7 +909,7 @@ public abstract class AbstractWebElementWrapper {
         for (int count = 0; count < 10; count++) {
             try {
                 if (isDisplayed(false)) {
-                    return this;
+                    return getSelf();
                 }
             } catch (Exception e) {
                 TS.log().debug("Had issue going to scroll. Attempt: " + count);

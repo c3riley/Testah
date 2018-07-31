@@ -1,12 +1,12 @@
 package org.testah.framework.report.performance.dto;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.testah.runner.http.load.HttpAkkaStats;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.testah.runner.http.load.HttpAkkaStats;
 
 public class ChunkStats {
 
@@ -18,7 +18,7 @@ public class ChunkStats {
     /**
      * Constructor for holder of statistical data of the the execution of a chunk of requests.
      *
-     * @param stats    overall execution data for a chunk of requests
+     * @param stats overall execution data for a chunk of requests
      */
     public ChunkStats(HttpAkkaStats stats) {
         setElapsedTime(stats.getDuration());
