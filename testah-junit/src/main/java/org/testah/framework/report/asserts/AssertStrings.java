@@ -37,6 +37,9 @@ public class AssertStrings {
      * @return the assert strings
      */
     public boolean deepAssert(final String expectedLines, final String actualLines) {
+        if(actualLines==null) {
+            return verboseAsserts.isNull("Actual is Null, checking that expected is null", expectedLines);
+        }
         return new AssertCollections<String>(StringUtils.split(actualLines,"\n"),verboseAsserts)
                 .equals(StringUtils.split(expectedLines,"\n")).isPassed();
     }
