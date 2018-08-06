@@ -285,6 +285,15 @@ public class Params {
      * The output.
      */
     @Comment(
+            info = "Should rest response get written to file and linked into the html report "
+                    + "which normally truncates the responses.")
+    @Arg(dest = "writeResponseToFile")
+    private boolean writeResponseToFile = false;
+
+    /**
+     * The output.
+     */
+    @Comment(
             info = "[BAR1]Reporting Properties[BAR2]Folder to write output to, if empty will be {user dir}/testahOutput")
     @Arg(dest = "output")
     private String output = "";
@@ -1438,5 +1447,13 @@ public class Params {
 
     public void setUniqueReportName(final boolean uniqueReportName) {
         this.uniqueReportName = uniqueReportName;
+    }
+
+    public boolean getWriteResponseToFile() {
+        return writeResponseToFile;
+    }
+
+    public void setWriteResponseToFile(boolean writeResponseToFile) {
+        this.writeResponseToFile = writeResponseToFile;
     }
 }

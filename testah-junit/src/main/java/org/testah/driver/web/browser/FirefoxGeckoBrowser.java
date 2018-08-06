@@ -86,6 +86,10 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
         return this;
     }
 
+    /**
+     * log Browser Info, including cookies and session to help with debugging issues.
+     * @return FirefoxGeckoBrowser for use.
+     */
     public AbstractBrowser<FirefoxGeckoBrowser> logBrowserInfo() {
         try {
             TS.log().trace("Browser SessionId: " + ((FirefoxDriver) TS.browser().getDriver()).getSessionId().toString());

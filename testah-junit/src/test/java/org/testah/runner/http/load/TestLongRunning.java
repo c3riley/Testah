@@ -7,13 +7,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 import org.junit.Rule;
 import org.junit.Test;
-import org.testah.framework.annotations.TestCase;
+
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.testah.runner.performance.AbstractLongRunningTest;
 import org.testah.runner.performance.ChunkStatsLogPublisher;
 import org.testah.runner.performance.ElasticSearchResponseTimesPublisher;
 import org.testah.runner.performance.TestRunProperties;
-
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 public class TestLongRunning extends AbstractLongRunningTest {
     private static final int numberOfChunks = 8;
@@ -44,7 +43,6 @@ public class TestLongRunning extends AbstractLongRunningTest {
     public WireMockRule wireMockRule = new WireMockRule(9200);
 
     @Test
-    @TestCase()
     public void testGet() throws Exception {
         final Integer[] expectedStatusCodes = {200, 300, 400, 500};
         String testClass = this.getClass().getSimpleName();
@@ -67,7 +65,6 @@ public class TestLongRunning extends AbstractLongRunningTest {
     }
 
     @Test
-    @TestCase()
     public void testPost() throws Exception {
         final Integer[] expectedStatusCodes = {200, 200, 200, 200};
         String testClass = this.getClass().getSimpleName();

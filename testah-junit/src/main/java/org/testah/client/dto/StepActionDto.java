@@ -74,6 +74,8 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      */
     private String htmlSnapShotPath = null;
 
+    private String restResponsePath = null;
+
     /**
      * Instantiates a new step action dto.
      */
@@ -417,6 +419,14 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     public StepActionDto setHtmlSnapShotPath(final String htmlSnapShotPath) {
         this.htmlSnapShotPath = htmlSnapShotPath;
         return this;
+    }
+
+    public String getRestResponsePath() {
+        return restResponsePath;
+    }
+
+    public void setRestResponsePath(String restResponsePath) {
+        this.restResponsePath = restResponsePath;
     }
 
 }

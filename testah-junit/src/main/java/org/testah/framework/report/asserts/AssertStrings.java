@@ -36,53 +36,9 @@ public class AssertStrings {
      * @param actualLines   the actual lines
      * @return the assert strings
      */
-    public AssertStrings deepAssert(final String expectedLines, final String actualLines) {
-        final boolean throwOnFail = verboseAsserts.getThrowExceptionOnFail();
-        try {
-            //Turn off so each line can be checked
-
-            verboseAsserts.setThrowExceptionOnFail(false);
-            int ctr = 0;
-
-            if (!verboseAsserts.notNull("Check that expectedLines is not null", expectedLines)) {
-                return this;
-            }
-
-            if (!verboseAsserts.notNull("Check that actualLines is not null", actualLines)) {
-                return this;
-            }
-
-            final String[] expectedLineArray = expectedLines.split("\n");
-            final String[] actualLineArray = actualLines.split("\n");
-
-            verboseAsserts.equalsTo("Check that the 2 files contain the same number of lines",
-                    expectedLineArray.length, actualLineArray.length);
-
-            for (final String expectedLine : expectedLineArray) {
-                if (ctr < actualLineArray.length) {
-                    if (!verboseAsserts.equalsTo(String.format("Checking File Lines[%d] are equal", (ctr + 1))
-                            + " - To help debug issues, right click and inspect the textarea "
-                            + "some characters will only be seen this way.", expectedLine, actualLineArray[ctr])) {
-                        addStepForStringDifferences(expectedLine, actualLineArray[ctr]);
-                    }
-                } else {
-                    verboseAsserts.equalsTo(String.format("Checking File Lines[%d] are equal", (ctr + 1)), expectedLine,
-                            "NO_LINE[" + ctr + "]_IN_ACTUAL_FILE");
-                }
-                ctr++;
-            }
-            for (int actualLinesMoreThanExpected = ctr; actualLinesMoreThanExpected < actualLineArray.length;
-                 actualLinesMoreThanExpected++) {
-                verboseAsserts.equalsTo(String.format("Checking File Lines[%d] are equal", (actualLinesMoreThanExpected + 1)),
-                        "NO_LINE[" + actualLinesMoreThanExpected + "]_IN_EXPECTED_FILE",
-                        actualLineArray[ctr++]);
-            }
-
-        } finally {
-            //Turn on, so any follow on assert fails will throw exception as expected.
-            verboseAsserts.setThrowExceptionOnFail(throwOnFail);
-        }
-        return this;
+    public boolean deepAssert(final String expectedLines, final String actualLines) {
+        return new AssertCollections<String>(StringUtils.split(actualLines,"\n"),verboseAsserts)
+                .equals(StringUtils.split(expectedLines,"\n")).isPassed();
     }
 
     /**

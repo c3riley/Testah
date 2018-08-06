@@ -9,6 +9,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.StepAction;
+import org.testah.framework.report.asserts.AssertCollections;
 import org.testah.framework.report.asserts.AssertStrings;
 
 import java.io.File;
@@ -172,9 +173,9 @@ public class VerboseAsserts {
     /**
      * Size equals.
      *
-     * @param message                    the message
+     * @param message                     the message
      * @param objectToCheckSizeOrLengthOf the object to check size or length of
-     * @param expectedSize               the expected size
+     * @param expectedSize                the expected size
      * @return true, if successful
      */
     public boolean sizeEquals(final String message, final Object objectToCheckSizeOrLengthOf, final int expectedSize) {
@@ -239,9 +240,9 @@ public class VerboseAsserts {
     /**
      * Not size equals.
      *
-     * @param message                    the message
+     * @param message                     the message
      * @param objectToCheckSizeOrLengthOf the object to check size or length of
-     * @param expectedSize               the expected size
+     * @param expectedSize                the expected size
      * @return true, if successful
      */
     public boolean notSizeEquals(final String message, final Object objectToCheckSizeOrLengthOf,
@@ -277,7 +278,7 @@ public class VerboseAsserts {
         if (null != actual) {
             return actual;
         } else {
-            throw new RuntimeException("Issue with object to Check for isEmpty Assert, object must be String, "
+            throw new RuntimeException("Issue with object to Check for notEmpty Assert, object must be String, "
                     + "ArrayList, Set, List or HashMap");
         }
     }
@@ -741,18 +742,12 @@ public class VerboseAsserts {
      * @return the boolean
      */
     public boolean equalsToMultilineString(final String message, final String expected, final String actual) {
-        try {
-            Assert.assertEquals(message + " - expected[" + expected + "] == actual[" + actual + "]",
-                    StringUtils.lowerCase(expected), StringUtils.lowerCase(actual));
-            return addAssertHistory(message, true, "equalsTo", expected, actual);
-        } catch (final Throwable e) {
-            final boolean rtn = addAssertHistory(message, false, "equalsTo", expected, actual, e);
-            assertStrings.deepAssert(expected, actual);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
+        if (actual == null) {
+            return isTrue("The Actual is null, checking to see if Expected is null, "
+                    + "else will fail and not go further for the assert.", (expected == null));
         }
+        return new AssertCollections(StringUtils.split(actual, System.lineSeparator()), this)
+                .equals(StringUtils.split(expected, System.lineSeparator())).isPassed();
     }
 
     /**
@@ -838,16 +833,7 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean equalsTo(final long expected, final long actual) {
-        try {
-            Assert.assertEquals(expected, actual);
-            return addAssertHistory("", true, "assertEquals", expected, actual);
-        } catch (final Throwable e) {
-            final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
+        return equalsTo("", expected, actual);
     }
 
     /**
@@ -1481,7 +1467,7 @@ public class VerboseAsserts {
      *
      * @param expectedAry the expectedAry
      * @param actualAry   the actualAry
-     * @param delta     the delta
+     * @param delta       the delta
      * @return true, if successful
      */
     public boolean arrayEquals(final double[] expectedAry, final double[] actualAry, final double delta) {
@@ -1636,7 +1622,7 @@ public class VerboseAsserts {
      * @return true, if is empty
      */
     public boolean isEmpty(final String message, final Object objectToCheck) {
-        if(notNull(message, objectToCheck)) {
+        if (notNull(message, objectToCheck)) {
             final Boolean actual = isEmpty(objectToCheck);
             return isTrue(message + " - Is Empty[" + objectToCheck + "]", actual);
         }
@@ -1667,7 +1653,7 @@ public class VerboseAsserts {
         if (null != actual) {
             return actual;
         } else {
-            throw new RuntimeException("Issue with object to Check for isEmpty Assert, object must be String, "
+            throw new RuntimeException("Issue with object to Check for notEmpty Assert, object must be String, "
                     + "ArrayList, Set, List or HashMap");
         }
     }
@@ -1680,7 +1666,7 @@ public class VerboseAsserts {
      * @return true, if is not empty
      */
     public boolean isNotEmpty(final String message, final Object objectToCheck) {
-        if(notNull(message, objectToCheck)) {
+        if (notNull(message, objectToCheck)) {
             final Boolean actual = isEmpty(objectToCheck);
             return isFalse(message + " - Is Empty", actual);
         }
@@ -1971,8 +1957,9 @@ public class VerboseAsserts {
      *
      * @param throwExceptionOnFail the new throw exception on fail
      */
-    public void setThrowExceptionOnFail(final boolean throwExceptionOnFail) {
+    public VerboseAsserts setThrowExceptionOnFail(final boolean throwExceptionOnFail) {
         this.throwExceptionOnFail = throwExceptionOnFail;
+        return this;
     }
 
     /**
@@ -1980,8 +1967,9 @@ public class VerboseAsserts {
      *
      * @param recordSteps the new record steps
      */
-    public void setRecordSteps(final boolean recordSteps) {
+    public VerboseAsserts setRecordSteps(final boolean recordSteps) {
         this.recordSteps = recordSteps;
+        return this;
     }
 
     /**
@@ -1998,9 +1986,10 @@ public class VerboseAsserts {
      *
      * @param isVerifyOnly the new verify only
      */
-    public void setVerifyOnly(final boolean isVerifyOnly) {
+    public VerboseAsserts setVerifyOnly(final boolean isVerifyOnly) {
         this.isVerifyOnly = isVerifyOnly;
         setThrowExceptionOnFail(false);
+        return this;
     }
 
 }

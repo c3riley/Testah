@@ -3,6 +3,7 @@ package org.testah.driver.http.response;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -18,6 +19,7 @@ import org.testah.framework.dto.base.AbstractDtoBase;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -434,7 +436,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * Creates the response info step.
      *
      * @param shortResponseBody the short response body
-     * @param escapeBody       the escape body
+     * @param escapeBody        the escape body
      * @param truncate          the truncate
      * @return the step action dto
      */
@@ -454,7 +456,26 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
 
         }
         print(shortResponseBody, truncate);
+        stepAction.setRestResponsePath(writeResponseInfoFile());
         return stepAction;
+    }
+
+    /**
+     * Write response to a file for it to be linked to from the report.
+     *
+     * @return the string
+     */
+    public String writeResponseInfoFile() {
+        if (TS.params().getWriteResponseToFile()) {
+            try {
+                File file = File.createTempFile("response", ".txt", new File(TS.params().getOutput()));
+                FileUtils.writeStringToFile(file, getResponseBody(), Charset.defaultCharset());
+                return file.getAbsolutePath();
+            } catch (IOException e) {
+                TS.log().warn("Issue Creating ResponseInfoFile", e);
+            }
+        }
+        return null;
     }
 
     /**

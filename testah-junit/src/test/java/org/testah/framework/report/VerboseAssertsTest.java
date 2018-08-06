@@ -264,18 +264,63 @@ public class VerboseAssertsTest {
 
     @Test
     public void notNull() {
+        Assert.assertFalse(va.notNull(null));
+        String tempStringIsNull = null;
+        Assert.assertFalse(va.notNull(tempStringIsNull));
+        List<String> tempList = null;
+        Assert.assertFalse(va.notNull(tempList));
+
+        Assert.assertTrue(va.notNull(""));
+        String tempString = "not null";
+        Assert.assertTrue(va.notNull(tempString));
+        List<String> tempListNotNull = new ArrayList<>();
+        Assert.assertTrue(va.notNull(tempListNotNull));
     }
 
     @Test
-    public void notNull1() {
+    public void notNullWithMessage() {
+        Assert.assertFalse(va.notNull("message", null));
+        String tempStringIsNull = null;
+        Assert.assertFalse(va.notNull("message", tempStringIsNull));
+        List<String> tempList = null;
+        Assert.assertFalse(va.notNull("message", tempList));
+
+        Assert.assertTrue(va.notNull("message", ""));
+        String tempString = "not null";
+        Assert.assertTrue(va.notNull("message", tempString));
+        List<String> tempListNotNull = new ArrayList<>();
+        Assert.assertTrue(va.notNull("message", tempListNotNull));
     }
 
     @Test
     public void isNull() {
+        Assert.assertTrue(va.isNull(null));
+        String tempStringIsNull = null;
+        Assert.assertTrue(va.isNull(tempStringIsNull));
+        List<String> tempList = null;
+        Assert.assertTrue(va.isNull(tempList));
+
+        Assert.assertFalse(va.isNull(""));
+        String tempString = "not null";
+        Assert.assertFalse(va.isNull(tempString));
+        List<String> tempListNotNull = new ArrayList<>();
+        Assert.assertFalse(va.isNull(tempListNotNull));
+
     }
 
     @Test
-    public void isNull1() {
+    public void isNullWithMessage() {
+        Assert.assertTrue(va.isNull("message", null));
+        String tempStringIsNull = null;
+        Assert.assertTrue(va.isNull("message", tempStringIsNull));
+        List<String> tempList = null;
+        Assert.assertTrue(va.isNull("message", tempList));
+
+        Assert.assertFalse(va.isNull("message", ""));
+        String tempString = "not null";
+        Assert.assertFalse(va.isNull("message", tempString));
+        List<String> tempListNotNull = new ArrayList<>();
+        Assert.assertFalse(va.isNull("message", tempListNotNull));
     }
 
     @Test
