@@ -7,12 +7,13 @@ apply plugin: 'maven'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
+apply plugin: 'idea'
 //apply plugin: 'org.jenkins-ci.jpi'
 
 sourceCompatibility = 1.8
 group = 'org.testah'
 
-version = '1.1.4'
+version = '1.1.5'
 
 buildscript {
     repositories {
@@ -119,10 +120,21 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.26'
-// https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-sse
+    // https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-sse
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-sse', version: '2.26'
 
     compile group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.26'
+
+    compile group: 'javax.mail', name: 'mail', version: '1.4.7'
+    compile group: 'org.apache.commons', name: 'commons-email', version: '1.5'
+
+    // https://mvnrepository.com/artifact/com.microsoft.ews-java-api/ews-java-api
+    compile group: 'com.microsoft.ews-java-api', name: 'ews-java-api', version: '2.0'
+
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
+    // https://mvnrepository.com/artifact/org.mockito/mockito-inline
+    testCompile group: 'org.mockito', name: 'mockito-inline', version: '2.21.0'
 
     configurations.all {
         resolutionStrategy.eachDependency {
