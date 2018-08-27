@@ -61,6 +61,7 @@ public class RunTimeDto {
      *
      * @return the run time dto
      */
+    @JsonIgnore
     public RunTimeDto start() {
         Date startDate = new Date();
         this.startDate = startDate;
@@ -73,6 +74,7 @@ public class RunTimeDto {
      * @param startTime the start time
      * @return the run time dto
      */
+    @JsonIgnore
     public RunTimeDto start(final Long startTime) {
         this.startTime = startTime;
         return this;
@@ -83,6 +85,7 @@ public class RunTimeDto {
      *
      * @return the run time dto
      */
+    @JsonIgnore
     public RunTimeDto stop() {
         Date endDate = new Date();
         this.endDate = endDate;
@@ -95,8 +98,10 @@ public class RunTimeDto {
      * @param endTime the end time
      * @return the run time dto
      */
+    @JsonIgnore
     public RunTimeDto stop(final Long endTime) {
         this.endTime = endTime;
+        this.endDate = new Date(endTime);
         calculateDuration();
         return this;
     }
@@ -141,7 +146,7 @@ public class RunTimeDto {
      * @return start date
      */
     public String getStartDate() {
-        return this.dateFormat.format(this.startDate);
+        return formatDate(this.startDate);
     }
 
     /**
@@ -150,7 +155,18 @@ public class RunTimeDto {
      * @return end date
      */
     public String getEndDate() {
-        return this.dateFormat.format(this.endDate);
+        return formatDate(this.endDate);
+    }
+
+    /**
+     * Format date string. Used to format a date like the getter for getStart and getEnd dates do.
+     *
+     * @param date the date
+     * @return the string of the date formated
+     */
+    @JsonIgnore
+    public String formatDate(final Date date) {
+        return this.dateFormat.format(date);
     }
 
 }

@@ -224,8 +224,8 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @param actual the actual
      * @return the step action dto
      */
-    public StepActionDto setActual(final Object actual) {
-        this.message3 = String.valueOf(actual);
+    public StepActionDto setActual(final String actual) {
+        this.message3 = actual;
         return this;
     }
 
@@ -235,8 +235,8 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @param expected the expected
      * @return the step action dto
      */
-    public StepActionDto setExpected(final Object expected) {
-        this.message2 = String.valueOf(expected);
+    public StepActionDto setExpected(final String expected) {
+        this.message2 = expected;
         return this;
     }
 
@@ -308,8 +308,8 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @param message2 the message2
      * @return the step action dto
      */
-    public StepActionDto setMessage2(final Object message2) {
-        this.message2 = String.valueOf(message2);
+    public StepActionDto setMessage2(final String message2) {
+        this.message2 = message2;
         return this;
     }
 
@@ -328,8 +328,8 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @param message3 the message3
      * @return the step action dto
      */
-    public StepActionDto setMessage3(final Object message3) {
-        this.message3 = String.valueOf(message3);
+    public StepActionDto setMessage3(final String message3) {
+        this.message3 = message3;
         return this;
     }
 

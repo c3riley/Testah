@@ -1,6 +1,7 @@
 package org.testah.util.mail;
 
 import org.testah.framework.dto.base.AbstractDtoBase;
+
 import java.util.Date;
 
 public class SendMailDto extends AbstractDtoBase<SendMailDto> {
@@ -12,7 +13,7 @@ public class SendMailDto extends AbstractDtoBase<SendMailDto> {
     private String subject = "this is a test";
     private String body = "<h1>this is a test</h1>";
     private String content = "text/html; charset=ISO-8859-1";
-    private Long sentDate;
+    private Date sentDate;
 
     public SendMailDto(final String from) {
         this.from = from;
@@ -84,14 +85,14 @@ public class SendMailDto extends AbstractDtoBase<SendMailDto> {
 
     public Date getSentDate() {
         if (sentDate == null) {
-            sentDate = new Date().getTime();
+            sentDate = new Date();
         }
         //Send copy of date to avoid findbugs issue
-        return new Date(sentDate);
+        return (Date) sentDate.clone();
     }
 
     public SendMailDto setSentDate(final Date sentDate) {
-        this.sentDate = sentDate.getTime();
+        this.sentDate = (Date) sentDate.clone();
         return this;
     }
 }

@@ -86,7 +86,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * if truncateResponseBodyInReport is true, this number will tell how much to truncate the response by.
      */
-    private int truncateResponseBodyInReportBy = 500;
+    private int truncateResponseBodyInReportBy = TS.params().getDefaultResponseTruncate();
 
     /**
      * Gets the self.
@@ -640,8 +640,16 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         return getSelf();
     }
 
+
+    /**
+     * Is truncate response body in report boolean.
+     * If the boolean is true, but also the truncateResponseBodyInReportBy needs to be set to 0 or more, else it will
+     * turn off the truncation, and this will return false.
+     *
+     * @return the boolean
+     */
     public boolean isTruncateResponseBodyInReport() {
-        return truncateResponseBodyInReport;
+        return truncateResponseBodyInReport && truncateResponseBodyInReportBy > 0;
     }
 
     public T setTruncateResponseBodyInReport(boolean truncateResponseBodyInReport) {

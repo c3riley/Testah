@@ -5,16 +5,15 @@ import java.util.Properties;
 /**
  * The type Gmail email util.
  */
-public class GmailEmailUtil extends EmailUtil {
+public class GmailEmailUtil extends ImapsEmailUtil {
 
     /**
      * Instantiates a new Gmail email util.
      */
     public GmailEmailUtil() {
-
         //Sent email to read from
-        setMailDomain("imap.gmail.com");
-
+        setMailServerAddress("imap.gmail.com");
+        setAuth();
         //Setting send mail props for gmail use
         final Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -22,7 +21,6 @@ public class GmailEmailUtil extends EmailUtil {
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
         setSendMailProps(props);
-
     }
 
 }
