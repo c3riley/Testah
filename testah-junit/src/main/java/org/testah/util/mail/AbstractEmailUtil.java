@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 /**
  * The type Abstract email util.
  *
- * @param <T> the type parameter
- * @param <M> the type parameter
- * @param <A> the type parameter
- * @param <F> the type parameter
- * @param <H> the type parameter
+ * @param <T> Class Implementing Abstract to Return
+ * @param <M> Email Message Class
+ * @param <A> Auth Class to Use
+ * @param <F> Folder Class Used
+ * @param <H> Header Class Used
  */
 public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
 
