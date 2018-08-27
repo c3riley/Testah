@@ -39,7 +39,6 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
      */
     public static final int MAX_NUMBER_OF_MESSAGES = 20;
     private static final WellKnownFolderName DEFAULT_FOLDER = WellKnownFolderName.Inbox;
-
     private int maxNumberOfMessages = MAX_NUMBER_OF_MESSAGES;
     private ExchangeService service;
     private ExchangeVersion exchangeVersion;
