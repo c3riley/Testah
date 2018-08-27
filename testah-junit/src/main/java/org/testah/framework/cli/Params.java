@@ -132,6 +132,18 @@ public class Params {
     @Arg(dest = "jiraPassword")
     private String jiraPassword = "";
 
+    @Comment(info = "UserName for access to email, will be added to mask")
+    @Arg(dest = "emailUserName")
+    private String emailUserName = "";
+
+    @Comment(info = "Pwd for access to email, will be added to mask, should be supplied via job or system")
+    @Arg(dest = "emailPassword")
+    private String emailPassword = "";
+
+    @Comment(info = "Domain for access to email, will be added to mask, should be supplied via job or system")
+    @Arg(dest = "emailDomain")
+    private String emailDomain = "";
+
     @Comment(info = "If No TS.asserts were found, so status is null, show tests as ignored")
     @Arg(dest = "resultIgnoredIfNoAssertsFound")
     private boolean resultIgnoredIfNoAssertsFound = true;
@@ -146,6 +158,10 @@ public class Params {
     @Comment(info = "Number of Concurrent Threads")
     @Arg(dest = "numConcurrentThreads")
     private int numConcurrentThreads = 1;
+
+    @Comment(info = "Default to truncate request response in report and logging, to turn off set to 0")
+    @Arg(dest = "defaultResponseTruncate")
+    private int defaultResponseTruncate = 500;
 
     /**
      * The browser.
@@ -1311,65 +1327,217 @@ public class Params {
         }
     }
 
+    /**
+     * Gets jira url.
+     *
+     * @return the jira url
+     */
     public String getJiraUrl() {
         return jiraUrl;
     }
 
-    public void setJiraUrl(final String jiraUrl) {
+    /**
+     * Sets jira url.
+     *
+     * @param jiraUrl the jira url
+     * @return the jira url
+     */
+    public Params setJiraUrl(final String jiraUrl) {
         this.jiraUrl = jiraUrl;
+        return this;
     }
 
+    /**
+     * Is use jira remote link boolean.
+     *
+     * @return the boolean
+     */
     public boolean isUseJiraRemoteLink() {
         return useJiraRemoteLink;
     }
 
-    public void setUseJiraRemoteLink(final boolean useJiraRemoteLink) {
+    /**
+     * Sets use jira remote link.
+     *
+     * @param useJiraRemoteLink the use jira remote link
+     * @return the use jira remote link
+     */
+    public Params setUseJiraRemoteLink(final boolean useJiraRemoteLink) {
         this.useJiraRemoteLink = useJiraRemoteLink;
+        return this;
     }
 
+    /**
+     * Gets jira user name.
+     *
+     * @return the jira user name
+     */
     public String getJiraUserName() {
         return jiraUserName;
     }
 
+    /**
+     * Gets jira password.
+     *
+     * @return the jira password
+     */
     public String getJiraPassword() {
         return jiraPassword;
     }
 
-    public void setJiraUserName(final String jiraUserName) {
+    /**
+     * Sets jira user name.
+     *
+     * @param jiraUserName the jira user name
+     * @return the jira user name
+     */
+    public Params setJiraUserName(final String jiraUserName) {
         TS.addMask(jiraUserName);
         this.jiraUserName = jiraUserName;
+        return this;
     }
 
-    public void setJiraPassword(final String jiraPassword) {
+    /**
+     * Sets jira password.
+     *
+     * @param jiraPassword the jira password
+     * @return the jira password
+     */
+    public Params setJiraPassword(final String jiraPassword) {
         TS.addMask(jiraPassword);
         this.jiraPassword = jiraPassword;
+        return this;
     }
 
+    /**
+     * Gets email user name.
+     *
+     * @return the email user name
+     */
+    public String getEmailUserName() {
+        return emailUserName;
+    }
+
+    /**
+     * Gets email password.
+     *
+     * @return the email password
+     */
+    public String getEmailPassword() {
+        return emailPassword;
+    }
+
+    /**
+     * Sets email user name.
+     *
+     * @param emailUserName the email user name
+     * @return the email user name
+     */
+    public Params setEmailUserName(final String emailUserName) {
+        TS.addMask(emailUserName);
+        this.emailUserName = emailUserName;
+        return this;
+    }
+
+    /**
+     * Sets email password.
+     *
+     * @param emailPassword the email password
+     * @return the email password
+     */
+    public Params setEmailPassword(final String emailPassword) {
+        TS.addMask(emailPassword);
+        this.emailPassword = emailPassword;
+        return this;
+    }
+
+    /**
+     * Gets email domain.
+     *
+     * @return the email domain
+     */
+    public String getEmailDomain() {
+        return emailDomain;
+    }
+
+    /**
+     * Sets email domain.
+     *
+     * @param emailDomain the email domain
+     * @return the email domain
+     */
+    public Params setEmailDomain(final String emailDomain) {
+        TS.addMask(emailDomain);
+        this.emailDomain = emailDomain;
+        return this;
+    }
+
+    /**
+     * Is result ignored if no asserts found boolean.
+     *
+     * @return the boolean
+     */
     public boolean isResultIgnoredIfNoAssertsFound() {
         return resultIgnoredIfNoAssertsFound;
     }
 
+    /**
+     * Sets result ignored if no asserts found.
+     *
+     * @param resultIgnoredIfNoAssertsFound the result ignored if no asserts found
+     * @return the result ignored if no asserts found
+     */
     public Params setResultIgnoredIfNoAssertsFound(final boolean resultIgnoredIfNoAssertsFound) {
         this.resultIgnoredIfNoAssertsFound = resultIgnoredIfNoAssertsFound;
         return this;
     }
 
+    /**
+     * Gets source url.
+     *
+     * @return the source url
+     */
     public String getSourceUrl() {
         return sourceUrl;
     }
 
-    public void setSourceUrl(final String sourceUrl) {
+    /**
+     * Sets source url.
+     *
+     * @param sourceUrl the source url
+     * @return the source url
+     */
+    public Params setSourceUrl(final String sourceUrl) {
         this.sourceUrl = sourceUrl;
+        return this;
     }
 
+    /**
+     * Gets other.
+     *
+     * @return the other
+     */
     public HashMap<String, String> getOther() {
         return other;
     }
 
-    public void setOther(final HashMap<String, String> other) {
+    /**
+     * Sets other.
+     *
+     * @param other the other
+     * @return the other
+     */
+    public Params setOther(final HashMap<String, String> other) {
         this.other = other;
+        return this;
     }
 
+    /**
+     * Gets value.
+     *
+     * @param key the key
+     * @return the value
+     */
     public String getValue(final String key) {
         return getValue(key, getOther().get(key));
     }
@@ -1392,51 +1560,143 @@ public class Params {
         return rtnValue;
     }
 
+    /**
+     * Is use json formatter boolean.
+     *
+     * @return the boolean
+     */
     public boolean isUseJsonFormatter() {
         return useJsonFormatter;
     }
 
-    public void setUseJsonFormatter(final boolean useJsonFormatter) {
+    /**
+     * Sets use json formatter.
+     *
+     * @param useJsonFormatter the use json formatter
+     * @return the use json formatter
+     */
+    public Params setUseJsonFormatter(final boolean useJsonFormatter) {
         this.useJsonFormatter = useJsonFormatter;
+        return this;
     }
 
+    /**
+     * Gets window width.
+     *
+     * @return the window width
+     */
     public int getWindowWidth() {
         return windowWidth;
     }
 
-    public void setWindowWidth(final int windowWidth) {
+    /**
+     * Sets window width.
+     *
+     * @param windowWidth the window width
+     * @return the window width
+     */
+    public Params setWindowWidth(final int windowWidth) {
         this.windowWidth = windowWidth;
+        return this;
     }
 
+    /**
+     * Gets window height.
+     *
+     * @return the window height
+     */
     public int getWindowHeight() {
         return windowHeight;
     }
 
-    public void setWindowHeight(final int windowHeight) {
+    /**
+     * Sets window height.
+     *
+     * @param windowHeight the window height
+     * @return the window height
+     */
+    public Params setWindowHeight(final int windowHeight) {
         this.windowHeight = windowHeight;
+        return this;
     }
 
+    /**
+     * Gets timezone.
+     *
+     * @return the timezone
+     */
     public String getTimezone() {
         return timezone;
     }
 
-    public void setTimezone(final String timezone) {
+    /**
+     * Sets timezone.
+     *
+     * @param timezone the timezone
+     * @return the timezone
+     */
+    public Params setTimezone(final String timezone) {
         this.timezone = timezone;
+        return this;
     }
 
+    /**
+     * Gets time format.
+     *
+     * @return the time format
+     */
     public String getTimeFormat() {
         return timeFormat;
     }
 
-    public void setTimeFormat(final String timeFormat) {
+    /**
+     * Sets time format.
+     *
+     * @param timeFormat the time format
+     * @return the time format
+     */
+    public Params setTimeFormat(final String timeFormat) {
         this.timeFormat = timeFormat;
+        return this;
     }
 
+    /**
+     * Is unique report name boolean.
+     *
+     * @return the boolean
+     */
     public boolean isUniqueReportName() {
         return uniqueReportName;
     }
 
-    public void setUniqueReportName(final boolean uniqueReportName) {
+    /**
+     * Sets unique report name.
+     *
+     * @param uniqueReportName the unique report name
+     * @return the unique report name
+     */
+    public Params setUniqueReportName(final boolean uniqueReportName) {
         this.uniqueReportName = uniqueReportName;
+        return this;
+    }
+
+    /**
+     * Gets default response truncate.
+     *
+     * @return the default response truncate
+     */
+    public int getDefaultResponseTruncate() {
+        return defaultResponseTruncate;
+    }
+
+    /**
+     * Sets default response truncate.
+     *
+     * @param defaultResponseTruncate the default response truncate
+     * @return the default response truncate
+     */
+    public Params setDefaultResponseTruncate(int defaultResponseTruncate) {
+        this.defaultResponseTruncate = defaultResponseTruncate;
+        return this;
     }
 }
