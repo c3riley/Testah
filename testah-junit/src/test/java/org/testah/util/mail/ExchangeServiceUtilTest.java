@@ -234,23 +234,23 @@ public class ExchangeServiceUtilTest {
         try (ExchangeMailTest exchange = new ExchangeMailTest()) {
             exchange.setMaxNumberOfMessages(100).connect()
                     .getMsgByFromEmail(TS.params().getEmailUserName()).stream().forEach(message -> {
-                try {
-                    TS.util().toJsonPrint(exchange.getEmailDto(message));
-                    TS.log().info(message.getSubject());
-                    TS.log().info(exchange.getMsgBody(message, "HTML"));
-                    TS.log().info(exchange.getMsgBody(message, "Text"));
-                    exchange.getAttachmentFiles(message).stream().forEach(file -> {
-                        TS.log().info(file.getAbsolutePath());
                         try {
-                            TS.log().info(FileUtils.readFileToString(file, Charset.forName("UTF-8")));
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            TS.util().toJsonPrint(exchange.getEmailDto(message));
+                            TS.log().info(message.getSubject());
+                            TS.log().info(exchange.getMsgBody(message, "HTML"));
+                            TS.log().info(exchange.getMsgBody(message, "Text"));
+                            exchange.getAttachmentFiles(message).stream().forEach(file -> {
+                                TS.log().info(file.getAbsolutePath());
+                                try {
+                                    TS.log().info(FileUtils.readFileToString(file, Charset.forName("UTF-8")));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                        } catch (Exception e) {
+                            TS.log().error(e);
                         }
                     });
-                } catch (Exception e) {
-                    TS.log().error(e);
-                }
-            });
         }
     }
 
@@ -302,6 +302,7 @@ public class ExchangeServiceUtilTest {
         return internetMessageHeaderCollection;
     }
 
+    @SuppressFBWarnings
     private AttachmentCollection getAttachmentCollection(final int numOfAttachments) throws Exception {
         Collection<Attachment> attachments = new ArrayList<>();
         if (numOfAttachments > 0) {

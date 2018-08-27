@@ -18,13 +18,13 @@ import java.util.stream.Collectors;
 /**
  * The type Abstract email util to support Imaps and Exchange Email Systems.
  *
- * @param <T> Class Implementing Abstract to Return
+ * @param <T> Class Implementing AbstractEmailUtil to Return
  * @param <M> Email Message Class
  * @param <A> Auth Class to Use
  * @param <F> Folder Class Used
  * @param <H> Header Class Used
  */
-public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
+public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H> implements Closeable {
 
     private static final String DEFAULT_EMAIL_CONTENT_TYPE = "text/html";
     private static final int DEFAULT_EXPECTED_FOUND_COUNT = 1;
@@ -58,6 +58,11 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
      */
     public AbstractEmailUtil(final String mailServerAddress) {
         this.mailServerAddress = mailServerAddress;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected T self() {
+        return (T) this;
     }
 
     /**
@@ -357,12 +362,13 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
      *
      * @param file               the file
      * @param shouldDeleteOnExit the should delete on exit
+     * @return the t
      */
     protected T deleteOnExit(final File file, final boolean shouldDeleteOnExit) {
         if (shouldDeleteOnExit) {
             file.deleteOnExit();
         }
-        return (T) this;
+        return self();
     }
 
     /**
@@ -438,9 +444,15 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
         return setAuth(TS.params().getEmailUserName(), TS.params().getEmailPassword(), TS.params().getEmailDomain());
     }
 
+    /**
+     * Sets auth.
+     *
+     * @param auth the auth
+     * @return the auth
+     */
     public T setAuth(A auth) {
         this.auth = auth;
-        return (T) this;
+        return self();
     }
 
     /**
@@ -508,7 +520,7 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
      */
     public T setTimeToPoll(long timeToPoll) {
         this.timeToPoll = timeToPoll;
-        return (T) this;
+        return self();
     }
 
     /**
@@ -519,7 +531,7 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
      */
     public T setTimeToPollInMinutes(int timeToPollInMinutes) {
         this.timeToPoll = TimeUnit.MINUTES.toMillis(timeToPollInMinutes);
-        return (T) this;
+        return self();
     }
 
     /**
@@ -539,7 +551,7 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
      */
     public T setTimeToPauseBetweenPoll(long timeToPauseBetweenPoll) {
         this.timeToPauseBetweenPoll = timeToPauseBetweenPoll;
-        return (T) this;
+        return self();
     }
 
     /**
@@ -550,7 +562,7 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
      */
     public T setTimeToPauseBetweenPollInSeconds(int timeToPollInSeconds) {
         this.timeToPauseBetweenPoll = TimeUnit.SECONDS.toMillis(timeToPollInSeconds);
-        return (T) this;
+        return self();
     }
 
     /**
@@ -631,7 +643,7 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
      */
     public T setFolder(F folder) {
         this.folder = folder;
-        return (T) this;
+        return self();
     }
 
     /**

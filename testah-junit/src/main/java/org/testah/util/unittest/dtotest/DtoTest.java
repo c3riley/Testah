@@ -30,10 +30,10 @@ import static org.junit.Assert.assertTrue;
  * A utility class which allows for testing entity and transfer object classes. This is mainly for code coverage since
  * these types of objects are normally nothing more than getters and setters. If any logic exists in the method, then
  * the get method name should be sent in as an ignored field and a custom test function should be written.
- * <p>
- * https://github.com/Blastman/DtoTester/blob/master/src/test/java/com/objectpartners/DtoTest.java
- * <p>
- * Changes have been made to support running instantiated and not as abstract, and to handle dto that have a super
+ *
+ * <p>https://github.com/Blastman/DtoTester/blob/master/src/test/java/com/objectpartners/DtoTest.java
+ *
+ * <p>Changes have been made to support running instantiated and not as abstract, and to handle dto that have a super
  */
 public class DtoTest {
 
@@ -196,6 +196,8 @@ public class DtoTest {
      * same thing. This will also use reflection to set the field if no setter exists (mainly used for user immutable
      * entities but Hibernate normally populates).
      *
+     * @param <T>      the type parameter
+     * @param instance the instance
      * @throws Exception If an expected error occurs.
      */
     public <T> void testGettersAndSetters(T instance) throws Exception {
@@ -307,33 +309,71 @@ public class DtoTest {
         return null;
     }
 
+    /**
+     * Gets ignored get fields.
+     *
+     * @return the ignored get fields
+     */
     public Set<String> getIgnoredGetFields() {
         return ignoredGetFields;
     }
 
+    /**
+     * Add to ignored get fields dto test.
+     *
+     * @param ignoredGetField the ignored get field
+     * @return the dto test
+     */
     public DtoTest addToIgnoredGetFields(final String ignoredGetField) {
         this.ignoredGetFields.add(ignoredGetField);
         return this;
     }
 
+    /**
+     * Gets annotations to ignore.
+     *
+     * @return the annotations to ignore
+     */
     public Set<Class> getAnnotationsToIgnore() {
         return annotationsToIgnore;
     }
 
+    /**
+     * Add to annotations to ignore dto test.
+     *
+     * @param annotation the annotation
+     * @return the dto test
+     */
     public DtoTest addToAnnotationsToIgnore(final Class annotation) {
         this.annotationsToIgnore.add(annotation);
         return this;
     }
 
+    /**
+     * Sets annotations to ignore.
+     *
+     * @param annotationsToIgnore the annotations to ignore
+     * @return the annotations to ignore
+     */
     public DtoTest setAnnotationsToIgnore(final Set<Class> annotationsToIgnore) {
         this.annotationsToIgnore = annotationsToIgnore;
         return this;
     }
 
+    /**
+     * Gets custom mappers.
+     *
+     * @return the custom mappers
+     */
     public Map<Class<?>, Supplier<?>> getCustomMappers() {
         return customMappers;
     }
 
+    /**
+     * Sets custom mappers.
+     *
+     * @param customMappers the custom mappers
+     */
     public void setCustomMappers(Map<Class<?>, Supplier<?>> customMappers) {
         this.customMappers = customMappers;
     }
@@ -349,6 +389,5 @@ public class DtoTest {
         }
         return mappers;
     }
-
 
 }

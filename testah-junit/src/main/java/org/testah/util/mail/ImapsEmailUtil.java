@@ -92,6 +92,7 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
         return this;
     }
 
+    @Override
     public ImapsEmailUtil setAuth(final String userName, final String password, final String domain) {
         this.auth = new PasswordAuthentication(userName, password);
         this.setDomain(domain);
@@ -198,7 +199,15 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
         }
     }
 
-    //https://javaee.github.io/javamail/FAQ#mainbody
+    /**
+     * Get Multipart Test
+     * Code is largely from https://javaee.github.io/javamail/FAQ#mainbody
+     *
+     * @param part Email part to check for text
+     * @return return text found
+     * @throws MessagingException Error with the message
+     * @throws IOException        Error with the message
+     */
     private String getMultipartText(final Part part) throws
             MessagingException, IOException {
         if (part.isMimeType("text/*")) {
@@ -208,16 +217,18 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
             // prefer html text over plain text
             final Multipart multipart = (Multipart) part.getContent();
             String text = null;
-            for (int i = 0; i < multipart.getCount(); i++) {
-                Part bodyPart = multipart.getBodyPart(i);
+            for (int ctr = 0; ctr < multipart.getCount(); ctr++) {
+                Part bodyPart = multipart.getBodyPart(ctr);
                 if (bodyPart.isMimeType("text/plain")) {
-                    if (text == null)
+                    if (text == null) {
                         text = getMultipartText(bodyPart);
+                    }
                     continue;
                 } else if (bodyPart.isMimeType("text/html")) {
                     String content = getMultipartText(bodyPart);
-                    if (content != null)
+                    if (content != null) {
                         return content;
+                    }
                 } else {
                     return getMultipartText(bodyPart);
                 }
@@ -225,10 +236,11 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
             return text;
         } else if (part.isMimeType("multipart/*")) {
             final Multipart mp = (Multipart) part.getContent();
-            for (int i = 0; i < mp.getCount(); i++) {
-                String text = getMultipartText(mp.getBodyPart(i));
-                if (text != null)
+            for (int ctr = 0; ctr < mp.getCount(); ctr++) {
+                String text = getMultipartText(mp.getBodyPart(ctr));
+                if (text != null) {
                     return text;
+                }
             }
         }
         return null;
@@ -426,6 +438,7 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
         this.imapProps = imapProps;
     }
 
+    @Override
     public String getFolderName() {
         if (folder != null) {
             return folder.getName();
@@ -475,7 +488,7 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
         emailDto.setToAddresses(getAddressList(message, Message.RecipientType.TO));
         emailDto.setCcAddresses(getAddressList(message, Message.RecipientType.CC));
         emailDto.setBccAddresses(getAddressList(message, Message.RecipientType.BCC));
-        emailDto.setFromAddress(StringUtils.join(message.getFrom(),","));
+        emailDto.setFromAddress(StringUtils.join(message.getFrom(), ","));
         return emailDto;
     }
 
