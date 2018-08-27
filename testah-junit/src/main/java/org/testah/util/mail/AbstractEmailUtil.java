@@ -175,7 +175,6 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
         return getMessages(getMsgByFromEmailFilter(fromAddress));
     }
 
-
     /**
      * Gets msg by index.
      *
@@ -282,15 +281,13 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
         return new ArrayList<M>();
     }
 
-
     /**
      * Gets attachment as strings.
      *
      * @param messages the messages
      * @return the attachment as strings
-     * @throws Exception the exception
      */
-    public List<String> getAttachmentAsStrings(final List<M> messages) throws Exception {
+    public List<String> getAttachmentAsStrings(final List<M> messages) {
         List<String> attachments = new ArrayList<>();
         getAttachmentFiles(messages, true).stream().forEach(file -> {
             try {
@@ -302,15 +299,13 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
         return attachments;
     }
 
-
     /**
      * Gets attachment files.
      *
      * @param messages the messages
      * @return the attachment files
-     * @throws Exception the exception
      */
-    public List<File> getAttachmentFiles(final List<M> messages) throws Exception {
+    public List<File> getAttachmentFiles(final List<M> messages) {
         return getAttachmentFiles(messages, false);
     }
 
@@ -347,20 +342,6 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
     }
 
     /**
-     * Delete on exit.
-     * This is to allow unit test to check if its set correctly
-     *
-     * @param file               the file
-     * @param shouldDeleteOnExit the should delete on exit
-     */
-    protected void deleteOnExit(final File file, final boolean shouldDeleteOnExit) {
-        if (shouldDeleteOnExit) {
-            file.deleteOnExit();
-        }
-        return;
-    }
-
-    /**
      * Gets attachment files.
      *
      * @param message      the message
@@ -369,6 +350,20 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
      * @throws Exception the exception
      */
     public abstract List<File> getAttachmentFiles(final M message, final boolean deleteOnExit) throws Exception;
+
+    /**
+     * Delete on exit.
+     * This is to allow unit test to check if its set correctly
+     *
+     * @param file               the file
+     * @param shouldDeleteOnExit the should delete on exit
+     */
+    protected T deleteOnExit(final File file, final boolean shouldDeleteOnExit) {
+        if (shouldDeleteOnExit) {
+            file.deleteOnExit();
+        }
+        return (T) this;
+    }
 
     /**
      * Gets msg body.
@@ -493,7 +488,6 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
      * @return the password
      */
     protected abstract String getPassword();
-
 
     public abstract void close();
 

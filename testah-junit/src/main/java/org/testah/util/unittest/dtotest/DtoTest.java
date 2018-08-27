@@ -49,7 +49,7 @@ public class DtoTest {
         mapperBuilder.put(int.class, () -> 0);
         mapperBuilder.put(double.class, () -> 0.0d);
         mapperBuilder.put(float.class, () -> 0.0f);
-        mapperBuilder.put(long.class, () -> 0l);
+        mapperBuilder.put(long.class, () -> 0L);
         mapperBuilder.put(boolean.class, () -> true);
         mapperBuilder.put(short.class, () -> (short) 0);
         mapperBuilder.put(byte.class, () -> (byte) 0);

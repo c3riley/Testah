@@ -63,9 +63,7 @@ public class RunTimeDto {
      */
     @JsonIgnore
     public RunTimeDto start() {
-        Date startDate = new Date();
-        this.startDate = startDate;
-        return start(startDate.getTime());
+        return start(new Date().getTime());
     }
 
     /**
@@ -77,6 +75,7 @@ public class RunTimeDto {
     @JsonIgnore
     public RunTimeDto start(final Long startTime) {
         this.startTime = startTime;
+        this.startDate = new Date(startTime);
         return this;
     }
 
@@ -87,9 +86,7 @@ public class RunTimeDto {
      */
     @JsonIgnore
     public RunTimeDto stop() {
-        Date endDate = new Date();
-        this.endDate = endDate;
-        return stop(endDate.getTime());
+        return stop(new Date().getTime());
     }
 
     /**
