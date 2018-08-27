@@ -377,6 +377,16 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
     }
 
     /**
+     * Gets msg body.
+     *
+     * @param message     the message
+     * @param contentType the content type
+     * @return the msg body
+     * @throws Exception the exception
+     */
+    public abstract String getMsgBody(final M message, final String contentType) throws Exception;
+
+    /**
      * Gets msg body text.
      *
      * @param message the message
@@ -393,16 +403,6 @@ public abstract class AbstractEmailUtil<T, M, A, F, H> implements Closeable {
      * @throws Exception the exception
      */
     public abstract String getMsgBodyHtml(final M message) throws Exception;
-
-    /**
-     * Gets msg body.
-     *
-     * @param message     the message
-     * @param contentType the content type
-     * @return the msg body
-     * @throws Exception the exception
-     */
-    public abstract String getMsgBody(final M message, final String contentType) throws Exception;
 
     /**
      * Delete msg t.
