@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * The type Abstract email util.
+ * The type Abstract email util to support Imaps and Exchange Email Systems.
  *
  * @param <T> Class Implementing Abstract to Return
  * @param <M> Email Message Class
