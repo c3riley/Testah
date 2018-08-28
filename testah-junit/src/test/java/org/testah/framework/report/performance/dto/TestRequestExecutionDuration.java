@@ -5,7 +5,7 @@ import org.testah.TS;
 
 public class TestRequestExecutionDuration {
     private static final String aggregation = "FAKE_aggregation";
-    private static final String domain = "api.dev1.eagleinvsys";
+    private static final String domain = "api.dev1.company.com";
     private static final String testClass = "FAKE_test_class";
     private static final String testMethod = "FAKE_test_method";
     private static final String collectionTime = "2017-11-01T13:54:06";

@@ -128,7 +128,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @return the actual
      */
     public Object getActual() {
-        return message3;
+        return getMessage3();
     }
 
     /**
@@ -137,7 +137,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @return the expected
      */
     public Object getExpected() {
-        return message2;
+        return getMessage2();
     }
 
     /**
@@ -224,9 +224,8 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @param actual the actual
      * @return the step action dto
      */
-    public StepActionDto setActual(final Object actual) {
-        this.message3 = String.valueOf(actual);
-        return this;
+    public StepActionDto setActual(final String actual) {
+        return setMessage3(actual);
     }
 
     /**
@@ -235,9 +234,8 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @param expected the expected
      * @return the step action dto
      */
-    public StepActionDto setExpected(final Object expected) {
-        this.message2 = String.valueOf(expected);
-        return this;
+    public StepActionDto setExpected(final String expected) {
+        return setMessage2(expected);
     }
 
     /**
@@ -308,8 +306,8 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @param message2 the message2
      * @return the step action dto
      */
-    public StepActionDto setMessage2(final Object message2) {
-        this.message2 = String.valueOf(message2);
+    public StepActionDto setMessage2(final String message2) {
+        this.message2 = message2;
         return this;
     }
 
@@ -328,8 +326,8 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @param message3 the message3
      * @return the step action dto
      */
-    public StepActionDto setMessage3(final Object message3) {
-        this.message3 = String.valueOf(message3);
+    public StepActionDto setMessage3(final String message3) {
+        this.message3 = message3;
         return this;
     }
 

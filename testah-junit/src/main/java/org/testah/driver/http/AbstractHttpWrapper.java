@@ -343,7 +343,9 @@ public abstract class AbstractHttpWrapper {
                 responseDto.setRequestUsed(request);
             }
             if (verbose) {
-                AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500), false);
+                AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(
+                        request.isTruncateResponseBodyInReport(), true,
+                        request.getTruncateResponseBodyInReportBy()), false);
             }
             if (request.isAutoAssert() && request.getExpectedStatus() > 0) {
                 responseDto.assertStatus(request.getExpectedStatus());

@@ -78,6 +78,17 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     protected boolean autoAssert = false;
 
     /**
+     * if the Http driver should use the short response in the report and truncate it.
+     * Default is true, and will use truncateResponseBodyInReportBy to tell how much to truncate it by
+     */
+    private boolean truncateResponseBodyInReport = true;
+
+    /**
+     * if truncateResponseBodyInReport is true, this number will tell how much to truncate the response by.
+     */
+    private int truncateResponseBodyInReportBy = TS.params().getDefaultResponseTruncate();
+
+    /**
      * Gets the self.
      *
      * @return the self
@@ -629,4 +640,29 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         return getSelf();
     }
 
+
+    /**
+     * Is truncate response body in report boolean.
+     * If the boolean is true, but also the truncateResponseBodyInReportBy needs to be set to 0 or more, else it will
+     * turn off the truncation, and this will return false.
+     *
+     * @return the boolean
+     */
+    public boolean isTruncateResponseBodyInReport() {
+        return truncateResponseBodyInReport && truncateResponseBodyInReportBy > 0;
+    }
+
+    public T setTruncateResponseBodyInReport(boolean truncateResponseBodyInReport) {
+        this.truncateResponseBodyInReport = truncateResponseBodyInReport;
+        return getSelf();
+    }
+
+    public int getTruncateResponseBodyInReportBy() {
+        return truncateResponseBodyInReportBy;
+    }
+
+    public T setTruncateResponseBodyInReportBy(int truncateResponseBodyInReportBy) {
+        this.truncateResponseBodyInReportBy = truncateResponseBodyInReportBy;
+        return getSelf();
+    }
 }
