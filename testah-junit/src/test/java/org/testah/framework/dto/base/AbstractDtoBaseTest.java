@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.containsString;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.testah.driver.http.response.ResponseDto;
 
 public class AbstractDtoBaseTest {
 
@@ -56,7 +57,13 @@ public class AbstractDtoBaseTest {
 
     @Test
     public void testEquals() {
+        ResponseDto dto1 = new ResponseDto();
+        ResponseDto dto2 = new ResponseDto();
+        dto1.setStatusText("testing2");
+        dto2.setStatusText("testing1");
 
+        dto1.equalsVerbose(dto2);
+        dto1.equals(dto2);
     }
 
 }

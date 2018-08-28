@@ -11,7 +11,7 @@ public class AssertStringsTest {
     private static final String testLineA = "This is a A test";
     private static final String testLineB = "This is a B test";
 
-    public AssertStrings assertStrings = new AssertStrings(new VerboseAsserts().onlyVerify());
+    public AssertStrings assertStrings;
 
     @Before
     public void setup()
@@ -22,73 +22,84 @@ public class AssertStringsTest {
     @Test
     public void testBothAreEmptyString()
     {
-        assertStrings.deepAssert("", "");
+        assertStrings = new AssertStrings("", new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo("");
     }
 
     @Test
     public void testExpectedIsEmptyString()
     {
-        assertStrings.deepAssert("", testLineA);
+        assertStrings = new AssertStrings(testLineA, new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo("");
     }
 
     @Test
     public void testActualIsEmptyString()
     {
-        assertStrings.deepAssert(testLineA, "");
+        assertStrings = new AssertStrings("", new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo(testLineA );
     }
 
     @Test
     public void testBothHaveNullValues()
     {
-        assertStrings.deepAssert(null, null);
+        assertStrings = new AssertStrings(null, new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo(null);
     }
 
     @Test
     public void testExpectedHasMoreLinesThanActual()
     {
-        assertStrings.deepAssert(getStringUsedWithNumberOfLines(testLineA, 2), getStringUsedWithNumberOfLines(testLineA, 1));
+        assertStrings = new AssertStrings(getStringUsedWithNumberOfLines(testLineA, 1), new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 2));
     }
 
     @Test
     public void testActualHasMoreLinesThanExpected()
     {
-        assertStrings.deepAssert(getStringUsedWithNumberOfLines(testLineA, 10), getStringUsedWithNumberOfLines(testLineA, 14));
+        assertStrings = new AssertStrings(getStringUsedWithNumberOfLines(testLineA, 14), new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 10));
     }
 
     @Test
     public void testOneLineStringWithDifferentValues()
     {
-        assertStrings.deepAssert(getStringUsedWithNumberOfLines(testLineA, 1), getStringUsedWithNumberOfLines(testLineB, 1));
+        assertStrings = new AssertStrings(getStringUsedWithNumberOfLines(testLineB, 1), new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 1));
     }
 
     @Test
     public void testMultiLineStringWithDifferentValues()
     {
-        assertStrings.deepAssert(getStringUsedWithNumberOfLines(testLineA, 10), getStringUsedWithNumberOfLines(testLineB, 10));
+        assertStrings = new AssertStrings(getStringUsedWithNumberOfLines(testLineB, 10), new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 10));
     }
 
     @Test
     public void testWithSomeSameLinesAndSomeDifferentLinesSameNumberOfLines()
     {
-        assertStrings.deepAssert(getStringUsedWithNumberOfLines(testLineA, 5)
+        assertStrings = new AssertStrings(getStringUsedWithNumberOfLines(testLineB, 10), new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 5)
                 + getStringUsedWithNumberOfLines(testLineB, 2)
-                + getStringUsedWithNumberOfLines(testLineA, 3), getStringUsedWithNumberOfLines(testLineB, 10));
+                + getStringUsedWithNumberOfLines(testLineA, 3));
     }
 
     @Test
     public void testWithSomeSameLinesAndSomeDifferentLinesActualHasMoreLines()
     {
-        assertStrings.deepAssert(getStringUsedWithNumberOfLines(testLineA, 5)
+        assertStrings = new AssertStrings(getStringUsedWithNumberOfLines(testLineB, 12), new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 5)
                 + getStringUsedWithNumberOfLines(testLineB, 2)
-                + getStringUsedWithNumberOfLines(testLineA, 3), getStringUsedWithNumberOfLines(testLineB, 12));
+                + getStringUsedWithNumberOfLines(testLineA, 3));
     }
 
     @Test
     public void testWithSomeSameLinesAndSomeDifferentLinesExpectedHasMoreLines()
     {
-        assertStrings.deepAssert(getStringUsedWithNumberOfLines(testLineA, 5)
+        assertStrings = new AssertStrings(getStringUsedWithNumberOfLines(testLineB, 9), new VerboseAsserts().onlyVerify());
+        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 5)
                + getStringUsedWithNumberOfLines(testLineB, 2)
-               + getStringUsedWithNumberOfLines(testLineA, 3), getStringUsedWithNumberOfLines(testLineB, 9));
+               + getStringUsedWithNumberOfLines(testLineA, 3));
     }
 
     @Test
@@ -97,7 +108,7 @@ public class AssertStringsTest {
         final String expected = "CLASS,,,,,,,,,,,,,,,,,";
         final String actual = "\tCLASS,,,,,,,,,,,,,,,,,";
 
-        String diffString = assertStrings.getEasyToDebugStringForStringDifferences(expected, actual);
+        String diffString = assertStrings.getEasyToDebugStringForStringDifferences(expected, actual, false);
         System.out.println(diffString);
         Assert.assertEquals("Check 1st line with expected difference",
                 diffString.split("\n")[0], "[ C ] char[67] != [ \t ] char[9]  <error found>");

@@ -87,6 +87,7 @@ public abstract class AbstractDtoBase<T> {
         return getSelf().getClass().getCanonicalName();
     }
 
+    @Override
     public String toString() {
         return toString(ToStringStyle.JSON_STYLE);
     }
@@ -103,6 +104,7 @@ public abstract class AbstractDtoBase<T> {
         return toStringBuilder.toString();
     }
 
+    @Override
     public boolean equals(final Object obj) {
         return EqualsBuilder.reflectionEquals(getSelf(), obj);
     }
@@ -125,6 +127,7 @@ public abstract class AbstractDtoBase<T> {
         return equals(obj);
     }
 
+    @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(getSelf());
     }

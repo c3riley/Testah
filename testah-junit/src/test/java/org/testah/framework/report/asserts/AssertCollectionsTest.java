@@ -30,19 +30,19 @@ class AssertCollectionsTest {
     @Test
     void hasSize() {
         List<String> lst = new ArrayList<String>();
-        new AssertCollections(lst).hasSize(0);
+        new AssertCollections(lst).size().equals(0);
 
         lst.add("item 1");
-        new AssertCollections(lst).hasSize(1);
+        new AssertCollections(lst).size().equals(1);
     }
 
     @Test
     void hasSizeArrayString() {
         String[] array = new String[] {};
-        new AssertCollections(array).hasSize(0);
+        new AssertCollections(array).size().equals(0);
 
         array = new String[] {"item 1"};
-        new AssertCollections(array).hasSize(1);
+        new AssertCollections(array).size().equals(1);
     }
 
     @Test
@@ -225,7 +225,7 @@ class AssertCollectionsTest {
         lst2.add("item 1");
         lst2.add("item 3");
         lst2.add("item 2");
-        new AssertCollections(lst1).equalsIgnoreOrder(lst2);
+        new AssertCollections(lst1).equalsToIgnoreOrder(lst2);
     }
 
     @Test

@@ -1,11 +1,18 @@
 package org.testah.framework.report;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.testah.TS;
+import org.testah.client.dto.TestCaseDto;
+import org.testah.client.dto.TestStepDto;
 
 import java.util.*;
+
+import org.testah.framework.dto.StepAction;
+import org.unitils.reflectionassert.ReflectionAssert;
 
 public class VerboseAssertsTest {
 
@@ -63,81 +70,82 @@ public class VerboseAssertsTest {
 
     @Test
     public void startsWith() {
-        Assert.assertTrue(va.startsWith("test", null, null));
-        Assert.assertTrue(va.startsWith("test", "t1234", "t"));
-        Assert.assertTrue(va.startsWith("test", "t1234", "t1234"));
-        Assert.assertTrue(va.startsWith("test", "t1234", ""));
-        Assert.assertTrue(va.startsWith("test", "", ""));
+        Assert.assertTrue(va.given("test").startsWith( null).isFailed());
+        Assert.assertTrue(va.given("t1234").startsWith( "t").isPassed());
+        Assert.assertTrue(va.given("t1234").startsWith( "t1234").isPassed());
+        Assert.assertTrue(va.given("t1234").startsWith(  "").isPassed());
+        Assert.assertTrue(va.given("").startsWith( "").isPassed());
 
-        Assert.assertFalse(va.startsWith("test", "t1234", null));
-        Assert.assertFalse(va.startsWith("test", "t1234", "t123a4"));
-        Assert.assertFalse(va.startsWith("test", "t1234", "T1234"));
-        Assert.assertFalse(va.startsWith("test", "", "t"));
+        Assert.assertFalse(va.given("t1234").startsWith( null).isPassed());
+        Assert.assertFalse(va.given("t1234").startsWith( "t123a4").isPassed());
+        Assert.assertFalse(va.given("t1234").startsWith(  "T1234").isPassed());
+        Assert.assertFalse(va.given("").startsWith(  "t").isPassed());
     }
 
     @Test
     public void startsWithIgnoreCase() {
-        Assert.assertTrue(va.startsWithIgnoreCase("test", null, null));
-        Assert.assertTrue(va.startsWithIgnoreCase("test", "t1234", "t"));
-        Assert.assertTrue(va.startsWithIgnoreCase("test", "t1234", "t1234"));
-        Assert.assertTrue(va.startsWithIgnoreCase("test", "t1234", ""));
-        Assert.assertTrue(va.startsWithIgnoreCase("test", "", ""));
+        String nullValue = null;
+        Assert.assertTrue(va.given(nullValue).startsWithIgnoreCase( null).isFailed());
+        Assert.assertTrue(va.given("t1234").startsWithIgnoreCase( "t").isPassed());
+        Assert.assertTrue(va.given("t1234").startsWithIgnoreCase(  "t1234").isPassed());
+        Assert.assertTrue(va.given("t1234").startsWithIgnoreCase(  "").isPassed());
+        Assert.assertTrue(va.given("").startsWithIgnoreCase(  "").isPassed());
 
-        Assert.assertFalse(va.startsWithIgnoreCase("test", "t1234", null));
-        Assert.assertFalse(va.startsWithIgnoreCase("test", "t1234", "t123a4"));
-        Assert.assertFalse(va.startsWithIgnoreCase("test", "", "t"));
+        Assert.assertFalse(va.given("t1234").startsWithIgnoreCase(  null).isPassed());
+        Assert.assertFalse(va.given("t1234").startsWithIgnoreCase( "t123a4").isPassed());
+        Assert.assertFalse(va.given("").startsWithIgnoreCase( "t").isPassed());
 
-        Assert.assertTrue(va.startsWithIgnoreCase("test", null, null));
-        Assert.assertTrue(va.startsWithIgnoreCase("test", "T1234", "t"));
-        Assert.assertTrue(va.startsWithIgnoreCase("test", "T1234a", "T1234A"));
-        Assert.assertTrue(va.startsWithIgnoreCase("test", "t1234", ""));
-        Assert.assertTrue(va.startsWithIgnoreCase("test", "", ""));
+        Assert.assertTrue(va.given(nullValue).startsWithIgnoreCase(  null).isFailed());
+        Assert.assertTrue(va.given("T1234").startsWithIgnoreCase(  "t").isPassed());
+        Assert.assertTrue(va.given("T1234a").startsWithIgnoreCase( "T1234A").isPassed());
+        Assert.assertTrue(va.given("t1234").startsWithIgnoreCase(  "").isPassed());
+        Assert.assertTrue(va.given("").startsWithIgnoreCase(  "").isPassed());
 
-        Assert.assertFalse(va.startsWithIgnoreCase("test", "T1234", null));
-        Assert.assertFalse(va.startsWithIgnoreCase("test", "R1234a", "R1234A2"));
-        Assert.assertFalse(va.startsWithIgnoreCase("test", "", "t"));
+        Assert.assertFalse(va.given("T1234").startsWithIgnoreCase(  null).isPassed());
+        Assert.assertFalse(va.given("R1234a").startsWithIgnoreCase(  "R1234A2").isPassed());
+        Assert.assertFalse(va.given("").startsWithIgnoreCase( "t").isPassed());
     }
 
     @Test
     public void endsWith() {
-        Assert.assertTrue(va.endsWith("test", "ending", "ing"));
-        Assert.assertFalse(va.endsWith("test", "ending", "Ing"));
-        Assert.assertFalse(va.endsWith("test", "ending", "izng"));
+        Assert.assertTrue(va.given("ending").endsWith( "ing").isPassed());
+        Assert.assertFalse(va.given("ending").endsWith(  "Ing").isPassed());
+        Assert.assertFalse(va.given("ending").endsWith(  "izng").isPassed());
     }
 
     @Test
     public void endsWithIgnoreCase() {
-        Assert.assertTrue(va.endsWithIgnoreCase("test", "ending", "ing"));
-        Assert.assertTrue(va.endsWithIgnoreCase("test", "ending", "Ing"));
-        Assert.assertFalse(va.endsWithIgnoreCase("test", "ending", "izng"));
+        Assert.assertTrue(va.given("ending").endsWithIgnoreCase(  "ing").isPassed());
+        Assert.assertTrue(va.given("ending").endsWithIgnoreCase( "Ing").isPassed());
+        Assert.assertFalse(va.given("ending").endsWithIgnoreCase( "izng").isPassed());
     }
 
     @Test
     public void contains() {
-        Assert.assertTrue(va.contains("test", "contains-me And this", " And "));
-        Assert.assertFalse(va.contains("test", "contains-me And this", " and "));
-        Assert.assertFalse(va.contains("test", "contains-me and this", "-me  "));
+        Assert.assertTrue(va.given("contains-me And this").contains(  " And ").isPassed());
+        Assert.assertFalse(va.given("contains-me And this").contains( " and ").isPassed());
+        Assert.assertFalse(va.given("contains-me And this").contains(  "-me  ").isPassed());
     }
 
     @Test
     public void containsIgnoreCase() {
-        Assert.assertTrue(va.containsIgnoreCase("test", "contains-me And this", " And "));
-        Assert.assertTrue(va.containsIgnoreCase("test", "contains-me And this", " and "));
-        Assert.assertFalse(va.containsIgnoreCase("test", "contains-me and this", "-me  "));
+        Assert.assertTrue(va.given("contains-me And this").containsIgnoreCase( " And ").isPassed());
+        Assert.assertTrue(va.given("contains-me And this").containsIgnoreCase(  " and ").isPassed());
+        Assert.assertFalse(va.given("contains-me And this").containsIgnoreCase(  "-me  ").isPassed());
     }
 
     @Test
     public void sizeEquals() {
-        Assert.assertTrue(va.sizeEquals("String", "123", 3));
+        Assert.assertTrue(va.given("String").size().equalsTo(6).isPassed());
 
-        Assert.assertTrue(va.sizeEquals("String", new String[]{"1", "2", "3"}, 3));
+        Assert.assertTrue(va.given(new String[]{"1", "2", "3"}).size().equalsTo(3).isPassed());
         List<String> lst = new ArrayList<>();
         lst.add("1");
         lst.add("2");
         lst.add("3");
-        Assert.assertTrue(va.sizeEquals("list", lst, 3));
+        Assert.assertTrue(va.given(lst).size().equalsTo(3).isPassed());
         lst.remove(0);
-        Assert.assertFalse(va.sizeEquals("list", lst, 3));
+        Assert.assertFalse(va.given(lst).size().equalsTo(3).isPassed());
 
         HashMap<String, Integer> hash = new HashMap<String, Integer>();
         hash.put("1", 1);
@@ -160,30 +168,30 @@ public class VerboseAssertsTest {
 
     @Test
     public void notEndsWith() {
-        Assert.assertFalse(va.notEndsWith("test", "ending", "ing"));
-        Assert.assertTrue(va.notEndsWith("test", "ending", "Ing"));
-        Assert.assertTrue(va.notEndsWith("test", "ending", "izng"));
+        Assert.assertFalse(va.given("ending").notEndsWith(  "ing").isPassed());
+        Assert.assertTrue(va.given("ending").notEndsWith(  "Ing").isPassed());
+        Assert.assertTrue(va.given("ending").notEndsWith( "izng").isPassed());
     }
 
     @Test
     public void notEndsWithIgnoreCase() {
-        Assert.assertFalse(va.notEndsWithIgnoreCase("test", "ending", "ing"));
-        Assert.assertFalse(va.notEndsWithIgnoreCase("test", "ending", "Ing"));
-        Assert.assertTrue(va.notEndsWithIgnoreCase("test", "ending", "izng"));
+        Assert.assertFalse(va.given("ending").notEndsWithIgnoreCase(  "ing").isPassed());
+        Assert.assertFalse(va.given("ending").notEndsWithIgnoreCase(  "Ing").isPassed());
+        Assert.assertTrue(va.given("ending").notEndsWithIgnoreCase( "izng").isPassed());
     }
 
     @Test
     public void notContains() {
-        Assert.assertFalse(va.notContains("test", "contains-me And this", " And "));
-        Assert.assertTrue(va.notContains("test", "contains-me And this", " and "));
-        Assert.assertTrue(va.notContains("test", "contains-me and this", "-me  "));
+        Assert.assertFalse(va.given("contains-me And this").notContains(  " And ").isPassed());
+        Assert.assertTrue(va.given("contains-me And this").notContains(  " and ").isPassed());
+        Assert.assertTrue(va.given("contains-me and this").notContains(  "-me  ").isPassed());
     }
 
     @Test
     public void notContainsIgnoreCase() {
-        Assert.assertFalse(va.notContainsIgnoreCase("test", "contains-me And this", " And "));
-        Assert.assertFalse(va.notContainsIgnoreCase("test", "contains-me And this", " and "));
-        Assert.assertTrue(va.notContainsIgnoreCase("test", "contains-me and this", "-me  "));
+        Assert.assertFalse(va.given("contains-me And this").notContainsIgnoreCase( " And ").isPassed());
+        Assert.assertFalse(va.given("contains-me And this").notContainsIgnoreCase(  " and ").isPassed());
+        Assert.assertTrue(va.given("contains-me and this").notContainsIgnoreCase(  "-me  ").isPassed());
     }
 
     @Test
@@ -389,10 +397,45 @@ public class VerboseAssertsTest {
 
     @Test
     public void assertFileExists() {
+        TestCaseDto test1 = new TestCaseDto();
+        test1.setName("test1");
+        test1.addTestStep(new TestStepDto("test", "test1"));
+        test1.getTestSteps().get(0).setStatus(false);
+        TestCaseDto test2 = new TestCaseDto();
+        test2.setName("test2");
+        test2.addTestStep(new TestStepDto("test", "test2"));
+        test2.getTestSteps().get(0).setStatus(true);
+        try {
+            ReflectionAssert.assertReflectionEquals(test1, test2);
+        } catch (Throwable throwable) {
+            TS.addStepAction(StepAction.createInfo("assertReflectionEquals", throwable.getMessage()));
+        }
+        EqualsBuilder.reflectionEquals(test1, test2);
+
+        List<String> lst1 = new ArrayList<>();
+        lst1.add("1");
+        lst1.add("1");
+        lst1.add("2");
+        lst1.add("1");
+        List<String> lst2 = new ArrayList<>();
+        lst2.add("1");
+        lst2.add("1");
+        lst2.add("1");
+        lst2.add("1");
+
+        try {
+            ReflectionAssert.assertReflectionEquals(lst1, lst2);
+        } catch (Throwable throwable) {
+            TS.addStepAction(StepAction.createInfo("assertReflectionEquals", throwable.getMessage()));
+        }
+
+
     }
 
     @Test
     public void assertFileExists1() {
+
+
     }
 
     @Test

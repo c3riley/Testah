@@ -86,7 +86,8 @@ dependencies {
     compile 'org.jvnet.localizer:localizer:1.12'
     compile 'org.jvnet.localizer:maven-localizer-plugin:1.13'
     compile 'net.sourceforge.argparse4j:argparse4j:0.7.0'
-
+    // https://mvnrepository.com/artifact/org.unitils/unitils-core
+    compile group: 'org.unitils', name: 'unitils-core', version: '3.4.6'
     //compile 'org.seleniumhq.selenium:selenium-java:2.53.1'
     compile 'io.github.bonigarcia:webdrivermanager:1.7.1'
 
