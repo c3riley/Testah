@@ -65,6 +65,7 @@ public abstract class AbstractLoadTest {
         runProps.setNumberOfAkkaThreads(numThreads);
         runProps.setChunkSize(chunkSize);
         runProps.setStopTime(DateTime.now().plusMinutes(timeIntervalMinutes).getMillis());
+        loadTestDataGenerator.init(chunkSize, runProps.getNumberOfChunks());
         List<ResponseDto> responses;
 
         while (System.currentTimeMillis() < runProps.getStopTime()) {

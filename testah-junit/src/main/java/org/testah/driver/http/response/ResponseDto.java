@@ -395,7 +395,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @return the response dto
      */
     public ResponseDto print(final boolean shortResponseBody) {
-        return print(shortResponseBody, 500);
+        return print(shortResponseBody, requestUsed.getTruncateResponseBodyInReportBy());
     }
 
     /**

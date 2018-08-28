@@ -55,6 +55,7 @@ jobs:
       - run: echo param_usefilterSchema=DEFAULT > testah-junit/testah.properties
       - run: echo filter_DEFAULT_filterByRunType=~FIREFOX >> testah-junit/testah.properties
       - run: echo filter_DEFAULT_filterByTestType=AUTOMATED >> testah-junit/testah.properties
+      - run: echo param_userDir=/home/circleci/repo/testah-junit >> testah-junit/testah.properties
       
       - run: cd testah-junit && ./gradlew build
 

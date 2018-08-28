@@ -94,7 +94,9 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
                             public void completed(final HttpResponse response) {
                                 if (verbose) {
                                     final ResponseDto responseDto = getResponseDto(response, request);
-                                    AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(true, true, 500));
+                                    AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(
+                                            request.isTruncateResponseBodyInReport(), true,
+                                            request.getTruncateResponseBodyInReportBy()));
                                 }
                             }
 
