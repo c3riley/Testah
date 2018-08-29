@@ -4,9 +4,11 @@ import org.junit.Assert;
 import org.testah.TS;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.base.AbstractAssertBase;
+import org.testah.framework.report.asserts.base.AssertFunctionReturnBooleanActual;
 import org.unitils.reflectionassert.ReflectionAssert;
 import org.unitils.reflectionassert.ReflectionComparatorMode;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -47,10 +49,13 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
      * @return the assert collections
      */
     public AssertCollections contains(final T expectedValueContained) {
-        return runAssert("Check that actual[" + getActual() + "] contains " + expectedValueContained, "contains",
-                () -> {
-                    Assert.assertTrue(getActual().contains(expectedValueContained));
-                }, expectedValueContained, getActual());
+        AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
+            history.setExpectedForHistory("Expect to contain[" + expectedValueContained + "]");
+            Assert.assertTrue(getActual().contains(expectedValueContained));
+            return true;
+        };
+         return runAssert("Check that actual[" + getActual() + "] contains " + expectedValueContained, "contains",
+                assertRun, null, getActual());
     }
 
     /**
@@ -60,10 +65,13 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
      * @return the assert collections
      */
     public AssertCollections doesNotContain(final T expectedValueNotContained) {
+        AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
+            history.setExpectedForHistory("Expect to not contain[" + expectedValueNotContained + "]");
+            Assert.assertFalse(getActual().contains(expectedValueNotContained));
+            return true;
+        };
         return runAssert("Check that actual[" + getActual() + "] does not contain " + expectedValueNotContained, "doesNotContain",
-                () -> {
-                    Assert.assertFalse(getActual().contains(expectedValueNotContained));
-                }, expectedValueNotContained, getActual());
+                assertRun, null, getActual());
     }
 
     /**
@@ -72,11 +80,15 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
      * @return the assert collections
      */
     public AssertCollections noDuplicates() {
-        HashSet<T> hashSet = new HashSet<T>(getActual());
+        AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
+            HashSet<T> hashSet = new HashSet<T>(getActual());
+            history.setExpectedForHistory(hashSet.size());
+            history.setActualForHistory(actual.size());
+            Assert.assertTrue(hashSet.size() == actual.size());
+            return true;
+        };
         return runAssert("Check that actual[" + getActual() + "] has not duplicates", "noDuplicates",
-                () -> {
-                    Assert.assertTrue(hashSet.size() == getActual().size());
-                }, getActual().size(), hashSet.size());
+                assertRun, null, getActual());
     }
 
     /**
@@ -85,11 +97,15 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
      * @return the assert collections
      */
     public AssertCollections hasDuplicates() {
-        HashSet<T> hashSet = new HashSet<T>(getActual());
+        AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
+            HashSet<T> hashSet = new HashSet<T>(getActual());
+            history.setExpectedForHistory(hashSet.size());
+            history.setActualForHistory(actual.size());
+            Assert.assertTrue(hashSet.size() < getActual().size());
+            return true;
+        };
         return runAssert("Check that actual[" + getActual() + "] has duplicates", "hasDuplicates",
-                () -> {
-                    Assert.assertTrue(hashSet.size() < getActual().size());
-                }, getActual().size(), hashSet.size());
+                assertRun, null, getActual());
     }
 
     /**
@@ -136,10 +152,12 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
 
     private AssertCollections equalsTo(final Collection<T> expectedCollection, final ReflectionComparatorMode... modes) {
         final String msg = "Checking that the actual is equal with reflection and modes[" + modes.toString() + "]";
-        return runAssert(msg, "equals",
-            () -> {
-                ReflectionAssert.assertReflectionEquals(msg, expectedCollection, getActual(), modes);
-            }, expectedCollection, getActual());
+        AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
+            ReflectionAssert.assertReflectionEquals(msg, expectedCollection, getActual(), modes);
+            return true;
+        };
+        return runAssert(msg, "equalsToWithReflection",
+                assertRun, expectedCollection, getActual());
     }
 
     /**
@@ -148,17 +166,22 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
      * @return the assert collections
      */
     public AssertCollections isEmpty() {
-        return runAssert("Checking that the actual is empty", "isEmpty",
-                () -> {
-                    Assert.assertTrue(getActual().isEmpty());
-                }, true, null);
+        AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
+                history.setExpectedForHistory(true);
+                history.setActualForHistory(getActual().isEmpty());
+                Assert.assertTrue(getActual().isEmpty());
+            return true;
+        };
+        return super.isEmpty(assertRun);
     }
 
     public AssertCollections isNotEmpty() {
-        final boolean actual = getActual().isEmpty();
-        return runAssert("Checking that the actual is not empty", "isNotEmpty",
-                () -> {
-                    Assert.assertFalse(actual);
-                }, false, SET_ACTUAL_HISTORY_FROM_CLOSURE_BOOLEAN);
+        AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
+            history.setExpectedForHistory(false);
+            history.setActualForHistory(getActual().isEmpty());
+            Assert.assertFalse(getActual().isEmpty());
+            return true;
+        };
+        return super.isNotEmpty(assertRun);
     }
 }

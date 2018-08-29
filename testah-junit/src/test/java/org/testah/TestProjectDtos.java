@@ -7,6 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testah.client.dto.*;
 import org.testah.framework.cli.Params;
+import org.testah.framework.dto.Result;
+import org.testah.framework.dto.ResultDto;
+import org.testah.framework.dto.Step;
+import org.testah.framework.report.asserts.base.AssertHistoryItem;
 import org.testah.runner.performance.dto.LoadTestSequenceDto;
 import org.testah.util.database.dto.SqlExecutionDto;
 import org.testah.util.dto.ShellInfoDto;
@@ -109,6 +113,14 @@ public class TestProjectDtos {
         test.testGettersAndSetters(new LoadTestSequenceDto());
         test.testGettersAndSetters(new SqlExecutionDto("SELECT 1"));
         test.testGettersAndSetters(new ShellInfoDto());
+        test.testGettersAndSetters(new AssertHistoryItem());
+
+        test.testGettersAndSetters(new ResultDto());
+        test.testGettersAndSetters(new Result());
+        test.testGettersAndSetters(new Step());
+
+
+
 
     }
 

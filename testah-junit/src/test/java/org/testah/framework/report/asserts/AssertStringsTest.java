@@ -107,11 +107,11 @@ public class AssertStringsTest {
     {
         final String expected = "CLASS,,,,,,,,,,,,,,,,,";
         final String actual = "\tCLASS,,,,,,,,,,,,,,,,,";
-
+        AssertStrings assertStrings = new AssertStrings(actual, new VerboseAsserts().onlyVerify());
         String diffString = assertStrings.getEasyToDebugStringForStringDifferences(expected, actual, false);
         System.out.println(diffString);
-        Assert.assertEquals("Check 1st line with expected difference",
-                diffString.split("\n")[0], "[ C ] char[67] != [ \t ] char[9]  <error found>");
+        Assert.assertEquals("Check 1st line with expected difference","1#[ C ](67) != [ \t ](9)  <error>",
+                diffString.split(System.lineSeparator())[1].trim());
     }
 
     private String getStringUsedWithNumberOfLines(final String lineValue, final int numberOfLines)

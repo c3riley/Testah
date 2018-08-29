@@ -1,13 +1,13 @@
 package org.testah.framework.report.asserts.base;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Assert;
 import org.testah.TS;
 import org.testah.framework.report.VerboseAsserts;
-import org.testah.framework.report.asserts.AssertStrings;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
 
@@ -89,68 +89,29 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
         return getStatus().contains(false);
     }
 
-    protected boolean canAssertRun() {
-        return canAssertRun("");
-    }
-
     protected boolean canAssertRun(final String assertName) {
-        return canAssertRun(assertName, false);
-    }
-
-    protected boolean canAssertRun(final boolean throwRuntimeIfCannotRunAssert) {
-        return canAssertRun("", throwRuntimeIfCannotRunAssert);
+        return canAssertRun(assertName, true);
     }
 
     protected boolean canAssertRun(final String assertName, final boolean throwRuntimeIfCannotRunAssert) {
         if (getActual() == null) {
-            TS.log().debug("Unable to run assert requested as collection is null");
+            TS.log().debug("Unable to run assert[" + assertName + "] requested as actual is null");
             getStatus().add(false);
-            getAsserts().isNull(getMessage("Checking that actual is not null"));
+            //getAsserts().isNull(getMessage("Checking that actual is not null"));
             if (throwRuntimeIfCannotRunAssert) {
-                throw new RuntimeException("Unable to run the assert attempted, the actual is null");
+                throw new AssertNotAllowedWithNullActual(assertName);
             }
             return false;
         }
         return true;
     }
 
-    protected H runAssert(final String message, final String assertName,
-                          final Runnable runnableAssertBlock) {
-        return runAssert(message, assertName, runnableAssertBlock, false);
-    }
-
-
-    protected H runAssert(final String message, final String assertName,
-                          final Runnable runnableAssertBlock, final boolean allowNull) {
-        return runAssert(message, assertName, runnableAssertBlock, true, true);
-    }
-
-    protected H runAssert(final String message, final String assertName,
-                          final Runnable runnableAssertBlock, final Object expectedObj,
-                          final Object actualObj) {
-        return runAssert(message, assertName, runnableAssertBlock, expectedObj, actualObj, false, null);
-    }
-
-    protected H runAssert(final String message, final String assertName,
-                          final Runnable runnableAssertBlock, final Object expectedObj,
-                          final Object actualObj, final boolean allowNull, final Runnable onFailureRunableBlock) {
-        if (allowNull || canAssertRun()) {
-            try {
-                runnableAssertBlock.run();
-                getStatus().add(getAsserts().addAssertHistory(message, true, assertName, expectedObj,
-                        actualObj));
-            } catch (final Throwable e) {
-                getStatus().add(getAsserts().addAssertHistory(message, false, assertName, expectedObj,
-                        actualObj, e));
-                if (onFailureRunableBlock != null) {
-                    onFailureRunableBlock.run();
-                }
-                if (getAsserts().getThrowExceptionOnFail()) {
-                    throw e;
-                }
-            }
-        }
-        return (H) this;
+    protected AssertFunctionReturnBooleanActual<T> getAssertBlock(final Runnable runnableAssertBlock) {
+        AssertFunctionReturnBooleanActual<T> assertStatement = (expected, actual, history) -> {
+            runnableAssertBlock.run();
+            return true;
+        };
+        return assertStatement;
     }
 
     protected H runAssert(final String message, final String assertName,
@@ -161,23 +122,30 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
 
     protected H runAssert(final String message, final String assertName,
                           final AssertFunctionReturnBooleanActual runnableAssertBlock, final T expected,
-                          final T actual, final boolean allowNull) {
-        return runAssert(message, assertName, runnableAssertBlock, expected, actual, allowNull, null);
+                          final T actual, final boolean allowActualToBeNull) {
+        return runAssert(message, assertName, runnableAssertBlock, expected, actual, allowActualToBeNull, null);
+    }
+
+    protected H runAssert(final String assertName,
+                          final AssertFunctionReturnBooleanActual runnableAssertBlock, final T expected,
+                          final T actual, final boolean allowActualToBeNull, final Runnable onFailureRunableBlock) {
+        return runAssert("",assertName, runnableAssertBlock, expected, actual,
+                allowActualToBeNull, onFailureRunableBlock );
     }
 
     protected H runAssert(final String message, final String assertName,
                           final AssertFunctionReturnBooleanActual runnableAssertBlock, final T expected,
-                          final T actual, final boolean allowNull, final Runnable onFailureRunableBlock) {
+                          final T actual, final boolean allowActualToBeNull, final Runnable onFailureRunableBlock) {
 
-        AssertHistoyItem assertHistoyItem = new AssertHistoyItem(actual).setAssertName(assertName)
+        AssertHistoryItem assertHistoryItem = new AssertHistoryItem(actual).setAssertName(assertName)
                 .setExpected(expected).setMessage(getMessage(message));
 
-        if (allowNull || canAssertRun()) {
+        if (allowActualToBeNull || canAssertRun(assertName)) {
             try {
-                runnableAssertBlock.run(expected, actual, assertHistoyItem);
-                getStatus().add(assertHistoyItem.addHistoryForPass(getAsserts()));
+                runnableAssertBlock.run(expected, actual, assertHistoryItem);
+                getStatus().add(assertHistoryItem.addHistoryForPass(getAsserts()));
             } catch (final Throwable e) {
-                getStatus().add(assertHistoyItem.addHistoryForFail(getAsserts(), e));
+                getStatus().add(assertHistoryItem.addHistoryForFail(getAsserts(), e));
                 if (onFailureRunableBlock != null) {
                     onFailureRunableBlock.run();
                 }
@@ -234,41 +202,12 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
     protected H isNotEmpty(final AssertFunctionReturnBooleanActual runnableAssertBlock) {
         AssertFunctionReturnBooleanActual<String> assertStatement = (expected, actual, history) -> {
             history.setMessage(String.format("expected %s[%s] to not be empty", actual.getClass().toString(), actual.toString()));
-            history.setActualForHistory(runnableAssertBlock.run(expected, actual, history));
-            Assert.assertFalse(runnableAssertBlock.run(expected, actual, history));
+            boolean status = runnableAssertBlock.run(expected, actual, history);
+            history.setActualForHistory(status);
+            Assert.assertTrue(status);
             return true;
         };
         return runAssert("isNotEmpty", assertStatement, null, getActual(), false, null);
     }
-
-    protected H runAssert(final String assertName,
-                          final AssertFunctionReturnBooleanActual runnableAssertBlock, final T expected,
-                          final T actual, final boolean allowNull, final Runnable onFailureRunableBlock) {
-
-        AssertHistoyItem assertHistoyItem = new AssertHistoyItem(actual).setAssertName(assertName)
-                .setExpected(expected).setMessage(getMessage(message));
-
-        if (allowNull || canAssertRun()) {
-            boolean expectedCheck = (allowNull || getAsserts().notNull("expected cannot be null for this assert",
-                    getActual()));
-            getStatus().add(expectedCheck);
-            if (expectedCheck) {
-                try {
-                    runnableAssertBlock.run(expected, actual, assertHistoyItem);
-                    getStatus().add(assertHistoyItem.addHistoryForPass(getAsserts()));
-                } catch (final Throwable e) {
-                    getStatus().add(assertHistoyItem.addHistoryForFail(getAsserts(), e));
-                    if (onFailureRunableBlock != null) {
-                        onFailureRunableBlock.run();
-                    }
-                    if (getAsserts().getThrowExceptionOnFail()) {
-                        throw e;
-                    }
-                }
-            }
-        }
-        return (H) this;
-    }
-
 
 }

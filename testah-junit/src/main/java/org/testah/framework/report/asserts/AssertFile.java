@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.base.AbstractAssertBase;
+import org.testah.framework.report.asserts.base.AssertFunctionReturnBooleanActual;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,17 +23,25 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
     }
 
     public AssertFile exists() {
+        AssertFunctionReturnBooleanActual<File> assertRun = (expected, actual, history) -> {
+            history.setExpectedForHistory(true);
+            history.setActualForHistory(actual.exists());
+            Assert.assertTrue(actual.exists());
+            return true;
+        };
         return runAssert("Check that file[" + getAbsolutePath() + "] exists", "exists",
-                () -> {
-                    Assert.assertTrue(getActual().exists());
-                }, true, getActual().exists());
+                assertRun, null, getActual());
     }
 
     public AssertFile notExists() {
-        return runAssert("Check that file[" + getAbsolutePath() + "] exists", "exists",
-                () -> {
-                    Assert.assertFalse(getActual().exists());
-                }, false, getActual().exists());
+        AssertFunctionReturnBooleanActual<File> assertRun = (expected, actual, history) -> {
+            history.setExpectedForHistory(false);
+            history.setActualForHistory(actual.exists());
+            Assert.assertFalse(actual.exists());
+            return true;
+        };
+        return runAssert("Check that file[" + getAbsolutePath() + "] does not exist", "notExists",
+                assertRun, null, getActual());
     }
 
     public AssertNumber size() {

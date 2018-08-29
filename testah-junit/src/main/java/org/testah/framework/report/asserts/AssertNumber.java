@@ -3,6 +3,10 @@ package org.testah.framework.report.asserts;
 import org.junit.Assert;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.base.AbstractAssertBase;
+import org.testah.framework.report.asserts.base.AssertFunctionReturnBooleanActual;
+import org.unitils.reflectionassert.ReflectionAssert;
+
+import java.util.Collection;
 
 public class AssertNumber<T extends Number & Comparable<T>> extends AbstractAssertBase<AssertNumber, T> {
 
@@ -14,11 +18,13 @@ public class AssertNumber<T extends Number & Comparable<T>> extends AbstractAsse
         super(actual, asserts);
     }
 
-    public AssertNumber<T> equalsTo(T expected, int delta) {
-        return runAssert("equalsTo expected[" + expected + "] and actuals[" + getActual() +
-                "] with delta allowed: " + delta, "equalsTo", ()-> {
-            Assert.assertTrue(Math.abs(getActual().compareTo(expected))<=delta);
-        },expected,getActual());
+    public AssertNumber<T> equalsTo(T expectedValue, int delta) {
+        AssertFunctionReturnBooleanActual<T> assertRun = (expected, actual, history) -> {
+            Assert.assertTrue(Math.abs(getActual().compareTo(expected)) <= delta);
+            return true;
+        };
+        return runAssert("equalsTo expected[" + expectedValue + "] and actuals[" + getActual() +
+                "] with delta allowed: " + delta, "equalsTo", assertRun, expectedValue, getActual());
     }
 
     @Override

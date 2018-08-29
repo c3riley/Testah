@@ -4,7 +4,9 @@ import org.junit.Assert;
 import org.testah.TS;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.base.AbstractAssertBase;
+import org.testah.framework.report.asserts.base.AssertFunctionReturnBooleanActual;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -14,7 +16,7 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
     private static final MathContext DEFAULT_MATH_CONTEXT = MathContext.DECIMAL32;
 
     public AssertBigDecimal(final Object actual, final VerboseAsserts verboseAsserts) {
-        this(getBigDecimal(actual,DEFAULT_MATH_CONTEXT), verboseAsserts);
+        this(getBigDecimal(actual, DEFAULT_MATH_CONTEXT), verboseAsserts);
     }
 
     public AssertBigDecimal(final Number actual, final VerboseAsserts verboseAsserts) {
@@ -29,20 +31,26 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
         return equalsTo(getBigDecimal(expected));
     }
 
-    public AssertBigDecimal shouldNotHaveDecimal() {
-        return runAssert("Actual[" + getActual() + "] should not have a decimal", "shouldNotHaveDecimal",
-                () -> {
-                    Assert.assertTrue((getActual().scale() <= 0) ||
-                            (getActual().setScale(0, RoundingMode.HALF_UP).compareTo(getActual()) == 0));
-                }, getActual(), "Should Not have Decimal");
+    public AssertBigDecimal shouldNotHaveDecimalValue() {
+        AssertFunctionReturnBooleanActual<BigDecimal> assertRun = (expected, actual, history) -> {
+            history.setExpectedForHistory("Should not have a decimal value");
+            Assert.assertTrue((getActual().scale() <= 0) ||
+                    (getActual().setScale(0, RoundingMode.HALF_UP).compareTo(getActual()) == 0));
+            return true;
+        };
+        return runAssert("Actual[" + getActual() + "] should not have a decimal", "shouldNotHaveDecimalValue",
+                assertRun, null, getActual());
     }
 
-    public AssertBigDecimal shouldHaveDecimal() {
-        return runAssert("Actual[" + getActual() + "] should have a decimal", "shouldHaveDecimal",
-                () -> {
-                    Assert.assertTrue((getActual().scale() > 0) ||
-                            (getActual().setScale(0, RoundingMode.HALF_UP).compareTo(getActual()) != 0));
-                }, getActual(), "Should have Decimal");
+    public AssertBigDecimal shouldHaveDecimalValue() {
+        AssertFunctionReturnBooleanActual<BigDecimal> assertRun = (expected, actual, history) -> {
+            history.setExpectedForHistory("Should have a decimal");
+            Assert.assertTrue((getActual().scale() > 0) ||
+                    (getActual().setScale(0, RoundingMode.HALF_UP).compareTo(getActual()) != 0));
+            return true;
+        };
+        return runAssert("Actual[" + getActual() + "] should have a decimal", "shouldHaveDecimalValue",
+                assertRun, null, getActual());
     }
 
     public AssertBigDecimal isWithinRange(final Number minRangeValue, final Number maxRangeValue) {
@@ -54,12 +62,16 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
     }
 
     public AssertBigDecimal isWithinRange(final BigDecimal minRangeValue, final BigDecimal maxRangeValue, final boolean allowEqualTo) {
+        AssertFunctionReturnBooleanActual<BigDecimal> assertRun = (expected, actual, history) -> {
+            history.setExpectedForHistory(minRangeValue + " < actual < " + maxRangeValue);
+            history.setActualForHistory(minRangeValue + " < " + getActual() + " < " + maxRangeValue);
+            isGreaterThan(minRangeValue, allowEqualTo);
+            isLessThan(maxRangeValue, allowEqualTo);
+            return true;
+        };
         return runAssert("Check if actual is in the ranger [ " +
                         minRangeValue + " < " + getActual() + " < " + maxRangeValue, "isWithinRange",
-                () -> {
-                    isGreaterThan(minRangeValue, allowEqualTo);
-                    isLessThan(maxRangeValue, allowEqualTo);
-                }, getActual(), minRangeValue + " < " + getActual() + " < " + maxRangeValue);
+                assertRun, null, getActual());
     }
 
     public AssertBigDecimal isGreaterThan(final Number valueToBeGreaterThan, final boolean allowEqualTo) {
@@ -83,48 +95,54 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
     }
 
     public AssertBigDecimal isGreaterThan(final BigDecimal valueToBeGreaterThan, final boolean allowEqualTo) {
-        String assertMethod = (allowEqualTo ? "isGreaterThanOrEqualTo" : "isGreaterThan");
-        final String message = getMessage() + " - actual[" + getActual().toPlainString() + "] " +
-                assertMethod + " " + valueToBeGreaterThan.toPlainString();
-        runAssert(message, assertMethod, () -> {
+        AssertFunctionReturnBooleanActual<BigDecimal> assertRun = (expected, actual, history) -> {
             if (allowEqualTo) {
-                Assert.assertTrue(message, getActual().compareTo(valueToBeGreaterThan) >= 0);
+                history.setExpectedForHistory(actual + ">=" + valueToBeGreaterThan);
+                Assert.assertTrue(getActual().compareTo(valueToBeGreaterThan) >= 0);
             } else {
-                Assert.assertTrue(message, getActual().compareTo(valueToBeGreaterThan) > 0);
+                history.setExpectedForHistory(actual + ">" + valueToBeGreaterThan);
+                Assert.assertTrue(getActual().compareTo(valueToBeGreaterThan) > 0);
             }
-        }, getActual(), getActual() + ">" + (allowEqualTo ? "=" : "") + valueToBeGreaterThan);
-        return this;
+            return true;
+        };
+        return runAssert(getActual() + "<" + (allowEqualTo ? "=" : "") + valueToBeGreaterThan,
+                (allowEqualTo ? "isGreaterThanOrEqualsTo" : "isGreaterThan"),
+                assertRun, null, getActual());
     }
 
     public AssertBigDecimal isLessThan(final BigDecimal valueToBeLessThan, final boolean allowEqualTo) {
-        String assertMethod = (allowEqualTo ? "isLessThanOrEqualTo" : "isLessThan");
-        final String message = getMessage() + " - actual[" + getActual().toPlainString() + "] " + assertMethod + " " +
-                valueToBeLessThan.toPlainString();
-        runAssert(message, assertMethod, () -> {
+        AssertFunctionReturnBooleanActual<BigDecimal> assertRun = (expected, actual, history) -> {
             if (allowEqualTo) {
-                Assert.assertTrue(message, getActual().compareTo(valueToBeLessThan) <= 0);
+                history.setExpectedForHistory(actual + "<=" + valueToBeLessThan);
+                Assert.assertTrue(getActual().compareTo(valueToBeLessThan) <= 0);
             } else {
-                Assert.assertTrue(message, getActual().compareTo(valueToBeLessThan) < 0);
+                history.setExpectedForHistory(actual + "<" + valueToBeLessThan);
+                Assert.assertTrue(getActual().compareTo(valueToBeLessThan) < 0);
             }
-        },getActual(),getActual() + "<" + (allowEqualTo ? "=" : "") + valueToBeLessThan);
-        return this;
+            return true;
+        };
+        return runAssert(getActual() + "<" + (allowEqualTo ? "=" : "") + valueToBeLessThan,
+                (allowEqualTo ? "isLessThanOrEqualsTo" : "isLessThan"),
+                assertRun, null, getActual());
     }
 
     @Override
     public AssertBigDecimal equalsTo(final BigDecimal expected) {
-        return equalsTo(expected,0);
+        return equalsTo(expected, 0);
     }
 
-    public AssertBigDecimal equalsTo(final BigDecimal expected, final int delta) {
-        runAssert("", "equalsTo", () -> {
-            if(delta==0) {
-                Assert.assertTrue(Math.abs(getActual().compareTo(expected))== delta);
+    public AssertBigDecimal equalsTo(final BigDecimal expectedValue, final int delta) {
+        AssertFunctionReturnBooleanActual<BigDecimal> assertRun = (expected, actual, history) -> {
+            if (delta == 0) {
+                Assert.assertTrue(Math.abs(actual.compareTo(expected)) == delta);
             } else {
-                Assert.assertTrue(Math.abs(getActual().compareTo(expected)) <= delta);
+                Assert.assertTrue(Math.abs(actual.compareTo(expected)) <= delta);
             }
-
-        }, expected, getActual());
-        return this;
+            return true;
+        };
+        return runAssert("Actual[" + getActual() + "] to equal Expected[" + expectedValue + "] " +
+                        "with delta[" + delta + "]", "equalsTo",
+                assertRun, expectedValue, getActual());
     }
 
     public static BigDecimal getBigDecimal(Object number) {
@@ -132,12 +150,17 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
     }
 
     public static BigDecimal getBigDecimal(final Object number, MathContext mathContext) {
-        if(number instanceof Number) {
-            return getBigDecimal((Number)number, mathContext );
-        }else if(number instanceof BigDecimal) {
-            return (BigDecimal)number;
+        try {
+            if (number instanceof Number) {
+                return getBigDecimal((Number) number, mathContext);
+            } else if (number instanceof BigDecimal) {
+                return (BigDecimal) number;
+            } else if (number instanceof String) {
+                return new BigDecimal(number.toString(), mathContext);
+            }
+        } catch (Throwable parseIssue) {
+            TS.log().info("Unable to parse[" + number + "] into a BigDecimal, returning null!", parseIssue);
         }
-        TS.log().info("Unable to convert to BigDecimal: " +number);
         return null;
     }
 
@@ -149,6 +172,6 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
         if (number == null) {
             return null;
         }
-        return new BigDecimal(number.toString(),mathContext);
+        return new BigDecimal(number.toString(), mathContext);
     }
 }

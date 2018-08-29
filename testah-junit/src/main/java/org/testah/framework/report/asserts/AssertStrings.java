@@ -2,6 +2,7 @@ package org.testah.framework.report.asserts;
 
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrBuilder;
 import org.junit.Assert;
 import org.testah.TS;
 import org.testah.framework.dto.StepAction;
@@ -26,7 +27,7 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
     }
 
     public AssertStrings(final String actual, final VerboseAsserts verboseAsserts) {
-        super(actual,verboseAsserts);
+        super(actual, verboseAsserts);
     }
 
     public AssertStrings equalsTo(final String expected) {
@@ -42,22 +43,24 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
     }
 
     protected AssertStrings equalsTo(final String extraMessage, final String expected, final String actual, boolean ignoreCase) {
-        if (actual == null || expected == null || !expected.contains(File.separator)) {
+        if (actual == null || expected == null || !expected.contains(System.lineSeparator())) {
             runAssert("Traditional equals" + extraMessage,
                     "equalsTo",
-                    () -> {
+                    getAssertBlock(() -> {
                         if (ignoreCase) {
                             Assert.assertTrue(StringUtils.equalsIgnoreCase(expected, actual));
                         } else {
                             Assert.assertTrue(StringUtils.equals(expected, actual));
                         }
-                    }, expected, actual, true, () -> {
+                    }), expected, actual, true, () -> {
                         addStepForStringDifferences(expected, actual, ignoreCase);
                     });
             return this;
         }
+        //StringUtils.split does not render correct lines
         TS.log().debug("Since newline found in expected, splitting on newline and comparing as array of strings");
-        equalsTo(StringUtils.split(getActual(), File.separator), StringUtils.split(expected, File.separator), ignoreCase);
+        equalsTo(getActual().split(System.lineSeparator()),
+                expected.split(System.lineSeparator()), ignoreCase);
         return this;
     }
 
@@ -124,18 +127,20 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         if (null != expected && null != actual) {
             final char[] expectedArray = expected.toCharArray();
             final char[] actualArray = actual.toCharArray();
-            final StringBuilder strBuilder = new StringBuilder();
+            final StrBuilder strBuilder = new StrBuilder();
             int maxIndex = expectedArray.length > actualArray.length ? expectedArray.length : actualArray.length;
             String expectedChar;
             String actualChar;
+            strBuilder.appendln("#[Char](Ascii)eq[Char](Ascii)");
             for (int ctr = 0; ctr < maxIndex; ctr++) {
                 expectedChar = getCharWithAsciiForDebug(ctr, expectedArray);
                 actualChar = getCharWithAsciiForDebug(ctr, actualArray);
+                strBuilder.append((ctr + 1) + "#");
                 if (StringUtils.equals(expectedChar, actualChar) ||
                         (ignoreCase && StringUtils.equalsIgnoreCase(expectedChar, actualChar))) {
-                    strBuilder.append(expectedChar + " == " + actualChar + "\n");
+                    strBuilder.appendln(expectedChar + " == " + actualChar);
                 } else {
-                    strBuilder.append(expectedChar + " != " + actualChar + "  <error found>\n");
+                    strBuilder.appendln(expectedChar + " != " + actualChar + "  <error>");
                 }
             }
             return strBuilder.toString();
@@ -152,7 +157,7 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
      */
     public String getCharWithAsciiForDebug(final int index, final char[] charArray) {
         if (charArray != null && index < charArray.length) {
-            return "[ " + CharUtils.toString(charArray[index]) + " ] char[" + (int) charArray[index] + "]";
+            return "[ " + CharUtils.toString(charArray[index]) + " ](" + (int) charArray[index] + ")";
         }
         return null;
     }
@@ -162,13 +167,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
     }
 
 
-
-
     public AssertStrings startsWith(final String expectedPrefix) {
         return runAssert(" - expected String[" + getActual() + "] to startWith " + expectedPrefix,
                 "startsWith",
-                () -> {
-                    Assert.assertTrue(StringUtils.startsWith( getActual(), expectedPrefix));
+                (expected, actual, history) -> {
+                    Assert.assertTrue(StringUtils.startsWith(getActual(), expectedPrefix));
+                    return true;
                 }, expectedPrefix, getActual());
     }
 
@@ -176,64 +180,72 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         return runAssert(" - expected String[" + getActual() + "] to "
                         + "startsWithIgnoreCase " + expectedPrefix,
                 "startsWithIgnoreCase",
-                () -> {
+                (expected, actual, history) -> {
                     Assert.assertTrue(StringUtils.startsWithIgnoreCase(getActual(), expectedPrefix));
+                    return true;
                 }, expectedPrefix, getActual());
     }
 
     public AssertStrings endsWith(final String expectedSuffix) {
         return runAssert(" - expected String[" + getActual() + "] to endsWith " + expectedSuffix,
                 "endsWith",
-                () -> {
+                (expected, actual, history) -> {
                     Assert.assertTrue(StringUtils.endsWith(getActual(), expectedSuffix));
+                    return true;
                 }, expectedSuffix, getActual());
     }
 
     public AssertStrings endsWithIgnoreCase(final String expectedSuffix) {
         return runAssert(" - expected String[" + getActual() + "] to endsWithIgnoreCase " + expectedSuffix,
                 "endsWithIgnoreCase",
-                () -> {
+                (expected, actual, history) -> {
                     Assert.assertTrue(StringUtils.endsWithIgnoreCase(getActual(), expectedSuffix));
+                    return true;
                 }, expectedSuffix, getActual());
     }
 
     public AssertStrings contains(final String expectedValueToContain) {
         return runAssert(" - expected String[" + getActual() + "] to contain " + expectedValueToContain,
                 "contains",
-                () -> {
+                (expected, actual, history) -> {
                     Assert.assertTrue(StringUtils.contains(getActual(), expectedValueToContain));
+                    return true;
                 }, expectedValueToContain, getActual());
     }
 
     public AssertStrings containsIgnoreCase(final String expectedValueToContain) {
         return runAssert(" - expected String[" + getActual() + "] to containsIgnoreCase " + expectedValueToContain,
                 "containsIgnoreCase",
-                () -> {
+                (expected, actual, history) -> {
                     Assert.assertTrue(StringUtils.containsIgnoreCase(getActual(), expectedValueToContain));
+                    return true;
                 }, expectedValueToContain, getActual());
     }
 
     public AssertStrings notEndsWith(final String expectedSuffix) {
         return runAssert(" - expected String[" + getActual() + "] to notEndsWith " + expectedSuffix,
                 "notEndsWith",
-                () -> {
+                (expected, actual, history) -> {
                     Assert.assertFalse(StringUtils.endsWith(getActual(), expectedSuffix));
+                    return true;
                 }, expectedSuffix, getActual());
     }
 
     public AssertStrings notEndsWithIgnoreCase(final String expectedSuffix) {
         return runAssert(" - expected String[" + getActual() + "] to endsWithIgnoreCase " + expectedSuffix,
                 "endsWithIgnoreCase",
-                () -> {
+                (expected, actual, history) -> {
                     Assert.assertFalse(StringUtils.endsWithIgnoreCase(getActual(), expectedSuffix));
+                    return true;
                 }, expectedSuffix, getActual());
     }
 
     public AssertStrings notContains(final String expectedValueToContain) {
         return runAssert(" - expected String[" + getActual() + "] to notContains " + expectedValueToContain,
                 "notContains",
-                () -> {
+                (expected, actual, history) -> {
                     Assert.assertFalse(StringUtils.contains(getActual(), expectedValueToContain));
+                    return true;
                 }, expectedValueToContain, getActual());
     }
 
@@ -244,15 +256,15 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
             return true;
         };
         return runAssert(" - expected String[" + getActual() + "] to notContainsIgnoreCase " + expectedValueToContain,
-                "notContainsIgnoreCase",assertStatement, expectedValueToContain, getActual());
+                "notContainsIgnoreCase", assertStatement, expectedValueToContain, getActual());
     }
 
     public AssertNumber<Integer> size() {
-        if(canAssertRun("stringSize",true)) {
-            return new AssertNumber<Integer>(getActual().length(),getAsserts())
+        if (canAssertRun("stringSize", true)) {
+            return new AssertNumber<Integer>(getActual().length(), getAsserts())
                     .withMessage("String length of " + getActual());
         }
-        return new AssertNumber<Integer>(null,getAsserts());
+        return new AssertNumber<Integer>(null, getAsserts());
     }
 
     public AssertStrings isEmpty() {
@@ -271,34 +283,34 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
 
     public AssertStrings isNumeric() {
         AssertFunctionReturnBooleanActual<String> assertStatement = (expected, actual, history) -> {
-            history.setMessage(String.format("expected String[%s] to be numeric",actual));
+            history.setMessage(String.format("expected String[%s] to be numeric", actual));
             history.setExpectedForHistory("Expect String to be Numeric");
             Assert.assertTrue(StringUtils.isNumeric(actual));
             return true;
         };
-        return runAssert("isNumeric",assertStatement, null, getActual(), false, null);
+        return runAssert("isNumeric", assertStatement, null, getActual(), false, null);
     }
 
     public AssertStrings match(final String expectedPattern) {
         AssertFunctionReturnBooleanActual<String> assertStatement = (expected, actual, history) -> {
             Pattern pattern = Pattern.compile(expected);
             Matcher matcher = pattern.matcher(actual);
-            history.setMessage(String.format("Expected String[%s] to match pattern[%s]",actual, expectedPattern));
+            history.setMessage(String.format("Expected String[%s] to match pattern[%s]", actual, expectedPattern));
             Assert.assertTrue(matcher.find());
             return true;
         };
-        return runAssert("match",assertStatement, expectedPattern, getActual(), false, null);
+        return runAssert("match", assertStatement, expectedPattern, getActual(), false, null);
     }
 
     public AssertStrings notMatch(final String expectedPattern) {
         AssertFunctionReturnBooleanActual<String> assertStatement = (expected, actual, history) -> {
             Pattern pattern = Pattern.compile(expected);
             Matcher matcher = pattern.matcher(actual);
-            history.setMessage(String.format("Expected String[%s] to not match pattern[%s]",actual, expectedPattern));
+            history.setMessage(String.format("Expected String[%s] to not match pattern[%s]", actual, expectedPattern));
             Assert.assertFalse(matcher.find());
             return true;
         };
-        return runAssert("notMatch",assertStatement, expectedPattern, getActual(), false, null);
+        return runAssert("notMatch", assertStatement, expectedPattern, getActual(), false, null);
     }
 
 }
