@@ -1,6 +1,7 @@
 package org.testah.util.mail;
 
 import com.google.common.base.Charsets;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import org.apache.commons.io.FileUtils;
 import org.testah.TS;
 import org.testah.framework.dto.StepAction;
@@ -418,6 +419,26 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
      * @throws Exception the exception
      */
     public abstract T deleteMsg(final M message) throws Exception;
+
+    /**
+     * Delete msg t.
+     *
+     * @param messages the messages
+     * @return the t
+     * @throws Exception the exception
+     */
+    public T deleteMsg(List<M> messages) throws Exception {
+        if(messages!=null) {
+            messages.stream().forEach(message-> {
+                try {
+                    deleteMsg(message);
+                } catch (Exception e) {
+                    TS.log().warn("Issue trying to delete message[" + message + "]",e);
+                }
+            });
+        }
+        return self();
+    }
 
     /**
      * Clear inbox t.

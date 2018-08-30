@@ -298,8 +298,8 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
 
     @Override
     public ImapsEmailUtil clearInbox() throws Exception {
-        for (final Message m : folder.getMessages()) {
-            m.setFlag(Flags.Flag.DELETED, true);
+        for (final Message message : folder.getMessages()) {
+            message.setFlag(Flags.Flag.DELETED, true);
         }
         TS.addStepAction(StepAction.createInfo("Deleting all messages in folder:", getFolderName()));
         return this;
