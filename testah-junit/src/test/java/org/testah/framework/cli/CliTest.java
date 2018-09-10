@@ -70,6 +70,28 @@ public class CliTest {
         Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), greaterThanOrEqualTo(50));
     }
 
+    @Test()
+    public void testCliQueryWithExternalAndRequireRelatedIdsFound() {
+        System.setProperty(PARAM_LOOK_AT_INTERNAL_TESTS, "org.testah.framework.cli.requirerelatedids");
+        System.setProperty("param_lookAtExternalTests", "test.groovy");
+        final String[] args = {"query", "--includeMeta", "--requireRelatedIds"};
+        final Cli cli = new Cli();
+        cli.getArgumentParser(args);
+        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), greaterThanOrEqualTo(1));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), greaterThanOrEqualTo(1));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testCliQueryWithExternalAndRequireRelatedIdsNotFound() {
+        System.setProperty(PARAM_LOOK_AT_INTERNAL_TESTS, ORG_TESTAH);
+        System.setProperty("param_lookAtExternalTests", "test.groovy");
+        final String[] args = {"query", "--includeMeta", "--requireRelatedIds"};
+        final Cli cli = new Cli();
+        cli.getArgumentParser(args);
+        Assert.assertThat(cli.getTestPlanFilter().getTestClassesMetFilters().size(), greaterThanOrEqualTo(46));
+        Assert.assertThat(cli.getTestPlanFilter().getTestClasses().size(), greaterThanOrEqualTo(50));
+    }
+
     @Test
     public void testCliCreate() {
         final String[] args = {"create"};

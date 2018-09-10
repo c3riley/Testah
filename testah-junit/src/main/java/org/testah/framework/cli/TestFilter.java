@@ -449,7 +449,7 @@ public class TestFilter {
                     final ClassLoader parent = this.getClass().getClassLoader();
 
                     public Object run() {
-                        return new GroovyClassLoader(parent);
+                            return new GroovyClassLoader(parent);
                     }
                 })) {
 
