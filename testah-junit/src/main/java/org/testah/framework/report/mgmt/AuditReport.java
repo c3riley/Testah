@@ -19,7 +19,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 public class AuditReport {
@@ -170,15 +172,21 @@ public class AuditReport {
         Row tcRow = testCaseSheet.createRow(tcRowNum++);
         Row tpRow = testPlanSheet.createRow(tpRowNum++);
 
-        addHeader(tcRow, "TestPlan", "TestCase", "RunTypes", "ACCEPTANCE", "SMOKE", "REG", "RunTypes", "TestType",
+        addHeader(tcRow, "TestPlan", "TestCase", "RunTypes", "ACCEPTANCE", "SMOKE", "REG", "RelatedIds", "TestType",
                 "HasKnownProblem", "Platforms",
                 "Components", "Comments", "Description", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
 
-        addHeader(tpRow, "TestPlan", "Description", "RunTypes", "ACCEPTANCE", "SMOKE", "REG", "RunTypes", "TestType",
+        addHeader(tpRow, "TestPlan", "Description", "RunTypes", "ACCEPTANCE", "SMOKE", "REG", "RelatedIds", "TestType",
                 "HasKnownProblem", "Platforms",
                 "Components", "Comments", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
 
+
+
         for (final Entry<String, TestPlanDto> testPlan : testPlans.entrySet()) {
+            List<String> tpRelatedIds = testPlan.getValue().getRelatedIds();
+            if(tpRelatedIds==null) {
+                tpRelatedIds = new ArrayList<>();
+            }
             tpRow = testPlanSheet.createRow(tpRowNum++);
             tpColNum = 0;
             addToCell(tpRow.createCell(tpColNum++), testPlan.getKey());
@@ -187,7 +195,7 @@ public class AuditReport {
             addToXCell(tpRow.createCell(tpColNum++), testPlan.getValue().getRunTypes().contains("ACCEPTANCE"));
             addToXCell(tpRow.createCell(tpColNum++), testPlan.getValue().getRunTypes().contains("SMOKE"));
             addToXCell(tpRow.createCell(tpColNum++), testPlan.getValue().getRunTypes().contains("REG"));
-            addToCell(tpRow.createCell(tpColNum++), String.join(", ", testPlan.getValue().getRunTypes()));
+            addToCell(tpRow.createCell(tpColNum++), String.join(", ", tpRelatedIds));
             addToCell(tpRow.createCell(tpColNum++), testPlan.getValue().getTestType().name());
             addToXCell(tpRow.createCell(tpColNum++), (null != testPlan.getValue().getKnownProblem()));
             addToCell(tpRow.createCell(tpColNum++), String.join(", ", testPlan.getValue().getPlatforms()));
@@ -209,6 +217,10 @@ public class AuditReport {
             }
 
             for (final TestCaseDto testCase : testPlan.getValue().getTestCases()) {
+                List<String> tcRelatedIds = testCase.getRelatedIds();
+                if(tcRelatedIds==null) {
+                    tcRelatedIds = tpRelatedIds;
+                }
                 tcRow = testCaseSheet.createRow(tcRowNum++);
                 tcColNum = 0;
                 addToCell(tcRow.createCell(tcColNum++), testPlan.getKey());
@@ -217,7 +229,7 @@ public class AuditReport {
                 addToXCell(tcRow.createCell(tcColNum++), testCase.getRunTypes().contains("ACCEPTANCE"));
                 addToXCell(tcRow.createCell(tcColNum++), testCase.getRunTypes().contains("SMOKE"));
                 addToXCell(tcRow.createCell(tcColNum++), testCase.getRunTypes().contains("REG"));
-                addToCell(tcRow.createCell(tcColNum++), String.join(", ", testCase.getRunTypes()));
+                addToCell(tcRow.createCell(tcColNum++), String.join(", ", tcRelatedIds));
                 addToCell(tcRow.createCell(tcColNum++), testCase.getTestType().name());
                 addToXCell(tcRow.createCell(tcColNum++), (null != testCase.getKnownProblem()));
                 addToCell(tcRow.createCell(tcColNum++), String.join(", ", testCase.getPlatforms()));
