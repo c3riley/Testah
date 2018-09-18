@@ -11,6 +11,7 @@ import org.testah.client.dto.TestStepDto;
 
 import java.util.*;
 
+import org.testah.framework.report.asserts.base.AssertNotAllowedWithNullActual;
 import org.unitils.reflectionassert.ReflectionAssert;
 
 public class VerboseAssertsTest {
@@ -81,27 +82,22 @@ public class VerboseAssertsTest {
         Assert.assertFalse(va.given("").startsWith(  "t").isPassed());
     }
 
+    @Test(expected = AssertNotAllowedWithNullActual.class)
+    public void startsWithIgnoreCaseWithNullNotAllowed() {
+        String nullValue = null;
+        Assert.assertTrue(va.given(nullValue).startsWithIgnoreCase(null).isFailed());
+    }
+
     @Test
     public void startsWithIgnoreCase() {
         String nullValue = null;
-        Assert.assertTrue(va.given(nullValue).startsWithIgnoreCase( null).isFailed());
-        Assert.assertTrue(va.given("t1234").startsWithIgnoreCase( "t").isPassed());
+         Assert.assertTrue(va.given("t1234").startsWithIgnoreCase( "t").isPassed());
         Assert.assertTrue(va.given("t1234").startsWithIgnoreCase(  "t1234").isPassed());
         Assert.assertTrue(va.given("t1234").startsWithIgnoreCase(  "").isPassed());
         Assert.assertTrue(va.given("").startsWithIgnoreCase(  "").isPassed());
 
         Assert.assertFalse(va.given("t1234").startsWithIgnoreCase(  null).isPassed());
         Assert.assertFalse(va.given("t1234").startsWithIgnoreCase( "t123a4").isPassed());
-        Assert.assertFalse(va.given("").startsWithIgnoreCase( "t").isPassed());
-
-        Assert.assertTrue(va.given(nullValue).startsWithIgnoreCase(  null).isFailed());
-        Assert.assertTrue(va.given("T1234").startsWithIgnoreCase(  "t").isPassed());
-        Assert.assertTrue(va.given("T1234a").startsWithIgnoreCase( "T1234A").isPassed());
-        Assert.assertTrue(va.given("t1234").startsWithIgnoreCase(  "").isPassed());
-        Assert.assertTrue(va.given("").startsWithIgnoreCase(  "").isPassed());
-
-        Assert.assertFalse(va.given("T1234").startsWithIgnoreCase(  null).isPassed());
-        Assert.assertFalse(va.given("R1234a").startsWithIgnoreCase(  "R1234A2").isPassed());
         Assert.assertFalse(va.given("").startsWithIgnoreCase( "t").isPassed());
     }
 

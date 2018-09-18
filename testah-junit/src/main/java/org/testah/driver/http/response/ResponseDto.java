@@ -120,7 +120,10 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @return the response dto
      */
     public ResponseDto assertStatus() {
-        return assertStatus(getRequestUsed().getExpectedStatus());
+        if (getRequestUsed() != null) {
+            return assertStatus(getRequestUsed().getExpectedStatus());
+        }
+        throw new RuntimeException("Unable to assertStatus the requestUsed in the response is null");
     }
 
     /**
@@ -456,7 +459,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         } else {
             stepAction = TS.step().action()
                     .info(this.getRequestType() + " - Uri: " + getUrl(),
-                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapeBody), false, step)
+                            "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapeBody), false, step)
                     .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
 
         }

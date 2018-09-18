@@ -200,10 +200,12 @@ public class HttpPoller {
         return this;
     }
 
+    @JsonIgnore
     public AbstractHttpWrapper getHttp() {
         return http;
     }
 
+    @JsonIgnore
     public HttpPoller setHttp(AbstractHttpWrapper http) {
         this.http = http;
         return this;

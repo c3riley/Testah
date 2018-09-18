@@ -1,13 +1,13 @@
 package org.testah.framework.report.asserts.base;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Assert;
 import org.testah.TS;
 import org.testah.framework.report.VerboseAsserts;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
 
@@ -129,8 +129,8 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
     protected H runAssert(final String assertName,
                           final AssertFunctionReturnBooleanActual runnableAssertBlock, final T expected,
                           final T actual, final boolean allowActualToBeNull, final Runnable onFailureRunableBlock) {
-        return runAssert("",assertName, runnableAssertBlock, expected, actual,
-                allowActualToBeNull, onFailureRunableBlock );
+        return runAssert("", assertName, runnableAssertBlock, expected, actual,
+                allowActualToBeNull, onFailureRunableBlock);
     }
 
     protected H runAssert(final String message, final String assertName,
@@ -157,9 +157,20 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
         return (H) this;
     }
 
+
+    /**
+     * Class Equals should not be used for this type of assert class, please only use equalsTo
+     *
+     * @param expected
+     * @return boolean true is equalsTo else false
+     * @Deprecated
+     */
+    @SuppressFBWarnings
     @Override
+    @Deprecated
     public boolean equals(Object expected) {
         T expectedWithCase = null;
+        TS.log().debug("Please use equalsTo not the class equals");
         try {
             expectedWithCase = ((T) expected);
             return equalsTo(expectedWithCase).isPassed();
@@ -168,7 +179,6 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
                     "class is so equals will not work", castError);
         }
     }
-
 
     public H equalsTo(T expected) {
 

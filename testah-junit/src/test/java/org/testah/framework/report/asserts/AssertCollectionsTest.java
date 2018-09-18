@@ -30,19 +30,19 @@ class AssertCollectionsTest {
     @Test
     void hasSize() {
         List<String> lst = new ArrayList<String>();
-        new AssertCollections(lst).size().equals(0);
+        new AssertCollections(lst).size().equalsTo(0);
 
         lst.add("item 1");
-        new AssertCollections(lst).size().equals(1);
+        new AssertCollections(lst).size().equalsTo(1);
     }
 
     @Test
     void hasSizeArrayString() {
         String[] array = new String[] {};
-        new AssertCollections(array).size().equals(0);
+        new AssertCollections(array).size().equalsTo(0);
 
         array = new String[] {"item 1"};
-        new AssertCollections(array).size().equals(1);
+        new AssertCollections(array).size().equalsTo(1);
     }
 
     @Test
@@ -189,7 +189,7 @@ class AssertCollectionsTest {
         lst2.add("item 1");
         lst2.add("item 2");
         lst2.add("item 3");
-        new AssertCollections(lst1).equals(lst2);
+        new AssertCollections(lst1).equalsTo(lst2);
     }
 
 
@@ -205,7 +205,7 @@ class AssertCollectionsTest {
             lst2.add("item 1");
             lst2.add("item 3");
             lst2.add("item 2");
-            new AssertCollections(lst1).equals(lst2);
+            new AssertCollections(lst1).equalsTo(lst2);
             Assert.assertTrue("If the assert above worked would not make it here", false);
         } catch (AssertionError assertFail) {
             TS.log().info("Error thrown as expected", assertFail);

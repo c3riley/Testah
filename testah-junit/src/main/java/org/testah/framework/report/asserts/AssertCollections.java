@@ -10,6 +10,7 @@ import org.unitils.reflectionassert.ReflectionComparatorMode;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * The type Assert collections.
@@ -151,7 +152,9 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
 
 
     private AssertCollections equalsTo(final Collection<T> expectedCollection, final ReflectionComparatorMode... modes) {
-        final String msg = "Checking that the actual is equal with reflection and modes[" + modes.toString() + "]";
+        StringBuilder str = new StringBuilder();
+        Stream.of(modes).forEach(it -> str.append(it.name()));
+        final String msg = "Checking that the actual is equal with reflection and modes[" + str.toString() + "]";
         AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
             ReflectionAssert.assertReflectionEquals(msg, expectedCollection, getActual(), modes);
             return true;

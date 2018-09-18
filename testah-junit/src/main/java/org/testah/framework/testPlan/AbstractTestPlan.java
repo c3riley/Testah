@@ -387,7 +387,7 @@ public abstract class AbstractTestPlan {
      */
     public static TestStepDto getTestStep() {
 
-        if (null == getTestStepThreadLocal().get() && null != getTestCase()) {
+        if (null == getTestStepThreadLocal().get()) {
             AbstractTestPlan.testStep.set(new TestStepDto("Initial Step", "").start());
             TS.log().info("TESTSTEP - " + AbstractTestPlan.testStep.get().getName());
         }

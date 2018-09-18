@@ -20,12 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AssertStringsTestComplete {
 
-    private VerboseAsserts posAssert;
     private VerboseAsserts negAssert;
 
     @BeforeEach
     void setUpTest() {
-        posAssert = new VerboseAsserts();
         negAssert = new VerboseAsserts().onlyVerify();
     }
 

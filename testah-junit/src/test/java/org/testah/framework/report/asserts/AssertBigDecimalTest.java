@@ -93,15 +93,16 @@ public class AssertBigDecimalTest {
     }
 
 
+    @SuppressWarnings("BC_VACUOUS_INSTANCEOF")
     @Test
     public void getBigDecimal() {
 
-
-        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1) instanceof BigDecimal);
-        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1f) instanceof BigDecimal);
-        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1l) instanceof BigDecimal);
-        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1.0) instanceof BigDecimal);
-        Assert.assertTrue(AssertBigDecimal.getBigDecimal("1") instanceof BigDecimal);
+        BigDecimal expected = new BigDecimal("1");
+        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1).compareTo(expected)==0);
+        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1f).compareTo(expected)==0);
+        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1l).compareTo(expected)==0);
+        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1.0).compareTo(expected)==0);
+        Assert.assertTrue(AssertBigDecimal.getBigDecimal("1").compareTo(expected)==0);
         Assert.assertTrue(AssertBigDecimal.getBigDecimal("") == null);
         Assert.assertTrue(AssertBigDecimal.getBigDecimal("test") == null);
         Assert.assertTrue(AssertBigDecimal.getBigDecimal("1c") == null);
