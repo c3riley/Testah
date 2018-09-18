@@ -6,6 +6,7 @@ import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion
 import microsoft.exchange.webservices.data.core.enumeration.property.BasePropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.BodyType;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.Folder;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
@@ -210,7 +211,14 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
 
     @Override
     public ExchangeEmailUtil deleteMsg(EmailMessage message) throws Exception {
-        return null;
+        return deleteMsg(message,DeleteMode.HardDelete);
+    }
+
+    public ExchangeEmailUtil deleteMsg(EmailMessage message, final DeleteMode deleteMode) throws Exception {
+        if(message!=null) {
+            message.delete(DeleteMode.HardDelete);
+        }
+        return self();
     }
 
     @Override

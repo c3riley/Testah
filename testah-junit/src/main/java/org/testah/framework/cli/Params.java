@@ -1376,7 +1376,6 @@ public class Params {
      * @return the email user name
      */
     public Params setEmailUserName(final String emailUserName) {
-        TS.addMask(emailUserName);
         this.emailUserName = emailUserName;
         return this;
     }
@@ -1418,7 +1417,6 @@ public class Params {
      * @return the email domain
      */
     public Params setEmailDomain(final String emailDomain) {
-        TS.addMask(emailDomain);
         this.emailDomain = emailDomain;
         return this;
     }
