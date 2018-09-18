@@ -17,7 +17,6 @@ import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.driver.http.HttpAuthUtil;
 import org.testah.framework.cli.Cli;
-import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.io.File;
@@ -521,7 +520,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      */
     public StepActionDto createRequestInfoStep() {
         StepActionDto stepAction = null;
-        stepAction = StepAction.createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
+        stepAction = TS.step().action().createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
                 "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
                         : Arrays.toString(headers.toArray())),
                 getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);

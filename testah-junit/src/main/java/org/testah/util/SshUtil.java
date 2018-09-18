@@ -2,7 +2,6 @@ package org.testah.util;
 
 import com.jcraft.jsch.*;
 import org.testah.TS;
-import org.testah.framework.dto.StepAction;
 import org.testah.util.dto.ShellInfoDto;
 
 import java.io.*;
@@ -126,7 +125,7 @@ public class SshUtil {
         if (null != getPemFile()) {
             getJsch().addIdentity(getPemFile());
         }
-        StepAction.createInfo("Getting Session", host + ":" + port + " for user: " + username).add();
+        TS.step().action().createInfo("Getting Session", host + ":" + port + " for user: " + username);
         return session;
     }
 
@@ -168,7 +167,7 @@ public class SshUtil {
             channel.connect();
             for (final String command : commands) {
                 if (verbose) {
-                    StepAction.createInfo("Running Shell Command", command);
+                    TS.step().action().createInfo("Running Shell Command", command);
                 }
                 if (isAutoAddMergeFields()) {
                     commander.println(command + mergeStreams);
@@ -215,7 +214,7 @@ public class SshUtil {
             }
 
             if (verbose) {
-                StepAction.createInfo("Shell Output", TS.util().toJson(info)).add();
+                TS.step().action().createInfo("Shell Output", TS.util().toJson(info));
             }
         } finally {
             System.out.println("exit-status: " + channel.getExitStatus());
@@ -441,7 +440,7 @@ public class SshUtil {
             this.lastExitCode = LAST_EXIT_CODE_DEFAULT;
             final Channel channel = session.openChannel("exec");
             if (isVerbose()) {
-                StepAction.createInfo("runExec", command).add();
+                TS.step().action().createInfo("runExec", command);
             }
             if (isAutoAddMergeFields()) {
                 ((ChannelExec) channel).setCommand(command + mergeStreams);

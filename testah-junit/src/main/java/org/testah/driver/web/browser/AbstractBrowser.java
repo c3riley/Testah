@@ -9,8 +9,6 @@ import org.testah.TS;
 import org.testah.client.enums.BrowserType;
 import org.testah.driver.web.element.AbstractWebElementWrapper;
 import org.testah.driver.web.element.WebElementWrapperV1;
-import org.testah.framework.dto.StepAction;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -361,7 +359,7 @@ public abstract class AbstractBrowser<T> {
      * @return the abstract browser
      */
     public AbstractBrowser<T> goTo(final String uri) {
-        StepAction.createInfo("goTo", uri).add();
+        TS.step().action().createInfo("goTo", uri);
         driver.get(uri);
         return getSelf();
     }
@@ -1063,7 +1061,7 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractBrowser<T> scroll(final int x, final int y) {
         final String scroll = "window.scrollBy(" + x + "," + y + ")";
-        StepAction.createInfo("Scrolling Browser", scroll);
+        TS.step().action().createInfo("Scrolling Browser", scroll);
         TS.browser().runJavaScript(scroll);
         return getSelf();
     }

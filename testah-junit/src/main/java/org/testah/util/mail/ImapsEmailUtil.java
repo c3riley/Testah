@@ -4,8 +4,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.util.MimeMessageParser;
 import org.testah.TS;
-import org.testah.framework.dto.StepAction;
-
 import javax.activation.DataSource;
 import javax.mail.Address;
 import javax.mail.BodyPart;
@@ -84,7 +82,7 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
             store = session.getStore(MAIL_PROTOCAL);
             store.connect(getMailServerAddress(), emailUserName, getPassword());
             setFolder(mailBoxFolder);
-            TS.addStepAction(StepAction.createInfo("Connected to Mailbox: " + getFolderName(), "email: " + emailUserName));
+            TS.step().action().createInfo("Connected to Mailbox: " + getFolderName(), "email: " + emailUserName);
         } catch (final Exception e) {
             throw new RuntimeException("Conneting to Mail Domain: " + getMailServerAddress() + " with user: "
                     + emailUserName, e);
@@ -290,7 +288,7 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
 
     @Override
     public ImapsEmailUtil deleteMsg(Message message) throws Exception {
-        TS.addStepAction(StepAction.createInfo("Deleting Messag", message.getSubject()));
+        TS.step().action().createInfo("Deleting Messag", message.getSubject());
         message.setFlag(Flags.Flag.DELETED, true);
         folder.expunge();
         return this;
@@ -301,7 +299,7 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
         for (final Message m : folder.getMessages()) {
             m.setFlag(Flags.Flag.DELETED, true);
         }
-        TS.addStepAction(StepAction.createInfo("Deleting all messages in folder:", getFolderName()));
+        TS.step().action().createInfo("Deleting all messages in folder:", getFolderName());
         return this;
     }
 
@@ -478,7 +476,7 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
     public ImapsEmailUtil setFolder(final String folderName) throws MessagingException {
         setFolder(store.getFolder(folderName));
         getFolder().open(Folder.READ_WRITE);
-        TS.addStepAction(StepAction.createInfo("Opened mailbox", getFolderName()));
+        TS.step().action().createInfo("Opened mailbox", getFolderName());
         return this;
     }
 

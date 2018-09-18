@@ -3,8 +3,6 @@ package org.testah.util.mail;
 import com.google.common.base.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.testah.TS;
-import org.testah.framework.dto.StepAction;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -219,7 +217,7 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
                     return true;
                 }).collect(Collectors.toList()));
                 if (!emailList.isEmpty()) {
-                    TS.addStepAction(StepAction.createInfo("Found Message", String.valueOf(emailList.size())));
+                    TS.step().action().createInfo("Found Message", String.valueOf(emailList.size()));
                 }
             }
         } catch (Exception e) {

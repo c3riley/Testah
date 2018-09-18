@@ -1,11 +1,11 @@
 package org.testah.driver.http.poller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.testah.TS;
+import org.testah.client.dto.StepActionDto;
+import org.testah.driver.http.AbstractHttpWrapper;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
-import org.testah.framework.dto.StepAction;
-import org.testah.framework.testPlan.AbstractTestPlan;
-
 import java.util.Date;
 
 /**
@@ -33,6 +33,13 @@ public class HttpPoller {
      */
     private boolean writeToLog = true;
 
+    @JsonIgnore
+    private AbstractHttpWrapper http;
+
+    public HttpPoller() {
+        this.http = TS.http();
+    }
+
     /**
      * Poll request.
      *
@@ -52,57 +59,60 @@ public class HttpPoller {
      * @param pollingMessage the polling message
      * @return the response dto
      */
-    public ResponseDto pollRequest(final AbstractRequestDto<?> request, final HttpPollerCheck pollerCheck, final String pollingMessage) {
+    public ResponseDto pollRequest(final AbstractRequestDto<?> request, final HttpPollerCheck pollerCheck,
+                                   final String pollingMessage) {
         ResponseDto response = null;
-        if (null != TS.params()) {
-            StepAction.createInfo("Running Poller for Http Request ").add();
-            AbstractTestPlan.addStepAction(request.createRequestInfoStep());
-        }
-        Long start = new Date().getTime();
+        TS.step().action().createInfo("Running Poller for Http Request");
+        TS.step().action().add(request.createRequestInfoStep());
+
+        StepActionDto pollerStepActionToReuse = TS.step().action().create();
+        final long start = new Date().getTime();
         int pollCtr = 0;
         boolean pollCheckPassed = false;
-        boolean exceptionOccurred = false;
+        Throwable exceptionOccurred = null;
         try {
-            for (pollCtr = 1; pollCtr < getMaxPollIteration(); pollCtr++) {
+            for (pollCtr = 1; pollCtr <= getMaxPollIteration(); pollCtr++) {
                 try {
-                    // doRequest does not return null
-                    response = TS.http().doRequest(request, false);
+                    // doRequest will not return null
+                    response = http.doRequest(request, false);
                     if (isStatusAssert()) {
-                        if (request.getExpectedStatus() != response.getStatusCode()) {
-                            response.assertStatus(request.getExpectedStatus());
-                        }
+                        response.assertStatus();
                     }
                     if (pollerCheck.isDone(response)) {
                         pollCheckPassed = true;
                         break;
                     }
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     TS.log().warn("Issue found during polling - " + e.getMessage());
-                    exceptionOccurred = true;
+                    exceptionOccurred = e;
                     throw e;
                 } finally {
-                    if (pollCtr == 1) {
-                        if (null != TS.params() && response != null) {
-                            AbstractTestPlan.addStepAction(response.createResponseInfoStep(false, true, 500), false);
+                    if (pollCtr == 1 || pollCheckPassed) {
+                        if (response != null) {
+                            response.createResponseInfoStep(false, true, 500);
                         }
                     } else if (isWriteToLog() && response != null) {
-                        response.createResponseInfoStep(false, true, 500);
+                        pollerStepActionToReuse = response.createResponseInfoStep(false, true, 500, pollerStepActionToReuse);
                     }
                 }
                 TS.util().pause(getPollIterationPause(), pollingMessage, pollCtr);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             TS.log().warn("Issue found during polling - " + e.getMessage());
-            exceptionOccurred = true;
+            exceptionOccurred = e;
             throw e;
         } finally {
-            if (null != response && null != TS.params()) {
-                AbstractTestPlan.addStepAction(response.createResponseInfoStep(false, true, 500), false);
-            }
-            StepAction.createInfo(
-                    "Polled for " + pollCtr + " iterations for duration of " + TS.util().getDurationPretty((new Date().getTime()) - start));
-            if (!exceptionOccurred && !pollCheckPassed) {
-                TS.asserts().fail("Poller went over max iteration allowed[" + pollCtr + "] and the poller check was not true!");
+            TS.step().action().createInfo(
+                    "Polled for " + pollCtr + " iterations for duration of " +
+                            TS.util().getDurationPretty((new Date().getTime()) - start));
+            if (pollCheckPassed) {
+                TS.asserts().pass("Poller completed successfully");
+            } else if (exceptionOccurred != null) {
+                TS.asserts().fail("Poller failed with an exception thrown - " +
+                        exceptionOccurred.getMessage(), exceptionOccurred);
+            } else if (pollCtr > getMaxPollIteration() && !pollCheckPassed) {
+                TS.asserts().fail("Poller went over max iteration allowed[" + pollCtr +
+                        "] and the poller check was not true!");
             }
         }
         return response;
@@ -159,10 +169,12 @@ public class HttpPoller {
 
     /**
      * Sets the status assert.
+     * Deprecated: Should set on request using setAutoAssert instead
      *
      * @param statusAssert the status assert
      * @return the http poller
      */
+    @Deprecated()
     public HttpPoller setStatusAssert(final boolean statusAssert) {
         this.statusAssert = statusAssert;
         return this;
@@ -188,4 +200,12 @@ public class HttpPoller {
         return this;
     }
 
+    public AbstractHttpWrapper getHttp() {
+        return http;
+    }
+
+    public HttpPoller setHttp(AbstractHttpWrapper http) {
+        this.http = http;
+        return this;
+    }
 }

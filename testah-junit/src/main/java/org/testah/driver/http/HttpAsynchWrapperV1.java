@@ -12,9 +12,6 @@ import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
-import org.testah.framework.dto.StepAction;
-import org.testah.framework.testPlan.AbstractTestPlan;
-
 import java.io.Closeable;
 import java.util.concurrent.Future;
 
@@ -84,7 +81,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
 
             new ResponseDto().setStart();
             if (verbose) {
-                AbstractTestPlan.addStepAction(request.createRequestInfoStep());
+                TS.step().action().add(request.createRequestInfoStep());
             }
             try {
                 getHttpAsyncClient().start();
@@ -94,7 +91,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
                             public void completed(final HttpResponse response) {
                                 if (verbose) {
                                     final ResponseDto responseDto = getResponseDto(response, request);
-                                    AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(
+                                    TS.step().action().add(responseDto.createResponseInfoStep(
                                             request.isTruncateResponseBodyInReport(), true,
                                             request.getTruncateResponseBodyInReportBy()));
                                 }
@@ -102,16 +99,16 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
 
                             public void failed(final Exception ex) {
                                 if (verbose) {
-                                    AbstractTestPlan.addStepAction(StepAction.createInfo(
+                                    TS.step().action().createInfo(
                                             "ERROR - Issue with request " + request.getHttpRequestBase().getRequestLine(),
-                                            ex.getMessage()));
+                                            ex.getMessage());
                                 }
                             }
 
                             public void cancelled() {
                                 if (verbose) {
-                                    AbstractTestPlan.addStepAction(StepAction.createInfo("Canceled Request",
-                                            request.getHttpRequestBase().getRequestLine().toString()));
+                                    TS.step().action().createInfo("Canceled Request",
+                                            request.getHttpRequestBase().getRequestLine().toString());
                                 }
                             }
                         });

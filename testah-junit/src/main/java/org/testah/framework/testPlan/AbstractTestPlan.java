@@ -16,7 +16,6 @@ import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.cli.TestFilter;
-import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.TestDtoHelper;
 import org.testah.runner.TestahJUnitRunner;
 import org.testah.runner.testPlan.TestPlanActor;
@@ -170,8 +169,8 @@ public abstract class AbstractTestPlan {
     private TestWatcher watchman2 = new TestWatcher() {
 
         protected void failed(final Throwable e, final Description description) {
-            StepAction.createAssertResult("Unexpected Error occurred", false, "UnhandledExceptionFoundByJUnit", "",
-                    e.getMessage(), e).add();
+            TS.step().action().createAssertResult("Unexpected Error occurred", false, "UnhandledExceptionFoundByJUnit", "",
+                    e.getMessage(), e).log();
 
             TS.log().error("TESTCASE Status: failed", e);
             stopTestCase(false);
@@ -484,48 +483,7 @@ public abstract class AbstractTestPlan {
         }
     }
 
-    /**
-     * Adds the step action.
-     *
-     * @param stepAction the step action
-     * @return true, if successful
-     */
-    public static boolean addStepAction(final StepActionDto stepAction) {
-        return addStepAction(stepAction, true);
-    }
 
-    /**
-     * Adds the step action.
-     *
-     * @param stepAction the step action
-     * @param writeToLog the write to log
-     * @return true, if successful
-     */
-    public static boolean addStepAction(final StepActionDto stepAction, final boolean writeToLog) {
-        if (null == getTestStep()) {
-            return false;
-        }
-        if (null != stepAction) {
-            getTestStep().addStepAction(stepAction);
-            if (writeToLog) {
-                final StringBuilder sb = new StringBuilder("StepAction - ");
-                if (null != stepAction.getStatus()) {
-                    sb.append("status:").append(stepAction.getStatus()).append(" - ");
-                }
-                if (null != stepAction.getMessage1()) {
-                    sb.append(" ").append(stepAction.getMessage1());
-                }
-                if (null != stepAction.getMessage2()) {
-                    sb.append(" ").append(stepAction.getMessage2());
-                }
-                if (null != stepAction.getMessage3()) {
-                    sb.append(" ").append(stepAction.getMessage3());
-                }
-                TS.log().info(sb.toString());
-            }
-        }
-        return true;
-    }
 
     /**
      * Step.
@@ -578,7 +536,7 @@ public abstract class AbstractTestPlan {
      * @return the step action dto
      */
     public StepActionDto stepActionInfo(final String message1) {
-        return StepAction.createInfo(message1);
+        return TS.step().action().createInfo(message1);
     }
 
     /**

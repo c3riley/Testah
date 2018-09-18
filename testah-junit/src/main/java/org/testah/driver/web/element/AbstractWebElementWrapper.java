@@ -6,8 +6,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 import org.testah.TS;
 import org.testah.driver.web.browser.AbstractBrowser;
-import org.testah.framework.dto.StepAction;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,7 +200,7 @@ public abstract class AbstractWebElementWrapper {
     public AbstractWebElementWrapper click() {
         waitTillIsDisplayed();
         if (elementIsOk("click", isAutoReport())) {
-            StepAction.createBrowserAction("Element Click", by).add();
+            TS.step().action().createBrowserAction("Element Click", by);
             webElement.click();
         }
         return getSelf();
@@ -226,7 +224,7 @@ public abstract class AbstractWebElementWrapper {
             }
             return false;
         }
-        StepAction.createInfo("Doing Activity: " + activity, "Element[" + getBy() + "]");
+        TS.step().action().createInfo("Doing Activity: " + activity, "Element[" + getBy() + "]");
         return (null != getDriverWebElement());
     }
 
@@ -339,7 +337,7 @@ public abstract class AbstractWebElementWrapper {
     public String getAttribute(final String attributeName) {
         if (elementIsOk("getAttribute", isAutoReport())) {
             final String v = webElement.getAttribute(attributeName);
-            StepAction.createBrowserAction("Element getAttribute", attributeName + " = " + v).add();
+            TS.step().action().createBrowserAction("Element getAttribute", attributeName + " = " + v);
             return v;
         }
         return null;
@@ -594,7 +592,7 @@ public abstract class AbstractWebElementWrapper {
      */
     public boolean isDisplayed(final boolean autoReport) {
         if (null == webElement) {
-            StepAction.createInfo("Element is not Displayed as it is not found, element is null");
+            TS.step().action().createInfo("Element is not Displayed as it is not found, element is null");
             return false;
         } else {
             return webElement.isDisplayed();
@@ -707,7 +705,7 @@ public abstract class AbstractWebElementWrapper {
      */
     public AbstractWebElementWrapper typeText(final String value) {
         if (elementIsOk("typeText", isAutoReport())) {
-            StepAction.createInfo("typeText", "By[" + by + "] Type Text: " + value).add();
+            TS.step().action().createInfo("typeText", "By[" + by + "] Type Text: " + value);
             webElement.sendKeys(value);
         }
         return getSelf();

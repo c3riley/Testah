@@ -13,7 +13,6 @@ import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.framework.cli.Cli;
-import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.io.File;
@@ -432,6 +431,11 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         return createResponseInfoStep(true, true, 2000);
     }
 
+    public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapeBody,
+                                                final int truncate) {
+        return createResponseInfoStep(shortResponseBody, escapeBody, truncate, TS.step().action().create());
+    }
+
     /**
      * Creates the response info step.
      *
@@ -441,17 +445,18 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @return the step action dto
      */
     public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapeBody,
-                                                final int truncate) {
+                                                final int truncate, final StepActionDto step) {
         StepActionDto stepAction = null;
         if (shortResponseBody) {
-            stepAction = StepAction
-                    .createInfo(this.getRequestType() + " - Uri: " + getUrl(),
+            stepAction = TS.step().action()
+                    .info(this.getRequestType() + " - Uri: " + getUrl(),
                             "Status: " + getStatusCode() + " [ " + getStatusText() + " ]",
-                            StringUtils.abbreviate(getResponseBody(escapeBody), truncate), false)
+                            StringUtils.abbreviate(getResponseBody(escapeBody), truncate), false, step)
                     .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         } else {
-            stepAction = StepAction.createInfo(this.getRequestType() + " - Uri: " + getUrl(),
-                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapeBody), false)
+            stepAction = TS.step().action()
+                    .info(this.getRequestType() + " - Uri: " + getUrl(),
+                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapeBody), false, step)
                     .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
 
         }

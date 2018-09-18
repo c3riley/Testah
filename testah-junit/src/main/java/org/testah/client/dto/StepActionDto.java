@@ -1,6 +1,7 @@
 package org.testah.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.testah.TS;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.framework.dto.base.AbstractDtoBase;
@@ -427,4 +428,24 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
         this.restResponsePath = restResponsePath;
     }
 
+    @JsonIgnore
+    public StepActionDto log() {
+        if (null != this) {
+            final StringBuilder sb = new StringBuilder("StepAction - ");
+            if (null != this.getStatus()) {
+                sb.append("status:").append(this.getStatus()).append(" - ");
+            }
+            if (null != this.getMessage1()) {
+                sb.append(" ").append(this.getMessage1());
+            }
+            if (null != this.getMessage2()) {
+                sb.append(" ").append(this.getMessage2());
+            }
+            if (null != this.getMessage3()) {
+                sb.append(" ").append(this.getMessage3());
+            }
+            TS.log().info(sb.toString());
+        }
+        return this;
+    }
 }

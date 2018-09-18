@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrBuilder;
 import org.junit.Assert;
 import org.testah.TS;
-import org.testah.framework.dto.StepAction;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.base.AbstractAssertBase;
 import org.testah.framework.report.asserts.base.AssertFunctionReturnBooleanActual;
@@ -106,10 +105,10 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
      */
     public AssertStrings addStepForStringDifferences(final String expected, final String actual, boolean ignoreCase) {
         final String diff = getEasyToDebugStringForStringDifferences(expected, actual, ignoreCase);
-        TS.addStepAction(StepAction.createInfo("Differnce in Lines this will break it out to help debug.  "
+        TS.step().action().createInfo("Differnce in Lines this will break it out to help debug.  "
                         + "Will show like << char >> char[Ascii char value].",
                 "To help see issues, right click and inspect the textarea.",
-                diff, true));
+                diff, true);
         TS.log().debug(diff);
         return this;
     }

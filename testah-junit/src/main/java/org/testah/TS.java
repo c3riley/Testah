@@ -7,9 +7,10 @@ import org.testah.driver.http.HttpWrapperV2;
 import org.testah.driver.web.browser.AbstractBrowser;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.cli.Params;
+import org.testah.framework.dto.StepActionHelper;
+import org.testah.framework.dto.StepHelper;
 import org.testah.framework.report.TestPlanReporter;
 import org.testah.framework.report.VerboseAsserts;
-import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.util.Log;
 import org.testah.util.TestahUtil;
 
@@ -29,6 +30,8 @@ import java.util.HashMap;
  */
 public class TS {
 
+    private static final StepHelper stepHelper = new StepHelper();
+    private static final StepActionHelper stepActionHelper = new StepActionHelper();
     /**
      * The _stateful data.
      * Allows a test to store data that helpers and other classes can use instead of always having to pass it.
@@ -276,10 +279,12 @@ public class TS {
      * Adds the step action.
      * Adds a step action into the running testcase on the active testplan for the thread
      *
-     * @param stepAction the step action
+     * @param stepActionDto the step action
+     * @deprecated Use TS.step().action().add(stepActionDto) instead
      */
-    public static void addStepAction(final StepActionDto stepAction) {
-        AbstractTestPlan.addStepAction(stepAction);
+    @Deprecated
+    public static void addStepAction(final StepActionDto stepActionDto) {
+        step().action().add(stepActionDto);
         return;
     }
 
@@ -352,5 +357,8 @@ public class TS {
         }
     }
 
+    public static StepHelper step() {
+        return stepHelper;
+    }
 
 }

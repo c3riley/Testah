@@ -7,7 +7,10 @@ import org.testah.framework.testPlan.AbstractTestPlan;
 
 /**
  * The Class StepAction.
+ *
+ * @deprecated Use TS.step().action() instead
  */
+@Deprecated
 public class StepAction extends StepActionDto {
 
     /**
@@ -19,6 +22,16 @@ public class StepAction extends StepActionDto {
         return new StepAction();
     }
 
+    public static StepActionDto add(final StepActionDto stepAction, final boolean writeToLog) {
+        if (null != TS.params() && TS.params().isRecordSteps()) {
+            TS.step().action().add(stepAction);
+            if(writeToLog) {
+                stepAction.log();
+            }
+        }
+        return stepAction;
+    }
+
     /**
      * Add step action dto.
      *
@@ -26,10 +39,7 @@ public class StepAction extends StepActionDto {
      * @return the step action dto
      */
     public static StepActionDto add(final StepActionDto stepAction) {
-        if (null != TS.params() && TS.params().isRecordSteps()) {
-            AbstractTestPlan.addStepAction(stepAction);
-        }
-        return stepAction;
+        return add(stepAction, true);
     }
 
     /**
@@ -39,9 +49,7 @@ public class StepAction extends StepActionDto {
      * @return the step action dto
      */
     public static StepActionDto add(final StepAction stepAction) {
-        if (null != TS.params() && TS.params().isRecordSteps()) {
-            AbstractTestPlan.addStepAction(stepAction);
-        }
+        add((StepActionDto)stepAction, true);
         return stepAction;
     }
 
@@ -61,10 +69,7 @@ public class StepAction extends StepActionDto {
      * @return the step action dto
      */
     public StepActionDto add(final boolean writeToLog) {
-        if (null != TS.params() && TS.params().isRecordSteps()) {
-            AbstractTestPlan.addStepAction(this, writeToLog);
-        }
-        return this;
+        return add(this, writeToLog);
     }
 
     /**

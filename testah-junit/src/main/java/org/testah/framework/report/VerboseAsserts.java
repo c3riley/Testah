@@ -8,7 +8,6 @@ import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 import org.testah.framework.cli.Cli;
-import org.testah.framework.dto.StepAction;
 import org.testah.framework.report.asserts.*;
 import org.unitils.reflectionassert.ReflectionAssert;
 import org.unitils.reflectionassert.ReflectionComparatorMode;
@@ -563,7 +562,7 @@ public class VerboseAsserts {
             return addAssertHistory(message, true, "equalsToWithReflection", expected, actual);
         } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "equalsToWithReflection", expected, actual, e);
-            TS.addStepAction(StepAction.createInfo("equalsToWithReflection", e.getMessage()));
+            TS.step().action().createInfo("equalsToWithReflection", e.getMessage());
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
@@ -1583,9 +1582,9 @@ public class VerboseAsserts {
     public boolean addAssertHistory(final String message, final Boolean status, final String assertMethod,
                                     final Object expected, final Object actual, final Throwable exception) {
         if (isVerifyOnly()) {
-            StepAction.createVerifyResult(message, status, assertMethod, expected, actual, exception).add(false);
+            TS.step().action().createVerifyResult(message, status, assertMethod, expected, actual, exception, false);
         } else {
-            StepAction.createAssertResult(message, status, assertMethod, expected, actual, exception).add(false);
+            TS.step().action().createAssertResult(message, status, assertMethod, expected, actual, exception, false);
         }
 
         return status;

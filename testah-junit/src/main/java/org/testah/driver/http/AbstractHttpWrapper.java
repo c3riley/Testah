@@ -327,7 +327,7 @@ public abstract class AbstractHttpWrapper {
 
             final ResponseDto responseDto = new ResponseDto().setStart();
             if (verbose) {
-                AbstractTestPlan.addStepAction(request.createRequestInfoStep(), false);
+                TS.step().action().add(request.createRequestInfoStep());
             }
             try (final CloseableHttpResponse response = (CloseableHttpResponse) getHttpClient()
                     .execute(request.getHttpRequestBase(), context)) {
@@ -343,9 +343,9 @@ public abstract class AbstractHttpWrapper {
                 responseDto.setRequestUsed(request);
             }
             if (verbose) {
-                AbstractTestPlan.addStepAction(responseDto.createResponseInfoStep(
+                TS.step().action().add(responseDto.createResponseInfoStep(
                         request.isTruncateResponseBodyInReport(), true,
-                        request.getTruncateResponseBodyInReportBy()), false);
+                        request.getTruncateResponseBodyInReportBy()));
             }
             if (request.isAutoAssert() && request.getExpectedStatus() > 0) {
                 responseDto.assertStatus(request.getExpectedStatus());

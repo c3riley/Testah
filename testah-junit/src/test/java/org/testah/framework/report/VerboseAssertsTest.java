@@ -11,7 +11,6 @@ import org.testah.client.dto.TestStepDto;
 
 import java.util.*;
 
-import org.testah.framework.dto.StepAction;
 import org.unitils.reflectionassert.ReflectionAssert;
 
 public class VerboseAssertsTest {
@@ -408,7 +407,7 @@ public class VerboseAssertsTest {
         try {
             ReflectionAssert.assertReflectionEquals(test1, test2);
         } catch (Throwable throwable) {
-            TS.addStepAction(StepAction.createInfo("assertReflectionEquals", throwable.getMessage()));
+            TS.step().action().createInfo("assertReflectionEquals", throwable.getMessage());
         }
         EqualsBuilder.reflectionEquals(test1, test2);
 
@@ -426,7 +425,7 @@ public class VerboseAssertsTest {
         try {
             ReflectionAssert.assertReflectionEquals(lst1, lst2);
         } catch (Throwable throwable) {
-            TS.addStepAction(StepAction.createInfo("assertReflectionEquals", throwable.getMessage()));
+            TS.step().action().createInfo("assertReflectionEquals", throwable.getMessage());
         }
 
 
