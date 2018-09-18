@@ -295,6 +295,8 @@
                                         <a href='$stepAction.getSnapShotPath()' target='_blank'>View</a>
                                         <br/>
                                         <a href='$stepAction.getHtmlSnapShotPath()' target='_blank'>Html</a>
+                                    #elseif("$!stepAction.getRestResponsePath()" != "")
+                                        <a href='$stepAction.getRestResponsePath()' target='_blank'>Rest Response</a>
                                     #end
                                 </td>
                             </tr>

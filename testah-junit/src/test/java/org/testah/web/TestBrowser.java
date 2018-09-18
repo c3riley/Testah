@@ -20,10 +20,10 @@ import java.util.List;
 
 @TestPlan
 public class TestBrowser extends BrowserTestPlan {
-    
+
     private final String baseUrl = "https://www.google.com/";
     private final String baseTitle = "Google";
-    
+
     @Before
     public void setup() {
         TS.browser().goTo(baseUrl);

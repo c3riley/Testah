@@ -22,9 +22,9 @@ public class ConsumeEventStream {
     private static final String TIMEOUT_MSG = "Server Side event took to long, went over %dmax";
 
     private final String url;
+    private final Long intervalTime = 1000L;
     private String chunkType = "text/event-stream";
     private int waitTimeout = 120;
-    private final Long intervalTime = 1000L;
     private ObjectMapper map = null;
     private List<String> rawMessages = new ArrayList<String>();
     private boolean verbose;
@@ -65,16 +65,6 @@ public class ConsumeEventStream {
     /**
      * Consume list.
      *
-     * @return the list
-     * @throws Exception the exception
-     */
-    public List<String> consume() throws Exception {
-        return consume(String.class);
-    }
-
-    /**
-     * Consume list.
-     *
      * @param <H>          the type parameter
      * @param messageClass the message class
      * @return the list
@@ -90,6 +80,65 @@ public class ConsumeEventStream {
         EventInput eventInput = target.request().get(EventInput.class);
         eventInput.setChunkType(getChunkType());
         return readStream(eventInput, messageClass);
+    }
+
+    /**
+     * Consume list.
+     *
+     * @return the list
+     * @throws Exception the exception
+     */
+    public List<String> consume() throws Exception {
+        return consume(String.class);
+    }
+
+    /**
+     * Is verbose boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Sets verbose.
+     *
+     * @param verbose the verbose
+     * @return the verbose
+     */
+    public ConsumeEventStream setVerbose(final boolean verbose) {
+        this.verbose = verbose;
+        return this;
+    }
+
+    /**
+     * Gets url.
+     *
+     * @return the url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * Gets chunk type.
+     *
+     * @return the chunk type
+     */
+    public String getChunkType() {
+        return chunkType;
+    }
+
+    /**
+     * Sets chunk type.
+     *
+     * @param chunkType the chunk type
+     * @return the chunk type
+     */
+    public ConsumeEventStream setChunkType(final String chunkType) {
+        this.chunkType = chunkType;
+        return this;
     }
 
     @SuppressWarnings("unchecked")
@@ -151,105 +200,6 @@ public class ConsumeEventStream {
     }
 
     /**
-     * Process data object.
-     *
-     * @param data the data
-     * @return the object
-     */
-    protected Object processData(final String data) {
-        try {
-            getMap().readTree(data);
-        } catch (Throwable throwable) {
-            TS.asserts().fail("Issue trying to process data[" + data + "] - " + throwable.getMessage());
-        }
-        return null;
-    }
-
-    /**
-     * Gets url.
-     *
-     * @return the url
-     */
-    public String getUrl() {
-        return url;
-    }
-
-    /**
-     * Gets chunk type.
-     *
-     * @return the chunk type
-     */
-    public String getChunkType() {
-        return chunkType;
-    }
-
-    /**
-     * Sets chunk type.
-     *
-     * @param chunkType the chunk type
-     * @return the chunk type
-     */
-    public ConsumeEventStream setChunkType(final String chunkType) {
-        this.chunkType = chunkType;
-        return this;
-    }
-
-    /**
-     * Gets wait timeout.
-     *
-     * @return the wait timeout
-     */
-    public int getWaitTimeout() {
-        return waitTimeout;
-    }
-
-    /**
-     * Sets wait timeout.
-     *
-     * @param waitTimeout the wait timeout
-     * @return the wait timeout
-     */
-    public ConsumeEventStream setWaitTimeout(final int waitTimeout) {
-        this.waitTimeout = waitTimeout;
-        return this;
-    }
-
-    /**
-     * Gets interval time.
-     *
-     * @return the interval time
-     */
-    public Long getIntervalTime() {
-        return intervalTime;
-    }
-
-    /**
-     * Gets map.
-     *
-     * @return the map
-     */
-    public ObjectMapper getMap() {
-        if (null == map) {
-            this.map = TS.util().getMap();
-        }
-        return map;
-    }
-
-    /**
-     * Print raw messages consume event stream.
-     *
-     * @return the consume event stream
-     */
-    public ConsumeEventStream printRawMessages() {
-        final AtomicInteger counter = new AtomicInteger(0);
-        TS.log().info("ConsumeEventStream Messages. Found: " + getRawMessages().size());
-        getRawMessages().forEach(msg -> {
-            TS.log().info(counter.getAndIncrement() + "] " + msg);
-        });
-        return this;
-    }
-
-    /**
      * Gets raw messages.
      *
      * @return the raw messages
@@ -273,22 +223,47 @@ public class ConsumeEventStream {
     }
 
     /**
-     * Is verbose boolean.
+     * Gets map.
      *
-     * @return the boolean
+     * @return the map
      */
-    public boolean isVerbose() {
-        return verbose;
+    public ObjectMapper getMap() {
+        if (null == map) {
+            this.map = TS.util().getMap();
+        }
+        return map;
+    }
+
+    @SuppressWarnings("unchecked")
+    private <J> ICloseStream<J> getCloseStream(Class<J> dataObj) {
+        if (null == closeStream) {
+            closeStream = new ICloseStream<J>() {
+                @Override
+                public boolean shouldCloseStream(final J data) {
+                    return false;
+                }
+            };
+        }
+        return this.closeStream;
     }
 
     /**
-     * Sets verbose.
+     * Gets wait timeout.
      *
-     * @param verbose the verbose
-     * @return the verbose
+     * @return the wait timeout
      */
-    public ConsumeEventStream setVerbose(final boolean verbose) {
-        this.verbose = verbose;
+    public int getWaitTimeout() {
+        return waitTimeout;
+    }
+
+    /**
+     * Sets wait timeout.
+     *
+     * @param waitTimeout the wait timeout
+     * @return the wait timeout
+     */
+    public ConsumeEventStream setWaitTimeout(final int waitTimeout) {
+        this.waitTimeout = waitTimeout;
         return this;
     }
 
@@ -312,17 +287,42 @@ public class ConsumeEventStream {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
-    private <J> ICloseStream<J> getCloseStream(Class<J> dataObj) {
-        if (null == closeStream) {
-            closeStream = new ICloseStream<J>() {
-                @Override
-                public boolean shouldCloseStream(final J data) {
-                    return false;
-                }
-            };
+    /**
+     * Gets interval time.
+     *
+     * @return the interval time
+     */
+    public Long getIntervalTime() {
+        return intervalTime;
+    }
+
+    /**
+     * Print raw messages consume event stream.
+     *
+     * @return the consume event stream
+     */
+    public ConsumeEventStream printRawMessages() {
+        final AtomicInteger counter = new AtomicInteger(0);
+        TS.log().info("ConsumeEventStream Messages. Found: " + getRawMessages().size());
+        getRawMessages().forEach(msg -> {
+            TS.log().info(counter.getAndIncrement() + "] " + msg);
+        });
+        return this;
+    }
+
+    /**
+     * Process data object.
+     *
+     * @param data the data
+     * @return the object
+     */
+    protected Object processData(final String data) {
+        try {
+            getMap().readTree(data);
+        } catch (Throwable throwable) {
+            TS.asserts().fail("Issue trying to process data[" + data + "] - " + throwable.getMessage());
         }
-        return this.closeStream;
+        return null;
     }
 
     /**

@@ -1,10 +1,6 @@
 package org.testah.runner;
 
-import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
-import akka.actor.Props;
-import akka.actor.UntypedActor;
-import akka.actor.UntypedActorFactory;
+import akka.actor.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.testah.TS;
@@ -20,6 +16,23 @@ import java.util.List;
 public class TestahJUnitRunner {
 
     private static boolean inUse = false;
+
+    /**
+     * Is in use boolean.
+     *
+     * @return the boolean
+     */
+    public static boolean isInUse() {
+        return inUse;
+    }
+
+    private static void setInUse(final boolean inUse) {
+        TestahJUnitRunner.inUse = inUse;
+        TestPlanActor.resetResults();
+        if (inUse) {
+            TestPlanActor.getResults();
+        }
+    }
 
     /**
      * Run tests list.
@@ -96,23 +109,6 @@ public class TestahJUnitRunner {
             return TestPlanActor.getResults();
         } catch (final Exception e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Is in use boolean.
-     *
-     * @return the boolean
-     */
-    public static boolean isInUse() {
-        return inUse;
-    }
-
-    private static void setInUse(final boolean inUse) {
-        TestahJUnitRunner.inUse = inUse;
-        TestPlanActor.resetResults();
-        if (inUse) {
-            TestPlanActor.getResults();
         }
     }
 }

@@ -1,7 +1,5 @@
 package org.testah.runner;
 
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -12,6 +10,8 @@ import org.testah.web.TestBrowser;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 public class TestTestahJUnitRunner {
 

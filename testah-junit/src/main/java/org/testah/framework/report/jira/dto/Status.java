@@ -15,22 +15,20 @@ import java.util.Map;
 public class Status {
 
     /**
+     * The additional properties.
+     */
+    @JsonIgnore
+    private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
+    /**
      * The resolved.
      */
     @JsonProperty("resolved")
     private Boolean resolved;
-
     /**
      * The icon.
      */
     @JsonProperty("icon")
     private Icon2 icon;
-
-    /**
-     * The additional properties.
-     */
-    @JsonIgnore
-    private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
     /**
      * Gets the resolved.

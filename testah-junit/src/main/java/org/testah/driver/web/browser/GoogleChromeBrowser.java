@@ -25,15 +25,6 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
      */
     private ChromeDriverService service = null;
 
-
-    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
-        if (null == service) {
-            return new ChromeDriver(capabilities);
-        } else {
-            return new ChromeDriver(service, capabilities);
-        }
-    }
-
     /*
      * (non-Javadoc).
      *
@@ -44,10 +35,11 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         return this;
     }
 
-    /*
-     * (non-Javadoc).
+    /**
+     * start Service for webdriver.
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#startService().
+     * @return GoogleChromeBrowser
+     * @throws IOException thrown if issues starting service
      */
     public GoogleChromeBrowser startService() throws IOException {
         service = new ChromeDriverService.Builder().usingDriverExecutable(new File(getChromePath())).usingAnyFreePort()
@@ -56,10 +48,24 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         return this;
     }
 
-    /*
-     * (non-Javadoc).
+    /**
+     * get Web Driver object.
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities().
+     * @param capabilities the capabilities
+     * @return WebDriver
+     */
+    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
+        if (null == service) {
+            return new ChromeDriver(capabilities);
+        } else {
+            return new ChromeDriver(service, capabilities);
+        }
+    }
+
+    /**
+     * create Capabilities.
+     *
+     * @return DesiredCapabilities
      */
     public DesiredCapabilities createCapabilities() {
         final DesiredCapabilities capabilities = DesiredCapabilities.chrome();
@@ -82,6 +88,30 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
 
         capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         return capabilities;
+    }
+
+    /**
+     * stop Service for chrome driver.
+     *
+     * @return GoogleChromeBrowser
+     * @throws IOException thrown is issue stopping service
+     */
+    public GoogleChromeBrowser stopService() throws IOException {
+        if (null != service) {
+            service.stop();
+        }
+        return null;
+    }
+
+    /**
+     * logBrowserInfo will log info about the browser session.
+     *
+     * @return returns class instance
+     */
+    @Override
+    public AbstractBrowser<GoogleChromeBrowser> logBrowserInfo() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
@@ -142,29 +172,6 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         })).filter(f -> {
             return f.isFile();
         }).forEach(File::delete);
-    }
-
-    /*
-     * (non-Javadoc).
-     *
-     * @see org.testah.driver.web.browser.AbstractBrowser#stopService().
-     */
-    public GoogleChromeBrowser stopService() throws IOException {
-        if (null != service) {
-            service.stop();
-        }
-        return null;
-    }
-
-    /**
-     * logBrowserInfo will log info about the browser session.
-     *
-     * @return returns class instance
-     */
-    @Override
-    public AbstractBrowser<GoogleChromeBrowser> logBrowserInfo() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

@@ -20,15 +20,6 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
     /*
      * (non-Javadoc)
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
-     */
-    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
-        return new FirefoxDriver(capabilities);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary()
      */
     public FirefoxGeckoBrowser getDriverBinary() {
@@ -47,7 +38,16 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
     /*
      * (non-Javadoc)
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities()
+     * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
+     */
+    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
+        return new FirefoxDriver(capabilities);
+    }
+
+    /**
+     * create Capabilities.
+     *
+     * @return DesiredCapabilities
      */
     public DesiredCapabilities createCapabilities() {
         final DesiredCapabilities capabilities = DesiredCapabilities.firefox();
@@ -86,9 +86,10 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
         return this;
     }
 
-    /*
-     * logBrowserInfo will log info about the browser session
-     * @return returns class instance
+    /**
+     * log Browser Info, including cookies and session to help with debugging issues.
+     *
+     * @return FirefoxGeckoBrowser for use.
      */
     public AbstractBrowser<FirefoxGeckoBrowser> logBrowserInfo() {
         try {

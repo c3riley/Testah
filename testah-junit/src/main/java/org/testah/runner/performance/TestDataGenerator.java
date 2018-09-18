@@ -20,7 +20,8 @@ public abstract class TestDataGenerator {
 
     /**
      * Constructor for long running tests where the parameters are fixed during execution.
-     * @param chunkSize size a of chunk of requests
+     *
+     * @param chunkSize      size a of chunk of requests
      * @param numberOfChunks number of chunks
      */
     public TestDataGenerator(int chunkSize, int numberOfChunks) {
@@ -29,13 +30,15 @@ public abstract class TestDataGenerator {
 
     /**
      * Allow dynamic setting of parameters.
-     * @param chunkSize size a of chunk of requests
+     *
+     * @param chunkSize      size a of chunk of requests
      * @param numberOfChunks number of chunks
      */
     public void init(int chunkSize, int numberOfChunks) {
         totalRequests = chunkSize * numberOfChunks;
         this.chunkSize = chunkSize;
     }
+
     public abstract List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> generateRequests() throws Exception;
 
     public abstract String getDomain() throws Exception;

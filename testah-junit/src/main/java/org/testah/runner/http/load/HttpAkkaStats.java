@@ -12,10 +12,9 @@ import java.util.stream.Collectors;
 public class HttpAkkaStats {
 
     private final int totalResponses;
+    private final Long duration;
     private Long startTime = 0L;
     private Long endTime = 0L;
-    private final Long duration;
-
     private DescriptiveStatistics statsDuration = new DescriptiveStatistics();
     private Map<Integer, DescriptiveStatistics> statsDurationPerStatus = new HashMap<>();
 
@@ -39,18 +38,6 @@ public class HttpAkkaStats {
             setEndTime(response.getEnd());
         }
         duration = (endTime - startTime);
-    }
-
-    private void setStartTime(final Long startTime) {
-        if (0L == this.startTime || this.startTime > startTime) {
-            this.startTime = startTime;
-        }
-    }
-
-    private void setEndTime(final Long endTime) {
-        if (0L == this.endTime || this.endTime < endTime) {
-            this.endTime = endTime;
-        }
     }
 
     /**
@@ -84,6 +71,12 @@ public class HttpAkkaStats {
         return startTime;
     }
 
+    private void setStartTime(final Long startTime) {
+        if (0L == this.startTime || this.startTime > startTime) {
+            this.startTime = startTime;
+        }
+    }
+
     /**
      * Get the time stamp in milliseconds of the last response.
      *
@@ -91,6 +84,12 @@ public class HttpAkkaStats {
      */
     public Long getEndTime() {
         return endTime;
+    }
+
+    private void setEndTime(final Long endTime) {
+        if (0L == this.endTime || this.endTime < endTime) {
+            this.endTime = endTime;
+        }
     }
 
     /**

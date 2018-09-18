@@ -17,18 +17,6 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.
-     * selenium.remote. DesiredCapabilities)
-     */
-    @Override
-    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
-        return new FirefoxDriver(capabilities);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary()
      */
     @Override
@@ -47,6 +35,18 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
     @Override
     public FirefoxBrowser startService() {
         return this;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.
+     * selenium.remote. DesiredCapabilities)
+     */
+    @Override
+    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
+        return new FirefoxDriver(capabilities);
     }
 
     /*

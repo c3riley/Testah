@@ -16,17 +16,16 @@ public class BuildClasses {
         StringBuilder param;
         for (final Method method : Assert.class.getMethods()) {
             if (Modifier.isPublic(method.getModifiers())
-                && (method.getName().startsWith("assert") || method.getName().startsWith("fail")))
-            {
+                    && (method.getName().startsWith("assert") || method.getName().startsWith("fail"))) {
                 logMsg = new StringBuilder("public static " + method.getGenericReturnType() + " " + method.getName() + "(");
                 param = new StringBuilder("Assert." + method.getName() + "(");
                 int count = 0;
                 for (final Parameter methodParams : method.getParameters()) {
                     logMsg
-                        .append(count > 0 ? ", final " : " final ")
-                        .append(methodParams.getType().getSimpleName())
-                        .append(" ")
-                        .append(methodParams.getName());
+                            .append(count > 0 ? ", final " : " final ")
+                            .append(methodParams.getType().getSimpleName())
+                            .append(" ")
+                            .append(methodParams.getName());
                     param.append((count > 0 ? "," : "") + methodParams.getName());
                     count++;
                 }
@@ -53,7 +52,7 @@ public class BuildClasses {
                 logMsg.append("}\n");
                 if (logMsg.toString().contains("arg2")) {
                     System.out.println(logMsg.toString().replace("arg0", "message").replace("arg1", "expected")
-                        .replace("arg2", "actual"));
+                            .replace("arg2", "actual"));
                 } else {
                     System.out.println(logMsg.toString().replace("arg0", "expected").replace("arg1", "actual"));
                 }

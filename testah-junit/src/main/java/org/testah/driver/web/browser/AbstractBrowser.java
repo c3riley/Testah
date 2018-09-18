@@ -9,7 +9,6 @@ import org.testah.TS;
 import org.testah.client.enums.BrowserType;
 import org.testah.driver.web.element.AbstractWebElementWrapper;
 import org.testah.driver.web.element.WebElementWrapperV1;
-import org.testah.framework.dto.StepAction;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,32 +18,28 @@ import java.util.List;
 
 /**
  * The Class AbstractBrowser wraps Webdriver Api implementation with many
- *  methods to reduce code in tests.
+ * methods to reduce code in tests.
  *
  * @param <T> the type parameter
  */
 public abstract class AbstractBrowser<T> {
 
     /**
-     * The driver.
-     */
-    private WebDriver driver;
-
-    /**
-     * The element wait time.
-     */
-    private int elementWaitTime = 10;
-
-    /**
      * The remote uri.
      */
     private final String remoteUri = TS.params().getWebDriver_defaultRemoteUri();
-
     /**
      * The remote.
      */
     private final boolean remote = TS.params().isWebDriver_useRemoteDriver();
-
+    /**
+     * The driver.
+     */
+    private WebDriver driver;
+    /**
+     * The element wait time.
+     */
+    private int elementWaitTime = 10;
     /**
      * The user agent value.
      */
@@ -56,15 +51,180 @@ public abstract class AbstractBrowser<T> {
     private DesiredCapabilities desiredCapabilities = null;
 
     /**
-     * Gets the self.
+     * Gets the default browser.
      *
-     * @return the self
+     * @return the default browser
      */
-    protected AbstractBrowser<T> getSelf() {
-        return this;
+    public static AbstractBrowser<?> getDefaultBrowser() {
+        TS.log().trace("Setting default browser: " + TS.params().getBrowser());
+        if (TS.params().getBrowser() == BrowserType.PHANTOMJS) {
+            return new PhantomJsBrowser().start();
+        } else if (TS.params().getBrowser() == BrowserType.CHROME) {
+            return new GoogleChromeBrowser().start();
+        } else if (TS.params().getBrowser() == BrowserType.FIREFOX) {
+            return new FirefoxBrowser().start();
+        } else if (TS.params().getBrowser() == BrowserType.JBROWSER) {
+            return new JBrowserDriverBrowser().start();
+        } else {
+            TS.log().debug("No Browser Match Found defaulting to Chrome");
+            return new GoogleChromeBrowser().start();
+        }
     }
 
     ;
+
+    /**
+     * Gets the firefox browser.
+     *
+     * @return the firefox browser
+     */
+    public static AbstractBrowser<?> getFirefoxBrowser() {
+        return new FirefoxBrowser().start();
+    }
+
+    /**
+     * Start.
+     *
+     * @return the abstract browser
+     */
+    public AbstractBrowser<T> start() {
+        return start(remote);
+    }
+
+    /**
+     * Start.
+     *
+     * @param remote the remote
+     * @return the abstract browser
+     */
+    public AbstractBrowser<T> start(final boolean remote) {
+        try {
+            final DesiredCapabilities capabilities = getCapabilities();
+
+            if (remote) {
+                driver = getRemoteDriver(capabilities);
+            } else {
+                getDriverBinary();
+                startService();
+                driver = getWebDriver(capabilities);
+            }
+            this.setWindowSize();
+        } catch (final Exception e) {
+            throw new RuntimeException("Issue Starting browser", e);
+        }
+        return getSelf();
+    }
+
+    /**
+     * Gets the capabilities.
+     *
+     * @return the capabilities
+     */
+    public DesiredCapabilities getCapabilities() {
+        if (null == desiredCapabilities) {
+            desiredCapabilities = createCapabilities();
+        }
+        return desiredCapabilities;
+    }
+
+    /**
+     * Sets the capabilities.
+     *
+     * @param desiredCapabilities the desired capabilities
+     * @return the abstract browser
+     */
+    public AbstractBrowser<T> setCapabilities(final DesiredCapabilities desiredCapabilities) {
+        this.desiredCapabilities = desiredCapabilities;
+        return getSelf();
+    }
+
+    /**
+     * Gets the remote driver.
+     *
+     * @param capabilities the capabilities
+     * @return the remote driver
+     */
+    public WebDriver getRemoteDriver(final DesiredCapabilities capabilities) {
+        try {
+            return new RemoteWebDriver(new URL(remoteUri), capabilities);
+        } catch (final Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    /**
+     * Gets the driver binary.
+     *
+     * @return the driver binary
+     */
+    public abstract AbstractBrowser<T> getDriverBinary();
+
+    /**
+     * Start service.
+     *
+     * @return the abstract browser
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public abstract T startService() throws IOException;
+
+    /**
+     * Gets the web driver.
+     *
+     * @param capabilities the capabilities
+     * @return the web driver
+     */
+    public abstract WebDriver getWebDriver(final DesiredCapabilities capabilities);
+
+    /**
+     * Sets window size. Use the default values from TS.params(), if not found maximize window.
+     *
+     * @return the window size
+     */
+    public AbstractBrowser<T> setWindowSize() {
+        return setWindowSize(TS.params().getWindowWidth(), TS.params().getWindowHeight());
+    }
+
+    /**
+     * Sets window size, if width or height is 0 or less just maximize window.
+     *
+     * @param width  the width
+     * @param height the height
+     * @return the window size
+     */
+    public AbstractBrowser<T> setWindowSize(final Integer width, final Integer height) {
+        try {
+            if (width > 0 && height > 0) {
+                driver.manage().window().setSize(new Dimension(width, height));
+            } else {
+                TS.log().debug("Unable to set size as value is null, will maximize window instead");
+                this.maximize();
+            }
+        } catch (final Exception e) {
+            TS.log().warn(String.format("Issue with setting window size - width: %d height: %d", width, height), e);
+        }
+        return getSelf();
+    }
+
+    /**
+     * Creates the capabilities.
+     *
+     * @return the desired capabilities
+     */
+    public abstract DesiredCapabilities createCapabilities();
+
+    /**
+     * Maximize.
+     *
+     * @return the abstract browser
+     */
+    public AbstractBrowser<T> maximize() {
+        try {
+            driver.manage().window().maximize();
+        } catch (final Exception e) {
+            TS.log().warn("Issue with maximize", e);
+        }
+        return getSelf();
+    }
 
     /**
      * Assert title.
@@ -78,6 +238,24 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
+     * Gets the title.
+     *
+     * @return the title
+     */
+    public String getTitle() {
+        return driver.getTitle();
+    }
+
+    /**
+     * Gets the self.
+     *
+     * @return the self
+     */
+    protected AbstractBrowser<T> getSelf() {
+        return this;
+    }
+
+    /**
      * Assert url.
      *
      * @param expectedUrl the expected url
@@ -86,6 +264,15 @@ public abstract class AbstractBrowser<T> {
     public AbstractBrowser<T> assertUrl(final String expectedUrl) {
         TS.asserts().equalsTo("Assert Web Browser Pagetitle", expectedUrl, getUrl());
         return getSelf();
+    }
+
+    /**
+     * Gets the url.
+     *
+     * @return the url
+     */
+    public String getUrl() {
+        return driver.getCurrentUrl();
     }
 
     /**
@@ -107,39 +294,12 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Creates the capabilities.
+     * Stop service.
      *
-     * @return the desired capabilities
+     * @return the abstract browser
+     * @throws IOException Signals that an I/O exception has occurred.
      */
-    public abstract DesiredCapabilities createCapabilities();
-
-    /**
-     * Gets the capabilities.
-     *
-     * @return the capabilities
-     */
-    public DesiredCapabilities getCapabilities() {
-        if (null == desiredCapabilities) {
-            desiredCapabilities = createCapabilities();
-        }
-        return desiredCapabilities;
-    }
-
-    /**
-     * Gets the driver.
-     *
-     * @return the driver
-     */
-    public WebDriver getDriver() {
-        return driver;
-    }
-
-    /**
-     * Gets the driver binary.
-     *
-     * @return the driver binary
-     */
-    public abstract AbstractBrowser<T> getDriverBinary();
+    public abstract T stopService() throws IOException;
 
     /**
      * Gets the element wait time.
@@ -151,28 +311,14 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Gets the java script value.
+     * Sets the element wait time.
      *
-     * @param javaScript the java script
-     * @return the java script value
+     * @param elementWaitTime the new element wait time
+     * @return the abstract browser
      */
-    public String getJavaScriptValue(final String javaScript) {
-        final JavascriptExecutor js = (JavascriptExecutor) driver;
-        return String.valueOf(js.executeScript(javaScript));
-    }
-
-    /**
-     * Gets the remote driver.
-     *
-     * @param capabilities the capabilities
-     * @return the remote driver
-     */
-    public WebDriver getRemoteDriver(final DesiredCapabilities capabilities) {
-        try {
-            return new RemoteWebDriver(new URL(remoteUri), capabilities);
-        } catch (final Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    public AbstractBrowser<T> setElementWaitTime(final int elementWaitTime) {
+        this.elementWaitTime = elementWaitTime;
+        return getSelf();
     }
 
     /**
@@ -182,24 +328,6 @@ public abstract class AbstractBrowser<T> {
      */
     public String getRemoteUri() {
         return remoteUri;
-    }
-
-    /**
-     * Gets the title.
-     *
-     * @return the title
-     */
-    public String getTitle() {
-        return driver.getTitle();
-    }
-
-    /**
-     * Gets the url.
-     *
-     * @return the url
-     */
-    public String getUrl() {
-        return driver.getCurrentUrl();
     }
 
     /**
@@ -223,14 +351,6 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Gets the web driver.
-     *
-     * @param capabilities the capabilities
-     * @return the web driver
-     */
-    public abstract WebDriver getWebDriver(final DesiredCapabilities capabilities);
-
-    /**
      * Gets the webelement.
      *
      * @param webElement the web element
@@ -238,6 +358,17 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractWebElementWrapper getWebElement(final AbstractWebElementWrapper webElement) {
         return new WebElementWrapperV1(webElement.getBy(), getWebElementNative(webElement.getBy(), false), this);
+    }
+
+    /**
+     * Gets the web element.
+     *
+     * @param by                 the by
+     * @param waitIterationCount the wait iteration count
+     * @return the web element
+     */
+    public AbstractWebElementWrapper getWebElement(final By by, final int waitIterationCount) {
+        return new WebElementWrapperV1(by, getWebElementNative(by, false, waitIterationCount), this);
     }
 
     /**
@@ -251,14 +382,41 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Gets the web element.
+     * Gets the web element native.
+     *
+     * @param by     the by
+     * @param noWait the no wait
+     * @return the web element native
+     */
+    private WebElement getWebElementNative(final By by, final boolean noWait) {
+        return getWebElementNative(by, noWait, elementWaitTime);
+    }
+
+    /**
+     * Gets the web element native.
      *
      * @param by                 the by
+     * @param noWait             the no wait
      * @param waitIterationCount the wait iteration count
-     * @return the web element
+     * @return the web element native
      */
-    public AbstractWebElementWrapper getWebElement(final By by, final int waitIterationCount) {
-        return new WebElementWrapperV1(by, getWebElementNative(by, false, waitIterationCount), this);
+    private WebElement getWebElementNative(final By by, final boolean noWait, final int waitIterationCount) {
+        String error = "";
+        WebElement element = null;
+        for (int count = 1; count <= waitIterationCount; count++) {
+            try {
+                element = driver.findElement(by);
+                break;
+            } catch (final Exception e) {
+                error = e.getMessage();
+            }
+            if (noWait) {
+                break;
+            }
+            TS.util().pause("getWebElementNative", count);
+        }
+        TS.asserts().notNull("Expected to find WebElement with By[" + by + "]: " + error, element);
+        return element;
     }
 
     /**
@@ -287,6 +445,49 @@ public abstract class AbstractBrowser<T> {
         for (final WebElement e : getWebElementsNative(by, false, waitIterationCount)) {
             lst.add(new WebElementWrapperV1(by, e, this));
         }
+        return lst;
+    }
+
+    /**
+     * Gets the web elements native.
+     *
+     * @param by     the by
+     * @param noWait the no wait
+     * @return the web elements native
+     */
+    private List<WebElement> getWebElementsNative(final By by, final boolean noWait) {
+        return getWebElementsNative(by, noWait, elementWaitTime);
+    }
+
+    /**
+     * Gets the web elements native.
+     *
+     * @param by                 the by
+     * @param noWait             the no wait
+     * @param waitIterationCount the wait iteration count
+     * @return the web elements native
+     */
+    private List<WebElement> getWebElementsNative(final By by, final boolean noWait, final int waitIterationCount) {
+        String error = "";
+        List<WebElement> lst = new ArrayList<>();
+        for (int count = 1; count <= waitIterationCount; count++) {
+            error = "";
+            try {
+                lst = driver.findElements(by);
+                if (!lst.isEmpty()) {
+                    TS.log().trace("List of Elements is empty");
+                    break;
+                }
+            } catch (final Exception e) {
+                error = e.getMessage();
+            }
+            if (noWait) {
+                break;
+            }
+            TS.util().pause("getWebElementsNative", count);
+        }
+        TS.asserts().isTrue("Expected to find WebElements with By[" + by + "] found: " + lst.size() + " " + error,
+                lst.size() > 0);
         return lst;
     }
 
@@ -325,48 +526,6 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Gets the default browser.
-     *
-     * @return the default browser
-     */
-    public static AbstractBrowser<?> getDefaultBrowser() {
-        TS.log().trace("Setting default browser: " + TS.params().getBrowser());
-        if (TS.params().getBrowser() == BrowserType.PHANTOMJS) {
-            return new PhantomJsBrowser().start();
-        } else if (TS.params().getBrowser() == BrowserType.CHROME) {
-            return new GoogleChromeBrowser().start();
-        } else if (TS.params().getBrowser() == BrowserType.FIREFOX) {
-            return new FirefoxBrowser().start();
-        } else if (TS.params().getBrowser() == BrowserType.JBROWSER) {
-            return new JBrowserDriverBrowser().start();
-        } else {
-            TS.log().debug("No Browser Match Found defaulting to Chrome");
-            return new GoogleChromeBrowser().start();
-        }
-    }
-
-    /**
-     * Gets the firefox browser.
-     *
-     * @return the firefox browser
-     */
-    public static AbstractBrowser<?> getFirefoxBrowser() {
-        return new FirefoxBrowser().start();
-    }
-
-    /**
-     * Go to.
-     *
-     * @param uri the uri
-     * @return the abstract browser
-     */
-    public AbstractBrowser<T> goTo(final String uri) {
-        StepAction.createInfo("goTo", uri).add();
-        driver.get(uri);
-        return getSelf();
-    }
-
-    /**
      * Go to and wait for title.
      *
      * @param uri   the uri
@@ -376,6 +535,37 @@ public abstract class AbstractBrowser<T> {
     public AbstractBrowser<T> goToAndWaitForTitle(final String uri, final String title) {
         goTo(uri);
         waitForTitle(title, 10);
+        return getSelf();
+    }
+
+    /**
+     * Go to.
+     *
+     * @param uri the uri
+     * @return the abstract browser
+     */
+    public AbstractBrowser<T> goTo(final String uri) {
+        TS.step().action().createInfo("goTo", uri);
+        driver.get(uri);
+        return getSelf();
+    }
+
+    /**
+     * Wait for title.
+     *
+     * @param pageTitle the page title
+     * @param timeout   the timeout
+     * @return the abstract browser
+     */
+    public AbstractBrowser<T> waitForTitle(final String pageTitle, final int timeout) {
+        String title;
+        for (int count = 1; count <= timeout; count++) {
+            title = getTitle();
+            if (TS.verify().equalsTo(pageTitle, title)) {
+                break;
+            }
+            TS.util().pause("waitForTitle from [" + pageTitle + "] - current [" + title + "]", count);
+        }
         return getSelf();
     }
 
@@ -394,15 +584,6 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Checks if is remote.
-     *
-     * @return true, if is remote
-     */
-    public boolean isRemote() {
-        return remote;
-    }
-
-    /**
      * Run java script.
      *
      * @param javaScript the java script
@@ -414,113 +595,42 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Sets the capabilities.
+     * Wait for title to change.
      *
-     * @param desiredCapabilities the desired capabilities
+     * @param pageTitleToChange the page title to change
+     * @param timeout           the timeout
      * @return the abstract browser
      */
-    public AbstractBrowser<T> setCapabilities(final DesiredCapabilities desiredCapabilities) {
-        this.desiredCapabilities = desiredCapabilities;
-        return getSelf();
-    }
-
-    /**
-     * Sets the driver.
-     *
-     * @param driver the new driver
-     * @return the abstract browser
-     */
-    public AbstractBrowser<T> setDriver(final WebDriver driver) {
-        this.driver = driver;
-        return getSelf();
-    }
-
-    /**
-     * Sets the element wait time.
-     *
-     * @param elementWaitTime the new element wait time
-     * @return the abstract browser
-     */
-    public AbstractBrowser<T> setElementWaitTime(final int elementWaitTime) {
-        this.elementWaitTime = elementWaitTime;
-        return getSelf();
-    }
-
-    /**
-     * Start.
-     *
-     * @return the abstract browser
-     */
-    public AbstractBrowser<T> start() {
-        return start(remote);
-    }
-
-    /**
-     * Start.
-     *
-     * @param remote the remote
-     * @return the abstract browser
-     */
-    public AbstractBrowser<T> start(final boolean remote) {
-        try {
-            final DesiredCapabilities capabilities = getCapabilities();
-
-            if (remote) {
-                driver = getRemoteDriver(capabilities);
-            } else {
-                getDriverBinary();
-                startService();
-                driver = getWebDriver(capabilities);
+    public AbstractBrowser<T> waitForTitleToChange(final String pageTitleToChange, final int timeout) {
+        String title;
+        for (int count = 1; count <= timeout; count++) {
+            title = getTitle();
+            if (TS.verify().notEquals(pageTitleToChange, title)) {
+                break;
             }
-            this.setWindowSize();
-        } catch (final Exception e) {
-            throw new RuntimeException("Issue Starting browser", e);
+            TS.util().pause("waitForTitleToChange from [" + pageTitleToChange + "] - current [" + title + "]", count);
         }
         return getSelf();
     }
 
     /**
-     * Start service.
+     * Gets the java script value.
      *
-     * @return the abstract browser
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @param javaScript the java script
+     * @return the java script value
      */
-    public abstract T startService() throws IOException;
-
-    /**
-     * Stop service.
-     *
-     * @return the abstract browser
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public abstract T stopService() throws IOException;
-
-    /**
-     * Create parent directory for screenshots.
-     *
-     * @param directoryPath parent directory
-     * @return parent directory of screenshot directories
-     */
-    public File getScreenshotDir(final String directoryPath) {
-        final File screenshotDir = new File(directoryPath, "screenshots");
-        TS.log().trace("screenshotDir.mkdir " + screenshotDir.mkdirs());
-        return screenshotDir;
+    public String getJavaScriptValue(final String javaScript) {
+        final JavascriptExecutor js = (JavascriptExecutor) driver;
+        return String.valueOf(js.executeScript(javaScript));
     }
 
     /**
-     * Get the intended path to the screenshot path.
+     * Checks if is remote.
      *
-     * @param screenshot file
-     * @return new path to screenshot file
+     * @return true, if is remote
      */
-    public String getScreenshotPathToUse(final File screenshot) {
-        String replaceAbsolutePath = "";
-        try {
-            replaceAbsolutePath = screenshot.getParentFile().getParentFile().getAbsolutePath() + File.separator;
-        } catch (final Exception e) {
-            TS.log().trace("issue getting screenshot replace path");
-        }
-        return screenshot.getAbsolutePath().replace(replaceAbsolutePath, "");
+    public boolean isRemote() {
+        return remote;
     }
 
     /**
@@ -552,6 +662,43 @@ public abstract class AbstractBrowser<T> {
         }
 
         return null;
+    }
+
+    /**
+     * Create parent directory for screenshots.
+     *
+     * @param directoryPath parent directory
+     * @return parent directory of screenshot directories
+     */
+    public File getScreenshotDir(final String directoryPath) {
+        final File screenshotDir = new File(directoryPath, "screenshots");
+        TS.log().trace("screenshotDir.mkdir " + screenshotDir.mkdirs());
+        return screenshotDir;
+    }
+
+    /**
+     * Gets the html.
+     *
+     * @return the html
+     */
+    public String getHtml() {
+        return driver.findElement(By.tagName("html")).getAttribute("outerHTML");
+    }
+
+    /**
+     * Get the intended path to the screenshot path.
+     *
+     * @param screenshot file
+     * @return new path to screenshot file
+     */
+    public String getScreenshotPathToUse(final File screenshot) {
+        String replaceAbsolutePath = "";
+        try {
+            replaceAbsolutePath = screenshot.getParentFile().getParentFile().getAbsolutePath() + File.separator;
+        } catch (final Exception e) {
+            TS.log().trace("issue getting screenshot replace path");
+        }
+        return screenshot.getAbsolutePath().replace(replaceAbsolutePath, "");
     }
 
     /**
@@ -596,33 +743,6 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Checks if is element present.
-     *
-     * @param by the by
-     * @return true, if is element present
-     */
-    private boolean isElementPresent(final By by) {
-        try {
-            if (null != getDriver().findElement(by)) {
-                return true;
-            }
-        } catch (final Exception e) {
-            TS.log().trace("Element is Not present " + by);
-        }
-        return false;
-    }
-
-    /**
-     * Verify element is present.
-     *
-     * @param by the by
-     * @return true, if successful
-     */
-    public boolean verifyElementIsPresent(final By by) {
-        return TS.verify().isTrue("Element[ " + by + "] is expected to be present", isElementPresent(by));
-    }
-
-    /**
      * Wait till element is present.
      *
      * @param by the by
@@ -647,6 +767,53 @@ public abstract class AbstractBrowser<T> {
             TS.util().pause(1000L);
         }
         return false;
+    }
+
+    /**
+     * Verify element is present.
+     *
+     * @param by the by
+     * @return true, if successful
+     */
+    public boolean verifyElementIsPresent(final By by) {
+        return TS.verify().isTrue("Element[ " + by + "] is expected to be present", isElementPresent(by));
+    }
+
+    /**
+     * Checks if is element present.
+     *
+     * @param by the by
+     * @return true, if is element present
+     */
+    private boolean isElementPresent(final By by) {
+        try {
+            if (null != getDriver().findElement(by)) {
+                return true;
+            }
+        } catch (final Exception e) {
+            TS.log().trace("Element is Not present " + by);
+        }
+        return false;
+    }
+
+    /**
+     * Gets the driver.
+     *
+     * @return the driver
+     */
+    public WebDriver getDriver() {
+        return driver;
+    }
+
+    /**
+     * Sets the driver.
+     *
+     * @param driver the new driver
+     * @return the abstract browser
+     */
+    public AbstractBrowser<T> setDriver(final WebDriver driver) {
+        this.driver = driver;
+        return getSelf();
     }
 
     /**
@@ -702,44 +869,6 @@ public abstract class AbstractBrowser<T> {
     }
 
     /**
-     * Wait for title.
-     *
-     * @param pageTitle the page title
-     * @param timeout   the timeout
-     * @return the abstract browser
-     */
-    public AbstractBrowser<T> waitForTitle(final String pageTitle, final int timeout) {
-        String title;
-        for (int count = 1; count <= timeout; count++) {
-            title = getTitle();
-            if (TS.verify().equalsTo(pageTitle, title)) {
-                break;
-            }
-            TS.util().pause("waitForTitle from [" + pageTitle + "] - current [" + title + "]", count);
-        }
-        return getSelf();
-    }
-
-    /**
-     * Wait for title to change.
-     *
-     * @param pageTitleToChange the page title to change
-     * @param timeout           the timeout
-     * @return the abstract browser
-     */
-    public AbstractBrowser<T> waitForTitleToChange(final String pageTitleToChange, final int timeout) {
-        String title;
-        for (int count = 1; count <= timeout; count++) {
-            title = getTitle();
-            if (TS.verify().notEquals(pageTitleToChange, title)) {
-                break;
-            }
-            TS.util().pause("waitForTitleToChange from [" + pageTitleToChange + "] - current [" + title + "]", count);
-        }
-        return getSelf();
-    }
-
-    /**
      * Wait for url to change.
      *
      * @param pageUrlToChange the page url to change
@@ -756,131 +885,6 @@ public abstract class AbstractBrowser<T> {
             TS.util().pause("waitForUrlToChange from [" + pageUrlToChange + "] - current [" + url + "]", count);
         }
 
-        return getSelf();
-    }
-
-    /**
-     * Gets the web element native.
-     *
-     * @param by     the by
-     * @param noWait the no wait
-     * @return the web element native
-     */
-    private WebElement getWebElementNative(final By by, final boolean noWait) {
-        return getWebElementNative(by, noWait, elementWaitTime);
-    }
-
-    /**
-     * Gets the web element native.
-     *
-     * @param by                 the by
-     * @param noWait             the no wait
-     * @param waitIterationCount the wait iteration count
-     * @return the web element native
-     */
-    private WebElement getWebElementNative(final By by, final boolean noWait, final int waitIterationCount) {
-        String error = "";
-        WebElement element = null;
-        for (int count = 1; count <= waitIterationCount; count++) {
-            try {
-                element = driver.findElement(by);
-                break;
-            } catch (final Exception e) {
-                error = e.getMessage();
-            }
-            if (noWait) {
-                break;
-            }
-            TS.util().pause("getWebElementNative", count);
-        }
-        TS.asserts().notNull("Expected to find WebElement with By[" + by + "]: " + error, element);
-        return element;
-    }
-
-    /**
-     * Gets the web elements native.
-     *
-     * @param by     the by
-     * @param noWait the no wait
-     * @return the web elements native
-     */
-    private List<WebElement> getWebElementsNative(final By by, final boolean noWait) {
-        return getWebElementsNative(by, noWait, elementWaitTime);
-    }
-
-    /**
-     * Gets the web elements native.
-     *
-     * @param by                 the by
-     * @param noWait             the no wait
-     * @param waitIterationCount the wait iteration count
-     * @return the web elements native
-     */
-    private List<WebElement> getWebElementsNative(final By by, final boolean noWait, final int waitIterationCount) {
-        String error = "";
-        List<WebElement> lst = new ArrayList<>();
-        for (int count = 1; count <= waitIterationCount; count++) {
-            error = "";
-            try {
-                lst = driver.findElements(by);
-                if (!lst.isEmpty()) {
-                    TS.log().trace("List of Elements is empty");
-                    break;
-                }
-            } catch (final Exception e) {
-                error = e.getMessage();
-            }
-            if (noWait) {
-                break;
-            }
-            TS.util().pause("getWebElementsNative", count);
-        }
-        TS.asserts().isTrue("Expected to find WebElements with By[" + by + "] found: " + lst.size() + " " + error,
-                lst.size() > 0);
-        return lst;
-    }
-
-    /**
-     * Maximize.
-     *
-     * @return the abstract browser
-     */
-    public AbstractBrowser<T> maximize() {
-        try {
-            driver.manage().window().maximize();
-        } catch (final Exception e) {
-            TS.log().warn("Issue with maximize", e);
-        }
-        return getSelf();
-    }
-
-    /**
-     * Sets window size. Use the default values from TS.params(), if not found maximize window.
-     *
-     * @return the window size
-     */
-    public AbstractBrowser<T> setWindowSize() {
-        return setWindowSize(TS.params().getWindowWidth(), TS.params().getWindowHeight());
-    }
-
-    /**
-     * Sets window size, if width or height is 0 or less just maximize window.
-     *
-     * @param width  the width
-     * @param height the height
-     * @return the window size
-     */
-    public AbstractBrowser<T> setWindowSize(final Integer width, final Integer height) {
-        try {
-            if (width > 0 && height > 0) {
-                driver.manage().window().setSize(new Dimension(width, height));
-            } else {
-                TS.log().debug("Unable to set size as value is null, will maximize window instead");
-                this.maximize();
-            }
-        } catch (final Exception e) {
-            TS.log().warn(String.format("Issue with setting window size - width: %d height: %d", width, height), e);
-        }
         return getSelf();
     }
 
@@ -902,39 +906,6 @@ public abstract class AbstractBrowser<T> {
     public AbstractBrowser<T> forward() {
         driver.navigate().forward();
         return getSelf();
-    }
-
-    /**
-     * Checks if is text present.
-     *
-     * @param textExpected the text expected
-     * @return true, if is text present
-     */
-    private boolean isTextPresent(final String textExpected) {
-        final String src = getText();
-        if (null != src && src.contains(textExpected)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Gets the text.
-     *
-     * @return the text
-     */
-    public String getText() {
-        return getWebElement(By.tagName("body")).getText();
-    }
-
-    /**
-     * Verify text is present.
-     *
-     * @param textExpected the text expected
-     * @return true, if successful
-     */
-    public boolean verifyTextIsPresent(final String textExpected) {
-        return TS.verify().isTrue("Looking for Text[" + textExpected + "] on Page", isTextPresent(textExpected));
     }
 
     /**
@@ -962,6 +933,39 @@ public abstract class AbstractBrowser<T> {
             TS.util().pause(1000L);
         }
         return false;
+    }
+
+    /**
+     * Verify text is present.
+     *
+     * @param textExpected the text expected
+     * @return true, if successful
+     */
+    public boolean verifyTextIsPresent(final String textExpected) {
+        return TS.verify().isTrue("Looking for Text[" + textExpected + "] on Page", isTextPresent(textExpected));
+    }
+
+    /**
+     * Checks if is text present.
+     *
+     * @param textExpected the text expected
+     * @return true, if is text present
+     */
+    private boolean isTextPresent(final String textExpected) {
+        final String src = getText();
+        if (null != src && src.contains(textExpected)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Gets the text.
+     *
+     * @return the text
+     */
+    public String getText() {
+        return getWebElement(By.tagName("body")).getText();
     }
 
     /**
@@ -995,15 +999,6 @@ public abstract class AbstractBrowser<T> {
     public AbstractBrowser<T> assertTextIsNotPresent(final String textExpected) {
         TS.asserts().isFalse("Looking for Text[" + textExpected + "] To Not be on Page", isTextPresent(textExpected));
         return getSelf();
-    }
-
-    /**
-     * Gets the html.
-     *
-     * @return the html
-     */
-    public String getHtml() {
-        return driver.findElement(By.tagName("html")).getAttribute("outerHTML");
     }
 
     /**
@@ -1063,7 +1058,7 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractBrowser<T> scroll(final int x, final int y) {
         final String scroll = "window.scrollBy(" + x + "," + y + ")";
-        StepAction.createInfo("Scrolling Browser", scroll);
+        TS.step().action().createInfo("Scrolling Browser", scroll);
         TS.browser().runJavaScript(scroll);
         return getSelf();
     }

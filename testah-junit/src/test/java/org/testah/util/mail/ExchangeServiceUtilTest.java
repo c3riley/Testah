@@ -4,12 +4,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import microsoft.exchange.webservices.data.core.enumeration.misc.XmlNamespace;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
-import microsoft.exchange.webservices.data.property.complex.Attachment;
-import microsoft.exchange.webservices.data.property.complex.AttachmentCollection;
-import microsoft.exchange.webservices.data.property.complex.EmailAddressCollection;
-import microsoft.exchange.webservices.data.property.complex.FileAttachment;
-import microsoft.exchange.webservices.data.property.complex.InternetMessageHeader;
-import microsoft.exchange.webservices.data.property.complex.InternetMessageHeaderCollection;
+import microsoft.exchange.webservices.data.property.complex.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
@@ -28,14 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class ExchangeServiceUtilTest {
 
@@ -65,6 +53,86 @@ public class ExchangeServiceUtilTest {
 
         Assert.assertEquals(true, exchange.getAttachmentFiles(messages.get(0)).isEmpty());
 
+    }
+
+    private List<EmailMessage> getEmails(final ExchangeMailTest exchange, final int number,
+                                         final int numOfAttachments) throws Exception {
+        List<EmailMessage> messages = new ArrayList<>();
+        for (int ctr = 0; ctr < number; ctr++) {
+            final EmailMessage message = mock(EmailMessage.class);
+            doReturn("this is a test " + ctr).when(message).getSubject();
+            doReturn(getEmails(ctr + "to", 3)).when(message).getToRecipients();
+            doReturn(getEmails(ctr + "cc", 2)).when(message).getCcRecipients();
+            doReturn(getEmails(ctr + "bcc", 1)).when(message).getBccRecipients();
+            doReturn(getInternetMessageHeaderCollection()).when(message).getInternetMessageHeaders();
+            doReturn(getEmails(ctr + "from", 1).iterator().next()).when(message).getFrom();
+
+            doReturn(getAttachmentCollection(numOfAttachments)).when(message).getAttachments();
+
+            messages.add(message);
+        }
+        return messages;
+    }
+
+    private EmailAddressCollection getEmails(final String suffix, final int number) {
+        EmailAddressCollection addresses = new EmailAddressCollection();
+        String name;
+        for (int ctr = 0; ctr < number; ctr++) {
+            name = "Test" + suffix + ctr;
+            addresses.add(name, name + "@nullmailer.com");
+        }
+        return addresses;
+    }
+
+    private InternetMessageHeaderCollection getInternetMessageHeaderCollection() {
+        Collection<InternetMessageHeader> internetMessageHeaderList = new ArrayList<>();
+        for (int ctr = 0; ctr < 5; ctr++) {
+            internetMessageHeaderList.add(getInternetMessageHeader(ctr));
+        }
+        InternetMessageHeaderCollection internetMessageHeaderCollection = spy(new InternetMessageHeaderCollection());
+        doReturn(internetMessageHeaderList.iterator()).when(internetMessageHeaderCollection).iterator();
+        return internetMessageHeaderCollection;
+    }
+
+    @SuppressFBWarnings
+    private AttachmentCollection getAttachmentCollection(final int numOfAttachments) throws Exception {
+        Collection<Attachment> attachments = new ArrayList<>();
+        if (numOfAttachments > 0) {
+            File outputDir = new File(TS.params().getOutput());
+            for (int ctr = 0; ctr < numOfAttachments; ctr++) {
+                FileAttachment attachment = mock(FileAttachment.class);
+                File file = File.createTempFile("_mailTestAttachmentFile" + 1, ".txt", outputDir);
+                FileUtils.writeStringToFile(file, "This is a test " + ctr, Charset.forName("UTF-8"));
+                doReturn(file.getAbsolutePath()).when(attachment).getName();
+
+                doAnswer(new Answer() {
+                    public Object answer(InvocationOnMock invocation) {
+                        Object[] args = invocation.getArguments();
+                        try {
+                            FileUtils.writeStringToFile(new File(args[0].toString()), "This is a test ", Charset.forName("UTF-8"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        //Mock mock = invocation.getMock();
+                        return null;
+                    }
+                }).when(attachment).load(anyString());
+                attachments.add(attachment);
+            }
+        }
+
+        AttachmentCollection attachmentCollection = spy(new AttachmentCollection());
+        doReturn(attachments.iterator()).when(attachmentCollection).iterator();
+        return attachmentCollection;
+    }
+
+    @SuppressFBWarnings
+    private InternetMessageHeader getInternetMessageHeader(int suffix) {
+        InternetMessageHeader internetMessageHeader = mock(InternetMessageHeader.class);
+        doReturn("header" + suffix).when(internetMessageHeader).getName();
+        doReturn("value1" + suffix).when(internetMessageHeader).getValue();
+        doReturn(XmlNamespace.Messages).when(internetMessageHeader).getNamespace();
+        return internetMessageHeader;
     }
 
     @Test
@@ -228,110 +296,31 @@ public class ExchangeServiceUtilTest {
         exchange.getAuth(true);
     }
 
+    @SuppressWarnings("checkstyle:lineWrappingIndentation")
     @Test
     public void test() throws Exception {
         Assume.assumeTrue("If password is not found do not run the test", !StringUtils.isEmpty(TS.params().getEmailPassword()));
         try (ExchangeMailTest exchange = new ExchangeMailTest()) {
             exchange.setMaxNumberOfMessages(100).connect()
                     .getMsgByFromEmail(TS.params().getEmailUserName()).stream().forEach(message -> {
+                try {
+                    TS.util().toJsonPrint(exchange.getEmailDto(message));
+                    TS.log().info(message.getSubject());
+                    TS.log().info(exchange.getMsgBody(message, "HTML"));
+                    TS.log().info(exchange.getMsgBody(message, "Text"));
+                    exchange.getAttachmentFiles(message).stream().forEach(file -> {
+                        TS.log().info(file.getAbsolutePath());
                         try {
-                            TS.util().toJsonPrint(exchange.getEmailDto(message));
-                            TS.log().info(message.getSubject());
-                            TS.log().info(exchange.getMsgBody(message, "HTML"));
-                            TS.log().info(exchange.getMsgBody(message, "Text"));
-                            exchange.getAttachmentFiles(message).stream().forEach(file -> {
-                                TS.log().info(file.getAbsolutePath());
-                                try {
-                                    TS.log().info(FileUtils.readFileToString(file, Charset.forName("UTF-8")));
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                        } catch (Exception e) {
-                            TS.log().error(e);
-                        }
-                    });
-        }
-    }
-
-    private EmailAddressCollection getEmails(final String suffix, final int number) {
-        EmailAddressCollection addresses = new EmailAddressCollection();
-        String name;
-        for (int ctr = 0; ctr < number; ctr++) {
-            name = "Test" + suffix + ctr;
-            addresses.add(name, name + "@nullmailer.com");
-        }
-        return addresses;
-    }
-
-    private List<EmailMessage> getEmails(final ExchangeMailTest exchange, final int number,
-                                         final int numOfAttachments) throws Exception {
-        List<EmailMessage> messages = new ArrayList<>();
-        for (int ctr = 0; ctr < number; ctr++) {
-            final EmailMessage message = mock(EmailMessage.class);
-            doReturn("this is a test " + ctr).when(message).getSubject();
-            doReturn(getEmails(ctr + "to", 3)).when(message).getToRecipients();
-            doReturn(getEmails(ctr + "cc", 2)).when(message).getCcRecipients();
-            doReturn(getEmails(ctr + "bcc", 1)).when(message).getBccRecipients();
-            doReturn(getInternetMessageHeaderCollection()).when(message).getInternetMessageHeaders();
-            doReturn(getEmails(ctr + "from", 1).iterator().next()).when(message).getFrom();
-
-            doReturn(getAttachmentCollection(numOfAttachments)).when(message).getAttachments();
-
-            messages.add(message);
-        }
-        return messages;
-    }
-
-    @SuppressFBWarnings
-    private InternetMessageHeader getInternetMessageHeader(int suffix) {
-        InternetMessageHeader internetMessageHeader = mock(InternetMessageHeader.class);
-        doReturn("header" + suffix).when(internetMessageHeader).getName();
-        doReturn("value1" + suffix).when(internetMessageHeader).getValue();
-        doReturn(XmlNamespace.Messages).when(internetMessageHeader).getNamespace();
-        return internetMessageHeader;
-    }
-
-    private InternetMessageHeaderCollection getInternetMessageHeaderCollection() {
-        Collection<InternetMessageHeader> internetMessageHeaderList = new ArrayList<>();
-        for (int ctr = 0; ctr < 5; ctr++) {
-            internetMessageHeaderList.add(getInternetMessageHeader(ctr));
-        }
-        InternetMessageHeaderCollection internetMessageHeaderCollection = spy(new InternetMessageHeaderCollection());
-        doReturn(internetMessageHeaderList.iterator()).when(internetMessageHeaderCollection).iterator();
-        return internetMessageHeaderCollection;
-    }
-
-    @SuppressFBWarnings
-    private AttachmentCollection getAttachmentCollection(final int numOfAttachments) throws Exception {
-        Collection<Attachment> attachments = new ArrayList<>();
-        if (numOfAttachments > 0) {
-            File outputDir = new File(TS.params().getOutput());
-            for (int ctr = 0; ctr < numOfAttachments; ctr++) {
-                FileAttachment attachment = mock(FileAttachment.class);
-                File file = File.createTempFile("_mailTestAttachmentFile" + 1, ".txt", outputDir);
-                FileUtils.writeStringToFile(file, "This is a test " + ctr, Charset.forName("UTF-8"));
-                doReturn(file.getAbsolutePath()).when(attachment).getName();
-
-                doAnswer(new Answer() {
-                    public Object answer(InvocationOnMock invocation) {
-                        Object[] args = invocation.getArguments();
-                        try {
-                            FileUtils.writeStringToFile(new File(args[0].toString()), "This is a test ", Charset.forName("UTF-8"));
+                            TS.log().info(FileUtils.readFileToString(file, Charset.forName("UTF-8")));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        //Mock mock = invocation.getMock();
-                        return null;
-                    }
-                }).when(attachment).load(anyString());
-                attachments.add(attachment);
-            }
+                    });
+                } catch (Exception e) {
+                    TS.log().error(e);
+                }
+            });
         }
-
-        AttachmentCollection attachmentCollection = spy(new AttachmentCollection());
-        doReturn(attachments.iterator()).when(attachmentCollection).iterator();
-        return attachmentCollection;
     }
 
 }

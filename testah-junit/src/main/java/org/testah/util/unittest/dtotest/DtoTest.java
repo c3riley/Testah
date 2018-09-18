@@ -9,22 +9,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.function.Supplier;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * A utility class which allows for testing entity and transfer object classes. This is mainly for code coverage since
@@ -339,17 +328,6 @@ public class DtoTest {
     }
 
     /**
-     * Add to annotations to ignore dto test.
-     *
-     * @param annotation the annotation
-     * @return the dto test
-     */
-    public DtoTest addToAnnotationsToIgnore(final Class annotation) {
-        this.annotationsToIgnore.add(annotation);
-        return this;
-    }
-
-    /**
      * Sets annotations to ignore.
      *
      * @param annotationsToIgnore the annotations to ignore
@@ -357,6 +335,17 @@ public class DtoTest {
      */
     public DtoTest setAnnotationsToIgnore(final Set<Class> annotationsToIgnore) {
         this.annotationsToIgnore = annotationsToIgnore;
+        return this;
+    }
+
+    /**
+     * Add to annotations to ignore dto test.
+     *
+     * @param annotation the annotation
+     * @return the dto test
+     */
+    public DtoTest addToAnnotationsToIgnore(final Class annotation) {
+        this.annotationsToIgnore.add(annotation);
         return this;
     }
 

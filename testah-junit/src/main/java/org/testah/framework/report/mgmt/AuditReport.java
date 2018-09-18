@@ -24,11 +24,11 @@ import java.util.Map.Entry;
 
 public class AuditReport {
 
-    private String filePathAndName;
     private final CellStyle headerCellStyle;
     private final CellStyle bodyCellStyle;
     private final CellStyle xbodyCellStyle;
     private final XSSFWorkbook workbook;
+    private String filePathAndName;
 
     /**
      * Constructor.
@@ -101,54 +101,6 @@ public class AuditReport {
         cellFont.setFontHeightInPoints((short) 10);
         cellStyle.setFont(cellFont);
         return cellStyle;
-    }
-
-    private void addHeader(final Row row, final String... headerValues) {
-        int colNum = 0;
-        for (final String headerValue : headerValues) {
-            Cell cell = row.createCell(colNum++);
-            cell.setCellValue(headerValue);
-            cell.setCellStyle(headerCellStyle);
-        }
-    }
-
-    private void addToCell(final Cell cell, final String value) {
-        cell.setCellValue(value);
-        cell.setCellStyle(bodyCellStyle);
-    }
-
-    private void addToXCell(final Cell cell, final boolean value) {
-        if (value) {
-            cell.setCellValue("X");
-        } else {
-            cell.setCellValue("");
-        }
-        cell.setCellStyle(xbodyCellStyle);
-    }
-
-    private HashMap<String, TestPlanDto> getTestMetadata() {
-        final TestFilter testPlanFilter = new TestFilter();
-
-        testPlanFilter.filterTestPlansToRun();
-        final HashMap<String, TestPlanDto> testPlans = new HashMap<>();
-        for (final Class<?> test : testPlanFilter.getTestClassesMetFilters()) {
-            testPlans
-                    .put(test.getCanonicalName(),
-                            TestDtoHelper
-                                    .createTestPlanDto(test, test.getAnnotation(TestPlan.class),
-                                            test.getAnnotation(KnownProblem.class))
-                                    .setRunTime(null).setRunInfo(null));
-
-            for (final Method method : test.getDeclaredMethods()) {
-                if (null != method.getAnnotation(TestCase.class)) {
-                    testPlans.get(test.getCanonicalName())
-                            .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
-                                    method.getAnnotation(TestCase.class), method.getAnnotation(KnownProblem.class),
-                                    test.getAnnotation(TestPlan.class)).setRunTime(null));
-                }
-            }
-        }
-        return testPlans;
     }
 
     /**
@@ -256,6 +208,54 @@ public class AuditReport {
         }
 
         System.out.println("Done");
+    }
+
+    private HashMap<String, TestPlanDto> getTestMetadata() {
+        final TestFilter testPlanFilter = new TestFilter();
+
+        testPlanFilter.filterTestPlansToRun();
+        final HashMap<String, TestPlanDto> testPlans = new HashMap<>();
+        for (final Class<?> test : testPlanFilter.getTestClassesMetFilters()) {
+            testPlans
+                    .put(test.getCanonicalName(),
+                            TestDtoHelper
+                                    .createTestPlanDto(test, test.getAnnotation(TestPlan.class),
+                                            test.getAnnotation(KnownProblem.class))
+                                    .setRunTime(null).setRunInfo(null));
+
+            for (final Method method : test.getDeclaredMethods()) {
+                if (null != method.getAnnotation(TestCase.class)) {
+                    testPlans.get(test.getCanonicalName())
+                            .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
+                                    method.getAnnotation(TestCase.class), method.getAnnotation(KnownProblem.class),
+                                    test.getAnnotation(TestPlan.class)).setRunTime(null));
+                }
+            }
+        }
+        return testPlans;
+    }
+
+    private void addHeader(final Row row, final String... headerValues) {
+        int colNum = 0;
+        for (final String headerValue : headerValues) {
+            Cell cell = row.createCell(colNum++);
+            cell.setCellValue(headerValue);
+            cell.setCellStyle(headerCellStyle);
+        }
+    }
+
+    private void addToCell(final Cell cell, final String value) {
+        cell.setCellValue(value);
+        cell.setCellStyle(bodyCellStyle);
+    }
+
+    private void addToXCell(final Cell cell, final boolean value) {
+        if (value) {
+            cell.setCellValue("X");
+        } else {
+            cell.setCellValue("");
+        }
+        cell.setCellStyle(xbodyCellStyle);
     }
 
 }

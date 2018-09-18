@@ -57,32 +57,31 @@ public class TestFilterPlatformTest {
         testFilterMyPlatform(1, 1, 0, 1, TestPlanWithManyPlatforms.class);
 
         testFilterMyPlatform(5, 5, 3, 2, TestPlanWithPlatform.class, TestPlanWithManyPlatforms.class,
-            TestPlanWithPlatformDefault.class, TestPlanWithPlatformEmpty.class,
-            TestPlanWithPlatformEmptyString.class);
+                TestPlanWithPlatformDefault.class, TestPlanWithPlatformEmpty.class,
+                TestPlanWithPlatformEmptyString.class);
 
     }
 
     private void testFilterMyPlatform(final int expectedTest1, final int expectedTest2, final int expectedTest3,
-                                      final int expectedTest4, final Class<?>... classesToAdd)
-    {
+                                      final int expectedTest4, final Class<?>... classesToAdd) {
         final TestFilter filter = new TestFilter();
         Set<Class<?>> classes = ImmutableSet.copyOf(Arrays.asList(classesToAdd));
 
         TS.params().setFilterByPlatform(null);
         Assert.assertEquals(expectedTest1, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-            .size());
+                .size());
 
         TS.params().setFilterByPlatform("");
         Assert.assertEquals(expectedTest2, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-            .size());
+                .size());
 
         TS.params().setFilterByPlatform("~TEST_Platform");
         Assert.assertEquals(expectedTest3, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-            .size());
+                .size());
 
         TS.params().setFilterByPlatform("TEST_Platform");
         Assert.assertEquals(expectedTest4, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-            .size());
+                .size());
     }
 
     @After

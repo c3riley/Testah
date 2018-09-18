@@ -15,15 +15,6 @@ public class JBrowserDriverBrowser extends AbstractBrowser<JBrowserDriverBrowser
     /*
      * (non-Javadoc)
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
-     */
-    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
-        return new JBrowserDriver(capabilities);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary()
      */
     public JBrowserDriverBrowser getDriverBinary() {
@@ -42,7 +33,16 @@ public class JBrowserDriverBrowser extends AbstractBrowser<JBrowserDriverBrowser
     /*
      * (non-Javadoc)
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities()
+     * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
+     */
+    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
+        return new JBrowserDriver(capabilities);
+    }
+
+    /**
+     * create Capabilities.
+     *
+     * @return DesiredCapabilities
      */
     public DesiredCapabilities createCapabilities() {
         final Settings.Builder builder = new Settings.Builder();

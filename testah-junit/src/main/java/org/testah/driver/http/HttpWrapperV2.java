@@ -13,10 +13,6 @@ import java.util.Arrays;
  */
 public class HttpWrapperV2 extends AbstractHttpWrapper {
 
-    protected AbstractHttpWrapper getSelf() {
-        return this;
-    }
-
     /**
      * The constant DEFAULT_TIMEOUT.
      */
@@ -29,6 +25,16 @@ public class HttpWrapperV2 extends AbstractHttpWrapper {
         super();
         setDefaultConnectionTimeout(DEFAULT_TIMEOUT);
         initRequestConfig();
+    }
+
+    protected AbstractHttpWrapper getSelf() {
+        return this;
+    }
+
+    @Override
+    public AbstractHttpWrapper setDefaultConnectionTimeout(final int defaultConnectionTimeout) {
+        super.setDefaultConnectionTimeout(defaultConnectionTimeout);
+        return initRequestConfig();
     }
 
     private AbstractHttpWrapper initRequestConfig() {
@@ -49,12 +55,6 @@ public class HttpWrapperV2 extends AbstractHttpWrapper {
                 .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
 
         return setRequestConfig(rcb.build());
-    }
-
-    @Override
-    public AbstractHttpWrapper setDefaultConnectionTimeout(final int defaultConnectionTimeout) {
-        super.setDefaultConnectionTimeout(defaultConnectionTimeout);
-        return initRequestConfig();
     }
 
 }

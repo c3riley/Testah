@@ -76,6 +76,26 @@ public class TestStepDto {
     }
 
     /**
+     * Gets the step actions.
+     *
+     * @return the step actions
+     */
+    public List<StepActionDto> getStepActions() {
+        return stepActions;
+    }
+
+    /**
+     * Sets the step actions.
+     *
+     * @param stepActions the step actions
+     * @return the test step dto
+     */
+    public TestStepDto setStepActions(final List<StepActionDto> stepActions) {
+        this.stepActions = stepActions;
+        return this;
+    }
+
+    /**
      * Start.
      *
      * @return the test step dto
@@ -87,6 +107,26 @@ public class TestStepDto {
     }
 
     /**
+     * Gets the run time.
+     *
+     * @return the run time
+     */
+    public RunTimeDto getRunTime() {
+        return runTime;
+    }
+
+    /**
+     * Sets the run time.
+     *
+     * @param runTime the run time
+     * @return the test step dto
+     */
+    public TestStepDto setRunTime(final RunTimeDto runTime) {
+        this.runTime = runTime;
+        return this;
+    }
+
+    /**
      * Stop.
      *
      * @return the test step dto
@@ -94,17 +134,6 @@ public class TestStepDto {
     public TestStepDto stop() {
         setStatus();
         getRunTime().stop();
-        return this;
-    }
-
-    /**
-     * Sets the status.
-     *
-     * @param status the status
-     * @return the test step dto
-     */
-    public TestStepDto setStatus(final Boolean status) {
-        this.status = status;
         return this;
     }
 
@@ -128,22 +157,13 @@ public class TestStepDto {
     }
 
     /**
-     * Gets the run time.
+     * Sets the status.
      *
-     * @return the run time
-     */
-    public RunTimeDto getRunTime() {
-        return runTime;
-    }
-
-    /**
-     * Sets the run time.
-     *
-     * @param runTime the run time
+     * @param status the status
      * @return the test step dto
      */
-    public TestStepDto setRunTime(final RunTimeDto runTime) {
-        this.runTime = runTime;
+    public TestStepDto setStatus(final Boolean status) {
+        this.status = status;
         return this;
     }
 
@@ -185,12 +205,23 @@ public class TestStepDto {
     }
 
     /**
-     * Gets the step actions.
+     * Gets the name.
      *
-     * @return the step actions
+     * @return the name
      */
-    public List<StepActionDto> getStepActions() {
-        return stepActions;
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name.
+     *
+     * @param name the name
+     * @return the test step dto
+     */
+    public TestStepDto setName(final String name) {
+        this.name = name;
+        return this;
     }
 
     /**
@@ -201,17 +232,6 @@ public class TestStepDto {
      */
     public TestStepDto addStepActions(final StepActionDto stepAction) {
         stepActions.add(stepAction);
-        return this;
-    }
-
-    /**
-     * Sets the step actions.
-     *
-     * @param stepActions the step actions
-     * @return the test step dto
-     */
-    public TestStepDto setStepActions(final List<StepActionDto> stepActions) {
-        this.stepActions = stepActions;
         return this;
     }
 
@@ -249,26 +269,6 @@ public class TestStepDto {
 
     public TestStepDto setStatusEnum(final TestStatus statusEnum) {
         this.statusEnum = statusEnum;
-        return this;
-    }
-
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name.
-     *
-     * @param name the name
-     * @return the test step dto
-     */
-    public TestStepDto setName(final String name) {
-        this.name = name;
         return this;
     }
 

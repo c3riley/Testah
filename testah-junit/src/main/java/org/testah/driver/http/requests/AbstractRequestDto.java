@@ -17,7 +17,6 @@ import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.driver.http.HttpAuthUtil;
 import org.testah.framework.cli.Cli;
-import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.io.File;
@@ -89,13 +88,14 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     private int truncateResponseBodyInReportBy = TS.params().getDefaultResponseTruncate();
 
     /**
-     * Gets the self.
+     * Instantiates a new abstract request dto.
      *
-     * @return the self
+     * @param httpRequestBase the http request base
+     * @param httpMethod      the http method
      */
-    @SuppressWarnings("unchecked")
-    protected T getSelf() {
-        return (T) this;
+    protected AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
+        this.httpRequestBase = httpRequestBase;
+        this.httpMethod = httpMethod;
     }
 
     ;
@@ -121,6 +121,16 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     }
 
     /**
+     * Gets the self.
+     *
+     * @return the self
+     */
+    @SuppressWarnings("unchecked")
+    protected T getSelf() {
+        return (T) this;
+    }
+
+    /**
      * Sets the uri.
      *
      * @param uri the uri
@@ -132,43 +142,12 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     }
 
     /**
-     * Instantiates a new abstract request dto.
-     *
-     * @param httpRequestBase the http request base
-     * @param httpMethod      the http method
-     */
-    protected AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
-        this.httpRequestBase = httpRequestBase;
-        this.httpMethod = httpMethod;
-    }
-
-    /**
      * With json.
      *
      * @return the abstract request dto
      */
     public T withJson() {
         addHeader("Content-Type", "application/json");
-        return getSelf();
-    }
-
-    /**
-     * With json UTF 8.
-     *
-     * @return the abstract request dto
-     */
-    public T withJsonUTF8() {
-        addHeader("content-type", "application/json; charset=UTF-8");
-        return getSelf();
-    }
-
-    /**
-     * With form url encoded.
-     *
-     * @return the abstract request dto
-     */
-    public T withFormUrlEncoded() {
-        addHeader("content-type", "application/x-www-form-urlencoded");
         return getSelf();
     }
 
@@ -199,12 +178,23 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     }
 
     /**
-     * Gets the headers.
+     * With json UTF 8.
      *
-     * @return the headers
+     * @return the abstract request dto
      */
-    public List<Header> getHeaders() {
-        return headers;
+    public T withJsonUTF8() {
+        addHeader("content-type", "application/json; charset=UTF-8");
+        return getSelf();
+    }
+
+    /**
+     * With form url encoded.
+     *
+     * @return the abstract request dto
+     */
+    public T withFormUrlEncoded() {
+        addHeader("content-type", "application/x-www-form-urlencoded");
+        return getSelf();
     }
 
     /**
@@ -359,6 +349,15 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     }
 
     /**
+     * Gets the headers.
+     *
+     * @return the headers
+     */
+    public List<Header> getHeaders() {
+        return headers;
+    }
+
+    /**
      * Sets the http request base.
      *
      * @param httpRequestBase the http request base
@@ -390,6 +389,14 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     }
 
     /**
+     * Sets entity.
+     *
+     * @param payload the payload
+     * @return the entity
+     */
+    protected abstract T setEntity(final HttpEntity payload);
+
+    /**
      * Sets payload.
      *
      * @param payload the payload
@@ -401,25 +408,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
                 payload = "";
             }
             return setPayload(new StringEntity(payload));
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Sets payload.
-     *
-     * @param payload the payload
-     * @return the payload
-     */
-    public T setPayload(final Object payload) {
-        try {
-            if (null == payload) {
-                TS.log().warn("payload was null so setting to empty string");
-                return setPayload(new StringEntity(""));
-            } else {
-                return setPayload(new StringEntity(TS.util().toJson(payload)));
-            }
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
@@ -452,18 +440,40 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @param payload the payload
      * @return the payload
      */
+    public T setPayload(final Object payload) {
+        try {
+            if (null == payload) {
+                TS.log().warn("payload was null so setting to empty string");
+                return setPayload(new StringEntity(""));
+            } else {
+                return setPayload(new StringEntity(TS.util().toJson(payload)));
+            }
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Sets payload.
+     *
+     * @param payload the payload
+     * @return the payload
+     */
     public T setPayload(final byte[] payload) {
         setContentType("application/octet-stream");
         return setPayload(new ByteArrayEntity(payload));
     }
 
     /**
-     * Sets entity.
+     * Sets the content type.
      *
-     * @param payload the payload
-     * @return the entity
+     * @param value the value
+     * @return the abstract request dto
      */
-    protected abstract T setEntity(final HttpEntity payload);
+    public T setContentType(final String value) {
+        addHeader("content-type", value);
+        return getSelf();
+    }
 
     /**
      * Gets the payload string.
@@ -521,7 +531,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      */
     public StepActionDto createRequestInfoStep() {
         StepActionDto stepAction = null;
-        stepAction = StepAction.createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
+        stepAction = TS.step().action().createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
                 "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
                         : Arrays.toString(headers.toArray())),
                 getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
@@ -559,17 +569,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     }
 
     /**
-     * Sets the content type.
-     *
-     * @param value the value
-     * @return the abstract request dto
-     */
-    public T setContentType(final String value) {
-        addHeader("content-type", value);
-        return getSelf();
-    }
-
-    /**
      * Sets the upload file.
      *
      * @param payload the payload
@@ -592,19 +591,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     public T setUploadFile(final File payload) throws IOException {
         TS.asserts().assertFileExists(payload);
         return setUpload(FileUtils.readFileToString(payload, Charset.forName("UTF-8")));
-    }
-
-    /**
-     * Sets the upload resource file.
-     *
-     * @param pathToResource the path to resource
-     * @return the abstract request dto
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public T setUploadResourceFile(final String pathToResource) throws IOException {
-        final String fileContent = TS.util().getResourceAsString(pathToResource);
-        TS.asserts().notNull("setUploadResourceFile make sure value is not null", fileContent);
-        return setUpload(fileContent.getBytes(Charset.forName("UTF-8")));
     }
 
     /**
@@ -640,6 +626,18 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         return getSelf();
     }
 
+    /**
+     * Sets the upload resource file.
+     *
+     * @param pathToResource the path to resource
+     * @return the abstract request dto
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public T setUploadResourceFile(final String pathToResource) throws IOException {
+        final String fileContent = TS.util().getResourceAsString(pathToResource);
+        TS.asserts().notNull("setUploadResourceFile make sure value is not null", fileContent);
+        return setUpload(fileContent.getBytes(Charset.forName("UTF-8")));
+    }
 
     /**
      * Is truncate response body in report boolean.

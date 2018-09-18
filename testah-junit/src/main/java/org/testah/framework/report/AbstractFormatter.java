@@ -44,11 +44,13 @@ public abstract class AbstractFormatter {
     }
 
     /**
-     * Gets the context base.
+     * Gets the default package.
      *
-     * @return the context base
+     * @return the default package
      */
-    public abstract VelocityContext getContextBase();
+    public static String getDefaultPackage() {
+        return DEFAULT_PACKAGE;
+    }
 
     /**
      * Gets the context.
@@ -58,7 +60,33 @@ public abstract class AbstractFormatter {
      */
     public abstract VelocityContext getContext(final VelocityContext context);
 
-    public abstract String getBaseReportObject();
+    /**
+     * Creates the report.
+     *
+     * @return the abstract formatter
+     */
+    public abstract AbstractFormatter createReport();
+
+    public AbstractFormatter createReport(final String reportName) {
+        return createReport(reportName, Params.getUserDir());
+    }
+
+    /**
+     * Creates the report.
+     *
+     * @param reportName the report name
+     * @param directory  directory to write the report to
+     * @return the abstract formatter
+     */
+    public AbstractFormatter createReport(final String reportName, final String directory) {
+        try {
+            reportFile = new File(directory, reportName);
+            FileUtils.writeStringToFile(reportFile, getReport(), Charset.forName("UTF-8"));
+        } catch (final IOException e) {
+            TS.log().error("issue creating report: " + reportName, e);
+        }
+        return this;
+    }
 
     /**
      * Gets the report.
@@ -101,6 +129,15 @@ public abstract class AbstractFormatter {
 
     }
 
+    /**
+     * Gets the context base.
+     *
+     * @return the context base
+     */
+    public abstract VelocityContext getContextBase();
+
+    public abstract String getBaseReportObject();
+
     private String maskValuesInReport(final String report) {
         if (TS.getMaskValues().isEmpty()) {
             return report;
@@ -108,43 +145,6 @@ public abstract class AbstractFormatter {
         final int size = TS.getMaskValues().keySet().size();
         return StringUtils.replaceEach(report, TS.getMaskValues().keySet().toArray(new String[size]),
                 TS.getMaskValues().values().toArray(new String[size]));
-    }
-
-    /**
-     * Creates the report.
-     *
-     * @return the abstract formatter
-     */
-    public abstract AbstractFormatter createReport();
-
-    public AbstractFormatter createReport(final String reportName) {
-        return createReport(reportName, Params.getUserDir());
-    }
-
-    /**
-     * Creates the report.
-     *
-     * @param reportName the report name
-     * @param directory  directory to write the report to
-     * @return the abstract formatter
-     */
-    public AbstractFormatter createReport(final String reportName, final String directory) {
-        try {
-            reportFile = new File(directory, reportName);
-            FileUtils.writeStringToFile(reportFile, getReport(), Charset.forName("UTF-8"));
-        } catch (final IOException e) {
-            TS.log().error("issue creating report: " + reportName, e);
-        }
-        return this;
-    }
-
-    /**
-     * Gets the default package.
-     *
-     * @return the default package
-     */
-    public static String getDefaultPackage() {
-        return DEFAULT_PACKAGE;
     }
 
     /**
