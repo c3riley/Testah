@@ -1,21 +1,17 @@
 package org.testah.framework.report.performance.dto;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.http.load.HttpAkkaStats;
 
+import java.util.*;
+import java.util.stream.Collectors;
+
 public class TestChunkStats {
     private static final long now = System.currentTimeMillis();
     private static final long elapsedTime = 660L;
-    private static final Integer[] statusCodes = new Integer[] { 200, 300, 400, 500 };
+    private static final Integer[] statusCodes = new Integer[]{200, 300, 400, 500};
 
     @Test
     public void test() {
@@ -63,8 +59,8 @@ public class TestChunkStats {
     }
 
     private List<ResponseDto> generateResponses(long startTime, int statusCode, long seed) {
-        Long[] durations = new Long[] { seed - 10L, seed, seed + 10L };
+        Long[] durations = new Long[]{seed - 10L, seed, seed + 10L};
         return Arrays.stream(durations).map(duration -> new ResponseDto().setStatusCode(statusCode).setStart(startTime)
-                        .setEnd(startTime + duration.longValue())).collect(Collectors.toList());
+                .setEnd(startTime + duration.longValue())).collect(Collectors.toList());
     }
 }

@@ -55,39 +55,39 @@ public class AssertBigDecimalTest {
     @Test
     public void isWithinRange() {
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("1.2"), negAsserts)
-                .isWithinRange(0,2,false).isPassed());
+                .isWithinRange(0, 2, false).isPassed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("2"), negAsserts)
-                .isWithinRange(0,2,true).isPassed());
+                .isWithinRange(0, 2, true).isPassed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("0.0"), negAsserts)
-                .isWithinRange(0,2,true).isPassed());
+                .isWithinRange(0, 2, true).isPassed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("1"), negAsserts)
-                .isWithinRange(0,2,false).isPassed());
+                .isWithinRange(0, 2, false).isPassed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("1"), negAsserts)
-                .isWithinRange(0L,2l,false).isPassed());
+                .isWithinRange(0L, 2L, false).isPassed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("0.4"), negAsserts)
-                .isWithinRange(0.3,0.5,false).isPassed());
+                .isWithinRange(0.3, 0.5, false).isPassed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("0.4"), negAsserts)
-                .isWithinRange(0.3f,0.5f,false).isPassed());
+                .isWithinRange(0.3f, 0.5f, false).isPassed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("1"), negAsserts)
-                .isWithinRange(0,2,false).isPassed());
+                .isWithinRange(0, 2, false).isPassed());
 
 
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("2.2"), negAsserts)
-                .isWithinRange(0,2,false).isFailed());
+                .isWithinRange(0, 2, false).isFailed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("2.00002"), negAsserts)
-                .isWithinRange(0,2,true).isFailed());
+                .isWithinRange(0, 2, true).isFailed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("-0.1"), negAsserts)
-                .isWithinRange(0,2,true).isFailed());
+                .isWithinRange(0, 2, true).isFailed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("2"), negAsserts)
-                .isWithinRange(0,2,false).isFailed());
+                .isWithinRange(0, 2, false).isFailed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("4"), negAsserts)
-                .isWithinRange(0L,2l,false).isFailed());
+                .isWithinRange(0L, 2L, false).isFailed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("0.66"), negAsserts)
-                .isWithinRange(0.3,0.5,false).isFailed());
+                .isWithinRange(0.3, 0.5, false).isFailed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("0.75534532"), negAsserts)
-                .isWithinRange(0.3f,0.5f,false).isFailed());
+                .isWithinRange(0.3f, 0.5f, false).isFailed());
         Assert.assertTrue(new AssertBigDecimal(new BigDecimal("545423646435"), negAsserts)
-                .isWithinRange(0,2,false).isFailed());
+                .isWithinRange(0, 2, false).isFailed());
 
 
     }
@@ -98,11 +98,11 @@ public class AssertBigDecimalTest {
     public void getBigDecimal() {
 
         BigDecimal expected = new BigDecimal("1");
-        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1).compareTo(expected)==0);
-        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1f).compareTo(expected)==0);
-        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1l).compareTo(expected)==0);
-        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1.0).compareTo(expected)==0);
-        Assert.assertTrue(AssertBigDecimal.getBigDecimal("1").compareTo(expected)==0);
+        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1).compareTo(expected) == 0);
+        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1f).compareTo(expected) == 0);
+        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1L).compareTo(expected) == 0);
+        Assert.assertTrue(AssertBigDecimal.getBigDecimal(1.0).compareTo(expected) == 0);
+        Assert.assertTrue(AssertBigDecimal.getBigDecimal("1").compareTo(expected) == 0);
         Assert.assertTrue(AssertBigDecimal.getBigDecimal("") == null);
         Assert.assertTrue(AssertBigDecimal.getBigDecimal("test") == null);
         Assert.assertTrue(AssertBigDecimal.getBigDecimal("1c") == null);

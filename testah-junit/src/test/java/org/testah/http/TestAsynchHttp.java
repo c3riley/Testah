@@ -1,8 +1,5 @@
 package org.testah.http;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-
 import org.apache.http.HttpResponse;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,6 +9,9 @@ import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 
 import java.util.concurrent.ExecutionException;
+
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @TestPlan
 public class TestAsynchHttp {

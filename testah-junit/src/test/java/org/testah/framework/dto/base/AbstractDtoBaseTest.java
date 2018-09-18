@@ -1,11 +1,11 @@
 package org.testah.framework.dto.base;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.testah.driver.http.response.ResponseDto;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 public class AbstractDtoBaseTest {
 

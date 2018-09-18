@@ -83,8 +83,8 @@ public class TestFilterTestTypeTest extends HttpTestPlan {
         expected.put(TestType.RETIRE, 1);
         expected.put(null, 7);
         testFilterMyTestType(expected, TestPlanWithTestType.class, TestPlanWithManyTestTypes.class,
-            TestPlanWithTestTypeDefault.class, TestPlanWithTestTypeEmpty.class,
-            TestPlanWithTestTypeEmptyString.class, TestPlanWithTestTypeRetire.class, TestPlanWithTestTypeManual.class);
+                TestPlanWithTestTypeDefault.class, TestPlanWithTestTypeEmpty.class,
+                TestPlanWithTestTypeEmptyString.class, TestPlanWithTestTypeRetire.class, TestPlanWithTestTypeManual.class);
     }
 
     private void testFilterMyTestType(final HashMap<TestType, Integer> expected, final Class<?>... classesToAdd) {
@@ -93,11 +93,11 @@ public class TestFilterTestTypeTest extends HttpTestPlan {
 
         TS.params().setFilterByTestType(null);
         Assert.assertEquals(expected.getOrDefault(null, 0).intValue(),
-            filter.resetTestClassesMetFilters().filterTestPlansToRun(classes).size());
+                filter.resetTestClassesMetFilters().filterTestPlansToRun(classes).size());
         for (TestType testType : TestType.values()) {
             TS.params().setFilterByTestType(testType);
             Assert.assertEquals(expected.getOrDefault(testType, 0).intValue(),
-                filter.resetTestClassesMetFilters().filterTestPlansToRun(classes).size());
+                    filter.resetTestClassesMetFilters().filterTestPlansToRun(classes).size());
         }
     }
 

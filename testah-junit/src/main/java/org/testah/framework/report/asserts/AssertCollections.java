@@ -8,8 +8,9 @@ import org.testah.framework.report.asserts.base.AssertFunctionReturnBooleanActua
 import org.unitils.reflectionassert.ReflectionAssert;
 import org.unitils.reflectionassert.ReflectionComparatorMode;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.stream.Stream;
 
 /**
@@ -23,22 +24,49 @@ import java.util.stream.Stream;
  */
 public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, Collection<T>> {
 
+    /**
+     * Instantiates a new Assert collections.
+     *
+     * @param actual the actual
+     */
     public AssertCollections(final Collection<T> actual) {
         this(actual, TS.asserts());
     }
 
+    /**
+     * Instantiates a new Assert collections.
+     *
+     * @param actual  the actual
+     * @param asserts the asserts
+     */
+    public AssertCollections(Collection<T> actual, VerboseAsserts asserts) {
+        super(actual, asserts);
+    }
+
+    /**
+     * Instantiates a new Assert collections.
+     *
+     * @param actual the actual
+     */
     public AssertCollections(final T[] actual) {
         this(actual, TS.asserts());
     }
 
+    /**
+     * Instantiates a new Assert collections.
+     *
+     * @param actual  the actual
+     * @param asserts the asserts
+     */
     public AssertCollections(final T[] actual, final VerboseAsserts asserts) {
         this(Arrays.asList(actual), asserts);
     }
 
-    public AssertCollections(Collection<T> actual, VerboseAsserts asserts) {
-        super(actual,asserts);
-    }
-
+    /**
+     * Size assert number.
+     *
+     * @return the assert number
+     */
     public AssertNumber<Integer> size() {
         return new AssertNumber<Integer>(getActual().size(), getAsserts()).setMessage("Collection Size");
     }
@@ -55,7 +83,7 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
             Assert.assertTrue(getActual().contains(expectedValueContained));
             return true;
         };
-         return runAssert("Check that actual[" + getActual() + "] contains " + expectedValueContained, "contains",
+        return runAssert("Check that actual[" + getActual() + "] contains " + expectedValueContained, "contains",
                 assertRun, null, getActual());
     }
 
@@ -129,6 +157,18 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
         return equalsTo(expectedCollection, new ReflectionComparatorMode[]{});
     }
 
+    private AssertCollections equalsTo(final Collection<T> expectedCollection, final ReflectionComparatorMode... modes) {
+        StringBuilder str = new StringBuilder();
+        Stream.of(modes).forEach(it -> str.append(it.name()));
+        final String msg = "Checking that the actual is equal with reflection and modes[" + str.toString() + "]";
+        AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
+            ReflectionAssert.assertReflectionEquals(msg, expectedCollection, getActual(), modes);
+            return true;
+        };
+        return runAssert(msg, "equalsToWithReflection",
+                assertRun, expectedCollection, getActual());
+    }
+
     /**
      * Equals ignore order assert collections.
      *
@@ -149,20 +189,6 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
         return equalsTo(expectedCollection, ReflectionComparatorMode.LENIENT_ORDER);
     }
 
-
-
-    private AssertCollections equalsTo(final Collection<T> expectedCollection, final ReflectionComparatorMode... modes) {
-        StringBuilder str = new StringBuilder();
-        Stream.of(modes).forEach(it -> str.append(it.name()));
-        final String msg = "Checking that the actual is equal with reflection and modes[" + str.toString() + "]";
-        AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
-            ReflectionAssert.assertReflectionEquals(msg, expectedCollection, getActual(), modes);
-            return true;
-        };
-        return runAssert(msg, "equalsToWithReflection",
-                assertRun, expectedCollection, getActual());
-    }
-
     /**
      * Is empty assert collections.
      *
@@ -170,14 +196,19 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
      */
     public AssertCollections isEmpty() {
         AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
-                history.setExpectedForHistory(true);
-                history.setActualForHistory(getActual().isEmpty());
-                Assert.assertTrue(getActual().isEmpty());
+            history.setExpectedForHistory(true);
+            history.setActualForHistory(getActual().isEmpty());
+            Assert.assertTrue(getActual().isEmpty());
             return true;
         };
         return super.isEmpty(assertRun);
     }
 
+    /**
+     * Is not empty assert collections.
+     *
+     * @return the assert collections
+     */
     public AssertCollections isNotEmpty() {
         AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
             history.setExpectedForHistory(false);

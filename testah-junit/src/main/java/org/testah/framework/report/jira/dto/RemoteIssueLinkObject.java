@@ -15,40 +15,35 @@ import java.util.Map;
 public class RemoteIssueLinkObject {
 
     /**
+     * The additional properties.
+     */
+    @JsonIgnore
+    private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
+    /**
      * The url.
      */
     @JsonProperty("url")
     private String url;
-
     /**
      * The title.
      */
     @JsonProperty("title")
     private String title;
-
     /**
      * The summary.
      */
     @JsonProperty("summary")
     private String summary;
-
     /**
      * The icon.
      */
     @JsonProperty("icon")
     private Icon icon;
-
     /**
      * The status.
      */
     @JsonProperty("status")
     private Status status;
-
-    /**
-     * The additional properties.
-     */
-    @JsonIgnore
-    private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
     /**
      * Gets the url.

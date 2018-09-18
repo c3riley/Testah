@@ -121,42 +121,6 @@ public class TestRunProperties {
     }
 
     /**
-     * Get the time in milliseconds until the test will run.
-     *
-     * @return the stopTime
-     */
-    public long getStopTime() {
-        if (stopTime == null) {
-            stopTime = System.currentTimeMillis() + runDuration;
-        }
-        return stopTime;
-    }
-
-    /**
-     * Get the time as LocalDateTime until the test will run.
-     *
-     * @return the stopDateTime
-     */
-    public LocalDateTime getStopDateTime() {
-        if (stopDateTime == null) {
-            stopDateTime = Instant.ofEpochMilli(getStopTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-        }
-        return stopDateTime;
-    }
-
-    /**
-     * Set the time in milliseconds until the test will run.
-     *
-     * @param stopTime the stopTime to set
-     * @return this object
-     */
-    public TestRunProperties setStopTime(long stopTime) {
-        TS.log().info("Setting stopTime to " + stopTime);
-        this.stopTime = stopTime;
-        return this;
-    }
-
-    /**
      * Get the number of requests in one chunk of requests.
      *
      * @return the chunkSize
@@ -301,10 +265,6 @@ public class TestRunProperties {
         return domain;
     }
 
-    public String getRuntime() {
-        return runDurationAsDuration.toString();
-    }
-
     /**
      * Set the domain for the service under test in the test run properties.
      *
@@ -317,11 +277,51 @@ public class TestRunProperties {
         return this;
     }
 
+    public String getRuntime() {
+        return runDurationAsDuration.toString();
+    }
+
     @Override
     public String toString() {
         runDurationAsDuration = Duration.ofMillis(runDuration);
         getStopDateTime();
         return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
+
+    /**
+     * Get the time as LocalDateTime until the test will run.
+     *
+     * @return the stopDateTime
+     */
+    public LocalDateTime getStopDateTime() {
+        if (stopDateTime == null) {
+            stopDateTime = Instant.ofEpochMilli(getStopTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+        return stopDateTime;
+    }
+
+    /**
+     * Get the time in milliseconds until the test will run.
+     *
+     * @return the stopTime
+     */
+    public long getStopTime() {
+        if (stopTime == null) {
+            stopTime = System.currentTimeMillis() + runDuration;
+        }
+        return stopTime;
+    }
+
+    /**
+     * Set the time in milliseconds until the test will run.
+     *
+     * @param stopTime the stopTime to set
+     * @return this object
+     */
+    public TestRunProperties setStopTime(long stopTime) {
+        TS.log().info("Setting stopTime to " + stopTime);
+        this.stopTime = stopTime;
+        return this;
     }
 }
 

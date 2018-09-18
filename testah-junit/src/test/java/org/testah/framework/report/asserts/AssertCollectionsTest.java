@@ -12,8 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AssertCollectionsTest {
 
     VerboseAsserts noThrow = new VerboseAsserts().setThrowExceptionOnFail(false);
@@ -38,10 +36,10 @@ class AssertCollectionsTest {
 
     @Test
     void hasSizeArrayString() {
-        String[] array = new String[] {};
+        String[] array = new String[]{};
         new AssertCollections(array).size().equalsTo(0);
 
-        array = new String[] {"item 1"};
+        array = new String[]{"item 1"};
         new AssertCollections(array).size().equalsTo(1);
     }
 

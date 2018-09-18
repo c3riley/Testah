@@ -28,6 +28,34 @@ public class TestPlanActor extends UntypedActor {
     }
 
     /**
+     * Check it results is null.
+     *
+     * @return return true if not null
+     */
+    public static boolean isResultsInUse() {
+        return (null != results);
+    }
+
+    /**
+     * Reset the results to null.
+     */
+    public static void resetResults() {
+        results = null;
+    }
+
+    /**
+     * Get the results.
+     *
+     * @return list of results
+     */
+    public static List<ResultDto> getResults() {
+        if (null == results) {
+            results = new ArrayList<ResultDto>();
+        }
+        return results;
+    }
+
+    /**
      * Override onReceive in UntypedActor.
      *
      * @see akka.actor.UntypedActor#onReceive(java.lang.Object)
@@ -59,34 +87,6 @@ public class TestPlanActor extends UntypedActor {
      */
     public ActorRef getWorkerRouter() {
         return workerRouter;
-    }
-
-    /**
-     * Get the results.
-     *
-     * @return list of results
-     */
-    public static List<ResultDto> getResults() {
-        if (null == results) {
-            results = new ArrayList<ResultDto>();
-        }
-        return results;
-    }
-
-    /**
-     * Check it results is null.
-     *
-     * @return return true if not null
-     */
-    public static boolean isResultsInUse() {
-        return (null != results);
-    }
-
-    /**
-     * Reset the results to null.
-     */
-    public static void resetResults() {
-        results = null;
     }
 
 }

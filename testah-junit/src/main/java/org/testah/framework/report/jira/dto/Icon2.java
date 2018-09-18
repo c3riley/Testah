@@ -15,28 +15,25 @@ import java.util.Map;
 public class Icon2 {
 
     /**
+     * The additional properties.
+     */
+    @JsonIgnore
+    private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
+    /**
      * The url16x16.
      */
     @JsonProperty("url16x16")
     private String url16x16;
-
     /**
      * The title.
      */
     @JsonProperty("title")
     private String title;
-
     /**
      * The link.
      */
     @JsonProperty("link")
     private String link;
-
-    /**
-     * The additional properties.
-     */
-    @JsonIgnore
-    private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
     /**
      * Gets the url16x16.

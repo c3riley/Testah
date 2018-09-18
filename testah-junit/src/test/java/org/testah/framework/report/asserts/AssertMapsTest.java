@@ -26,27 +26,27 @@ class AssertMapsTest {
     @Test
     public void testKeys() {
         Map<String, String> data = new HashMap<>();
-        Assert.assertTrue( new AssertMaps<String, String>(data, negAsserts).keySet()
+        Assert.assertTrue(new AssertMaps<String, String>(data, negAsserts).keySet()
                 .size().equalsTo(0).isPassed());
     }
 
     @Test
     public void testValues() {
         Map<String, String> data = new HashMap<>();
-        Assert.assertTrue( new AssertMaps<String, String>(data, negAsserts).values()
+        Assert.assertTrue(new AssertMaps<String, String>(data, negAsserts).values()
                 .size().equalsTo(0).isPassed());
     }
 
     @Test
     public void isEmptyTest() {
         Map<String, String> data = new HashMap<>();
-        Assert.assertTrue( new AssertMaps<String, String>(data, negAsserts).isEmpty().isPassed());
+        Assert.assertTrue(new AssertMaps<String, String>(data, negAsserts).isEmpty().isPassed());
     }
 
     @Test
     public void isNotEmptyTest() {
         Map<String, String> data = new HashMap<>();
-        Assert.assertTrue( new AssertMaps<String, String>(data, negAsserts).isNotEmpty().isFailed());
+        Assert.assertTrue(new AssertMaps<String, String>(data, negAsserts).isNotEmpty().isFailed());
     }
 
 }

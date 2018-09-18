@@ -6,14 +6,16 @@ import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.framework.testPlan.AbstractTestPlan;
 
+/**
+ * The type Step action helper.
+ */
 public class StepActionHelper {
 
-    public StepActionDto create() {
-        StepActionDto stepActionDto = new StepActionDto();
-        add(stepActionDto);
-        return stepActionDto;
-    }
-
+    /**
+     * Current step action dto.
+     *
+     * @return the step action dto
+     */
     public StepActionDto current() {
         try {
             return Iterables.getLast(AbstractTestPlan.getTestStep().getStepActions());
@@ -23,33 +25,70 @@ public class StepActionHelper {
         }
     }
 
-    public StepActionDto add(final StepActionDto stepAction) {
-        if (null == AbstractTestPlan.getTestStep()) {
-            throw new RuntimeException("Unable to add stepAction as current Test Step is null");
-        }
-        if (null == stepAction) {
-            throw new RuntimeException("Unable to add stepAction as it is null");
-        }
-        AbstractTestPlan.getTestStep().addStepAction(stepAction);
-        return stepAction;
-    }
-
+    /**
+     * Create assert result step action dto.
+     *
+     * @param message      the message
+     * @param status       the status
+     * @param assertMethod the assert method
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param exception    the exception
+     * @return the step action dto
+     */
     public StepActionDto createAssertResult(final String message, final Boolean status, final String assertMethod,
                                             final Object expected, final Object actual, final Throwable exception) {
         return createAssertResult(message, status, assertMethod, expected, actual, exception, true);
     }
 
+    /**
+     * Create assert result step action dto.
+     *
+     * @param message      the message
+     * @param status       the status
+     * @param assertMethod the assert method
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param exception    the exception
+     * @param autoLog      the auto log
+     * @return the step action dto
+     */
     public StepActionDto createAssertResult(final String message, final Boolean status, final String assertMethod,
                                             final Object expected, final Object actual, final Throwable exception, final boolean autoLog) {
         return assertResult(message, status, assertMethod, expected, actual, exception, create(), autoLog);
     }
 
+    /**
+     * Create assert result step action dto.
+     *
+     * @param message      the message
+     * @param status       the status
+     * @param assertMethod the assert method
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param exception    the exception
+     * @param step         the step
+     * @return the step action dto
+     */
     public StepActionDto createAssertResult(final String message, final Boolean status, final String assertMethod,
                                             final Object expected, final Object actual, final Throwable exception,
                                             final StepActionDto step) {
         return assertResult(message, status, assertMethod, expected, actual, exception, step, true);
     }
 
+    /**
+     * Assert result step action dto.
+     *
+     * @param message      the message
+     * @param status       the status
+     * @param assertMethod the assert method
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param exception    the exception
+     * @param step         the step
+     * @param autoLog      the auto log
+     * @return the step action dto
+     */
     public StepActionDto assertResult(final String message, final Boolean status, final String assertMethod,
                                       final Object expected, final Object actual, final Throwable exception,
                                       final StepActionDto step, final boolean autoLog) {
@@ -74,23 +113,81 @@ public class StepActionHelper {
         return step;
     }
 
+    /**
+     * Create step action dto.
+     *
+     * @return the step action dto
+     */
+    public StepActionDto create() {
+        StepActionDto stepActionDto = new StepActionDto();
+        add(stepActionDto);
+        return stepActionDto;
+    }
+
+    /**
+     * Add step action dto.
+     *
+     * @param stepAction the step action
+     * @return the step action dto
+     */
+    public StepActionDto add(final StepActionDto stepAction) {
+        if (null == AbstractTestPlan.getTestStep()) {
+            throw new RuntimeException("Unable to add stepAction as current Test Step is null");
+        }
+        if (null == stepAction) {
+            throw new RuntimeException("Unable to add stepAction as it is null");
+        }
+        AbstractTestPlan.getTestStep().addStepAction(stepAction);
+        return stepAction;
+    }
+
+    /**
+     * Create verify result step action dto.
+     *
+     * @param message      the message
+     * @param status       the status
+     * @param assertMethod the assert method
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param exception    the exception
+     * @return the step action dto
+     */
     public StepActionDto createVerifyResult(final String message, final Boolean status, final String assertMethod,
                                             final Object expected, final Object actual, final Throwable exception) {
         return createVerifyResult(message, status, assertMethod, expected, actual, exception, true);
     }
 
+    /**
+     * Create verify result step action dto.
+     *
+     * @param message      the message
+     * @param status       the status
+     * @param assertMethod the assert method
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param exception    the exception
+     * @param autoLog      the auto log
+     * @return the step action dto
+     */
     public StepActionDto createVerifyResult(final String message, final Boolean status, final String assertMethod,
                                             final Object expected, final Object actual, final Throwable exception,
                                             final boolean autoLog) {
         return verifyResult(message, status, assertMethod, expected, actual, exception, create(), autoLog);
     }
 
-    public StepActionDto verifyResult(final String message, final Boolean status, final String assertMethod,
-                                      final Object expected, final Object actual, final Throwable exception,
-                                      final StepActionDto step) {
-        return verifyResult(message, status, assertMethod, expected, actual, exception, step, true);
-    }
-
+    /**
+     * Verify result step action dto.
+     *
+     * @param message      the message
+     * @param status       the status
+     * @param assertMethod the assert method
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param exception    the exception
+     * @param step         the step
+     * @param autoLog      the auto log
+     * @return the step action dto
+     */
     public StepActionDto verifyResult(final String message, final Boolean status, final String assertMethod,
                                       final Object expected, final Object actual, final Throwable exception,
                                       final StepActionDto step, boolean autoLog) {
@@ -102,36 +199,91 @@ public class StepActionHelper {
         step.setException(null);
         step.setTestStepActionType(TestStepActionType.VERIFY);
         if (autoLog) {
-            TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " +
-                    status + " - " + message + " - expected[" + expected + "] actual[" + actual + "]");
+            TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - "
+                    + status + " - " + message + " - expected[" + expected + "] actual[" + actual + "]");
         }
         return step;
     }
 
+    /**
+     * Verify result step action dto.
+     *
+     * @param message      the message
+     * @param status       the status
+     * @param assertMethod the assert method
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param exception    the exception
+     * @param step         the step
+     * @return the step action dto
+     */
+    public StepActionDto verifyResult(final String message, final Boolean status, final String assertMethod,
+                                      final Object expected, final Object actual, final Throwable exception,
+                                      final StepActionDto step) {
+        return verifyResult(message, status, assertMethod, expected, actual, exception, step, true);
+    }
+
+    /**
+     * Create info step action dto.
+     *
+     * @param message1 the message 1
+     * @return the step action dto
+     */
     public StepActionDto createInfo(final String message1) {
         return createInfo(message1, "", "", true);
     }
 
-    public StepActionDto createInfo(final String message1, final String message2) {
-        return createInfo(message1, message2, "", true);
-    }
-
-    public StepActionDto info(final String message1, final String message2, final String message3,
-                              final boolean autoLog, final StepActionDto step) {
-        return info(message1, message2, message3, autoLog, false, step);
-    }
-
+    /**
+     * Create info step action dto.
+     *
+     * @param message1 the message 1
+     * @param message2 the message 2
+     * @param message3 the message 3
+     * @param autoLog  the auto log
+     * @return the step action dto
+     */
     public StepActionDto createInfo(final String message1, final String message2, final String message3,
                                     final boolean autoLog) {
         return createInfo(message1, message2, message3, autoLog, false);
     }
 
-
+    /**
+     * Create info step action dto.
+     *
+     * @param message1     the message 1
+     * @param message2     the message 2
+     * @param message3     the message 3
+     * @param autoLog      the auto log
+     * @param takeSnapShot the take snap shot
+     * @return the step action dto
+     */
     public StepActionDto createInfo(final String message1, final String message2, final String message3,
                                     final boolean autoLog, final boolean takeSnapShot) {
         return info(message1, message2, message3, autoLog, takeSnapShot, create());
     }
 
+    /**
+     * Create info step action dto.
+     *
+     * @param message1 the message 1
+     * @param message2 the message 2
+     * @return the step action dto
+     */
+    public StepActionDto createInfo(final String message1, final String message2) {
+        return createInfo(message1, message2, "", true);
+    }
+
+    /**
+     * Info step action dto.
+     *
+     * @param message1     the message 1
+     * @param message2     the message 2
+     * @param message3     the message 3
+     * @param autoLog      the auto log
+     * @param takeSnapShot the take snap shot
+     * @param step         the step
+     * @return the step action dto
+     */
     public StepActionDto info(final String message1, final String message2, final String message3,
                               final boolean autoLog, final boolean takeSnapShot, final StepActionDto step) {
         step.setMessage1(message1);
@@ -150,18 +302,63 @@ public class StepActionHelper {
         return step;
     }
 
+    /**
+     * Info step action dto.
+     *
+     * @param message1 the message 1
+     * @param message2 the message 2
+     * @param message3 the message 3
+     * @param autoLog  the auto log
+     * @param step     the step
+     * @return the step action dto
+     */
+    public StepActionDto info(final String message1, final String message2, final String message3,
+                              final boolean autoLog, final StepActionDto step) {
+        return info(message1, message2, message3, autoLog, false, step);
+    }
+
+    /**
+     * Create browser action step action dto.
+     *
+     * @param message1 the message 1
+     * @param by       the by
+     * @return the step action dto
+     */
     public StepActionDto createBrowserAction(final String message1, final Object by) {
         return createBrowserAction(message1, by.toString());
     }
 
-    public StepActionDto createBrowserAction(final String message1, final Object by, final StepActionDto step) {
-        return browserAction(message1, by.toString(), step);
-    }
-
+    /**
+     * Create browser action step action dto.
+     *
+     * @param message1 the message 1
+     * @param message2 the message 2
+     * @return the step action dto
+     */
     public StepActionDto createBrowserAction(final String message1, final String message2) {
         return browserAction(message1, message2, create());
     }
 
+    /**
+     * Create browser action step action dto.
+     *
+     * @param message1 the message 1
+     * @param by       the by
+     * @param step     the step
+     * @return the step action dto
+     */
+    public StepActionDto createBrowserAction(final String message1, final Object by, final StepActionDto step) {
+        return browserAction(message1, by.toString(), step);
+    }
+
+    /**
+     * Browser action step action dto.
+     *
+     * @param message1 the message 1
+     * @param message2 the message 2
+     * @param step     the step
+     * @return the step action dto
+     */
     public StepActionDto browserAction(final String message1, final String message2, final StepActionDto step) {
         step.setMessage1(message1);
         step.setMessage2(message2);
@@ -170,18 +367,42 @@ public class StepActionHelper {
         return step;
     }
 
-    public StepActionDto screenshot(final String message) {
-        return info(message, "", "", true, true, create());
-    }
-
+    /**
+     * Screenshot step action dto.
+     *
+     * @param message the message
+     * @param step    the step
+     * @return the step action dto
+     */
     public StepActionDto screenshot(final String message, final StepActionDto step) {
         return info(message, "", "", true, true, step);
     }
 
+    /**
+     * Screenshot step action dto.
+     *
+     * @return the step action dto
+     */
     public StepActionDto screenshot() {
         return screenshot("");
     }
 
+    /**
+     * Screenshot step action dto.
+     *
+     * @param message the message
+     * @return the step action dto
+     */
+    public StepActionDto screenshot(final String message) {
+        return info(message, "", "", true, true, create());
+    }
+
+    /**
+     * Add snapshot step action dto.
+     *
+     * @param stepActionDto the step action dto
+     * @return the step action dto
+     */
     public StepActionDto addSnapshot(final StepActionDto stepActionDto) {
         stepActionDto.setSnapShotPath(TS.browser().takeScreenShot());
         stepActionDto.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());

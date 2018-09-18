@@ -3,6 +3,7 @@ package org.testah.util.mail;
 import com.google.common.base.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.testah.TS;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -27,12 +28,6 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
     private static final String DEFAULT_EMAIL_CONTENT_TYPE = "text/html";
     private static final int DEFAULT_EXPECTED_FOUND_COUNT = 1;
     private static final long DEFAULT_POLL_PAUSE_ITERATION = 5000L;
-
-    private long timeToPoll = TimeUnit.MINUTES.toMillis(5);
-    private long timeToPauseBetweenPoll = TimeUnit.SECONDS.toMillis(10);
-    private String domain;
-    private String mailServerAddress;
-    private boolean debug = true;
     /**
      * The Folder.
      */
@@ -41,6 +36,11 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
      * The Auth.
      */
     protected A auth;
+    private long timeToPoll = TimeUnit.MINUTES.toMillis(5);
+    private long timeToPauseBetweenPoll = TimeUnit.SECONDS.toMillis(10);
+    private String domain;
+    private String mailServerAddress;
+    private boolean debug = true;
 
     /**
      * Instantiates a new Abstract email util.
@@ -58,70 +58,12 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
         this.mailServerAddress = mailServerAddress;
     }
 
-    @SuppressWarnings("unchecked")
-    protected T self() {
-        return (T) this;
-    }
-
     /**
      * Connect t.
      *
      * @return the t
      */
     public abstract T connect();
-
-    /**
-     * Gets all messages.
-     *
-     * @return the all messages
-     * @throws Exception the exception
-     */
-    public abstract List<M> getAllMessages() throws Exception;
-
-    /**
-     * Gets msg by subject filter.
-     *
-     * @param subject the subject
-     * @return the msg by subject filter
-     * @throws Exception the exception
-     */
-    public abstract EmailMessageFilter<M> getMsgBySubjectFilter(final String subject) throws Exception;
-
-    /**
-     * Gets msg by to email filter.
-     *
-     * @param toAddress the to address
-     * @return the msg by to email filter
-     * @throws Exception the exception
-     */
-    public abstract EmailMessageFilter<M> getMsgByToEmailFilter(final String toAddress) throws Exception;
-
-    /**
-     * Gets msg by cc email filter.
-     *
-     * @param ccAddress the cc address
-     * @return the msg by cc email filter
-     * @throws Exception the exception
-     */
-    public abstract EmailMessageFilter<M> getMsgByCcEmailFilter(final String ccAddress) throws Exception;
-
-    /**
-     * Gets msg by bcc email filter.
-     *
-     * @param bccAddress the bcc address
-     * @return the msg by bcc email filter
-     * @throws Exception the exception
-     */
-    public abstract EmailMessageFilter<M> getMsgByBccEmailFilter(final String bccAddress) throws Exception;
-
-    /**
-     * Gets msg by from email filter.
-     *
-     * @param fromAddress the from address
-     * @return the msg by from email filter
-     * @throws Exception the exception
-     */
-    public abstract EmailMessageFilter<M> getMsgByFromEmailFilter(final String fromAddress) throws Exception;
 
     /**
      * Gets msg by subject.
@@ -132,66 +74,6 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
      */
     public List<M> getMsgBySubject(final String subject) throws Exception {
         return getMessages(getMsgBySubjectFilter(subject));
-    }
-
-    /**
-     * Gets msg by to email.
-     *
-     * @param toAddress the to address
-     * @return the msg by to email
-     * @throws Exception the exception
-     */
-    public List<M> getMsgByToEmail(final String toAddress) throws Exception {
-        return getMessages(getMsgByToEmailFilter(toAddress));
-    }
-
-    /**
-     * Gets msg by cc email.
-     *
-     * @param ccAddress the cc address
-     * @return the msg by cc email
-     * @throws Exception the exception
-     */
-    public List<M> getMsgByCcEmail(final String ccAddress) throws Exception {
-        return getMessages(getMsgByCcEmailFilter(ccAddress));
-    }
-
-    /**
-     * Gets msg by bcc email.
-     *
-     * @param bccAddress the bcc address
-     * @return the msg by bcc email
-     * @throws Exception the exception
-     */
-    public List<M> getMsgByBccEmail(final String bccAddress) throws Exception {
-        return getMessages(getMsgByBccEmailFilter(bccAddress));
-    }
-
-    /**
-     * Gets msg by from email.
-     *
-     * @param fromAddress the from address
-     * @return the msg by from email
-     * @throws Exception the exception
-     */
-    public List<M> getMsgByFromEmail(final String fromAddress) throws Exception {
-        return getMessages(getMsgByFromEmailFilter(fromAddress));
-    }
-
-    /**
-     * Gets msg by index.
-     *
-     * @param index the index
-     * @return the msg by index
-     * @throws Exception the exception
-     */
-    public M getMsgByIndex(final int index) throws Exception {
-        List<M> messages = getAllMessages();
-        if (messages.size() >= index) {
-            return messages.get(index);
-        }
-        TS.log().warn("No message found with index of " + index);
-        return null;
     }
 
     /**
@@ -224,6 +106,133 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
             TS.log().warn("Issue with getting email", e);
         }
         return emailList;
+    }
+
+    /**
+     * Gets msg by subject filter.
+     *
+     * @param subject the subject
+     * @return the msg by subject filter
+     * @throws Exception the exception
+     */
+    public abstract EmailMessageFilter<M> getMsgBySubjectFilter(final String subject) throws Exception;
+
+    /**
+     * Gets folder name.
+     *
+     * @return the folder name
+     */
+    public abstract String getFolderName();
+
+    /**
+     * Gets user name.
+     *
+     * @return the user name
+     */
+    protected abstract String getUserName();
+
+    /**
+     * Gets all messages.
+     *
+     * @return the all messages
+     * @throws Exception the exception
+     */
+    public abstract List<M> getAllMessages() throws Exception;
+
+    /**
+     * Gets msg by to email.
+     *
+     * @param toAddress the to address
+     * @return the msg by to email
+     * @throws Exception the exception
+     */
+    public List<M> getMsgByToEmail(final String toAddress) throws Exception {
+        return getMessages(getMsgByToEmailFilter(toAddress));
+    }
+
+    /**
+     * Gets msg by to email filter.
+     *
+     * @param toAddress the to address
+     * @return the msg by to email filter
+     * @throws Exception the exception
+     */
+    public abstract EmailMessageFilter<M> getMsgByToEmailFilter(final String toAddress) throws Exception;
+
+    /**
+     * Gets msg by cc email.
+     *
+     * @param ccAddress the cc address
+     * @return the msg by cc email
+     * @throws Exception the exception
+     */
+    public List<M> getMsgByCcEmail(final String ccAddress) throws Exception {
+        return getMessages(getMsgByCcEmailFilter(ccAddress));
+    }
+
+    /**
+     * Gets msg by cc email filter.
+     *
+     * @param ccAddress the cc address
+     * @return the msg by cc email filter
+     * @throws Exception the exception
+     */
+    public abstract EmailMessageFilter<M> getMsgByCcEmailFilter(final String ccAddress) throws Exception;
+
+    /**
+     * Gets msg by bcc email.
+     *
+     * @param bccAddress the bcc address
+     * @return the msg by bcc email
+     * @throws Exception the exception
+     */
+    public List<M> getMsgByBccEmail(final String bccAddress) throws Exception {
+        return getMessages(getMsgByBccEmailFilter(bccAddress));
+    }
+
+    /**
+     * Gets msg by bcc email filter.
+     *
+     * @param bccAddress the bcc address
+     * @return the msg by bcc email filter
+     * @throws Exception the exception
+     */
+    public abstract EmailMessageFilter<M> getMsgByBccEmailFilter(final String bccAddress) throws Exception;
+
+    /**
+     * Gets msg by from email.
+     *
+     * @param fromAddress the from address
+     * @return the msg by from email
+     * @throws Exception the exception
+     */
+    public List<M> getMsgByFromEmail(final String fromAddress) throws Exception {
+        return getMessages(getMsgByFromEmailFilter(fromAddress));
+    }
+
+    /**
+     * Gets msg by from email filter.
+     *
+     * @param fromAddress the from address
+     * @return the msg by from email filter
+     * @throws Exception the exception
+     */
+    public abstract EmailMessageFilter<M> getMsgByFromEmailFilter(final String fromAddress) throws Exception;
+
+    /**
+     * Gets msg by index.
+     *
+     * @param index the index
+     * @return the msg by index
+     * @throws Exception the exception
+     */
+    public M getMsgByIndex(final int index) throws Exception {
+        List<M> messages = getAllMessages();
+        if (messages.size() >= index) {
+            return messages.get(index);
+        }
+        TS.log().warn("No message found with index of " + index);
+        return null;
     }
 
     /**
@@ -305,16 +314,6 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
     /**
      * Gets attachment files.
      *
-     * @param messages the messages
-     * @return the attachment files
-     */
-    public List<File> getAttachmentFiles(final List<M> messages) {
-        return getAttachmentFiles(messages, false);
-    }
-
-    /**
-     * Gets attachment files.
-     *
      * @param messages     the messages
      * @param deleteOnExit the delete on exit
      * @return the attachment files
@@ -336,6 +335,26 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
     /**
      * Gets attachment files.
      *
+     * @param message      the message
+     * @param deleteOnExit the delete on exit
+     * @return the attachment files
+     * @throws Exception the exception
+     */
+    public abstract List<File> getAttachmentFiles(final M message, final boolean deleteOnExit) throws Exception;
+
+    /**
+     * Gets attachment files.
+     *
+     * @param messages the messages
+     * @return the attachment files
+     */
+    public List<File> getAttachmentFiles(final List<M> messages) {
+        return getAttachmentFiles(messages, false);
+    }
+
+    /**
+     * Gets attachment files.
+     *
      * @param message the message
      * @return the attachment files
      * @throws Exception the exception
@@ -343,16 +362,6 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
     public List<File> getAttachmentFiles(final M message) throws Exception {
         return getAttachmentFiles(message, false);
     }
-
-    /**
-     * Gets attachment files.
-     *
-     * @param message      the message
-     * @param deleteOnExit the delete on exit
-     * @return the attachment files
-     * @throws Exception the exception
-     */
-    public abstract List<File> getAttachmentFiles(final M message, final boolean deleteOnExit) throws Exception;
 
     /**
      * Delete on exit.
@@ -367,6 +376,11 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
             file.deleteOnExit();
         }
         return self();
+    }
+
+    @SuppressWarnings("unchecked")
+    protected T self() {
+        return (T) this;
     }
 
     /**
@@ -389,24 +403,6 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
      * @throws Exception the exception
      */
     public abstract String getMsgBody(final M message, final String contentType) throws Exception;
-
-    /**
-     * Gets msg body text.
-     *
-     * @param message the message
-     * @return the msg body text
-     * @throws Exception the exception
-     */
-    public abstract String getMsgBodyText(final M message) throws Exception;
-
-    /**
-     * Gets msg body html.
-     *
-     * @param message the message
-     * @return the msg body html
-     * @throws Exception the exception
-     */
-    public abstract String getMsgBodyHtml(final M message) throws Exception;
 
     /**
      * Delete msg t.
@@ -445,6 +441,16 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
     /**
      * Sets auth.
      *
+     * @param userName the user name
+     * @param password the password
+     * @param domain   the domain
+     * @return the auth
+     */
+    public abstract T setAuth(final String userName, final String password, final String domain);
+
+    /**
+     * Sets auth.
+     *
      * @param auth the auth
      * @return the auth
      */
@@ -452,16 +458,6 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
         this.auth = auth;
         return self();
     }
-
-    /**
-     * Sets auth.
-     *
-     * @param userName the user name
-     * @param password the password
-     * @param domain   the domain
-     * @return the auth
-     */
-    public abstract T setAuth(final String userName, final String password, final String domain);
 
     /**
      * Gets auth.
@@ -484,13 +480,6 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
     protected A getAuth() {
         return auth;
     }
-
-    /**
-     * Gets user name.
-     *
-     * @return the user name
-     */
-    protected abstract String getUserName();
 
     /**
      * Gets password.
@@ -618,13 +607,6 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
     }
 
     /**
-     * Gets folder name.
-     *
-     * @return the folder name
-     */
-    public abstract String getFolderName();
-
-    /**
      * Gets folder.
      *
      * @return the folder
@@ -643,14 +625,6 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
         this.folder = folder;
         return self();
     }
-
-    /**
-     * Gets message headers as map.
-     *
-     * @param message the message
-     * @return the message headers as map
-     */
-    public abstract HashMap<String, List<String>> getMessageHeadersAsMap(final M message);
 
     /**
      * Gets message headers.
@@ -677,6 +651,32 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
         emailDto.setBody(getMsgBody(message, null));
         return fillEmailDto(message, emailDto);
     }
+
+    /**
+     * Gets msg body html.
+     *
+     * @param message the message
+     * @return the msg body html
+     * @throws Exception the exception
+     */
+    public abstract String getMsgBodyHtml(final M message) throws Exception;
+
+    /**
+     * Gets msg body text.
+     *
+     * @param message the message
+     * @return the msg body text
+     * @throws Exception the exception
+     */
+    public abstract String getMsgBodyText(final M message) throws Exception;
+
+    /**
+     * Gets message headers as map.
+     *
+     * @param message the message
+     * @return the message headers as map
+     */
+    public abstract HashMap<String, List<String>> getMessageHeadersAsMap(final M message);
 
     /**
      * Fill email dto email dto.

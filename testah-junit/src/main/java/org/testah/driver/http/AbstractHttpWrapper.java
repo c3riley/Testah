@@ -43,7 +43,6 @@ import org.testah.TS;
 import org.testah.driver.http.requests.*;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.report.VerboseAsserts;
-import org.testah.framework.testPlan.AbstractTestPlan;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
@@ -62,100 +61,81 @@ import java.util.Set;
 public abstract class AbstractHttpWrapper {
 
     /**
+     * The trust all certs.
+     */
+    protected boolean trustAllCerts = true;
+    /**
      * The default pool size.
      */
     private int defaultPoolSize = 100;
-
     /**
      * The Default max per route.
      */
     private int defaultMaxPerRoute = 100;
-
     /**
      * The default connection timeout.
      */
     private int defaultConnectionTimeout = 5000;
-
     /**
      * The verbose.getDefaultConnectionTimeout
      */
     private boolean verbose = true;
-
     /**
      * The share state.
      */
     private boolean shareState = true;
-
     /**
      * The ignore http error.
      */
     private boolean ignoreHttpError = false;
-
     /**
      * The cookie store.
      */
     private CookieStore cookieStore = null;
-
     /**
      * The cookie specs.
      */
     private String cookieSpecs = CookieSpecs.DEFAULT;
-
     /**
      * The request config.
      */
     private RequestConfig requestConfig = null;
-
     /**
      * The proxy.
      */
     private HttpHost proxy = null;
-
     /**
      * The default timeout.
      */
     private Integer defaultTimeout = null;
-
     /**
      * The connection keep alive strategy.
      */
     private ConnectionKeepAliveStrategy connectionKeepAliveStrategy = null;
-
     /**
      * The http client.
      */
     private HttpClient httpClient = null;
-
     /**
      * The sslcontext.
      */
     private SSLContext sslcontext = null;
-
     /**
      * The socket factory registry.
      */
     private Registry<ConnectionSocketFactory> socketFactoryRegistry = null;
-
     /**
      * The response parser factory.
      */
     private HttpMessageParserFactory<HttpResponse> responseParserFactory = null;
-
     /**
      * The dns resolver.
      */
     private DnsResolver dnsResolver = null;
-
     /**
      * The request writer factory.
      */
     private HttpMessageWriterFactory<HttpRequest> requestWriterFactory = null;
-
-    /**
-     * The trust all certs.
-     */
-    protected boolean trustAllCerts = true;
-
     private org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory = null;
 
     /**
@@ -167,13 +147,6 @@ public abstract class AbstractHttpWrapper {
 
 
     private VerboseAsserts verboseAsserts;
-
-    /**
-     * Gets self.
-     *
-     * @return the self
-     */
-    protected abstract AbstractHttpWrapper getSelf();
 
     /**
      * Do request with assert.
@@ -210,70 +183,6 @@ public abstract class AbstractHttpWrapper {
             response.assertStatus(expected.getStatusCode());
         }
         return response;
-    }
-
-    /**
-     * Do get.
-     *
-     * @param uri the uri
-     * @return the response dto
-     */
-    public ResponseDto doGet(final String uri) {
-        return doRequest(new GetRequestDto(uri));
-    }
-
-    /**
-     * Do post.
-     *
-     * @param uri     the uri
-     * @param payload the payload
-     * @return the response dto
-     */
-    public ResponseDto doPost(final String uri, final String payload) {
-        return doRequest(new PostRequestDto(uri, payload));
-    }
-
-    /**
-     * Do post.
-     *
-     * @param uri     the uri
-     * @param payload the payload
-     * @return the response dto
-     */
-    public ResponseDto doPost(final String uri, final Object payload) {
-        return doRequest(new PostRequestDto(uri, payload));
-    }
-
-    /**
-     * Do put.
-     *
-     * @param uri     the uri
-     * @param payload the payload
-     * @return the response dto
-     */
-    public ResponseDto doPut(final String uri, final String payload) {
-        return doRequest(new PutRequestDto(uri, payload));
-    }
-
-    /**
-     * Do put.
-     *
-     * @param uri     the uri
-     * @param payload the payload
-     * @return the response dto
-     */
-    public ResponseDto doPut(final String uri, final Object payload) {
-        return doRequest(new PutRequestDto(uri, payload));
-    }
-
-    /**
-     * Do delete.
-     *
-     * @param uri the uri
-     * @return the response dto
-     */
-    public ResponseDto doDelete(final String uri) {
-        return doRequest(new DeleteRequestDto(uri));
     }
 
     /**
@@ -362,6 +271,334 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
+     * Gets verbose asserts.
+     * If Null, will use TS.asserts() as default
+     *
+     * @return the verbose asserts
+     */
+    public VerboseAsserts getVerboseAsserts() {
+        if (this.verboseAsserts == null) {
+            this.verboseAsserts = TS.asserts();
+        }
+        return this.verboseAsserts;
+    }
+
+    /**
+     * Sets verbose asserts.
+     *
+     * @param verboseAsserts the verbose asserts
+     * @return the verbose asserts
+     */
+    public AbstractHttpWrapper setVerboseAsserts(final VerboseAsserts verboseAsserts) {
+        this.verboseAsserts = verboseAsserts;
+        return getSelf();
+    }
+
+    /**
+     * Sets verbose asserts.
+     * Defaults verboseAsserts to a new instance of verboseAsserts
+     *
+     * @return the verbose asserts
+     */
+    public AbstractHttpWrapper setVerboseAsserts() {
+        this.verboseAsserts = new VerboseAsserts();
+        return getSelf();
+    }
+
+    /**
+     * Checks if is ignore http error.
+     *
+     * @return true, if is ignore http error
+     */
+    public boolean isIgnoreHttpError() {
+        return ignoreHttpError;
+    }
+
+    /**
+     * Sets the ignore http error.
+     *
+     * @param ignoreHttpError the new ignore http error
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setIgnoreHttpError(final boolean ignoreHttpError) {
+        this.ignoreHttpError = ignoreHttpError;
+        return getSelf();
+    }
+
+    /**
+     * Gets the request config.
+     *
+     * @return the request config
+     */
+    public RequestConfig getRequestConfig() {
+        return requestConfig;
+    }
+
+    /**
+     * Sets the request config.
+     *
+     * @param requestConfig the request config
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setRequestConfig(final RequestConfig requestConfig) {
+        this.requestConfig = requestConfig;
+        return getSelf();
+    }
+
+    /**
+     * Sets the request config.
+     *
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setRequestConfig() {
+        final Builder rcb = RequestConfig.custom();
+
+        if (null != getDefaultConnectionTimeout()) {
+            rcb.setSocketTimeout(getDefaultConnectionTimeout()).setConnectTimeout(getDefaultConnectionTimeout())
+                    .setConnectionRequestTimeout(getDefaultConnectionTimeout());
+        }
+
+        rcb.setCookieSpec(CookieSpecs.DEFAULT).setExpectContinueEnabled(true)
+                .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
+                .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
+        return setRequestConfig(rcb.build());
+    }
+
+    /**
+     * Gets custom test header.
+     *
+     * @return the custom test header
+     */
+    public HashMap<String, Header> getCustomHeaders() {
+        return customHeaders;
+    }
+
+    /**
+     * Gets the http client.
+     *
+     * @return the http client
+     */
+    public HttpClient getHttpClient() {
+        if (null == httpClient) {
+            setHttpClient();
+        }
+        return httpClient;
+    }
+
+    /**
+     * Sets the http client.
+     *
+     * @param httpClient the http client
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setHttpClient(final HttpClient httpClient) {
+        this.httpClient = httpClient;
+        return getSelf();
+    }
+
+    /**
+     * Sets the http client.
+     *
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setHttpClient() {
+        final HttpClientBuilder hcb = HttpClients.custom();
+
+        if (null != getProxy()) {
+            hcb.setProxy(getProxy());
+        }
+        if (null != getRequestConfig()) {
+            hcb.setDefaultRequestConfig(getRequestConfig());
+        }
+
+        if (null != getCookieStore()) {
+            hcb.setDefaultCookieStore(getCookieStore());
+        }
+        if (null != getConnectionManager()) {
+            hcb.setConnectionManager(getConnectionManager());
+        }
+        if (trustAllCerts) {
+            hcb.setSSLSocketFactory(getSslSocketFactory());
+            // hcb.setSSLHostnameVerifier(new NoopHostnameVerifier());
+        }
+
+        return setHttpClient(hcb.build());
+    }
+
+    /**
+     * Gets the proxy.
+     *
+     * @return the proxy
+     */
+    public HttpHost getProxy() {
+        return proxy;
+    }
+
+    /**
+     * Sets the proxy.
+     *
+     * @param proxy the proxy
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setProxy(final HttpHost proxy) {
+        this.proxy = proxy;
+        return getSelf();
+    }
+
+    /**
+     * Sets the proxy.
+     *
+     * @param host the host
+     * @param port the port
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setProxy(final String host, final int port) {
+        return setProxy(new HttpHost(host, port));
+    }
+
+    /**
+     * Gets the cookie store.
+     *
+     * @return the cookie store
+     */
+    public CookieStore getCookieStore() {
+        return cookieStore;
+    }
+
+    /**
+     * Sets the cookie store.
+     *
+     * @param cookieStore the cookie store
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setCookieStore(final CookieStore cookieStore) {
+        this.cookieStore = cookieStore;
+        return getSelf();
+    }
+
+    /**
+     * Gets the connection manager.
+     *
+     * @return the connection manager
+     */
+    public PoolingHttpClientConnectionManager getConnectionManager() {
+        return connManager;
+    }
+
+    /**
+     * Gets ssl socket factory.
+     *
+     * @return the ssl socket factory
+     */
+    public org.apache.http.conn.ssl.SSLConnectionSocketFactory getSslSocketFactory() {
+        if (null == sslSocketFactory) {
+            this.sslSocketFactory = getDefaultSslConnectionSocketFactory();
+        }
+        return sslSocketFactory;
+    }
+
+    /**
+     * Sets ssl socket factory.
+     *
+     * @param sslSocketFactory the ssl socket factory
+     */
+    public void setSslSocketFactory(final org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory) {
+        this.sslSocketFactory = sslSocketFactory;
+    }
+
+    /**
+     * Sets the ssl context trust all.
+     *
+     * @return the abstract http wrapper
+     */
+    public SSLConnectionSocketFactory getDefaultSslConnectionSocketFactory() {
+        try {
+            final org.apache.http.ssl.SSLContextBuilder contextB = SSLContextBuilder.create();
+
+            contextB.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
+
+            final SSLContext sslContext = contextB.build();
+
+            return new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    /**
+     * Gets self.
+     *
+     * @return the self
+     */
+    protected abstract AbstractHttpWrapper getSelf();
+
+    /**
+     * Do get.
+     *
+     * @param uri the uri
+     * @return the response dto
+     */
+    public ResponseDto doGet(final String uri) {
+        return doRequest(new GetRequestDto(uri));
+    }
+
+    /**
+     * Do post.
+     *
+     * @param uri     the uri
+     * @param payload the payload
+     * @return the response dto
+     */
+    public ResponseDto doPost(final String uri, final String payload) {
+        return doRequest(new PostRequestDto(uri, payload));
+    }
+
+    /**
+     * Do post.
+     *
+     * @param uri     the uri
+     * @param payload the payload
+     * @return the response dto
+     */
+    public ResponseDto doPost(final String uri, final Object payload) {
+        return doRequest(new PostRequestDto(uri, payload));
+    }
+
+    /**
+     * Do put.
+     *
+     * @param uri     the uri
+     * @param payload the payload
+     * @return the response dto
+     */
+    public ResponseDto doPut(final String uri, final String payload) {
+        return doRequest(new PutRequestDto(uri, payload));
+    }
+
+    /**
+     * Do put.
+     *
+     * @param uri     the uri
+     * @param payload the payload
+     * @return the response dto
+     */
+    public ResponseDto doPut(final String uri, final Object payload) {
+        return doRequest(new PutRequestDto(uri, payload));
+    }
+
+    /**
+     * Do delete.
+     *
+     * @param uri the uri
+     * @return the response dto
+     */
+    public ResponseDto doDelete(final String uri) {
+        return doRequest(new DeleteRequestDto(uri));
+    }
+
+    /**
      * Gets the response dto.
      *
      * @param response the response
@@ -403,91 +640,43 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Sets the http client.
+     * Gets the cookie specs.
      *
-     * @return the abstract http wrapper
+     * @return the cookie specs
      */
-    public AbstractHttpWrapper setHttpClient() {
-        final HttpClientBuilder hcb = HttpClients.custom();
-
-        if (null != getProxy()) {
-            hcb.setProxy(getProxy());
-        }
-        if (null != getRequestConfig()) {
-            hcb.setDefaultRequestConfig(getRequestConfig());
-        }
-
-        if (null != getCookieStore()) {
-            hcb.setDefaultCookieStore(getCookieStore());
-        }
-        if (null != getConnectionManager()) {
-            hcb.setConnectionManager(getConnectionManager());
-        }
-        if (trustAllCerts) {
-            hcb.setSSLSocketFactory(getSslSocketFactory());
-            // hcb.setSSLHostnameVerifier(new NoopHostnameVerifier());
-        }
-
-        return setHttpClient(hcb.build());
+    public String getCookieSpecs() {
+        return cookieSpecs;
     }
 
     /**
-     * Sets the http client.
+     * Sets the cookie specs.
      *
-     * @param httpClient the http client
+     * @param cookieSpecs the cookie specs
      * @return the abstract http wrapper
      */
-    public AbstractHttpWrapper setHttpClient(final HttpClient httpClient) {
-        this.httpClient = httpClient;
+    public AbstractHttpWrapper setCookieSpecs(final String cookieSpecs) {
+        this.cookieSpecs = cookieSpecs;
         return getSelf();
     }
 
     /**
-     * Sets the request config.
+     * Gets the default connection timeout.
      *
-     * @return the abstract http wrapper
+     * @return the default connection timeout
      */
-    public AbstractHttpWrapper setRequestConfig() {
-        final Builder rcb = RequestConfig.custom();
-
-        if (null != getDefaultConnectionTimeout()) {
-            rcb.setSocketTimeout(getDefaultConnectionTimeout()).setConnectTimeout(getDefaultConnectionTimeout())
-                    .setConnectionRequestTimeout(getDefaultConnectionTimeout());
-        }
-
-        rcb.setCookieSpec(CookieSpecs.DEFAULT).setExpectContinueEnabled(true)
-                .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
-                .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
-        return setRequestConfig(rcb.build());
+    public Integer getDefaultConnectionTimeout() {
+        return defaultConnectionTimeout;
     }
 
     /**
-     * Sets the request config.
+     * Sets the default connection timeout.
      *
-     * @param requestConfig the request config
+     * @param defaultConnectionTimeout the default connection timeout
      * @return the abstract http wrapper
      */
-    public AbstractHttpWrapper setRequestConfig(final RequestConfig requestConfig) {
-        this.requestConfig = requestConfig;
+    public AbstractHttpWrapper setDefaultConnectionTimeout(final int defaultConnectionTimeout) {
+        this.defaultConnectionTimeout = defaultConnectionTimeout;
         return getSelf();
-    }
-
-    /**
-     * Gets the cookie store.
-     *
-     * @return the cookie store
-     */
-    public CookieStore getCookieStore() {
-        return cookieStore;
-    }
-
-    /**
-     * Gets the default cookie store.
-     *
-     * @return the default cookie store
-     */
-    public CookieStore getDefaultCookieStore() {
-        return new BasicCookieStore();
     }
 
     /**
@@ -540,6 +729,8 @@ public abstract class AbstractHttpWrapper {
         return getSelf();
     }
 
+    ;
+
     /**
      * Gets the dns resolver.
      *
@@ -583,22 +774,22 @@ public abstract class AbstractHttpWrapper {
     /**
      * Sets the request writer factory.
      *
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setRequestWriterFactory() {
-        requestWriterFactory = new DefaultHttpRequestWriterFactory();
-        return getSelf();
-    }
-
-    /**
-     * Sets the request writer factory.
-     *
      * @param requestWriterFactory the new request writer factory
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setRequestWriterFactory(
             final HttpMessageWriterFactory<HttpRequest> requestWriterFactory) {
         this.requestWriterFactory = requestWriterFactory;
+        return getSelf();
+    }
+
+    /**
+     * Sets the request writer factory.
+     *
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setRequestWriterFactory() {
+        requestWriterFactory = new DefaultHttpRequestWriterFactory();
         return getSelf();
     }
 
@@ -656,24 +847,52 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Sets the ssl context trust all.
+     * Gets the default max per route.
      *
+     * @return the default max per route
+     */
+    public int getDefaultMaxPerRoute() {
+        return defaultMaxPerRoute;
+    }
+
+    /**
+     * Gets the default pool size.
+     *
+     * @return the default pool size
+     */
+    public int getDefaultPoolSize() {
+        return defaultPoolSize;
+    }
+
+    /**
+     * Sets the default pool size.
+     *
+     * @param defaultPoolSize the default pool size
      * @return the abstract http wrapper
      */
-    public SSLConnectionSocketFactory getDefaultSslConnectionSocketFactory() {
-        try {
-            final org.apache.http.ssl.SSLContextBuilder contextB = SSLContextBuilder.create();
+    public AbstractHttpWrapper setDefaultPoolSize(final int defaultPoolSize) {
+        this.defaultPoolSize = defaultPoolSize;
+        return getSelf();
+    }
 
-            contextB.loadTrustMaterial(new org.apache.http.conn.ssl.TrustSelfSignedStrategy());
+    /**
+     * Gets the sslcontext.
+     *
+     * @return the sslcontext
+     */
+    public SSLContext getSslcontext() {
+        return sslcontext;
+    }
 
-            final SSLContext sslContext = contextB.build();
-
-            return new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
-
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-
+    /**
+     * Sets the sslcontext.
+     *
+     * @param sslcontext the sslcontext
+     * @return the abstract http wrapper
+     */
+    public AbstractHttpWrapper setSslcontext(final SSLContext sslcontext) {
+        this.sslcontext = sslcontext;
+        return getSelf();
     }
 
     /**
@@ -745,44 +964,11 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Sets the default pool size.
-     *
-     * @param defaultPoolSize the default pool size
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setDefaultPoolSize(final int defaultPoolSize) {
-        this.defaultPoolSize = defaultPoolSize;
-        return getSelf();
-    }
-
-    /**
      * Sets the allow any certs.
      *
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setAllowAnyCerts() {
-        return getSelf();
-    }
-
-    ;
-
-    /**
-     * Gets the default connection timeout.
-     *
-     * @return the default connection timeout
-     */
-    public Integer getDefaultConnectionTimeout() {
-        return defaultConnectionTimeout;
-    }
-
-    /**
-     * Sets the default connection timeout.
-     *
-     * @param defaultConnectionTimeout the default connection timeout
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setDefaultConnectionTimeout(final int defaultConnectionTimeout) {
-        this.defaultConnectionTimeout = defaultConnectionTimeout;
         return getSelf();
     }
 
@@ -827,15 +1013,6 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Gets the default pool size.
-     *
-     * @return the default pool size
-     */
-    public int getDefaultPoolSize() {
-        return defaultPoolSize;
-    }
-
-    /**
      * Sets the cookies from browser.
      *
      * @return the abstract http wrapper
@@ -871,14 +1048,12 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Sets the cookie store.
+     * Gets the default cookie store.
      *
-     * @param cookieStore the cookie store
-     * @return the abstract http wrapper
+     * @return the default cookie store
      */
-    public AbstractHttpWrapper setCookieStore(final CookieStore cookieStore) {
-        this.cookieStore = cookieStore;
-        return getSelf();
+    public CookieStore getDefaultCookieStore() {
+        return new BasicCookieStore();
     }
 
     /**
@@ -902,66 +1077,6 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Gets the default max per route.
-     *
-     * @return the default max per route
-     */
-    public int getDefaultMaxPerRoute() {
-        return defaultMaxPerRoute;
-    }
-
-    /**
-     * Gets the cookie specs.
-     *
-     * @return the cookie specs
-     */
-    public String getCookieSpecs() {
-        return cookieSpecs;
-    }
-
-    /**
-     * Sets the cookie specs.
-     *
-     * @param cookieSpecs the cookie specs
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setCookieSpecs(final String cookieSpecs) {
-        this.cookieSpecs = cookieSpecs;
-        return getSelf();
-    }
-
-    /**
-     * Gets the proxy.
-     *
-     * @return the proxy
-     */
-    public HttpHost getProxy() {
-        return proxy;
-    }
-
-    /**
-     * Sets the proxy.
-     *
-     * @param proxy the proxy
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setProxy(final HttpHost proxy) {
-        this.proxy = proxy;
-        return getSelf();
-    }
-
-    /**
-     * Sets the proxy.
-     *
-     * @param host the host
-     * @param port the port
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setProxy(final String host, final int port) {
-        return setProxy(new HttpHost(host, port));
-    }
-
-    /**
      * Gets the default timeout.
      *
      * @return the default timeout
@@ -979,27 +1094,6 @@ public abstract class AbstractHttpWrapper {
     public AbstractHttpWrapper setDefaultTimeout(final Integer defaultTimeout) {
         this.defaultTimeout = defaultTimeout;
         return getSelf();
-    }
-
-    /**
-     * Gets the request config.
-     *
-     * @return the request config
-     */
-    public RequestConfig getRequestConfig() {
-        return requestConfig;
-    }
-
-    /**
-     * Gets the http client.
-     *
-     * @return the http client
-     */
-    public HttpClient getHttpClient() {
-        if (null == httpClient) {
-            setHttpClient();
-        }
-        return httpClient;
     }
 
     /**
@@ -1023,61 +1117,12 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Gets the connection manager.
-     *
-     * @return the connection manager
-     */
-    public PoolingHttpClientConnectionManager getConnectionManager() {
-        return connManager;
-    }
-
-    /**
-     * Gets the sslcontext.
-     *
-     * @return the sslcontext
-     */
-    public SSLContext getSslcontext() {
-        return sslcontext;
-    }
-
-    /**
-     * Sets the sslcontext.
-     *
-     * @param sslcontext the sslcontext
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setSslcontext(final SSLContext sslcontext) {
-        this.sslcontext = sslcontext;
-        return getSelf();
-    }
-
-    /**
      * Gets the request writer factory.
      *
      * @return the request writer factory
      */
     public HttpMessageWriterFactory<HttpRequest> getRequestWriterFactory() {
         return requestWriterFactory;
-    }
-
-    /**
-     * Checks if is ignore http error.
-     *
-     * @return true, if is ignore http error
-     */
-    public boolean isIgnoreHttpError() {
-        return ignoreHttpError;
-    }
-
-    /**
-     * Sets the ignore http error.
-     *
-     * @param ignoreHttpError the new ignore http error
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setIgnoreHttpError(final boolean ignoreHttpError) {
-        this.ignoreHttpError = ignoreHttpError;
-        return getSelf();
     }
 
     /**
@@ -1101,27 +1146,6 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Gets ssl socket factory.
-     *
-     * @return the ssl socket factory
-     */
-    public org.apache.http.conn.ssl.SSLConnectionSocketFactory getSslSocketFactory() {
-        if (null == sslSocketFactory) {
-            this.sslSocketFactory = getDefaultSslConnectionSocketFactory();
-        }
-        return sslSocketFactory;
-    }
-
-    /**
-     * Sets ssl socket factory.
-     *
-     * @param sslSocketFactory the ssl socket factory
-     */
-    public void setSslSocketFactory(final org.apache.http.conn.ssl.SSLConnectionSocketFactory sslSocketFactory) {
-        this.sslSocketFactory = sslSocketFactory;
-    }
-
-    /**
      * Add custom test header abstract http wrapper.
      *
      * @return the abstract http wrapper
@@ -1138,25 +1162,6 @@ public abstract class AbstractHttpWrapper {
      */
     public AbstractHttpWrapper addCustomTestHeader(final String value) {
         return addCustomHeader("X-Application-Id", value);
-    }
-
-    /**
-     * Gets custom test header.
-     *
-     * @return the custom test header
-     */
-    public HashMap<String, Header> getCustomHeaders() {
-        return customHeaders;
-    }
-
-    /**
-     * Clear custom test header abstract http wrapper.
-     *
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper clearCustomTestHeader() {
-        getCustomHeaders().clear();
-        return getSelf();
     }
 
     /**
@@ -1182,13 +1187,12 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Remove custom header abstract http wrapper.
+     * Clear custom test header abstract http wrapper.
      *
-     * @param name the name
      * @return the abstract http wrapper
      */
-    public AbstractHttpWrapper removeCustomHeader(final String name) {
-        getCustomHeaders().remove(name);
+    public AbstractHttpWrapper clearCustomTestHeader() {
+        getCustomHeaders().clear();
         return getSelf();
     }
 
@@ -1251,38 +1255,14 @@ public abstract class AbstractHttpWrapper {
     }
 
     /**
-     * Sets verbose asserts.
-     * Defaults verboseAsserts to a new instance of verboseAsserts
+     * Remove custom header abstract http wrapper.
      *
-     * @return the verbose asserts
+     * @param name the name
+     * @return the abstract http wrapper
      */
-    public AbstractHttpWrapper setVerboseAsserts() {
-        this.verboseAsserts = new VerboseAsserts();
+    public AbstractHttpWrapper removeCustomHeader(final String name) {
+        getCustomHeaders().remove(name);
         return getSelf();
-    }
-
-    /**
-     * Sets verbose asserts.
-     *
-     * @param verboseAsserts the verbose asserts
-     * @return the verbose asserts
-     */
-    public AbstractHttpWrapper setVerboseAsserts(final VerboseAsserts verboseAsserts) {
-        this.verboseAsserts = verboseAsserts;
-        return getSelf();
-    }
-
-    /**
-     * Gets verbose asserts.
-     * If Null, will use TS.asserts() as default
-     *
-     * @return the verbose asserts
-     */
-    public VerboseAsserts getVerboseAsserts() {
-        if (this.verboseAsserts == null) {
-            this.verboseAsserts = TS.asserts();
-        }
-        return this.verboseAsserts;
     }
 
 }

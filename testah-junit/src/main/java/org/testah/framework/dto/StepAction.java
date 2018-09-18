@@ -3,7 +3,6 @@ package org.testah.framework.dto;
 import org.testah.TS;
 import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
-import org.testah.framework.testPlan.AbstractTestPlan;
 
 /**
  * The Class StepAction.
@@ -22,16 +21,6 @@ public class StepAction extends StepActionDto {
         return new StepAction();
     }
 
-    public static StepActionDto add(final StepActionDto stepAction, final boolean writeToLog) {
-        if (null != TS.params() && TS.params().isRecordSteps()) {
-            TS.step().action().add(stepAction);
-            if(writeToLog) {
-                stepAction.log();
-            }
-        }
-        return stepAction;
-    }
-
     /**
      * Add step action dto.
      *
@@ -43,13 +32,30 @@ public class StepAction extends StepActionDto {
     }
 
     /**
+     * Add step action dto.
+     *
+     * @param stepAction the step action
+     * @param writeToLog the write to log
+     * @return the step action dto
+     */
+    public static StepActionDto add(final StepActionDto stepAction, final boolean writeToLog) {
+        if (null != TS.params() && TS.params().isRecordSteps()) {
+            TS.step().action().add(stepAction);
+            if (writeToLog) {
+                stepAction.log();
+            }
+        }
+        return stepAction;
+    }
+
+    /**
      * Adds the.
      *
      * @param stepAction the step action
      * @return the step action dto
      */
     public static StepActionDto add(final StepAction stepAction) {
-        add((StepActionDto)stepAction, true);
+        add((StepActionDto) stepAction, true);
         return stepAction;
     }
 
@@ -147,17 +153,6 @@ public class StepAction extends StepActionDto {
      *
      * @param message1 the message1
      * @param message2 the message2
-     * @return the step action
-     */
-    public static StepAction createInfo(final String message1, final String message2) {
-        return createInfo(message1, message2, "", true);
-    }
-
-    /**
-     * Creates the info.
-     *
-     * @param message1 the message1
-     * @param message2 the message2
      * @param message3 the message3
      * @param autoLog  the auto log
      * @return the step action
@@ -197,6 +192,17 @@ public class StepAction extends StepActionDto {
     }
 
     /**
+     * Creates the info.
+     *
+     * @param message1 the message1
+     * @param message2 the message2
+     * @return the step action
+     */
+    public static StepAction createInfo(final String message1, final String message2) {
+        return createInfo(message1, message2, "", true);
+    }
+
+    /**
      * Creates the browser action.
      *
      * @param message1 the message1
@@ -226,20 +232,20 @@ public class StepAction extends StepActionDto {
     /**
      * Screenshot step action.
      *
-     * @param message the message
      * @return the step action
      */
-    public static StepAction screenshot(final String message) {
-        return createInfo(message, "", "", true, true);
+    public static StepAction screenshot() {
+        return screenshot("");
     }
 
     /**
      * Screenshot step action.
      *
+     * @param message the message
      * @return the step action
      */
-    public static StepAction screenshot() {
-        return screenshot("");
+    public static StepAction screenshot(final String message) {
+        return createInfo(message, "", "", true, true);
     }
 
     /**

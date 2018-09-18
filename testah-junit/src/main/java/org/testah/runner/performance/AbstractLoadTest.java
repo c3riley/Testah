@@ -48,10 +48,6 @@ public abstract class AbstractLoadTest {
         });
     }
 
-    protected String getRunStepFile(Class<?> testClass) {
-        return testClass.getCanonicalName().replaceAll("\\.", "/") + ".json";
-    }
-
     /**
      * Execute the HTTP requests, gather and publish the statistics. A concrete test may have multiple
      * calls to ramp up, steady level and ramp down.
@@ -93,6 +89,10 @@ public abstract class AbstractLoadTest {
                 }
             }
         }
+    }
+
+    protected String getRunStepFile(Class<?> testClass) {
+        return testClass.getCanonicalName().replaceAll("\\.", "/") + ".json";
     }
 
 }

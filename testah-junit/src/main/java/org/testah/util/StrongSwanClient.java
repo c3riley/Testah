@@ -39,57 +39,6 @@ public class StrongSwanClient {
     }
 
     /**
-     * The Enum Message.
-     */
-    public static enum Message {
-
-        /**
-         * The section start.
-         */
-        SECTION_START(1),
-        /**
-         * The section end.
-         */
-        SECTION_END(2),
-        /**
-         * The list start.
-         */
-        LIST_START(4),
-        /**
-         * The list item.
-         */
-        LIST_ITEM(5),
-        /**
-         * The list end.
-         */
-        LIST_END(6);
-
-        /**
-         * The value.
-         */
-        private final int value;
-
-        /**
-         * Instantiates a new message.
-         *
-         * @param value the value
-         */
-        Message(final int value) {
-            this.value = value;
-        }
-
-        /**
-         * Gets the value.
-         *
-         * @return the value
-         */
-        public int getValue() {
-            return value;
-        }
-
-    }
-
-    /**
      * Send message.
      *
      * @param messages the messages
@@ -143,6 +92,57 @@ public class StrongSwanClient {
      */
     public void setSocketFullPath(final String socketFullPath) {
         this.socketFullPath = socketFullPath;
+    }
+
+    /**
+     * The Enum Message.
+     */
+    public static enum Message {
+
+        /**
+         * The section start.
+         */
+        SECTION_START(1),
+        /**
+         * The section end.
+         */
+        SECTION_END(2),
+        /**
+         * The list start.
+         */
+        LIST_START(4),
+        /**
+         * The list item.
+         */
+        LIST_ITEM(5),
+        /**
+         * The list end.
+         */
+        LIST_END(6);
+
+        /**
+         * The value.
+         */
+        private final int value;
+
+        /**
+         * Instantiates a new message.
+         *
+         * @param value the value
+         */
+        Message(final int value) {
+            this.value = value;
+        }
+
+        /**
+         * Gets the value.
+         *
+         * @return the value
+         */
+        public int getValue() {
+            return value;
+        }
+
     }
 
 }

@@ -84,7 +84,6 @@ public class VerboseAsserts {
     }
 
 
-
     /**
      * Size equals.
      *
@@ -97,7 +96,6 @@ public class VerboseAsserts {
         return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLengthOf
                 + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLengthOf), expectedSize);
     }
-
 
 
     /**
@@ -278,6 +276,13 @@ public class VerboseAsserts {
         return fail(message, null);
     }
 
+    /**
+     * Fail boolean.
+     *
+     * @param message   the message
+     * @param throwable the throwable
+     * @return the boolean
+     */
     public boolean fail(final String message, Throwable throwable) {
         try {
             Assert.fail(message + (throwable != null ? " - throwable[" + throwable + "]" : ""));
@@ -292,9 +297,19 @@ public class VerboseAsserts {
     }
 
     /**
+     * Critical.
+     *
+     * @param message the message
+     */
+    public void critical(final String message) {
+        critical(message, null);
+    }
+
+    /**
      * Critical failure.
      *
-     * @param message message string
+     * @param message   message string
+     * @param throwable the throwable
      */
     public void critical(final String message, final Throwable throwable) {
         TS.log().fatal(Cli.BAR_LONG);
@@ -303,8 +318,25 @@ public class VerboseAsserts {
         addAssertHistory(message, false, "critical", null, null, throwable);
     }
 
-    public void critical(final String message) {
-        critical(message, null);
+    /**
+     * Checks if is verify only.
+     *
+     * @return true, if is verify only
+     */
+    public boolean isVerifyOnly() {
+        return isVerifyOnly;
+    }
+
+    /**
+     * Sets the verify only.
+     *
+     * @param isVerifyOnly the new verify only
+     * @return the verify only
+     */
+    public VerboseAsserts setVerifyOnly(final boolean isVerifyOnly) {
+        this.isVerifyOnly = isVerifyOnly;
+        setThrowExceptionOnFail(false);
+        return this;
     }
 
     /**
@@ -443,7 +475,6 @@ public class VerboseAsserts {
         }
     }
 
-
     /**
      * Equals to multiline string boolean.
      *
@@ -497,25 +528,25 @@ public class VerboseAsserts {
     /**
      * Equals.
      *
-     * @param message  the message
-     * @param expected the expected
-     * @param actual   the actual
-     * @return true, if successful
-     */
-    public boolean equalsTo(final String message, final double expected, final double actual) {
-        return new AssertNumber<Double>(actual, this).setMessage(message)
-                .equalsTo(expected).isPassed();
-    }
-
-    /**
-     * Equals.
-     *
      * @param expected the expected
      * @param actual   the actual
      * @return true, if successful
      */
     public boolean equalsTo(final long expected, final long actual) {
         return equalsTo("", expected, actual);
+    }
+
+    /**
+     * Equals.
+     *
+     * @param message  the message
+     * @param expected the expected
+     * @param actual   the actual
+     * @return true, if successful
+     */
+    public boolean equalsTo(final String message, final long expected, final long actual) {
+        return new AssertNumber<Long>(actual, this).setMessage(message)
+                .equalsTo(expected).isPassed();
     }
 
     /**
@@ -543,26 +574,6 @@ public class VerboseAsserts {
             return addAssertHistory("", true, "assertEquals", expected, actual);
         } catch (final Throwable e) {
             final boolean rtn = addAssertHistory("", false, "assertEquals", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
-    }
-
-    public boolean equalsToWithReflection(final Object expected, final Object actual) {
-        return equalsToWithReflection("", expected, actual);
-    }
-
-
-    public boolean equalsToWithReflection(final String message, final Object expected, final Object actual,
-                                          ReflectionComparatorMode... modes) {
-        try {
-            ReflectionAssert.assertReflectionEquals(message, expected, actual, modes);
-            return addAssertHistory(message, true, "equalsToWithReflection", expected, actual);
-        } catch (final Throwable e) {
-            final boolean rtn = addAssertHistory(message, false, "equalsToWithReflection", expected, actual, e);
-            TS.step().action().createInfo("equalsToWithReflection", e.getMessage());
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
@@ -700,26 +711,60 @@ public class VerboseAsserts {
     /**
      * Equals.
      *
-     * @param message  the message
-     * @param expected the expected
-     * @param actual   the actual
-     * @return true, if successful
-     */
-    public boolean equalsTo(final String message, final long expected, final long actual) {
-        Double d;
-        return new AssertNumber<Long>(actual, this).setMessage(message)
-                .equalsTo(expected).isPassed();
-    }
-
-    /**
-     * Equals.
-     *
      * @param expected the expected
      * @param actual   the actual
      * @return true, if successful
      */
     public boolean equalsTo(final double expected, final double actual) {
-        return equalsTo("",expected, actual);
+        return equalsTo("", expected, actual);
+    }
+
+    /**
+     * Equals.
+     *
+     * @param message  the message
+     * @param expected the expected
+     * @param actual   the actual
+     * @return true, if successful
+     */
+    public boolean equalsTo(final String message, final double expected, final double actual) {
+        return new AssertNumber<Double>(actual, this).setMessage(message)
+                .equalsTo(expected).isPassed();
+    }
+
+    /**
+     * Equals to with reflection boolean.
+     *
+     * @param expected the expected
+     * @param actual   the actual
+     * @return the boolean
+     */
+    public boolean equalsToWithReflection(final Object expected, final Object actual) {
+        return equalsToWithReflection("", expected, actual);
+    }
+
+    /**
+     * Equals to with reflection boolean.
+     *
+     * @param message  the message
+     * @param expected the expected
+     * @param actual   the actual
+     * @param modes    the modes
+     * @return the boolean
+     */
+    public boolean equalsToWithReflection(final String message, final Object expected, final Object actual,
+                                          ReflectionComparatorMode... modes) {
+        try {
+            ReflectionAssert.assertReflectionEquals(message, expected, actual, modes);
+            return addAssertHistory(message, true, "equalsToWithReflection", expected, actual);
+        } catch (final Throwable e) {
+            final boolean rtn = addAssertHistory(message, false, "equalsToWithReflection", expected, actual, e);
+            TS.step().action().createInfo("equalsToWithReflection", e.getMessage());
+            if (getThrowExceptionOnFail()) {
+                throw e;
+            }
+            return rtn;
+        }
     }
 
     /**
@@ -730,6 +775,17 @@ public class VerboseAsserts {
      */
     public void unExpectedException(final String msg, final Throwable error) {
         addAssertHistory(msg, false, "unExpectedException", "", msg, error);
+    }
+
+    /**
+     * Use Hamcrest matcher for assert.
+     *
+     * @param <T>      generic type
+     * @param expected expected object
+     * @param matcher  Hamcrest matcher
+     */
+    public <T> void assertThat(final T expected, final Matcher<? super T> matcher) {
+        assertThat("", expected, matcher);
     }
 
     /**
@@ -752,14 +808,12 @@ public class VerboseAsserts {
     }
 
     /**
-     * Use Hamcrest matcher for assert.
+     * Gets the throw exception on fail.
      *
-     * @param <T>      generic type
-     * @param expected expected object
-     * @param matcher  Hamcrest matcher
+     * @return the throw exception on fail
      */
-    public <T> void assertThat(final T expected, final Matcher<? super T> matcher) {
-        assertThat("", expected, matcher);
+    public boolean getThrowExceptionOnFail() {
+        return throwExceptionOnFail;
     }
 
     /**
@@ -1350,7 +1404,6 @@ public class VerboseAsserts {
         return false;
     }
 
-
     /**
      * Is greater than or equal to boolean.
      *
@@ -1362,7 +1415,6 @@ public class VerboseAsserts {
     public boolean isGreaterThanOrEqualTo(String message, final Number valueToBeGreaterThan, final Number actual) {
         return isGreaterThan(message, valueToBeGreaterThan, actual, true);
     }
-
 
     /**
      * Is greater than or equal to boolean.
@@ -1450,7 +1502,6 @@ public class VerboseAsserts {
         return isLessThan(message, valueToBeLessThan, actual, true);
     }
 
-
     /**
      * Is less than or equal to boolean.
      *
@@ -1474,7 +1525,6 @@ public class VerboseAsserts {
     public boolean isLessThan(String message, final Number valueToBeLessThan, final Number actual) {
         return isLessThan(message, valueToBeLessThan, actual, false);
     }
-
 
     /**
      * Is less than boolean.
@@ -1500,7 +1550,6 @@ public class VerboseAsserts {
     public boolean isLessThan(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual) {
         return isLessThan(message, valueToBeLessThan, actual, false);
     }
-
 
     /**
      * Is less than boolean.
@@ -1568,6 +1617,7 @@ public class VerboseAsserts {
         return addAssertHistory(message, status, assertMethod, expected, actual, null);
     }
 
+
     /**
      * Adds the assert history.
      *
@@ -1591,21 +1641,23 @@ public class VerboseAsserts {
     }
 
     /**
-     * Gets the throw exception on fail.
-     *
-     * @return the throw exception on fail
-     */
-    public boolean getThrowExceptionOnFail() {
-        return throwExceptionOnFail;
-    }
-
-    /**
      * Checks if is throw exception on fail.
      *
      * @return true, if is throw exception on fail
      */
     public boolean isThrowExceptionOnFail() {
         return getThrowExceptionOnFail();
+    }
+
+    /**
+     * Sets the throw exception on fail.
+     *
+     * @param throwExceptionOnFail the new throw exception on fail
+     * @return the throw exception on fail
+     */
+    public VerboseAsserts setThrowExceptionOnFail(final boolean throwExceptionOnFail) {
+        this.throwExceptionOnFail = throwExceptionOnFail;
+        return this;
     }
 
     /**
@@ -1630,19 +1682,10 @@ public class VerboseAsserts {
     }
 
     /**
-     * Sets the throw exception on fail.
-     *
-     * @param throwExceptionOnFail the new throw exception on fail
-     */
-    public VerboseAsserts setThrowExceptionOnFail(final boolean throwExceptionOnFail) {
-        this.throwExceptionOnFail = throwExceptionOnFail;
-        return this;
-    }
-
-    /**
      * Sets the record steps.
      *
      * @param recordSteps the new record steps
+     * @return the record steps
      */
     public VerboseAsserts setRecordSteps(final boolean recordSteps) {
         this.recordSteps = recordSteps;
@@ -1650,41 +1693,56 @@ public class VerboseAsserts {
     }
 
     /**
-     * Checks if is verify only.
+     * Given assert collections.
      *
-     * @return true, if is verify only
+     * @param <H>    the type parameter
+     * @param actual the actual
+     * @return the assert collections
      */
-    public boolean isVerifyOnly() {
-        return isVerifyOnly;
-    }
-
-    /**
-     * Sets the verify only.
-     *
-     * @param isVerifyOnly the new verify only
-     */
-    public VerboseAsserts setVerifyOnly(final boolean isVerifyOnly) {
-        this.isVerifyOnly = isVerifyOnly;
-        setThrowExceptionOnFail(false);
-        return this;
-    }
-
     public <H> AssertCollections given(final H[] actual) {
         return new AssertCollections<>(actual, this);
     }
 
+    /**
+     * Given assert collections.
+     *
+     * @param <H>    the type parameter
+     * @param actual the actual
+     * @return the assert collections
+     */
     public <H> AssertCollections given(final Collection<H> actual) {
         return new AssertCollections<>(actual, this);
     }
 
-    public <T,H> AssertMaps given(final AbstractMap<T,H> actual) {
+    /**
+     * Given assert maps.
+     *
+     * @param <T>    the type parameter
+     * @param <H>    the type parameter
+     * @param actual the actual
+     * @return the assert maps
+     */
+    public <T, H> AssertMaps given(final AbstractMap<T, H> actual) {
         return new AssertMaps<>(actual, this);
     }
 
+    /**
+     * Given assert strings.
+     *
+     * @param actual the actual
+     * @return the assert strings
+     */
     public AssertStrings given(final String actual) {
         return new AssertStrings(actual, this);
     }
 
+    /**
+     * Given assert number.
+     *
+     * @param <T>    the type parameter
+     * @param actual the actual
+     * @return the assert number
+     */
     public <T extends Number & Comparable<T>> AssertNumber<T> given(final T actual) {
         return new AssertNumber<T>(actual, this);
     }

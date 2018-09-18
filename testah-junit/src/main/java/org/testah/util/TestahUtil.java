@@ -103,6 +103,29 @@ public class TestahUtil {
     /**
      * Pause.
      *
+     * @param milliseconds   the milliseconds
+     * @param reasonForPause the reason for pause
+     * @param iteration      the iteration
+     * @return the testah util
+     */
+    public TestahUtil pause(final Long milliseconds, final String reasonForPause, final Integer iteration) {
+        try {
+            if (null == iteration) {
+                TS.log().debug("pause - " + reasonForPause + " - " + milliseconds + "ms");
+            } else {
+                TS.log().debug("pause - " + iteration + "] " + reasonForPause + " - " + milliseconds + "ms");
+            }
+
+            Thread.sleep(milliseconds);
+        } catch (final Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+        return this;
+    }
+
+    /**
+     * Pause.
+     *
      * @return the testah util
      */
     public TestahUtil pause() {
@@ -158,44 +181,12 @@ public class TestahUtil {
     }
 
     /**
-     * Pause.
-     *
-     * @param milliseconds   the milliseconds
-     * @param reasonForPause the reason for pause
-     * @param iteration      the iteration
-     * @return the testah util
-     */
-    public TestahUtil pause(final Long milliseconds, final String reasonForPause, final Integer iteration) {
-        try {
-            if (null == iteration) {
-                TS.log().debug("pause - " + reasonForPause + " - " + milliseconds + "ms");
-            } else {
-                TS.log().debug("pause - " + iteration + "] " + reasonForPause + " - " + milliseconds + "ms");
-            }
-
-            Thread.sleep(milliseconds);
-        } catch (final Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return this;
-    }
-
-    /**
      * Now unique.
      *
      * @return the string
      */
     public String nowUnique() {
         return now("MMddyyyyHHmmssS");
-    }
-
-    /**
-     * Now.
-     *
-     * @return the string
-     */
-    public String now() {
-        return now("MM/dd/yyyy HH:mm:ss.S");
     }
 
     /**
@@ -209,13 +200,12 @@ public class TestahUtil {
     }
 
     /**
-     * To date string.
+     * Now.
      *
-     * @param time the time
      * @return the string
      */
-    public String toDateString(final Long time) {
-        return toDateString(time, "MM/dd/yyyy HH:mm:ss.S");
+    public String now() {
+        return now("MM/dd/yyyy HH:mm:ss.S");
     }
 
     /**
@@ -228,6 +218,17 @@ public class TestahUtil {
     public String toDateString(final Long time, final String dateTimeFormat) {
         final SimpleDateFormat f = new SimpleDateFormat(dateTimeFormat);
         return f.format(new Date(time));
+    }
+
+
+    /**
+     * To date string.
+     *
+     * @param time the time
+     * @return the string
+     */
+    public String toDateString(final Long time) {
+        return toDateString(time, "MM/dd/yyyy HH:mm:ss.S");
     }
 
     /**
@@ -254,28 +255,6 @@ public class TestahUtil {
     /**
      * Download file.
      *
-     * @param urlToUse the url to use
-     * @return the file
-     */
-    public File downloadFile(final String urlToUse) {
-        return downloadFile(urlToUse, "");
-    }
-
-    /**
-     * Download file.
-     *
-     * @param urlToUse    the url to use
-     * @param destination the destination
-     * @return the file
-     */
-    public File downloadFile(final String urlToUse, final String destination) {
-        final File downloadFileDirectory = getDownloadDestinationDirectory(destination);
-        return downloadFile(urlToUse, downloadFileDirectory);
-    }
-
-    /**
-     * Download file.
-     *
      * @param urlToUse       the url to use
      * @param destinationDir the target directory
      * @return the file
@@ -293,6 +272,28 @@ public class TestahUtil {
             TS.log().warn(e);
         }
         return null;
+    }
+
+    /**
+     * Download file.
+     *
+     * @param urlToUse the url to use
+     * @return the file
+     */
+    public File downloadFile(final String urlToUse) {
+        return downloadFile(urlToUse, "");
+    }
+
+    /**
+     * Download file.
+     *
+     * @param urlToUse    the url to use
+     * @param destination the destination
+     * @return the file
+     */
+    public File downloadFile(final String urlToUse, final String destination) {
+        final File downloadFileDirectory = getDownloadDestinationDirectory(destination);
+        return downloadFile(urlToUse, downloadFileDirectory);
     }
 
     /**

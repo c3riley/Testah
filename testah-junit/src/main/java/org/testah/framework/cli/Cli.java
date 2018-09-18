@@ -34,45 +34,36 @@ import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
 public class Cli {
 
     /**
-     * The res.
-     */
-    private Namespace res;
-
-    /**
-     * The param loader.
-     */
-    private final ParamLoader paramLoader;
-
-    /**
-     * The opt.
-     */
-    private Params opt;
-
-    /**
      * The Constant version.
      */
     public static final String version = "1.1.5";
-
     /**
      * The Constant BAR_LONG.
      */
     public static final String BAR_LONG = "=============================================================================================";
-
     /**
      * The Constant BAR_SHORT.
      */
     public static final String BAR_SHORT = "=========================================";
-
     /**
      * The Constant BAR_WALL.
      */
     public static final String BAR_WALL = "# ";
-
-    private TestFilter testPlanFilter;
-
-    private boolean underTest = false;
-
     private static boolean running = false;
+    /**
+     * The param loader.
+     */
+    private final ParamLoader paramLoader;
+    /**
+     * The res.
+     */
+    private Namespace res;
+    /**
+     * The opt.
+     */
+    private Params opt;
+    private TestFilter testPlanFilter;
+    private boolean underTest = false;
 
     /**
      * Instantiates a new cli.
@@ -87,6 +78,49 @@ public class Cli {
         this.paramLoader = new ParamLoader(propFilePath);
         this.opt = new ParamLoader(propFilePath).loadParamValues();
 
+    }
+
+    /**
+     * Is running boolean indicates if cli is processing a request.
+     *
+     * @return the boolean
+     */
+    public static boolean isRunning() {
+        return running;
+    }
+
+    /**
+     * Sets running.
+     *
+     * @param running the running
+     */
+    private static void setRunning(final boolean running) {
+        Cli.running = running;
+    }
+
+    /**
+     * Write out testah.
+     */
+    public static void writeOutTestah() {
+        System.out.println("\n" + Cli.BAR_LONG);
+        System.out.println(
+                "      _____________                    _                                         ============");
+        System.out.println(
+                "     /_____  _____/      ________     | |                                       =======/\\==||");
+        System.out.println(
+                "          | |           /___ ___/     | |                                      =======/  \\=||");
+        System.out.println(
+                "          | |   ___    __  | |        | |                                     =======/    \\||");
+        System.out.println(
+                "          | |  / __|  (    | |  ___   | |___                                  =======\\    /||");
+        System.out.println(
+                "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
+        System.out.println(
+                "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
+        System.out.println("=======================================================[Version: " + Cli.version
+                + "]======================");
+
+        System.out.println(Cli.BAR_LONG);
     }
 
     /**
@@ -195,15 +229,6 @@ public class Cli {
             setRunning(false);
         }
         return this;
-    }
-
-    /**
-     * Process create.
-     */
-    public void processCreate() {
-        if (res.getBoolean("prop")) {
-            paramLoader.overwriteDefaultConfig();
-        }
     }
 
     /**
@@ -352,6 +377,55 @@ public class Cli {
     }
 
     /**
+     * Process create.
+     */
+    public void processCreate() {
+        if (res.getBoolean("prop")) {
+            paramLoader.overwriteDefaultConfig();
+        }
+    }
+
+    /**
+     * Gets test plan filter.
+     *
+     * @return the test plan filter
+     */
+    public TestFilter getTestPlanFilter() {
+        return testPlanFilter;
+    }
+
+    /**
+     * Sets test plan filter.
+     *
+     * @param testPlanFilter the test plan filter
+     * @return the test plan filter
+     */
+    public Cli setTestPlanFilter(final TestFilter testPlanFilter) {
+        this.testPlanFilter = testPlanFilter;
+        return this;
+    }
+
+    /**
+     * Is under test boolean for use with unit tests testing cli class.
+     *
+     * @return the boolean
+     */
+    public boolean isUnderTest() {
+        return underTest;
+    }
+
+    /**
+     * Sets under test for use with unit tests testing cli class.
+     *
+     * @param underTest the under test
+     * @return the under test
+     */
+    public Cli setUnderTest(final boolean underTest) {
+        this.underTest = underTest;
+        return this;
+    }
+
+    /**
      * Gets the res.
      *
      * @return the res
@@ -398,88 +472,5 @@ public class Cli {
     public Cli setOpt(final Params opt) {
         this.opt = opt;
         return this;
-    }
-
-    /**
-     * Gets test plan filter.
-     *
-     * @return the test plan filter
-     */
-    public TestFilter getTestPlanFilter() {
-        return testPlanFilter;
-    }
-
-    /**
-     * Sets test plan filter.
-     *
-     * @param testPlanFilter the test plan filter
-     * @return the test plan filter
-     */
-    public Cli setTestPlanFilter(final TestFilter testPlanFilter) {
-        this.testPlanFilter = testPlanFilter;
-        return this;
-    }
-
-    /**
-     * Write out testah.
-     */
-    public static void writeOutTestah() {
-        System.out.println("\n" + Cli.BAR_LONG);
-        System.out.println(
-                "      _____________                    _                                         ============");
-        System.out.println(
-                "     /_____  _____/      ________     | |                                       =======/\\==||");
-        System.out.println(
-                "          | |           /___ ___/     | |                                      =======/  \\=||");
-        System.out.println(
-                "          | |   ___    __  | |        | |                                     =======/    \\||");
-        System.out.println(
-                "          | |  / __|  (    | |  ___   | |___                                  =======\\    /||");
-        System.out.println(
-                "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
-        System.out.println(
-                "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
-        System.out.println("=======================================================[Version: " + Cli.version
-                + "]======================");
-
-        System.out.println(Cli.BAR_LONG);
-    }
-
-    /**
-     * Is under test boolean for use with unit tests testing cli class.
-     *
-     * @return the boolean
-     */
-    public boolean isUnderTest() {
-        return underTest;
-    }
-
-    /**
-     * Sets under test for use with unit tests testing cli class.
-     *
-     * @param underTest the under test
-     * @return the under test
-     */
-    public Cli setUnderTest(final boolean underTest) {
-        this.underTest = underTest;
-        return this;
-    }
-
-    /**
-     * Is running boolean indicates if cli is processing a request.
-     *
-     * @return the boolean
-     */
-    public static boolean isRunning() {
-        return running;
-    }
-
-    /**
-     * Sets running.
-     *
-     * @param running the running
-     */
-    private static void setRunning(final boolean running) {
-        Cli.running = running;
     }
 }

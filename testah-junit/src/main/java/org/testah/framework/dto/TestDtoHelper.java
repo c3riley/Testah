@@ -19,17 +19,50 @@ import java.util.Arrays;
 public class TestDtoHelper {
 
     /**
-     * Convert known problem ann to dto.
+     * Creates the test plan dto.
      *
-     * @param knownProblem the known problem
-     * @return the known problem dto
+     * @param desc                 the desc
+     * @param meta                 the meta
+     * @param knownProblemFillFrom the known problem fill from
+     * @return the test plan dto
      */
-    public static KnownProblemDto convertKnownProblemAnnToDto(final KnownProblem knownProblem) {
-        final KnownProblemDto knownProblemDto = new org.testah.client.dto.KnownProblemDto();
-        knownProblemDto.setLinkedIds(Arrays.asList(knownProblem.linkedIds()));
-        knownProblemDto.setDescription(knownProblem.description());
-        knownProblemDto.setTypeOfKnown(knownProblem.typeOfKnown());
-        return knownProblemDto;
+    public static TestPlanDto createTestPlanDto(final Description desc, final TestPlan meta,
+                                                final KnownProblem knownProblemFillFrom) {
+        TestPlanDto testPlanToFill = new TestPlanDto();
+        if (null == meta || null == meta.name() || meta.name().length() == 0) {
+            testPlanToFill.setName(desc.getClassName());
+        } else {
+            testPlanToFill.setName(meta.name());
+        }
+        testPlanToFill.setSource(desc.getTestClass().getCanonicalName());
+        if (null != meta) {
+            testPlanToFill = fill(testPlanToFill, meta, knownProblemFillFrom);
+        }
+        return testPlanToFill;
+    }
+
+
+    /**
+     * Creates the test plan dto.
+     *
+     * @param testPlanClass        the test plan class
+     * @param meta                 the meta
+     * @param knownProblemFillFrom the known problem fill from
+     * @return the test plan dto
+     */
+    public static TestPlanDto createTestPlanDto(final Class<?> testPlanClass, final TestPlan meta,
+                                                final KnownProblem knownProblemFillFrom) {
+        TestPlanDto testPlanToFill = new TestPlanDto();
+        if (null == meta || null == meta.name() || meta.name().length() == 0) {
+            testPlanToFill.setName(testPlanClass.getName());
+        } else {
+            testPlanToFill.setName(meta.name());
+        }
+        testPlanToFill.setSource(testPlanClass.getCanonicalName());
+        if (null != meta) {
+            testPlanToFill = fill(testPlanToFill, meta, knownProblemFillFrom);
+        }
+        return testPlanToFill;
     }
 
     /**
@@ -62,25 +95,6 @@ public class TestDtoHelper {
             testPlanToFill.setKnownProblem(convertKnownProblemAnnToDto(knownProblemFillFrom));
         }
         return testPlanToFill;
-    }
-
-    /**
-     * Fill.
-     *
-     * @param runInfo the run info
-     * @return the run info dto
-     */
-    public static RunInfoDto fill(RunInfoDto runInfo) {
-        if (null == runInfo) {
-            runInfo = new RunInfoDto();
-        }
-        runInfo.setRunId(System.getProperty("testah.runId", TS.params().getRunInfo_runId()));
-        runInfo.setRunLocation(System.getProperty("testah.runLocation", TS.params().getRunLocation()));
-        runInfo.setBuildNumber(System.getProperty("testah.buildNumber", TS.params().getRunInfo_buildNumber()));
-        runInfo.setRunType(System.getProperty("testah.runType", TS.params().getRunType()));
-        runInfo.setVersionId(System.getProperty("testah.versionId", TS.params().getRunInfo_versionId()));
-        return runInfo;
-
     }
 
     /**
@@ -158,49 +172,36 @@ public class TestDtoHelper {
     }
 
     /**
-     * Creates the test plan dto.
+     * Fill.
      *
-     * @param desc                 the desc
-     * @param meta                 the meta
-     * @param knownProblemFillFrom the known problem fill from
-     * @return the test plan dto
+     * @param runInfo the run info
+     * @return the run info dto
      */
-    public static TestPlanDto createTestPlanDto(final Description desc, final TestPlan meta,
-                                                final KnownProblem knownProblemFillFrom) {
-        TestPlanDto testPlanToFill = new TestPlanDto();
-        if (null == meta || null == meta.name() || meta.name().length() == 0) {
-            testPlanToFill.setName(desc.getClassName());
-        } else {
-            testPlanToFill.setName(meta.name());
+    public static RunInfoDto fill(RunInfoDto runInfo) {
+        if (null == runInfo) {
+            runInfo = new RunInfoDto();
         }
-        testPlanToFill.setSource(desc.getTestClass().getCanonicalName());
-        if (null != meta) {
-            testPlanToFill = fill(testPlanToFill, meta, knownProblemFillFrom);
-        }
-        return testPlanToFill;
+        runInfo.setRunId(System.getProperty("testah.runId", TS.params().getRunInfo_runId()));
+        runInfo.setRunLocation(System.getProperty("testah.runLocation", TS.params().getRunLocation()));
+        runInfo.setBuildNumber(System.getProperty("testah.buildNumber", TS.params().getRunInfo_buildNumber()));
+        runInfo.setRunType(System.getProperty("testah.runType", TS.params().getRunType()));
+        runInfo.setVersionId(System.getProperty("testah.versionId", TS.params().getRunInfo_versionId()));
+        return runInfo;
+
     }
 
     /**
-     * Creates the test plan dto.
+     * Convert known problem ann to dto.
      *
-     * @param testPlanClass        the test plan class
-     * @param meta                 the meta
-     * @param knownProblemFillFrom the known problem fill from
-     * @return the test plan dto
+     * @param knownProblem the known problem
+     * @return the known problem dto
      */
-    public static TestPlanDto createTestPlanDto(final Class<?> testPlanClass, final TestPlan meta,
-                                                final KnownProblem knownProblemFillFrom) {
-        TestPlanDto testPlanToFill = new TestPlanDto();
-        if (null == meta || null == meta.name() || meta.name().length() == 0) {
-            testPlanToFill.setName(testPlanClass.getName());
-        } else {
-            testPlanToFill.setName(meta.name());
-        }
-        testPlanToFill.setSource(testPlanClass.getCanonicalName());
-        if (null != meta) {
-            testPlanToFill = fill(testPlanToFill, meta, knownProblemFillFrom);
-        }
-        return testPlanToFill;
+    public static KnownProblemDto convertKnownProblemAnnToDto(final KnownProblem knownProblem) {
+        final KnownProblemDto knownProblemDto = new org.testah.client.dto.KnownProblemDto();
+        knownProblemDto.setLinkedIds(Arrays.asList(knownProblem.linkedIds()));
+        knownProblemDto.setDescription(knownProblem.description());
+        knownProblemDto.setTypeOfKnown(knownProblem.typeOfKnown());
+        return knownProblemDto;
     }
 
     /**
@@ -260,4 +261,5 @@ public class TestDtoHelper {
     public static RunInfoDto createRunInfo() {
         return fill(new RunInfoDto());
     }
+
 }

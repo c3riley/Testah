@@ -66,13 +66,13 @@ public class BasicJiraRemoteLinkBuilder extends AbstractJiraRemoteLinkBuilder {
                 testCase.getKnownProblem().getDescription(), getSourceLinkToUse(), getLastTestPlanDtoUsed().getSource());
     }
 
-    private String getTestPlanSummary(TestPlanDto testPlan) {
-        return String.format("%s - status: %s - duration: %s", testPlan.getDescription(), testPlan.getStatusEnum(),
-                testPlan.getRunTime().getDuration());
-    }
-
     private String getTestCaseSummary(TestCaseDto testCase) {
         return String.format("%s - status: %s - duration: %s", testCase.getDescription(), testCase.getStatusEnum(),
                 testCase.getRunTime().getDuration());
+    }
+
+    private String getTestPlanSummary(TestPlanDto testPlan) {
+        return String.format("%s - status: %s - duration: %s", testPlan.getDescription(), testPlan.getStatusEnum(),
+                testPlan.getRunTime().getDuration());
     }
 }

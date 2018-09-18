@@ -52,13 +52,13 @@ public class TestHttpAkkaRunner {
             values.add(value);
             payload = "{\"key\": \"" + value + "\"}";
             postRequest =
-                new PostRequestDto(testUrl, payload);
+                    new PostRequestDto(testUrl, payload);
             postRequest.setContentType("application/json");
             postRequests.add(postRequest);
         }
 
         ConcurrentLinkedQueue<PostRequestDto> concurrentLinkedQueue =
-            new ConcurrentLinkedQueue<PostRequestDto>(postRequests);
+                new ConcurrentLinkedQueue<PostRequestDto>(postRequests);
         List<HttpAkkaStats> statsList = new ArrayList<>();
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
@@ -73,7 +73,7 @@ public class TestHttpAkkaRunner {
             TS.asserts().isTrue(stats.getDuration() instanceof Long);
             TS.asserts().isTrue(stats.getDuration() > 0);
             TS.log().info("Number of calls: " + stats.getStatsDuration().getN() + ", 90% = "
-                + stats.getStatsDuration().getPercentile(90.0));
+                    + stats.getStatsDuration().getPercentile(90.0));
             TS.asserts().isTrue(stats.getTotalResponses() == totalNumberOfPosts);
             TS.asserts().isTrue(stats.getStatsDuration().getPercentile(90.0) > 0);
         });
@@ -108,7 +108,7 @@ public class TestHttpAkkaRunner {
         }
 
         ConcurrentLinkedQueue<GetRequestDto> concurrentLinkedQueue =
-            new ConcurrentLinkedQueue<>(getRequests);
+                new ConcurrentLinkedQueue<>(getRequests);
         List<HttpAkkaStats> statsList = new ArrayList<>();
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
@@ -123,7 +123,7 @@ public class TestHttpAkkaRunner {
             TS.asserts().isTrue(stats.getDuration() instanceof Long);
             TS.asserts().isTrue(stats.getDuration() > 0);
             TS.log().info("Number of calls: " + stats.getStatsDuration().getN() + ", 90% = "
-                + stats.getStatsDuration().getPercentile(90.0));
+                    + stats.getStatsDuration().getPercentile(90.0));
             TS.asserts().isTrue(stats.getTotalResponses() == totalNumberOfGets);
             TS.asserts().isTrue(stats.getStatsDuration().getPercentile(90.0) > 0);
         });

@@ -6,6 +6,7 @@ import org.testah.client.dto.StepActionDto;
 import org.testah.driver.http.AbstractHttpWrapper;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
+
 import java.util.Date;
 
 /**
@@ -103,16 +104,16 @@ public class HttpPoller {
             throw e;
         } finally {
             TS.step().action().createInfo(
-                    "Polled for " + pollCtr + " iterations for duration of " +
-                            TS.util().getDurationPretty((new Date().getTime()) - start));
+                    "Polled for " + pollCtr + " iterations for duration of "
+                            + TS.util().getDurationPretty((new Date().getTime()) - start));
             if (pollCheckPassed) {
                 TS.asserts().pass("Poller completed successfully");
             } else if (exceptionOccurred != null) {
-                TS.asserts().fail("Poller failed with an exception thrown - " +
-                        exceptionOccurred.getMessage(), exceptionOccurred);
+                TS.asserts().fail("Poller failed with an exception thrown - "
+                        + exceptionOccurred.getMessage(), exceptionOccurred);
             } else if (pollCtr > getMaxPollIteration() && !pollCheckPassed) {
-                TS.asserts().fail("Poller went over max iteration allowed[" + pollCtr +
-                        "] and the poller check was not true!");
+                TS.asserts().fail("Poller went over max iteration allowed[" + pollCtr
+                        + "] and the poller check was not true!");
             }
         }
         return response;
@@ -135,26 +136,6 @@ public class HttpPoller {
      */
     public HttpPoller setMaxPollIteration(final int maxPollIteration) {
         this.maxPollIteration = maxPollIteration;
-        return this;
-    }
-
-    /**
-     * Gets the poll iteration pause.
-     *
-     * @return the poll iteration pause
-     */
-    public Long getPollIterationPause() {
-        return pollIterationPause;
-    }
-
-    /**
-     * Sets the poll iteration pause.
-     *
-     * @param pollIterationPause the poll iteration pause
-     * @return the http poller
-     */
-    public HttpPoller setPollIterationPause(final Long pollIterationPause) {
-        this.pollIterationPause = pollIterationPause;
         return this;
     }
 
@@ -197,6 +178,26 @@ public class HttpPoller {
      */
     public HttpPoller setWriteToLog(final boolean writeToLog) {
         this.writeToLog = writeToLog;
+        return this;
+    }
+
+    /**
+     * Gets the poll iteration pause.
+     *
+     * @return the poll iteration pause
+     */
+    public Long getPollIterationPause() {
+        return pollIterationPause;
+    }
+
+    /**
+     * Sets the poll iteration pause.
+     *
+     * @param pollIterationPause the poll iteration pause
+     * @return the http poller
+     */
+    public HttpPoller setPollIterationPause(final Long pollIterationPause) {
+        this.pollIterationPause = pollIterationPause;
         return this;
     }
 

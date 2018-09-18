@@ -106,6 +106,18 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Assert status.
      *
+     * @return the response dto
+     */
+    public ResponseDto assertStatus() {
+        if (getRequestUsed() != null) {
+            return assertStatus(getRequestUsed().getExpectedStatus());
+        }
+        throw new RuntimeException("Unable to assertStatus the requestUsed in the response is null");
+    }
+
+    /**
+     * Assert status.
+     *
      * @param expectedStatus the expected status
      * @return the response dto
      */
@@ -115,15 +127,23 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     }
 
     /**
-     * Assert status.
+     * Gets the request used.
      *
+     * @return the request used
+     */
+    public AbstractRequestDto<?> getRequestUsed() {
+        return requestUsed;
+    }
+
+    /**
+     * Sets the request used.
+     *
+     * @param requestUsed the new request used
      * @return the response dto
      */
-    public ResponseDto assertStatus() {
-        if (getRequestUsed() != null) {
-            return assertStatus(getRequestUsed().getExpectedStatus());
-        }
-        throw new RuntimeException("Unable to assertStatus the requestUsed in the response is null");
+    public ResponseDto setRequestUsed(final AbstractRequestDto<?> requestUsed) {
+        this.requestUsed = requestUsed;
+        return this;
     }
 
     /**
@@ -140,56 +160,6 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     }
 
     /**
-     * Gets the status code.
-     *
-     * @return the status code
-     */
-    public int getStatusCode() {
-        return statusCode;
-    }
-
-    /**
-     * Gets the status text.
-     *
-     * @return the status text
-     */
-    public String getStatusText() {
-        return statusText;
-    }
-
-    /**
-     * Gets the response body.
-     *
-     * @return the response body
-     */
-    public String getResponseBody() {
-        return responseBody;
-    }
-
-    /**
-     * Gets the response body.
-     *
-     * @param escape the escape
-     * @return the response body
-     */
-    public String getResponseBody(final boolean escape) {
-        if (escape) {
-            return escapeHtml(getResponseBody());
-        } else {
-            return getResponseBody();
-        }
-    }
-
-    /**
-     * Gets the headers.
-     *
-     * @return the headers
-     */
-    public Header[] getHeaders() {
-        return headers.clone();
-    }
-
-    /**
      * Gets the footers.
      *
      * @return the footers
@@ -199,12 +169,14 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     }
 
     /**
-     * Gets the response bytes.
+     * Sets the footers.
      *
-     * @return the response bytes
+     * @param footers the footers
+     * @return the response dto
      */
-    public byte[] getResponseBytes() {
-        return responseBytes.clone();
+    public ResponseDto setFooters(final Header[] footers) {
+        this.footers = footers.clone();
+        return this;
     }
 
     /**
@@ -233,33 +205,22 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     }
 
     /**
-     * Gets the url.
+     * Gets the response bytes.
      *
-     * @return the url
+     * @return the response bytes
      */
-    public String getUrl() {
-        return url;
+    public byte[] getResponseBytes() {
+        return responseBytes.clone();
     }
 
     /**
-     * Sets the status code.
+     * Sets the response bytes.
      *
-     * @param statusCode the status code
+     * @param responseBytes the response bytes
      * @return the response dto
      */
-    public ResponseDto setStatusCode(final int statusCode) {
-        this.statusCode = statusCode;
-        return this;
-    }
-
-    /**
-     * Sets the status text.
-     *
-     * @param statusText the status text
-     * @return the response dto
-     */
-    public ResponseDto setStatusText(final String statusText) {
-        this.statusText = statusText;
+    public ResponseDto setResponseBytes(final byte[] responseBytes) {
+        this.responseBytes = responseBytes.clone();
         return this;
     }
 
@@ -338,50 +299,6 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     }
 
     /**
-     * Sets the headers.
-     *
-     * @param headers the headers
-     * @return the response dto
-     */
-    public ResponseDto setHeaders(final Header[] headers) {
-        this.headers = headers.clone();
-        return this;
-    }
-
-    /**
-     * Sets the footers.
-     *
-     * @param footers the footers
-     * @return the response dto
-     */
-    public ResponseDto setFooters(final Header[] footers) {
-        this.footers = footers.clone();
-        return this;
-    }
-
-    /**
-     * Sets the response bytes.
-     *
-     * @param responseBytes the response bytes
-     * @return the response dto
-     */
-    public ResponseDto setResponseBytes(final byte[] responseBytes) {
-        this.responseBytes = responseBytes.clone();
-        return this;
-    }
-
-    /**
-     * Sets the url.
-     *
-     * @param url the url
-     * @return the response dto
-     */
-    public ResponseDto setUrl(final String url) {
-        this.url = url;
-        return this;
-    }
-
-    /**
      * Prints the.
      *
      * @return the response dto
@@ -426,6 +343,109 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     }
 
     /**
+     * Gets the url.
+     *
+     * @return the url
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * Sets the url.
+     *
+     * @param url the url
+     * @return the response dto
+     */
+    public ResponseDto setUrl(final String url) {
+        this.url = url;
+        return this;
+    }
+
+    /**
+     * Gets the status code.
+     *
+     * @return the status code
+     */
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    /**
+     * Sets the status code.
+     *
+     * @param statusCode the status code
+     * @return the response dto
+     */
+    public ResponseDto setStatusCode(final int statusCode) {
+        this.statusCode = statusCode;
+        return this;
+    }
+
+    /**
+     * Gets the status text.
+     *
+     * @return the status text
+     */
+    public String getStatusText() {
+        return statusText;
+    }
+
+    /**
+     * Sets the status text.
+     *
+     * @param statusText the status text
+     * @return the response dto
+     */
+    public ResponseDto setStatusText(final String statusText) {
+        this.statusText = statusText;
+        return this;
+    }
+
+    /**
+     * Gets the headers.
+     *
+     * @return the headers
+     */
+    public Header[] getHeaders() {
+        return headers.clone();
+    }
+
+    /**
+     * Sets the headers.
+     *
+     * @param headers the headers
+     * @return the response dto
+     */
+    public ResponseDto setHeaders(final Header[] headers) {
+        this.headers = headers.clone();
+        return this;
+    }
+
+    /**
+     * Gets the response body.
+     *
+     * @return the response body
+     */
+    public String getResponseBody() {
+        return responseBody;
+    }
+
+    /**
+     * Gets the response body.
+     *
+     * @param escape the escape
+     * @return the response body
+     */
+    public String getResponseBody(final boolean escape) {
+        if (escape) {
+            return escapeHtml(getResponseBody());
+        } else {
+            return getResponseBody();
+        }
+    }
+
+    /**
      * Adds the as info step.
      *
      * @return the step action dto
@@ -466,6 +486,26 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         print(shortResponseBody, truncate);
         stepAction.setRestResponsePath(writeResponseInfoFile());
         return stepAction;
+    }
+
+    /**
+     * Gets the request type.
+     *
+     * @return the request type
+     */
+    public String getRequestType() {
+        return requestType;
+    }
+
+    /**
+     * Sets the request type.
+     *
+     * @param requestType the request type
+     * @return the response dto
+     */
+    public ResponseDto setRequestType(final String requestType) {
+        this.requestType = requestType;
+        return this;
     }
 
     /**
@@ -522,21 +562,21 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the start.
      *
-     * @return the response dto
-     */
-    public ResponseDto setStart() {
-        return setStart(System.currentTimeMillis());
-    }
-
-    /**
-     * Sets the start.
-     *
      * @param start the start
      * @return the response dto
      */
     public ResponseDto setStart(final Long start) {
         this.start = start;
         return this;
+    }
+
+    /**
+     * Sets the start.
+     *
+     * @return the response dto
+     */
+    public ResponseDto setStart() {
+        return setStart(System.currentTimeMillis());
     }
 
     /**
@@ -551,15 +591,6 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Sets the end.
      *
-     * @return the response dto
-     */
-    public ResponseDto setEnd() {
-        return setEnd(System.currentTimeMillis());
-    }
-
-    /**
-     * Sets the end.
-     *
      * @param end the end
      * @return the response dto
      */
@@ -569,52 +600,21 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     }
 
     /**
+     * Sets the end.
+     *
+     * @return the response dto
+     */
+    public ResponseDto setEnd() {
+        return setEnd(System.currentTimeMillis());
+    }
+
+    /**
      * Gets the duration.
      *
      * @return the duration
      */
     public Long getDuration() {
         return (end - start);
-    }
-
-    /**
-     * Gets the request type.
-     *
-     * @return the request type
-     */
-    public String getRequestType() {
-        return requestType;
-    }
-
-    /**
-     * Sets the request type.
-     *
-     * @param requestType the request type
-     * @return the response dto
-     */
-    public ResponseDto setRequestType(final String requestType) {
-        this.requestType = requestType;
-        return this;
-    }
-
-    /**
-     * Gets the request used.
-     *
-     * @return the request used
-     */
-    public AbstractRequestDto<?> getRequestUsed() {
-        return requestUsed;
-    }
-
-    /**
-     * Sets the request used.
-     *
-     * @param requestUsed the new request used
-     * @return the response dto
-     */
-    public ResponseDto setRequestUsed(final AbstractRequestDto<?> requestUsed) {
-        this.requestUsed = requestUsed;
-        return this;
     }
 
     /**

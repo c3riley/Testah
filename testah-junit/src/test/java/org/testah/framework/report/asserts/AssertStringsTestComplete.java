@@ -13,10 +13,7 @@ import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.base.AssertNotAllowedWithNullActual;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class AssertStringsTestComplete {
 
@@ -31,6 +28,14 @@ class AssertStringsTestComplete {
     void tearDownTest() {
     }
 
+    @Test
+    void equalsToTest() {
+        getEqualsDataPass().forEach((expected, actual) -> {
+            Assert.assertTrue(new AssertStrings(actual).equalsTo(expected).isPassed());
+            Assert.assertTrue(new AssertStrings(actual).equalsToWithReflection(expected).isPassed());
+        });
+    }
+
     private Map<String, String> getEqualsDataPass() {
         Map<String, String> data = new HashMap<>();
         data.put("", "");
@@ -42,6 +47,14 @@ class AssertStringsTestComplete {
         data.put("\"", "\"");
         data.put(" ", " ");
         return data;
+    }
+
+    @Test
+    void equalsToTestNeg() {
+        getEqualsDataFail().forEach((expected, actual) -> {
+            Assert.assertTrue(new AssertStrings(actual, negAssert).equalsTo(expected).isFailed());
+            Assert.assertTrue(new AssertStrings(actual, negAssert).equalsToWithReflection(expected).isFailed());
+        });
     }
 
     private Map<String, String> getEqualsDataFail() {
@@ -59,28 +72,33 @@ class AssertStringsTestComplete {
     }
 
     @Test
-    void equalsToTest() {
-        getEqualsDataPass().forEach((expected, actual) -> {
-            Assert.assertTrue(new AssertStrings(actual).equalsTo(expected).isPassed());
-            Assert.assertTrue(new AssertStrings(actual).equalsToWithReflection(expected).isPassed());
-        });
-    }
-
-    @Test
-    void equalsToTestNeg() {
-        getEqualsDataFail().forEach((expected, actual) -> {
-            Assert.assertTrue(new AssertStrings(actual, negAssert).equalsTo(expected).isFailed());
-            Assert.assertTrue(new AssertStrings(actual, negAssert).equalsToWithReflection(expected).isFailed());
-        });
-    }
-
-    @Test
     void equalsToIgnoreCaseTest() {
         getEqualsDataPass().forEach((expected, actual) -> {
             Assert.assertTrue(new AssertStrings(actual).equalsToIgnoreCase(expected).isPassed());
             Assert.assertTrue(new AssertStrings(StringUtils.upperCase(actual)).equalsToIgnoreCase(expected).isPassed());
             Assert.assertTrue(new AssertStrings(actual).equalsToIgnoreCase(StringUtils.upperCase(expected)).isPassed());
         });
+    }
+
+    @Test
+    void equalsToWithMultiLinesTest() {
+        for (int lineCount : new int[]{0, 1, 2, 5, 20, 500}) {
+            String multiLine = getMultilineString(lineCount);
+            Assert.assertTrue(new AssertStrings(multiLine, negAssert).equalsTo(multiLine).isPassed());
+            Assert.assertTrue(new AssertStrings(multiLine, negAssert).equalsTo(multiLine + getMultilineString(2)).isFailed());
+            Assert.assertTrue(new AssertStrings(multiLine + getMultilineString(1), negAssert).equalsTo(multiLine).isFailed());
+            if (lineCount > 1) {
+                String actualWithChange = multiLine.replace("~REPLACE_1~",
+                        "").replace("~REPLACE_4~",
+                        "wie er llNot MAtch").replace("~REPLACE_17~",
+                        "willew  Not e r~!#$*$!~|;\t\fwerMAtch").replace("~REPLACE_42~",
+                        "wie er llNot MAtch").replace("~REPLACE_498~",
+                        "wie er ch");
+                Assert.assertTrue(new AssertStrings(actualWithChange, negAssert).equalsTo(multiLine).isFailed());
+                Assert.assertTrue(new AssertStrings(actualWithChange, negAssert).equalsTo(multiLine + getMultilineString(1)).isFailed());
+                Assert.assertTrue(new AssertStrings(actualWithChange + getMultilineString(4), negAssert).equalsTo(multiLine).isFailed());
+            }
+        }
     }
 
     private String getMultilineString(final int numberOfLines) {
@@ -93,27 +111,6 @@ class AssertStringsTestComplete {
             str.append(System.lineSeparator());
         }
         return str.toString();
-    }
-
-    @Test
-    void equalsToWithMultiLinesTest() {
-        for (int lineCount : new int[]{0, 1, 2, 5, 20, 500}) {
-            String multiLine = getMultilineString(lineCount);
-            Assert.assertTrue(new AssertStrings(multiLine,negAssert).equalsTo(multiLine).isPassed());
-            Assert.assertTrue(new AssertStrings(multiLine,negAssert).equalsTo(multiLine+getMultilineString(2)).isFailed());
-            Assert.assertTrue(new AssertStrings(multiLine+getMultilineString(1),negAssert).equalsTo(multiLine).isFailed());
-            if (lineCount > 1) {
-                String actualWithChange = multiLine.replace("~REPLACE_1~",
-                        "").replace("~REPLACE_4~",
-                        "wie er llNot MAtch").replace("~REPLACE_17~",
-                        "willew  Not e r~!#$*$!~|;\t\fwerMAtch").replace("~REPLACE_42~",
-                        "wie er llNot MAtch").replace("~REPLACE_498~",
-                        "wie er ch");
-                Assert.assertTrue(new AssertStrings(actualWithChange,negAssert).equalsTo(multiLine).isFailed());
-                Assert.assertTrue(new AssertStrings(actualWithChange,negAssert).equalsTo(multiLine+getMultilineString(1)).isFailed());
-                Assert.assertTrue(new AssertStrings(actualWithChange+getMultilineString(4),negAssert).equalsTo(multiLine).isFailed());
-            }
-        }
     }
 
     @Test

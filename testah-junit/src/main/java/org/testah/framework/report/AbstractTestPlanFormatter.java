@@ -28,22 +28,12 @@ public abstract class AbstractTestPlanFormatter extends AbstractFormatter {
     }
 
     /**
-     * Gets the context base.
+     * Gets the test plan.
      *
-     * @return the context base
+     * @return the test plan
      */
-    @Override
-    public VelocityContext getContextBase() {
-        VelocityContext context = new VelocityContext();
-
-        if (null != testPlan) {
-            context.put("testPlan", testPlan);
-            context.put("util", TS.util());
-
-            context = getContext(context);
-        }
-
-        return context;
+    public TestPlanDto getTestPlan() {
+        return testPlan;
     }
 
     /**
@@ -63,18 +53,29 @@ public abstract class AbstractTestPlanFormatter extends AbstractFormatter {
         return getReport(getContextBase());
     }
 
+    /**
+     * Gets the context base.
+     *
+     * @return the context base
+     */
+    @Override
+    public VelocityContext getContextBase() {
+        VelocityContext context = new VelocityContext();
+
+        if (null != testPlan) {
+            context.put("testPlan", testPlan);
+            context.put("util", TS.util());
+
+            context = getContext(context);
+        }
+
+        return context;
+    }
+
     public String getBaseReportObject() {
         return TS.util().toJson(this.testPlan);
     }
 
-    /**
-     * Gets the test plan.
-     *
-     * @return the test plan
-     */
-    public TestPlanDto getTestPlan() {
-        return testPlan;
-    }
 
     /**
      * Sets the report file.

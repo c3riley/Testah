@@ -57,32 +57,31 @@ public class TestFilterComponentTest {
         testFilterMyComponent(1, 1, 0, 1, TestPlanWithManyComponents.class);
 
         testFilterMyComponent(5, 5, 3, 2, TestPlanWithComponent.class, TestPlanWithManyComponents.class,
-            TestPlanWithComponentDefault.class, TestPlanWithComponentEmpty.class,
-            TestPlanWithComponentEmptyString.class);
+                TestPlanWithComponentDefault.class, TestPlanWithComponentEmpty.class,
+                TestPlanWithComponentEmptyString.class);
 
     }
 
     private void testFilterMyComponent(final int expectedTest1, final int expectedTest2, final int expectedTest3,
-                                       final int expectedTest4, final Class<?>... classesToAdd)
-    {
+                                       final int expectedTest4, final Class<?>... classesToAdd) {
         final TestFilter filter = new TestFilter();
         Set<Class<?>> classes = ImmutableSet.copyOf(Arrays.asList(classesToAdd));
 
         TS.params().setFilterByComponent(null);
         Assert.assertEquals(expectedTest1, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-            .size());
+                .size());
 
         TS.params().setFilterByComponent("");
         Assert.assertEquals(expectedTest2, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-            .size());
+                .size());
 
         TS.params().setFilterByComponent("~TEST_COMPONENT");
         Assert.assertEquals(expectedTest3, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-            .size());
+                .size());
 
         TS.params().setFilterByComponent("TEST_COMPONENT");
         Assert.assertEquals(expectedTest4, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
-            .size());
+                .size());
     }
 
     @After

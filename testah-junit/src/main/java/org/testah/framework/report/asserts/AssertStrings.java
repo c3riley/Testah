@@ -9,38 +9,69 @@ import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.base.AbstractAssertBase;
 import org.testah.framework.report.asserts.base.AssertFunctionReturnBooleanActual;
 
-import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /**
  * The type Assert strings.
  */
+@SuppressWarnings("checkstyle:lineWrappingIndentation")
 public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
-
+    //CHECKSTYLE.OFF: checkstyle:lineWrappingIndentation
     /**
      * Instantiates a new Assert strings.
+     *
+     * @param actual the actual
      */
     public AssertStrings(final String actual) {
         this(actual, TS.asserts());
     }
 
+    /**
+     * Instantiates a new Assert strings.
+     *
+     * @param actual         the actual
+     * @param verboseAsserts the verbose asserts
+     */
     public AssertStrings(final String actual, final VerboseAsserts verboseAsserts) {
         super(actual, verboseAsserts);
+    }
+
+    /**
+     * Equals to ignore case assert strings.
+     *
+     * @param expected the expected
+     * @return the assert strings
+     */
+    public AssertStrings equalsToIgnoreCase(final String expected) {
+        return equalsTo(expected, true);
     }
 
     public AssertStrings equalsTo(final String expected) {
         return equalsTo(expected, false);
     }
 
-    public AssertStrings equalsToIgnoreCase(final String expected) {
-        return equalsTo(expected, true);
-    }
-
+    /**
+     * Equals to assert strings.
+     *
+     * @param expected   the expected
+     * @param ignoreCase the ignore case
+     * @return the assert strings
+     */
     protected AssertStrings equalsTo(final String expected, boolean ignoreCase) {
         return equalsTo("", expected, getActual(), ignoreCase);
     }
 
+    /**
+     * Equals to assert strings.
+     *
+     * @param extraMessage the extra message
+     * @param expected     the expected
+     * @param actual       the actual
+     * @param ignoreCase   the ignore case
+     * @return the assert strings
+     */
     protected AssertStrings equalsTo(final String extraMessage, final String expected, final String actual, boolean ignoreCase) {
         if (actual == null || expected == null || !expected.contains(System.lineSeparator())) {
             runAssert("Traditional equals" + extraMessage,
@@ -64,6 +95,14 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
     }
 
 
+    /**
+     * Equals to assert strings.
+     *
+     * @param expectedLineArray the expected line array
+     * @param actualLineArray   the actual line array
+     * @param ignoreCase        the ignore case
+     * @return the assert strings
+     */
     protected AssertStrings equalsTo(final String[] expectedLineArray, final String[] actualLineArray, boolean ignoreCase) {
         final boolean throwOnFail = getAsserts().getThrowExceptionOnFail();
         try {
@@ -99,8 +138,9 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
     /**
      * Add step for string differences assert strings.
      *
-     * @param expected the expected
-     * @param actual   the actual
+     * @param expected   the expected
+     * @param actual     the actual
+     * @param ignoreCase the ignore case
      * @return the assert strings
      */
     public AssertStrings addStepForStringDifferences(final String expected, final String actual, boolean ignoreCase) {
@@ -118,8 +158,9 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
      * Gets easy to debug string for string differences. This will generate a message with a line per
      * char compare and char ascii number to help see the difference, even for hidden control characters.
      *
-     * @param expected the expected
-     * @param actual   the actual
+     * @param expected   the expected
+     * @param actual     the actual
+     * @param ignoreCase the ignore case
      * @return the easy to debug string for string differences
      */
     public String getEasyToDebugStringForStringDifferences(final String expected, final String actual, boolean ignoreCase) {
@@ -135,8 +176,8 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 expectedChar = getCharWithAsciiForDebug(ctr, expectedArray);
                 actualChar = getCharWithAsciiForDebug(ctr, actualArray);
                 strBuilder.append((ctr + 1) + "#");
-                if (StringUtils.equals(expectedChar, actualChar) ||
-                        (ignoreCase && StringUtils.equalsIgnoreCase(expectedChar, actualChar))) {
+                if (StringUtils.equals(expectedChar, actualChar)
+                        || (ignoreCase && StringUtils.equalsIgnoreCase(expectedChar, actualChar))) {
                     strBuilder.appendln(expectedChar + " == " + actualChar);
                 } else {
                     strBuilder.appendln(expectedChar + " != " + actualChar + "  <error>");
@@ -145,6 +186,17 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
             return strBuilder.toString();
         }
         return null;
+    }
+
+    /**
+     * Gets char with ascii for debug.
+     *
+     * @param index       the index
+     * @param stringValue the string value
+     * @return the char with ascii for debug
+     */
+    public String getCharWithAsciiForDebug(final int index, final String stringValue) {
+        return getCharWithAsciiForDebug(index, (stringValue != null ? stringValue.toCharArray() : null));
     }
 
     /**
@@ -161,11 +213,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         return null;
     }
 
-    public String getCharWithAsciiForDebug(final int index, final String stringValue) {
-        return getCharWithAsciiForDebug(index, (stringValue != null ? stringValue.toCharArray() : null));
-    }
-
-
+    /**
+     * Starts with assert strings.
+     *
+     * @param expectedPrefix the expected prefix
+     * @return the assert strings
+     */
     public AssertStrings startsWith(final String expectedPrefix) {
         return runAssert(" - expected String[" + getActual() + "] to startWith " + expectedPrefix,
                 "startsWith",
@@ -175,6 +228,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 }, expectedPrefix, getActual());
     }
 
+    /**
+     * Starts with ignore case assert strings.
+     *
+     * @param expectedPrefix the expected prefix
+     * @return the assert strings
+     */
     public AssertStrings startsWithIgnoreCase(final String expectedPrefix) {
         return runAssert(" - expected String[" + getActual() + "] to "
                         + "startsWithIgnoreCase " + expectedPrefix,
@@ -185,6 +244,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 }, expectedPrefix, getActual());
     }
 
+    /**
+     * Ends with assert strings.
+     *
+     * @param expectedSuffix the expected suffix
+     * @return the assert strings
+     */
     public AssertStrings endsWith(final String expectedSuffix) {
         return runAssert(" - expected String[" + getActual() + "] to endsWith " + expectedSuffix,
                 "endsWith",
@@ -194,6 +259,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 }, expectedSuffix, getActual());
     }
 
+    /**
+     * Ends with ignore case assert strings.
+     *
+     * @param expectedSuffix the expected suffix
+     * @return the assert strings
+     */
     public AssertStrings endsWithIgnoreCase(final String expectedSuffix) {
         return runAssert(" - expected String[" + getActual() + "] to endsWithIgnoreCase " + expectedSuffix,
                 "endsWithIgnoreCase",
@@ -203,6 +274,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 }, expectedSuffix, getActual());
     }
 
+    /**
+     * Contains assert strings.
+     *
+     * @param expectedValueToContain the expected value to contain
+     * @return the assert strings
+     */
     public AssertStrings contains(final String expectedValueToContain) {
         return runAssert(" - expected String[" + getActual() + "] to contain " + expectedValueToContain,
                 "contains",
@@ -212,6 +289,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 }, expectedValueToContain, getActual());
     }
 
+    /**
+     * Contains ignore case assert strings.
+     *
+     * @param expectedValueToContain the expected value to contain
+     * @return the assert strings
+     */
     public AssertStrings containsIgnoreCase(final String expectedValueToContain) {
         return runAssert(" - expected String[" + getActual() + "] to containsIgnoreCase " + expectedValueToContain,
                 "containsIgnoreCase",
@@ -221,6 +304,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 }, expectedValueToContain, getActual());
     }
 
+    /**
+     * Not ends with assert strings.
+     *
+     * @param expectedSuffix the expected suffix
+     * @return the assert strings
+     */
     public AssertStrings notEndsWith(final String expectedSuffix) {
         return runAssert(" - expected String[" + getActual() + "] to notEndsWith " + expectedSuffix,
                 "notEndsWith",
@@ -230,6 +319,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 }, expectedSuffix, getActual());
     }
 
+    /**
+     * Not ends with ignore case assert strings.
+     *
+     * @param expectedSuffix the expected suffix
+     * @return the assert strings
+     */
     public AssertStrings notEndsWithIgnoreCase(final String expectedSuffix) {
         return runAssert(" - expected String[" + getActual() + "] to endsWithIgnoreCase " + expectedSuffix,
                 "endsWithIgnoreCase",
@@ -239,6 +334,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 }, expectedSuffix, getActual());
     }
 
+    /**
+     * Not contains assert strings.
+     *
+     * @param expectedValueToContain the expected value to contain
+     * @return the assert strings
+     */
     public AssertStrings notContains(final String expectedValueToContain) {
         return runAssert(" - expected String[" + getActual() + "] to notContains " + expectedValueToContain,
                 "notContains",
@@ -249,6 +350,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
     }
 
 
+    /**
+     * Not contains ignore case assert strings.
+     *
+     * @param expectedValueToContain the expected value to contain
+     * @return the assert strings
+     */
     public AssertStrings notContainsIgnoreCase(final String expectedValueToContain) {
         AssertFunctionReturnBooleanActual<String> assertStatement = (expected, actual, history) -> {
             Assert.assertFalse(StringUtils.containsIgnoreCase(actual, expected));
@@ -258,6 +365,11 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 "notContainsIgnoreCase", assertStatement, expectedValueToContain, getActual());
     }
 
+    /**
+     * Size assert number.
+     *
+     * @return the assert number
+     */
     public AssertNumber<Integer> size() {
         if (canAssertRun("stringSize", true)) {
             return new AssertNumber<Integer>(getActual().length(), getAsserts())
@@ -266,6 +378,11 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         return new AssertNumber<Integer>(null, getAsserts());
     }
 
+    /**
+     * Is empty assert strings.
+     *
+     * @return the assert strings
+     */
     public AssertStrings isEmpty() {
         return isEmpty((expected, actual, history) -> {
             history.setExpectedForHistory("");
@@ -273,6 +390,11 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         });
     }
 
+    /**
+     * Is not empty assert strings.
+     *
+     * @return the assert strings
+     */
     public AssertStrings isNotEmpty() {
         return isNotEmpty((expected, actual, history) -> {
             history.setExpectedForHistory("String to not be empty");
@@ -280,6 +402,11 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         });
     }
 
+    /**
+     * Is numeric assert strings.
+     *
+     * @return the assert strings
+     */
     public AssertStrings isNumeric() {
         AssertFunctionReturnBooleanActual<String> assertStatement = (expected, actual, history) -> {
             history.setMessage(String.format("expected String[%s] to be numeric", actual));
@@ -290,6 +417,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         return runAssert("isNumeric", assertStatement, null, getActual(), false, null);
     }
 
+    /**
+     * Match assert strings.
+     *
+     * @param expectedPattern the expected pattern
+     * @return the assert strings
+     */
     public AssertStrings match(final String expectedPattern) {
         AssertFunctionReturnBooleanActual<String> assertStatement = (expected, actual, history) -> {
             Pattern pattern = Pattern.compile(expected);
@@ -301,6 +434,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         return runAssert("match", assertStatement, expectedPattern, getActual(), false, null);
     }
 
+    /**
+     * Not match assert strings.
+     *
+     * @param expectedPattern the expected pattern
+     * @return the assert strings
+     */
     public AssertStrings notMatch(final String expectedPattern) {
         AssertFunctionReturnBooleanActual<String> assertStatement = (expected, actual, history) -> {
             Pattern pattern = Pattern.compile(expected);
@@ -311,5 +450,5 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         };
         return runAssert("notMatch", assertStatement, expectedPattern, getActual(), false, null);
     }
-
+    //CHECKSTYLE.ON: checkstyle:lineWrappingIndentation
 }

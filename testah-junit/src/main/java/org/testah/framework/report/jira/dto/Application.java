@@ -15,22 +15,20 @@ import java.util.Map;
 public class Application {
 
     /**
+     * The additional properties.
+     */
+    @JsonIgnore
+    private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
+    /**
      * The type.
      */
     @JsonProperty("type")
     private String type;
-
     /**
      * The name.
      */
     @JsonProperty("name")
     private String name;
-
-    /**
-     * The additional properties.
-     */
-    @JsonIgnore
-    private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
     /**
      * Gets the type.

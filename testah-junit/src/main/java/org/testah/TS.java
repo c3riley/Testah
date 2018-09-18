@@ -32,52 +32,44 @@ public class TS {
 
     private static final StepHelper stepHelper = new StepHelper();
     private static final StepActionHelper stepActionHelper = new StepActionHelper();
+    private static final HashMap<String, String> maskValues = new HashMap<>();
     /**
      * The _stateful data.
      * Allows a test to store data that helpers and other classes can use instead of always having to pass it.
      */
     private static ThreadLocal<HashMap<String, Object>> _statefulData = new ThreadLocal<HashMap<String, Object>>();
-
     /**
      * The _browser.
      * The wrapper used around selenium/webdriver, the entry point for all web/browser functionality.
      */
     private static ThreadLocal<AbstractBrowser<?>> _browser = new ThreadLocal<AbstractBrowser<?>>();
-
     /**
      * The _http.
      * The wrapper used around httpclient, the entry point for all rest/service functionality.
      */
     private static ThreadLocal<AbstractHttpWrapper> _http = new ThreadLocal<AbstractHttpWrapper>();
-
     private static TestPlanReporter _testPlanReporter;
-
     /**
      * The _asserts.
      * The main assert class, it auto keeps track of state and logs not only fails but also passes.
      */
     private static ThreadLocal<VerboseAsserts> _asserts = new ThreadLocal<VerboseAsserts>();
-
     /**
      * The _verify.
      * The main assert class but will not fail a test so you can use in an if to determine flow or logic, its the
      * same code as the asserts.
      */
     private static ThreadLocal<VerboseAsserts> _verify = new ThreadLocal<VerboseAsserts>();
-
     /**
      * The _testah util.
      * Common util with things like the mapper, time methods, etc.
      */
     private static TestahUtil _testahUtil;
-
     /**
      * The _params.
      * The runtime params from the testah.properties file.
      */
     private static Params _params;
-
-    private static final HashMap<String, String> maskValues = new HashMap<>();
 
     /**
      * Asserts.
@@ -131,6 +123,16 @@ public class TS {
     }
 
     /**
+     * Reset stateful data.
+     *
+     * @return the hash map
+     */
+    public static HashMap<String, Object> resetStatefulData() {
+        statefulData().clear();
+        return statefulData();
+    }
+
+    /**
      * Stateful data.
      * Allows a test to store data that helpers and other classes can use instead of always having to pass it.
      *
@@ -141,16 +143,6 @@ public class TS {
             _statefulData.set(new HashMap<String, Object>());
         }
         return _statefulData.get();
-    }
-
-    /**
-     * Reset stateful data.
-     *
-     * @return the hash map
-     */
-    public static HashMap<String, Object> resetStatefulData() {
-        statefulData().clear();
-        return statefulData();
     }
 
     /**
@@ -165,18 +157,6 @@ public class TS {
         }
         return _testahUtil;
     }
-
-    /**
-     * Log.
-     * A log4j instantiated object, to make it easier to log the write way.
-     * Should never use System.out.printlin in an e2e test.
-     *
-     * @return the logger
-     */
-    public static Logger log() {
-        return Log.getLog();
-    }
-
 
     /**
      * Params params - Deprecated.
@@ -230,15 +210,6 @@ public class TS {
     }
 
     /**
-     * Checks if is browser is currently initialized.
-     *
-     * @return true, if is browser
-     */
-    public static boolean isBrowser() {
-        return (null != _browser && null != _browser.get());
-    }
-
-    /**
      * Sets the browser.
      * Should only be used to test the test code.
      *
@@ -248,6 +219,15 @@ public class TS {
     public static AbstractBrowser<?> setBrowser(final AbstractBrowser<?> browser) {
         _browser.set(browser);
         return _browser.get();
+    }
+
+    /**
+     * Checks if is browser is currently initialized.
+     *
+     * @return true, if is browser
+     */
+    public static boolean isBrowser() {
+        return (null != _browser && null != _browser.get());
     }
 
     /**
@@ -286,6 +266,10 @@ public class TS {
     public static void addStepAction(final StepActionDto stepActionDto) {
         step().action().add(stepActionDto);
         return;
+    }
+
+    public static StepHelper step() {
+        return stepHelper;
     }
 
     /**
@@ -357,8 +341,15 @@ public class TS {
         }
     }
 
-    public static StepHelper step() {
-        return stepHelper;
+    /**
+     * Log.
+     * A log4j instantiated object, to make it easier to log the write way.
+     * Should never use System.out.printlin in an e2e test.
+     *
+     * @return the logger
+     */
+    public static Logger log() {
+        return Log.getLog();
     }
 
 }

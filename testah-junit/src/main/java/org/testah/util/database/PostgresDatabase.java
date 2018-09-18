@@ -25,34 +25,6 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
     }
 
     /**
-     * Get the database connection.
-     *
-     * @see org.testah.util.database.AbstractDatabaseUtil#getConnection()
-     */
-    public Connection getConnection() throws SQLException {
-        Connection connection = null;
-        connection = DriverManager.getConnection(getConnectionString(), getDbUser(), getDbPassword());
-        return connection;
-    }
-
-    /**
-     * Check if driver is loaded.
-     *
-     * @see org.testah.util.database.AbstractDatabaseUtil#isDriverLoaded()
-     */
-    public boolean isDriverLoaded() throws Exception {
-        Class.forName("org.postgresql.Driver");
-        return true;
-    }
-
-    /* (non-Javadoc)
-     * @see org.testah.util.database.AbstractDatabaseUtil#getConnectionString()
-     */
-    public String getConnectionString() {
-        return "jdbc:postgresql://" + getHost() + ":" + getPort() + "/" + getDatabaseName();
-    }
-
-    /**
      * Execute SQL query.
      *
      * @param sql the SQL query string
@@ -96,6 +68,34 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
             }
         }
         return values;
+    }
+
+    /**
+     * Get the database connection.
+     *
+     * @see org.testah.util.database.AbstractDatabaseUtil#getConnection()
+     */
+    public Connection getConnection() throws SQLException {
+        Connection connection = null;
+        connection = DriverManager.getConnection(getConnectionString(), getDbUser(), getDbPassword());
+        return connection;
+    }
+
+    /**
+     * Check if driver is loaded.
+     *
+     * @see org.testah.util.database.AbstractDatabaseUtil#isDriverLoaded()
+     */
+    public boolean isDriverLoaded() throws Exception {
+        Class.forName("org.postgresql.Driver");
+        return true;
+    }
+
+    /* (non-Javadoc)
+     * @see org.testah.util.database.AbstractDatabaseUtil#getConnectionString()
+     */
+    public String getConnectionString() {
+        return "jdbc:postgresql://" + getHost() + ":" + getPort() + "/" + getDatabaseName();
     }
 
     /**

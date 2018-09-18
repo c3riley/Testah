@@ -22,7 +22,7 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
 
     // Always server time (GMT)
     private static final ZoneId zoneId = ZoneId.of("GMT");
-
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     private Long startTime;
     private Long endTime;
     private String baseUrl;
@@ -32,7 +32,6 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
     private String type;
     private Boolean verbose = false;
     private TestRunProperties runProps;
-    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 
     /**
      * Constructor.
@@ -56,6 +55,34 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
         this.username = username;
         this.runProps = runProps;
         this.type = type;
+    }
+
+    /**
+     * Get the LocalDateTime as a String formatted so that Elasticsearch recognizes it as time stamp.
+     *
+     * @param dateTime   the LocalDateTime object
+     * @param zoneOffset the time zone offset to the time used by elasticsearch, e.g. UTC; null if already
+     *                   using the right time zone
+     * @return LocalDateTime as string
+     */
+    public static String getDateTimeString(LocalDateTime dateTime, ZoneOffset zoneOffset) {
+        if (zoneOffset != null) {
+            return ZonedDateTime.of(dateTime,
+                    ZoneId.systemDefault()).withZoneSameInstant(zoneOffset).toLocalDateTime().format(dateTimeFormatter);
+        } else {
+            return dateTime.format(dateTimeFormatter);
+        }
+    }
+
+    /**
+     * Get the date time string in the given time zone for the given epoch time.
+     *
+     * @param milliseconds epoch time in milliseconds
+     * @param zoneId       time zone id
+     * @return elastic search formatted time string
+     */
+    public static String getDateTimeString(long milliseconds, ZoneId zoneId) {
+        return Instant.ofEpochMilli(milliseconds).atZone(zoneId).toLocalDateTime().format(dateTimeFormatter);
     }
 
     /**
@@ -115,6 +142,41 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
         TS.log().info(String.format(elasticSearchUploadMsg, getUploadUrl(), response.getStatusCode()));
     }
 
+    @Override
+    public void cleanup() {
+        // no post processing required
+    }
+
+    private void setStartTime(final Long startTime) {
+        if (0L == this.startTime || this.startTime > startTime) {
+            this.startTime = startTime;
+        }
+    }
+
+    private void setEndTime(final Long endTime) {
+        if (0L == this.endTime || this.endTime < endTime) {
+            this.endTime = endTime;
+        }
+    }
+
+    /**
+     * Get the upload URL to Elasticsearch.
+     *
+     * @return the upload url to Elasticsearch
+     */
+    public String getUploadUrl() {
+        return baseUrl + getUrlPathUpload();
+    }
+
+    /**
+     * Get the upload URL to Elasticsearch.
+     *
+     * @return the upload url to Elasticsearch
+     */
+    public String getUrlPathUpload() {
+        return String.format(urlPathUpload, index, type);
+    }
+
     /**
      * Get the domain URL.
      *
@@ -131,24 +193,6 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
      */
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
-    }
-
-    /**
-     * Get the upload URL to Elasticsearch.
-     *
-     * @return the upload url to Elasticsearch
-     */
-    public String getUrlPathUpload() {
-        return String.format(urlPathUpload, index, type);
-    }
-
-    /**
-     * Get the upload URL to Elasticsearch.
-     *
-     * @return the upload url to Elasticsearch
-     */
-    public String getUploadUrl() {
-        return baseUrl + getUrlPathUpload();
     }
 
     /**
@@ -189,50 +233,5 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
     public ElasticSearchResponseTimesPublisher setIndex(String index) {
         this.index = index;
         return this;
-    }
-
-    private void setStartTime(final Long startTime) {
-        if (0L == this.startTime || this.startTime > startTime) {
-            this.startTime = startTime;
-        }
-    }
-
-    private void setEndTime(final Long endTime) {
-        if (0L == this.endTime || this.endTime < endTime) {
-            this.endTime = endTime;
-        }
-    }
-
-    /**
-     * Get the LocalDateTime as a String formatted so that Elasticsearch recognizes it as time stamp.
-     *
-     * @param dateTime   the LocalDateTime object
-     * @param zoneOffset the time zone offset to the time used by elasticsearch, e.g. UTC; null if already
-     *                   using the right time zone
-     * @return LocalDateTime as string
-     */
-    public static String getDateTimeString(LocalDateTime dateTime, ZoneOffset zoneOffset) {
-        if (zoneOffset != null) {
-            return ZonedDateTime.of(dateTime,
-                    ZoneId.systemDefault()).withZoneSameInstant(zoneOffset).toLocalDateTime().format(dateTimeFormatter);
-        } else {
-            return dateTime.format(dateTimeFormatter);
-        }
-    }
-
-    /**
-     * Get the date time string in the given time zone for the given epoch time.
-     *
-     * @param milliseconds epoch time in milliseconds
-     * @param zoneId       time zone id
-     * @return elastic search formatted time string
-     */
-    public static String getDateTimeString(long milliseconds, ZoneId zoneId) {
-        return Instant.ofEpochMilli(milliseconds).atZone(zoneId).toLocalDateTime().format(dateTimeFormatter);
-    }
-
-    @Override
-    public void cleanup() {
-        // no post processing required
     }
 }

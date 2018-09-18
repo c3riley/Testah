@@ -11,25 +11,21 @@ import java.io.*;
 public class BashUtil {
 
     /**
+     * The Constant DEFAULT_EXIT_VALUE.
+     */
+    public static final int DEFAULT_EXIT_VALUE = -999;
+    /**
      * The verbose.
      */
     private boolean verbose = true;
-
     /**
      * The output.
      */
     private String output = "";
-
     /**
      * The error.
      */
     private String error = "";
-
-    /**
-     * The Constant DEFAULT_EXIT_VALUE.
-     */
-    public static final int DEFAULT_EXIT_VALUE = -999;
-
     /**
      * The exit value.
      */
@@ -104,26 +100,6 @@ public class BashUtil {
         printWriter.close();
 
         return tmpBashScript;
-    }
-
-    /**
-     * Checks if is verbose.
-     *
-     * @return true, if is verbose
-     */
-    public boolean isVerbose() {
-        return verbose;
-    }
-
-    /**
-     * Sets the verbose.
-     *
-     * @param verbose the new verbose
-     * @return the bash util
-     */
-    public BashUtil setVerbose(final boolean verbose) {
-        this.verbose = verbose;
-        return this;
     }
 
     /**
@@ -209,6 +185,26 @@ public class BashUtil {
      */
     public BashUtil setBashSource(final String bashSource) {
         this.bashSource = bashSource;
+        return this;
+    }
+
+    /**
+     * Checks if is verbose.
+     *
+     * @return true, if is verbose
+     */
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Sets the verbose.
+     *
+     * @param verbose the new verbose
+     * @return the bash util
+     */
+    public BashUtil setVerbose(final boolean verbose) {
+        this.verbose = verbose;
         return this;
     }
 

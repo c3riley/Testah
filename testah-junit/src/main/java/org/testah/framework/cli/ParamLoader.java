@@ -29,21 +29,18 @@ public class ParamLoader {
      * Keeping the property causes java.lang.IllegalArgumentException when executing tests.
      */
     private static final String excludeJacocoInstrumentation = "$jacocoData";
-
-    /**
-     * The params from properties.
-     */
-    private PropertiesConfiguration paramsFromProperties = null;
-
     /**
      * The Constant fieldPrefix.
      */
     private static final String fieldPrefix = "param_";
-
     /**
      * The path to param prop file.
      */
     private final String pathToParamPropFile;
+    /**
+     * The params from properties.
+     */
+    private PropertiesConfiguration paramsFromProperties = null;
 
     /**
      * Instantiates a new param loader.
@@ -53,21 +50,21 @@ public class ParamLoader {
     }
 
     /**
-     * Gets the default prop file path.
-     *
-     * @return the default prop file path
-     */
-    public static String getDefaultPropFilePath() {
-        return System.getProperty("user.dir") + File.separator + "testah.properties";
-    }
-
-    /**
      * Instantiates a new param loader.
      *
      * @param pathToParamPropFile the path to param prop file
      */
     public ParamLoader(final String pathToParamPropFile) {
         this.pathToParamPropFile = pathToParamPropFile;
+    }
+
+    /**
+     * Gets the default prop file path.
+     *
+     * @return the default prop file path
+     */
+    public static String getDefaultPropFilePath() {
+        return System.getProperty("user.dir") + File.separator + "testah.properties";
     }
 
     /**
@@ -243,40 +240,6 @@ public class ParamLoader {
     }
 
     /**
-     * Overwrite default config.
-     *
-     * @return the param loader
-     */
-    public ParamLoader overwriteDefaultConfig() {
-        try {
-            getDefaultParamProperties().save(new File(pathToParamPropFile));
-        } catch (final ConfigurationException e) {
-            TS.log().warn(e);
-        }
-        return this;
-    }
-
-    /**
-     * Gets the params.
-     *
-     * @return the params
-     */
-    public PropertiesConfiguration getParams() {
-        return paramsFromProperties;
-    }
-
-    /**
-     * Gets the custom param properties.
-     *
-     * @param customPropfile the custom propfile
-     * @return the custom param properties
-     * @throws ConfigurationException the configuration exception
-     */
-    public PropertiesConfiguration getCustomParamProperties(final File customPropfile) throws ConfigurationException {
-        return new PropertiesConfiguration(customPropfile);
-    }
-
-    /**
      * Gets the default param properties.
      *
      * @return the default param properties
@@ -325,6 +288,40 @@ public class ParamLoader {
             }
         }
         return defaultConfig;
+    }
+
+    /**
+     * Gets the custom param properties.
+     *
+     * @param customPropfile the custom propfile
+     * @return the custom param properties
+     * @throws ConfigurationException the configuration exception
+     */
+    public PropertiesConfiguration getCustomParamProperties(final File customPropfile) throws ConfigurationException {
+        return new PropertiesConfiguration(customPropfile);
+    }
+
+    /**
+     * Overwrite default config.
+     *
+     * @return the param loader
+     */
+    public ParamLoader overwriteDefaultConfig() {
+        try {
+            getDefaultParamProperties().save(new File(pathToParamPropFile));
+        } catch (final ConfigurationException e) {
+            TS.log().warn(e);
+        }
+        return this;
+    }
+
+    /**
+     * Gets the params.
+     *
+     * @return the params
+     */
+    public PropertiesConfiguration getParams() {
+        return paramsFromProperties;
     }
 
 }

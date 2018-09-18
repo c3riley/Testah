@@ -18,14 +18,14 @@ public class TestRequestExecutionDuration {
     public void testSingleMode() {
         RequestExecutionDuration requestExecutionDuration = new RequestExecutionDuration(aggregation);
         requestExecutionDuration
-            .setCollectionTime(collectionTime)
-            .setDomain(domain)
-            .setDuration(duration)
-            .setService(service)
-            .setStatusCode(statusCode)
-            .setTestClass(testClass)
-            .setTestMethod(testMethod)
-            .setTimestamp(timestamp);
+                .setCollectionTime(collectionTime)
+                .setDomain(domain)
+                .setDuration(duration)
+                .setService(service)
+                .setStatusCode(statusCode)
+                .setTestClass(testClass)
+                .setTestMethod(testMethod)
+                .setTimestamp(timestamp);
 
         TS.asserts().equalsTo(aggregation, requestExecutionDuration.getAggregation());
         TS.asserts().equalsTo(collectionTime, requestExecutionDuration.getCollectionTime());
@@ -41,12 +41,12 @@ public class TestRequestExecutionDuration {
     public void testChunkMode() {
         RequestExecutionDuration requestExecutionDuration = new RequestExecutionDuration(aggregation);
         requestExecutionDuration
-            .setCollectionTime(collectionTime)
-            .setDomain(domain)
-            .setDuration(duration)
-            .setService(service)
-            .setTestClass(testClass)
-            .setTestMethod(testMethod);
+                .setCollectionTime(collectionTime)
+                .setDomain(domain)
+                .setDuration(duration)
+                .setService(service)
+                .setTestClass(testClass)
+                .setTestMethod(testMethod);
 
         TS.asserts().equalsTo(aggregation, requestExecutionDuration.getAggregation());
         TS.asserts().equalsTo(duration, requestExecutionDuration.getDuration());

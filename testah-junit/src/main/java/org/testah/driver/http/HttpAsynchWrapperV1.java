@@ -12,6 +12,7 @@ import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
+
 import java.io.Closeable;
 import java.util.concurrent.Future;
 
@@ -24,41 +25,6 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
      * The http asynch client.
      */
     private CloseableHttpAsyncClient httpAsynchClient;
-
-    /**
-     * Sets the http asynch client.
-     *
-     * @return the abstract http wrapper
-     */
-    public AbstractHttpWrapper setHttpAsynchClient() {
-        final HttpAsyncClientBuilder hcb = HttpAsyncClients.custom();
-        if (null != getProxy()) {
-            hcb.setProxy(getProxy());
-        }
-        if (null != getRequestConfig()) {
-            hcb.setDefaultRequestConfig(getRequestConfig());
-        }
-        if (null != getCookieStore()) {
-            hcb.setDefaultCookieStore(getCookieStore());
-        }
-        try {
-            if (null != getConnectionManager()) {
-                final ConnectingIOReactor ioReactor = new DefaultConnectingIOReactor();
-                final PoolingNHttpClientConnectionManager connManager = new PoolingNHttpClientConnectionManager(
-                        ioReactor);
-                connManager.setMaxTotal(100);
-                hcb.setConnectionManager(connManager);
-            }
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-        hcb.setMaxConnPerRoute(getDefaultMaxPerRoute());
-        hcb.setMaxConnTotal(getDefaultPoolSize());
-        if (isTrustAllCerts()) {
-            // hcb.setSSLHostnameVerifier(new NoopHostnameVerifier());
-        }
-        return setHttpAsyncClient(hcb.build());
-    }
 
     /**
      * Do request asynch.
@@ -128,6 +94,18 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
     }
 
     /**
+     * Gets the http async client.
+     *
+     * @return the http async client
+     */
+    public CloseableHttpAsyncClient getHttpAsyncClient() {
+        if (null == httpAsynchClient) {
+            setHttpAsynchClient();
+        }
+        return httpAsynchClient;
+    }
+
+    /**
      * Sets the http async client.
      *
      * @param httpAsynchClient the http asynch client
@@ -139,15 +117,38 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
     }
 
     /**
-     * Gets the http async client.
+     * Sets the http asynch client.
      *
-     * @return the http async client
+     * @return the abstract http wrapper
      */
-    public CloseableHttpAsyncClient getHttpAsyncClient() {
-        if (null == httpAsynchClient) {
-            setHttpAsynchClient();
+    public AbstractHttpWrapper setHttpAsynchClient() {
+        final HttpAsyncClientBuilder hcb = HttpAsyncClients.custom();
+        if (null != getProxy()) {
+            hcb.setProxy(getProxy());
         }
-        return httpAsynchClient;
+        if (null != getRequestConfig()) {
+            hcb.setDefaultRequestConfig(getRequestConfig());
+        }
+        if (null != getCookieStore()) {
+            hcb.setDefaultCookieStore(getCookieStore());
+        }
+        try {
+            if (null != getConnectionManager()) {
+                final ConnectingIOReactor ioReactor = new DefaultConnectingIOReactor();
+                final PoolingNHttpClientConnectionManager connManager = new PoolingNHttpClientConnectionManager(
+                        ioReactor);
+                connManager.setMaxTotal(100);
+                hcb.setConnectionManager(connManager);
+            }
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+        hcb.setMaxConnPerRoute(getDefaultMaxPerRoute());
+        hcb.setMaxConnTotal(getDefaultPoolSize());
+        if (isTrustAllCerts()) {
+            // hcb.setSSLHostnameVerifier(new NoopHostnameVerifier());
+        }
+        return setHttpAsyncClient(hcb.build());
     }
 
     /**

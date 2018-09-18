@@ -24,17 +24,6 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.
-     * selenium.remote.DesiredCapabilities)
-     */
-    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
-        return new PhantomJSDriver(service, capabilities);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary()
      */
     public PhantomJsBrowser getDriverBinary() {
@@ -55,8 +44,20 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
         return this;
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.
+     * selenium.remote.DesiredCapabilities)
+     */
+    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
+        return new PhantomJSDriver(service, capabilities);
+    }
+
     /**
      * create Capabilities.
+     *
      * @return DesiredCapabilities
      */
     public DesiredCapabilities createCapabilities() {
@@ -70,6 +71,25 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
         capabilities.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, getPhantomJsBinPath());
 
         return capabilities;
+    }
+
+    /**
+     * stop Service.
+     *
+     * @return PhantomJsBrowser
+     * @throws IOException thrown if issue stopping service
+     */
+    public PhantomJsBrowser stopService() throws IOException {
+        if (null != service) {
+            service.stop();
+        }
+        return null;
+    }
+
+    @Override
+    public AbstractBrowser<PhantomJsBrowser> logBrowserInfo() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
@@ -97,24 +117,6 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
         }
         return binPath;
 
-    }
-
-    /**
-     * stop Service.
-     * @return PhantomJsBrowser
-     * @throws IOException thrown if issue stopping service
-     */
-    public PhantomJsBrowser stopService() throws IOException {
-        if (null != service) {
-            service.stop();
-        }
-        return null;
-    }
-
-    @Override
-    public AbstractBrowser<PhantomJsBrowser> logBrowserInfo() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }
