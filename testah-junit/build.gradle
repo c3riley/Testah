@@ -8,7 +8,6 @@ apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
 apply plugin: 'idea'
-//apply plugin: 'org.jenkins-ci.jpi'
 
 sourceCompatibility = 1.8
 
