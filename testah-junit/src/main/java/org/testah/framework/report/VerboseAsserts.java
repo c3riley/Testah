@@ -1632,9 +1632,9 @@ public class VerboseAsserts {
     public boolean addAssertHistory(final String message, final Boolean status, final String assertMethod,
                                     final Object expected, final Object actual, final Throwable exception) {
         if (isVerifyOnly()) {
-            TS.step().action().createVerifyResult(message, status, assertMethod, expected, actual, exception, false);
+            TS.step().action().createVerifyResult(message, status, assertMethod, expected, actual, exception, true);
         } else {
-            TS.step().action().createAssertResult(message, status, assertMethod, expected, actual, exception, false);
+            TS.step().action().createAssertResult(message, status, assertMethod, expected, actual, exception, true);
         }
 
         return status;

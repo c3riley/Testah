@@ -105,7 +105,7 @@ public class AssertStringsTest {
         AssertStrings assertStrings = new AssertStrings(actual, new VerboseAsserts().onlyVerify());
         String diffString = assertStrings.getEasyToDebugStringForStringDifferences(expected, actual, false);
         System.out.println(diffString);
-        Assert.assertEquals("Check 1st line with expected difference", "1#[ C ](67) != [ \t ](9)  <error>",
+        Assert.assertEquals("Check 1st line with expected difference", "1#[ C ](67) != [ \\t ](9)  <error>",
                 diffString.split(System.lineSeparator())[1].trim());
     }
 

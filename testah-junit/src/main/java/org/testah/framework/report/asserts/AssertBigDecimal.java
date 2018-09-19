@@ -17,6 +17,10 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
 
     private static final MathContext DEFAULT_MATH_CONTEXT = MathContext.DECIMAL32;
 
+    public AssertBigDecimal(final Object actual) {
+        this(actual, TS.asserts());
+    }
+
     /**
      * Instantiates a new Assert big decimal.
      *
@@ -27,6 +31,10 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
         this(getBigDecimal(actual, DEFAULT_MATH_CONTEXT), verboseAsserts);
     }
 
+    public AssertBigDecimal(final BigDecimal actual) {
+        this(actual, TS.asserts());
+    }
+
     /**
      * Instantiates a new Assert big decimal.
      *
@@ -35,6 +43,10 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
      */
     public AssertBigDecimal(final BigDecimal actual, final VerboseAsserts verboseAsserts) {
         super(actual, verboseAsserts);
+    }
+
+    public AssertBigDecimal(final Number actual) {
+        this(actual, TS.asserts());
     }
 
     /**

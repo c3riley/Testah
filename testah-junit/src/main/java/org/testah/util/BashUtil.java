@@ -39,7 +39,7 @@ public class BashUtil {
     /**
      * The bash source.
      */
-    private String bashSource = "source ~/.bashrc\nsource ~/profile";
+    private String bashSource = "source ~/.bashrc" + System.lineSeparator() + "source ~/profile";
 
     /**
      * Instantiates a new bash util.
@@ -90,15 +90,15 @@ public class BashUtil {
     public File createBashFile(final String... commands) throws IOException {
         final File tmpBashScript = File.createTempFile("tmpBashScript", null);
 
-        final Writer streamWriter = new OutputStreamWriter(new FileOutputStream(tmpBashScript), "UTF-8");
-        final PrintWriter printWriter = new PrintWriter(streamWriter);
-        printWriter.println(getBangLine());
-        printWriter.println(getBashSource());
-        for (final String command : commands) {
-            printWriter.println(command);
+        try (final Writer streamWriter = new OutputStreamWriter(new FileOutputStream(tmpBashScript), "UTF-8")) {
+            try (final PrintWriter printWriter = new PrintWriter(streamWriter)) {
+                printWriter.println(getBangLine());
+                printWriter.println(getBashSource());
+                for (final String command : commands) {
+                    printWriter.println(command);
+                }
+            }
         }
-        printWriter.close();
-
         return tmpBashScript;
     }
 

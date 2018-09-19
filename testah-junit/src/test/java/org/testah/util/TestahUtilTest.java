@@ -2,6 +2,9 @@ package org.testah.util;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.testah.framework.report.asserts.AssertBigDecimal;
+import org.testah.framework.report.asserts.AssertNumber;
+import org.testah.framework.report.asserts.AssertStrings;
 
 public class TestahUtilTest {
 
@@ -61,4 +64,36 @@ public class TestahUtilTest {
         Assert.assertEquals("get util remove leading slash", 3, testahUtil.getResourceFolderFiles("/util").size());
         Assert.assertEquals("get util remove leading slash", 3, testahUtil.getResourceFolderFiles("/util", false).size());
     }
+
+    @Test
+    public void testToJson() {
+       new AssertStrings(testahUtil.toJson(new String[]{"test"})).equalsTo("[ \"test\" ]");
+       Assert.assertNull(testahUtil.toJson(null));
+    }
+
+    @Test
+    public void testGetRandomInt() {
+        new AssertStrings(testahUtil.toJson(new String[]{"test"})).equalsTo("[ \"test\" ]");
+        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(1,5))).isWithinRange(1,5);
+        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(1,50))).isWithinRange(1,50);
+        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(1,500))).isWithinRange(1,500);
+        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(-121,5))).isWithinRange(-121,5);
+    }
+
+    @Test
+    public void testToDateString() {
+        new AssertStrings(testahUtil.toDateString(1537329320L)).equalsTo("01/18/1970 14:02:09.320");
+    }
+
+    @Test
+    public void testGetDurationPretty() {
+        new AssertStrings(testahUtil.getDurationPretty(102325456L))
+                .equalsTo("28 hours, 25 minutes, 25 seconds and 456 milliseconds");
+    }
+
+    @Test
+    public void testSplitCamelCase() {
+        new AssertStrings(testahUtil.splitCamelCase("thisIsCamelCase")).equalsTo("this Is Camel Case");
+    }
+
 }

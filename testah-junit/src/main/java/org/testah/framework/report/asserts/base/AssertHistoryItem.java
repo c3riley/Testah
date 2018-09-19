@@ -39,7 +39,7 @@ public class AssertHistoryItem extends AbstractDtoBase<AssertHistoryItem> {
      * @param actual  the actual
      */
     public AssertHistoryItem(final String message, Object actual) {
-        this.actual = actual;
+        setActual(actual);
         this.message = message;
     }
 

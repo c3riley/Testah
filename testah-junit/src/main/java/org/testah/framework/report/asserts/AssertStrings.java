@@ -1,6 +1,7 @@
 package org.testah.framework.report.asserts;
 
 import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrBuilder;
 import org.junit.Assert;
@@ -131,6 +132,9 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         } finally {
             //Turn on, so any follow on assert fails will throw exception as expected.
             getAsserts().setThrowExceptionOnFail(throwOnFail);
+            if(this.isFailed()) {
+                getAsserts().fail("Failed During equalsTo - see above for the asserts that caused the failure.");
+            }
         }
         return this;
     }
@@ -178,9 +182,9 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 strBuilder.append((ctr + 1) + "#");
                 if (StringUtils.equals(expectedChar, actualChar)
                         || (ignoreCase && StringUtils.equalsIgnoreCase(expectedChar, actualChar))) {
-                    strBuilder.appendln(expectedChar + " == " + actualChar);
+                    strBuilder.appendln(StringEscapeUtils.escapeJava(expectedChar) + " == " + StringEscapeUtils.escapeJava(actualChar));
                 } else {
-                    strBuilder.appendln(expectedChar + " != " + actualChar + "  <error>");
+                    strBuilder.appendln(StringEscapeUtils.escapeJava(expectedChar) + " != " + StringEscapeUtils.escapeJava(actualChar) + "  <error>");
                 }
             }
             return strBuilder.toString();
