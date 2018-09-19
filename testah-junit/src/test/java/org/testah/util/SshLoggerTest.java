@@ -1,7 +1,5 @@
 package org.testah.util;
 
-import com.jcraft.jsch.Logger;
-import org.apache.http.util.Asserts;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,9 +8,8 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class SshLoggerTest {
 
@@ -24,8 +21,8 @@ public class SshLoggerTest {
 
     @Before
     public void setUp() throws Exception {
-            System.setOut(new PrintStream(outContent, true,"UTF8"));
-            System.setErr(new PrintStream(errContent,true,"UTF8"));
+        System.setOut(new PrintStream(outContent, true, "UTF8"));
+        System.setErr(new PrintStream(errContent, true, "UTF8"));
     }
 
     @After
@@ -46,24 +43,24 @@ public class SshLoggerTest {
 
     @Test
     public void log() throws UnsupportedEncodingException {
-        sshLogger.log(0,"Debug Message");
-        assertEquals("DEBUG: Debug Message\r\n", errContent.toString("UTF8"));
+        sshLogger.log(0, "Debug Message");
+        assertEquals("DEBUG: Debug Message" + System.lineSeparator(), errContent.toString("UTF8"));
         errContent.reset();
 
-        sshLogger.log(1,"Info Message");
-        assertEquals("INFO: Info Message\r\n", errContent.toString("UTF8"));
+        sshLogger.log(1, "Info Message");
+        assertEquals("INFO: Info Message" + System.lineSeparator(), errContent.toString("UTF8"));
         errContent.reset();
 
-        sshLogger.log(2,"Warn Message");
-        assertEquals("WARN: Warn Message\r\n", errContent.toString("UTF8"));
+        sshLogger.log(2, "Warn Message");
+        assertEquals("WARN: Warn Message" + System.lineSeparator(), errContent.toString("UTF8"));
         errContent.reset();
 
-        sshLogger.log(3,"Error Message");
-        assertEquals("ERROR: Error Message\r\n", errContent.toString("UTF8"));
+        sshLogger.log(3, "Error Message");
+        assertEquals("ERROR: Error Message" + System.lineSeparator(), errContent.toString("UTF8"));
         errContent.reset();
 
-        sshLogger.log(4,"Fatal Message");
-        assertEquals("FATAL: Fatal Message\r\n", errContent.toString("UTF8"));
+        sshLogger.log(4, "Fatal Message");
+        assertEquals("FATAL: Fatal Message" + System.lineSeparator(), errContent.toString("UTF8"));
         errContent.reset();
     }
 }

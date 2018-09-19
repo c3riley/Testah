@@ -11,6 +11,7 @@ import org.testah.framework.annotations.Comment;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * The Class Params.
@@ -125,7 +126,7 @@ public class Params {
             info = "timezone to use for runtime data, if empty will use system default. "
                     + "If supplied should be string representation of timezone like America/New_York")
     @Arg(dest = "timezone")
-    private String timezone = null;
+    private String timezone = TimeZone.getDefault().getID();
     @Comment(
             info = "timeFormat to use for runtime data, if empty will use default. "
                     + "If supplied should be string representation of timezone like yyyy-MM-dd'T'HH:mm:ss.SSZ")

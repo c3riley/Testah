@@ -82,7 +82,11 @@ public class TestahUtilTest {
 
     @Test
     public void testToDateString() {
-        new AssertStrings(testahUtil.toDateString(1537329320L)).equalsTo("01/18/1970 14:02:09.320");
+        new AssertStrings(testahUtil.toDateString(1537329320L,"MM/dd/yyyy HH:mm:ss.S", "EST"))
+                .equalsTo("01/18/1970 14:02:09.320");
+
+        new AssertStrings(testahUtil.toDateString(1537329320L,"MM/dd/yyyy HH:mm:ss.S"))
+                .contains("01/18/1970");
     }
 
     @Test

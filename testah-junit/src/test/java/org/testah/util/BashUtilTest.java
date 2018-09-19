@@ -24,6 +24,7 @@ public class BashUtilTest {
     public void tearDown() throws Exception {
     }
 
+    @Ignore
     @Test
     public void executeCommands() throws IOException, InterruptedException {
         BashUtil bashUtil = new BashUtil();
