@@ -4,7 +4,7 @@ import com.jcraft.jsch.Logger;
 
 public class SshLogger implements Logger {
 
-    public static final java.util.Hashtable<Integer, String> logLevels = new java.util.Hashtable<>();
+    private static final java.util.Hashtable<Integer, String> logLevels = new java.util.Hashtable<>();
 
     static {
         logLevels.put(DEBUG, "DEBUG: ");

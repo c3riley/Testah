@@ -140,7 +140,7 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
      *
      * @param expected Object to compare, should be same class type as actual used.
      * @return boolean true is equalsTo else false
-     * @deprecated
+     * @deprecated equals is confusing for an assert class like this, it should be avoided
      */
     @SuppressFBWarnings
     @Override

@@ -211,11 +211,19 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
 
     @Override
     public ExchangeEmailUtil deleteMsg(EmailMessage message) throws Exception {
-        return deleteMsg(message,DeleteMode.HardDelete);
+        return deleteMsg(message, DeleteMode.HardDelete);
     }
 
+    /**
+     * Delete msg exchange email util.
+     *
+     * @param message    the message
+     * @param deleteMode the delete mode
+     * @return the exchange email util
+     * @throws Exception the exception
+     */
     public ExchangeEmailUtil deleteMsg(EmailMessage message, final DeleteMode deleteMode) throws Exception {
-        if(message!=null) {
+        if (message != null) {
             message.delete(DeleteMode.HardDelete);
         }
         return self();

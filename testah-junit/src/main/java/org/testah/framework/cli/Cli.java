@@ -381,9 +381,9 @@ public class Cli {
                     }
                 });
                 if (!missingRelatedIds.isEmpty()) {
-                    throw new RuntimeException("Metadata audit failure: At least 1 testcase is missing required " +
-                            "related field value! The value can be applied at the testplan level for all " +
-                            "testcases to get - " + TS.util().toJson(missingRelatedIds));
+                    throw new RuntimeException("Metadata audit failure: At least 1 testcase is missing required "
+                            + "related field value! The value can be applied at the testplan level for all "
+                            + "testcases to get - " + TS.util().toJson(missingRelatedIds));
                 }
             }
 
