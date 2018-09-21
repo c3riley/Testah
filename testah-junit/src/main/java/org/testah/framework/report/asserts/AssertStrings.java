@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("checkstyle:lineWrappingIndentation")
 public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
     //CHECKSTYLE.OFF: checkstyle:lineWrappingIndentation
+
     /**
      * Instantiates a new Assert strings.
      *
@@ -132,7 +133,7 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         } finally {
             //Turn on, so any follow on assert fails will throw exception as expected.
             getAsserts().setThrowExceptionOnFail(throwOnFail);
-            if(this.isFailed()) {
+            if (this.isFailed()) {
                 getAsserts().fail("Failed During equalsTo - see above for the asserts that caused the failure.");
             }
         }

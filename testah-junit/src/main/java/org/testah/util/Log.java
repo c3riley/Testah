@@ -54,7 +54,6 @@ public class Log {
         final LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
         loggerConfig.setLevel(level);
         ctx.updateLoggers();
-
     }
 
     /**
@@ -84,6 +83,11 @@ public class Log {
      */
     public Logger getLogger() {
         return logger;
+    }
+
+    public static void resetLogger() {
+        LOGGER = null;
+        LogManager.shutdown();
     }
 
 }

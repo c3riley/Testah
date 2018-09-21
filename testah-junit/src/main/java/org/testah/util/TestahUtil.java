@@ -219,6 +219,14 @@ public class TestahUtil {
         return toDateString(time, dateTimeFormat, TimeZone.getDefault().getID());
     }
 
+    /**
+     * To date string string.
+     *
+     * @param time           the time
+     * @param dateTimeFormat the date time format
+     * @param timeZone       the time zone
+     * @return the string
+     */
     public String toDateString(final Long time, final String dateTimeFormat, final String timeZone) {
         final SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
         sdf.setTimeZone(TimeZone.getTimeZone(timeZone));

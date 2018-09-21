@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.testah.util.unittest.dtotest.SystemOutCapture;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -13,23 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 public class SshLoggerTest {
 
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
-    private final PrintStream originalErr = System.err;
     SshLogger sshLogger = new SshLogger();
-
-    @Before
-    public void setUp() throws Exception {
-        System.setOut(new PrintStream(outContent, true, "UTF8"));
-        System.setErr(new PrintStream(errContent, true, "UTF8"));
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        System.setOut(originalOut);
-        System.setErr(originalErr);
-    }
 
     @Test
     public void isEnabled() {
@@ -43,24 +28,21 @@ public class SshLoggerTest {
 
     @Test
     public void log() throws UnsupportedEncodingException {
-        sshLogger.log(0, "Debug Message");
-        assertEquals("DEBUG: Debug Message" + System.lineSeparator(), errContent.toString("UTF8"));
-        errContent.reset();
+        try(SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
+            sshLogger.log(0, "Debug Message");
+            assertEquals("DEBUG: Debug Message" + System.lineSeparator(), systemOutCapture.getSystemErr());
 
-        sshLogger.log(1, "Info Message");
-        assertEquals("INFO: Info Message" + System.lineSeparator(), errContent.toString("UTF8"));
-        errContent.reset();
+            sshLogger.log(1, "Info Message");
+            assertEquals("INFO: Info Message" + System.lineSeparator(), systemOutCapture.getSystemErr());
 
-        sshLogger.log(2, "Warn Message");
-        assertEquals("WARN: Warn Message" + System.lineSeparator(), errContent.toString("UTF8"));
-        errContent.reset();
+            sshLogger.log(2, "Warn Message");
+            assertEquals("WARN: Warn Message" + System.lineSeparator(), systemOutCapture.getSystemErr());
 
-        sshLogger.log(3, "Error Message");
-        assertEquals("ERROR: Error Message" + System.lineSeparator(), errContent.toString("UTF8"));
-        errContent.reset();
+            sshLogger.log(3, "Error Message");
+            assertEquals("ERROR: Error Message" + System.lineSeparator(), systemOutCapture.getSystemErr());
 
-        sshLogger.log(4, "Fatal Message");
-        assertEquals("FATAL: Fatal Message" + System.lineSeparator(), errContent.toString("UTF8"));
-        errContent.reset();
+            sshLogger.log(4, "Fatal Message");
+            assertEquals("FATAL: Fatal Message" + System.lineSeparator(), systemOutCapture.getSystemErr());
+        }
     }
 }

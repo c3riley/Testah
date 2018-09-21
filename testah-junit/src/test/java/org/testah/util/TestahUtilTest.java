@@ -1,10 +1,13 @@
 package org.testah.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Assert;
 import org.junit.Test;
+import org.testah.TS;
 import org.testah.framework.report.asserts.AssertBigDecimal;
 import org.testah.framework.report.asserts.AssertNumber;
 import org.testah.framework.report.asserts.AssertStrings;
+import org.testah.util.unittest.dtotest.SystemOutCapture;
 
 public class TestahUtilTest {
 
@@ -67,25 +70,25 @@ public class TestahUtilTest {
 
     @Test
     public void testToJson() {
-       new AssertStrings(testahUtil.toJson(new String[]{"test"})).equalsTo("[ \"test\" ]");
-       Assert.assertNull(testahUtil.toJson(null));
+        new AssertStrings(testahUtil.toJson(new String[]{"test"})).equalsTo("[ \"test\" ]");
+        Assert.assertNull(testahUtil.toJson(null));
     }
 
     @Test
     public void testGetRandomInt() {
         new AssertStrings(testahUtil.toJson(new String[]{"test"})).equalsTo("[ \"test\" ]");
-        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(1,5))).isWithinRange(1,5);
-        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(1,50))).isWithinRange(1,50);
-        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(1,500))).isWithinRange(1,500);
-        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(-121,5))).isWithinRange(-121,5);
+        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(1, 5))).isWithinRange(1, 5);
+        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(1, 50))).isWithinRange(1, 50);
+        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(1, 500))).isWithinRange(1, 500);
+        new AssertBigDecimal(Integer.valueOf(testahUtil.getRandomInt(-121, 5))).isWithinRange(-121, 5);
     }
 
     @Test
     public void testToDateString() {
-        new AssertStrings(testahUtil.toDateString(1537329320L,"MM/dd/yyyy HH:mm:ss.S", "EST"))
+        new AssertStrings(testahUtil.toDateString(1537329320L, "MM/dd/yyyy HH:mm:ss.S", "EST"))
                 .equalsTo("01/18/1970 14:02:09.320");
 
-        new AssertStrings(testahUtil.toDateString(1537329320L,"MM/dd/yyyy HH:mm:ss.S"))
+        new AssertStrings(testahUtil.toDateString(1537329320L, "MM/dd/yyyy HH:mm:ss.S"))
                 .contains("01/18/1970");
     }
 
@@ -99,5 +102,26 @@ public class TestahUtilTest {
     public void testSplitCamelCase() {
         new AssertStrings(testahUtil.splitCamelCase("thisIsCamelCase")).equalsTo("this Is Camel Case");
     }
+
+    @Test
+    public void testGetMap() throws JsonProcessingException {
+        TS.asserts().notNull(testahUtil.getMap());
+        TS.asserts().equalsTo("[ \"test\" ]", testahUtil.getMap().writeValueAsString(new String[]{"test"}));
+    }
+
+    @Test
+    public void testToJsonPrint() throws JsonProcessingException {
+        String content;
+        try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
+
+            TS.asserts().equalsTo("[ \"test\" ]", testahUtil.toJsonPrint(new String[]{"test"}));
+            content = systemOutCapture.getSystemOut();
+        }
+        TS.log().info("test");
+        new AssertStrings(content)
+               .contains("JSON Output for class [Ljava.lang.String;\n[ \"test\" ]");
+        TS.log().info(content);
+    }
+
 
 }

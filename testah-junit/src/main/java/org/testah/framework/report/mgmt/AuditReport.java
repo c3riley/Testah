@@ -133,10 +133,9 @@ public class AuditReport {
                 "Components", "Comments", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
 
 
-
         for (final Entry<String, TestPlanDto> testPlan : testPlans.entrySet()) {
             List<String> tpRelatedIds = testPlan.getValue().getRelatedIds();
-            if(tpRelatedIds==null) {
+            if (tpRelatedIds == null) {
                 tpRelatedIds = new ArrayList<>();
             }
             tpRow = testPlanSheet.createRow(tpRowNum++);
@@ -170,7 +169,7 @@ public class AuditReport {
 
             for (final TestCaseDto testCase : testPlan.getValue().getTestCases()) {
                 List<String> tcRelatedIds = testCase.getRelatedIds();
-                if(tcRelatedIds==null) {
+                if (tcRelatedIds == null) {
                     tcRelatedIds = tpRelatedIds;
                 }
                 tcRow = testCaseSheet.createRow(tcRowNum++);
