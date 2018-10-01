@@ -21,6 +21,8 @@ import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,6 +139,11 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T setUri(final String uri) {
+        try {
+            httpRequestBase.setURI(new URI(uri));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
         this.uri = uri;
         return getSelf();
     }

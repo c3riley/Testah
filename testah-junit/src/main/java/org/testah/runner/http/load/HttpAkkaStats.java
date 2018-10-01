@@ -24,6 +24,9 @@ public class HttpAkkaStats {
      * @param responses list of service responses
      */
     public HttpAkkaStats(final List<ResponseDto> responses) {
+        if (responses == null) {
+            throw new RuntimeException("responses is null and null is not allowed");
+        }
         this.totalResponses = responses.size();
         statsDuration = new DescriptiveStatistics();
         statsDurationPerStatus = new HashMap<>();

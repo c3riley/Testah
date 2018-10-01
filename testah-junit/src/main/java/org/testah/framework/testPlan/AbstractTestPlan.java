@@ -71,7 +71,7 @@ public abstract class AbstractTestPlan {
     /**
      * The global timeout.
      */
-    private TestRule globalTimeout = Timeout.millis(100000L);
+    private TestRule globalTimeout = new Timeout(100000);
     /**
      * The description.
      */

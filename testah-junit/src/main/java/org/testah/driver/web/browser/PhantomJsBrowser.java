@@ -1,5 +1,6 @@
 package org.testah.driver.web.browser;
 
+import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -27,7 +28,7 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary()
      */
     public PhantomJsBrowser getDriverBinary() {
-        PhantomJsDriverManager.getInstance().setup();
+        PhantomJsDriverManager.getInstance(DriverManagerType.PHANTOMJS).setup();
         return this;
     }
 

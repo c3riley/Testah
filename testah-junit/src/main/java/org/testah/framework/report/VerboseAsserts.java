@@ -1160,7 +1160,15 @@ public class VerboseAsserts {
      */
     public boolean arrayEquals(final String message, final boolean[] expected, final boolean[] actual) {
         try {
-            Assert.assertArrayEquals(message, expected, actual);
+            if (expected == null && actual == null) {
+                TS.log().debug("Both expected and actual are null, so are equal");
+            } else {
+                Assert.assertEquals("Assert that both arrays are the same size", expected.length, actual.length);
+                int index = 0;
+                for (boolean expectedValue : expected) {
+                    Assert.assertEquals(message + " - index[" + index + "]", expectedValue, actual[index++]);
+                }
+            }
             return addAssertHistory(message, true, "assertArrayEquals", expected, actual);
         } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertArrayEquals", expected, actual, e);

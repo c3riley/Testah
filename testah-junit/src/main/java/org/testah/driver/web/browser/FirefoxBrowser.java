@@ -1,5 +1,6 @@
 package org.testah.driver.web.browser;
 
+import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -21,9 +22,11 @@ public class FirefoxBrowser extends AbstractBrowser<FirefoxBrowser> {
      */
     @Override
     public FirefoxBrowser getDriverBinary() {
-        FirefoxDriverManager.getInstance().setup();
-        System.setProperty("webdriver.gecko.driver", FirefoxDriverManager.getInstance().getBinaryPath());
-        TS.params().setWebDriver_firefoxDriverBinary(FirefoxDriverManager.getInstance().getBinaryPath());
+        FirefoxDriverManager.getInstance(DriverManagerType.FIREFOX).setup();
+        System.setProperty("webdriver.gecko.driver", FirefoxDriverManager
+                .getInstance(DriverManagerType.FIREFOX).getBinaryPath());
+        TS.params().setWebDriver_firefoxDriverBinary(FirefoxDriverManager
+                .getInstance(DriverManagerType.FIREFOX).getBinaryPath());
         return this;
     }
 

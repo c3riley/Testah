@@ -26,6 +26,7 @@ public class SystemOutCapture implements Closeable {
      * @return the system out capture
      */
     public SystemOutCapture start() {
+        Log.resetLogger();
         if (started) {
             TS.log().info("SystemOutCapture start");
             return this;
