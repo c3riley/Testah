@@ -18,8 +18,7 @@ import java.util.HashMap;
 /**
  * The Class TS.
  */
-public class TS
-{
+public class TS {
 
     /**
      * The _stateful data.
@@ -65,10 +64,8 @@ public class TS
      *
      * @return the verbose asserts
      */
-    public static VerboseAsserts asserts()
-    {
-        if (null == _asserts)
-        {
+    public static VerboseAsserts asserts() {
+        if (null == _asserts) {
             _asserts = new VerboseAsserts();
         }
         return _asserts;
@@ -79,10 +76,8 @@ public class TS
      *
      * @return the verbose asserts
      */
-    public static VerboseAsserts verify()
-    {
-        if (null == _verify)
-        {
+    public static VerboseAsserts verify() {
+        if (null == _verify) {
             _verify = new VerboseAsserts().onlyVerfiy();
         }
         return _verify;
@@ -93,10 +88,8 @@ public class TS
      *
      * @return the hash map
      */
-    public static HashMap<String, Object> statefulData()
-    {
-        if (null == _statefulData || null == _statefulData.get())
-        {
+    public static HashMap<String, Object> statefulData() {
+        if (null == _statefulData || null == _statefulData.get()) {
             final ThreadLocal<HashMap<String, Object>> _statefulDataTmp = new ThreadLocal<>();
             _statefulDataTmp.set(new HashMap<String, Object>());
             _statefulData = _statefulDataTmp;
@@ -109,8 +102,7 @@ public class TS
      *
      * @return the hash map
      */
-    public static HashMap<String, Object> resetStatefulData()
-    {
+    public static HashMap<String, Object> resetStatefulData() {
         _statefulData = null;
         return statefulData();
     }
@@ -120,10 +112,8 @@ public class TS
      *
      * @return the testah util
      */
-    public static TestahUtil util()
-    {
-        if (null == _testahUtil)
-        {
+    public static TestahUtil util() {
+        if (null == _testahUtil) {
             _testahUtil = new TestahUtil();
         }
         return _testahUtil;
@@ -134,8 +124,7 @@ public class TS
      *
      * @return the logger
      */
-    public static Logger log()
-    {
+    public static Logger log() {
         return Log.getLog();
     }
 
@@ -145,10 +134,8 @@ public class TS
      * @param params the params
      * @return the params
      */
-    public static Params params(final Params params)
-    {
-        if (null == _params)
-        {
+    public static Params params(final Params params) {
+        if (null == _params) {
             _params = params;
         }
         return _params;
@@ -159,10 +146,8 @@ public class TS
      *
      * @return the params
      */
-    public static Params params()
-    {
-        if (null == _params)
-        {
+    public static Params params() {
+        if (null == _params) {
             _params = new Cli().getArgumentParser(null).getOpt();
             Log.setLevel(_params.getLevel());
         }
@@ -175,8 +160,7 @@ public class TS
      * @param params the params
      * @return the params
      */
-    public static Params setParams(final Params params)
-    {
+    public static Params setParams(final Params params) {
         TS._params = params;
         return TS._params;
     }
@@ -186,10 +170,8 @@ public class TS
      *
      * @return the abstract browser
      */
-    public static AbstractBrowser<?> browser()
-    {
-        if (null == _browser || null == _browser.get())
-        {
+    public static AbstractBrowser<?> browser() {
+        if (null == _browser || null == _browser.get()) {
             setBrowser(AbstractBrowser.getDefaultBrowser());
         }
         return _browser.get();
@@ -200,8 +182,7 @@ public class TS
      *
      * @return true, if is browser
      */
-    public static boolean isBrowser()
-    {
+    public static boolean isBrowser() {
         return (null != _browser && null != _browser.get());
     }
 
@@ -211,8 +192,7 @@ public class TS
      * @param browser the browser
      * @return the abstract browser
      */
-    public static AbstractBrowser<?> setBrowser(final AbstractBrowser<?> browser)
-    {
+    public static AbstractBrowser<?> setBrowser(final AbstractBrowser<?> browser) {
         final ThreadLocal<AbstractBrowser<?>> browserTemp = new ThreadLocal<>();
         browserTemp.set(browser);
         _browser = browserTemp;
@@ -224,10 +204,8 @@ public class TS
      *
      * @return the abstract http wrapper
      */
-    public static AbstractHttpWrapper http()
-    {
-        if (null == _http || null == _http.get())
-        {
+    public static AbstractHttpWrapper http() {
+        if (null == _http || null == _http.get()) {
             TS.setHttp(new HttpWrapperV2());
         }
         return _http.get();
@@ -239,8 +217,7 @@ public class TS
      * @param http the http
      * @return the abstract http wrapper
      */
-    public static AbstractHttpWrapper setHttp(final AbstractHttpWrapper http)
-    {
+    public static AbstractHttpWrapper setHttp(final AbstractHttpWrapper http) {
         ThreadLocal<AbstractHttpWrapper> tempHttp = new ThreadLocal<>();
         tempHttp.set(http);
         TS._http = tempHttp;
@@ -252,8 +229,7 @@ public class TS
      *
      * @param stepAction the step action
      */
-    public static void addStepAction(final StepActionDto stepAction)
-    {
+    public static void addStepAction(final StepActionDto stepAction) {
         AbstractTestPlan.addStepAction(stepAction);
         return;
     }
@@ -263,8 +239,7 @@ public class TS
      *
      * @return the mask values
      */
-    public static HashMap<String, String> getMaskValues()
-    {
+    public static HashMap<String, String> getMaskValues() {
         return maskValues;
     }
 
@@ -273,8 +248,7 @@ public class TS
      *
      * @param valueToMask the value to mask
      */
-    public static void addMask(final String valueToMask)
-    {
+    public static void addMask(final String valueToMask) {
         maskValues.put(valueToMask, "*masked*");
     }
 
@@ -283,10 +257,8 @@ public class TS
      *
      * @return the test plan reporter
      */
-    public static TestPlanReporter getTestPlanReporter()
-    {
-        if (null == _testPlanReporter)
-        {
+    public static TestPlanReporter getTestPlanReporter() {
+        if (null == _testPlanReporter) {
             _testPlanReporter = new TestPlanReporter();
         }
         return _testPlanReporter;
@@ -297,31 +269,25 @@ public class TS
      *
      * @param testPlanReporter the test plan reporter
      */
-    public static void setTestPlanReporter(final TestPlanReporter testPlanReporter)
-    {
+    public static void setTestPlanReporter(final TestPlanReporter testPlanReporter) {
         _testPlanReporter = testPlanReporter;
     }
 
     /**
      * Tear down.
      */
-    public static void tearDown()
-    {
+    public static void tearDown() {
         cleanUpThreadLocal(_browser);
         cleanUpThreadLocal(_statefulData);
         cleanUpThreadLocal(_http);
     }
 
-    private static void cleanUpThreadLocal(final ThreadLocal<?> threadLocal)
-    {
-        try
-        {
-            if (null != threadLocal)
-            {
+    private static void cleanUpThreadLocal(final ThreadLocal<?> threadLocal) {
+        try {
+            if (null != threadLocal) {
                 threadLocal.remove();
             }
-        } catch (final Exception e)
-        {
+        } catch (final Exception e) {
             TS.log().warn("Trying to remove thread local", e);
         }
     }
