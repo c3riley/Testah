@@ -10,10 +10,10 @@ steps:
 - task: Gradle@2
   inputs:
     workingDirectory: 'testah-junit'
-    gradleWrapperFile: 'gradlew'
+    gradleWrapperFile: 'testah-junit/gradlew'
     gradleOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.10'
+    jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: false
     testResultsFiles: '**/TEST-*.xml'
