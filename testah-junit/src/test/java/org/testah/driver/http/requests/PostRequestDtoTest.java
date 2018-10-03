@@ -202,6 +202,7 @@ public class PostRequestDtoTest {
 
     @Test
     public void addBasicAuthHeader1() {
+        TS.getMaskValues().clear();
         postWithData.addBasicAuthHeader("User1", "password", true);
         Assert.assertTrue(postWithData.getHeaders().stream().findFirst().filter(
             header -> header.getName().equals("Authorization") &&
@@ -218,6 +219,7 @@ public class PostRequestDtoTest {
 
     @Test
     public void addBasicAuthHeaderWithMask() {
+        TS.getMaskValues().clear();
         postWithData.addBasicAuthHeaderWithMask("User1", "password");
         Assert.assertTrue(postWithData.getHeaders().stream().findFirst().filter(
             header -> header.getName().equals("Authorization") &&
