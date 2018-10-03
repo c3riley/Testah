@@ -1,6 +1,7 @@
 package org.testah.framework.report;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.util.Asserts;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.json.JSONObject;
@@ -1163,6 +1164,8 @@ public class VerboseAsserts {
             if (expected == null && actual == null) {
                 TS.log().debug("Both expected and actual are null, so are equal");
             } else {
+                Assert.assertNotNull("Check if expected is null",expected);
+                Assert.assertNotNull("Check if actual is null",actual);
                 Assert.assertEquals("Assert that both arrays are the same size", expected.length, actual.length);
                 int index = 0;
                 for (boolean expectedValue : expected) {

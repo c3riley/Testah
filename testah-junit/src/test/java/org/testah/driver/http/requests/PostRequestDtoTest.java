@@ -28,8 +28,9 @@ public class PostRequestDtoTest {
 
     @Test
     public void setEntity() {
-        postEmptyList.setEntity(null);
-        Assert.assertNull(((HttpPost) postEmptyList.getHttpRequestBase()).getEntity());
+        postWithData.setEntity(null);
+        HttpPost post = (HttpPost) postEmptyList.getHttpRequestBase();
+        Assert.assertNull(post.getEntity());
     }
 
     @Test
@@ -58,15 +59,17 @@ public class PostRequestDtoTest {
     @Test
     public void withJson() {
         postEmptyList.withJson();
-        Header header = new BasicHeader("Content-Type", "application/json");
-        postEmptyList.getHeaders().contains(header);
+        Assert.assertTrue(postEmptyList.getHeaders().stream().findFirst().filter(
+                header -> header.getName().equals("Content-Type") && header.getValue()
+                        .equals("application/json")).isPresent());
     }
 
     @Test
     public void addHeader() {
-        Header header = new BasicHeader("cool", "test");
-        postEmptyList.addHeader(header);
-        postEmptyList.getHeaders().contains(header);
+        postEmptyList.addHeader(new BasicHeader("cool", "test"));
+        Assert.assertTrue(postEmptyList.getHeaders().stream().findFirst().filter(
+                header -> header.getName().equals("cool") && header.getValue()
+                        .equals("test")).isPresent());
     }
 
     @Test
@@ -79,15 +82,17 @@ public class PostRequestDtoTest {
     @Test
     public void withJsonUTF8() {
         postEmptyList.withJsonUTF8();
-        Header header = new BasicHeader("Content-Type", "application/json; charset=UTF-8");
-        postEmptyList.getHeaders().contains(header);
+        Assert.assertTrue(postEmptyList.getHeaders().stream().findFirst().filter(
+                header -> header.getName().equals("Content-Type") && header.getValue()
+                        .equals("application/json; charset=UTF-8")).isPresent());
     }
 
     @Test
     public void withFormUrlEncoded() {
         postEmptyList.withFormUrlEncoded();
-        Header header = new BasicHeader("Content-Type", "application/x-www-form-urlencoded");
-        postEmptyList.getHeaders().contains(header);
+        Assert.assertTrue(postEmptyList.getHeaders().stream().findFirst().filter(
+                header -> header.getName().equals("Content-Type") && header.getValue()
+                        .equals("application/x-www-form-urlencoded")).isPresent());
     }
 
     @Test
