@@ -72,8 +72,8 @@ public class TestHttpAkkaRunner {
             TS.log().info("Average duration of call: " + stats.getAvgDuration());
             TS.asserts().isTrue(stats.getDuration() instanceof Long);
             TS.asserts().isTrue(stats.getDuration() > 0);
-            TS.log().info("Number of calls: " + stats.getStatsDuration().getN() + ", 90% = "
-                    + stats.getStatsDuration().getPercentile(90.0));
+            TS.log().info("Number of calls: " + stats.getStatsDuration().getN() + ", 90% = " +
+                    stats.getStatsDuration().getPercentile(90.0));
             TS.asserts().isTrue(stats.getTotalResponses() == totalNumberOfPosts);
             TS.asserts().isTrue(stats.getStatsDuration().getPercentile(90.0) > 0);
         });
@@ -122,8 +122,8 @@ public class TestHttpAkkaRunner {
             TS.log().info("Average duration of call: " + stats.getAvgDuration());
             TS.asserts().isTrue(stats.getDuration() instanceof Long);
             TS.asserts().isTrue(stats.getDuration() > 0);
-            TS.log().info("Number of calls: " + stats.getStatsDuration().getN() + ", 90% = "
-                    + stats.getStatsDuration().getPercentile(90.0));
+            TS.log().info("Number of calls: " + stats.getStatsDuration().getN() + ", 90% = " +
+                    stats.getStatsDuration().getPercentile(90.0));
             TS.asserts().isTrue(stats.getTotalResponses() == totalNumberOfGets);
             TS.asserts().isTrue(stats.getStatsDuration().getPercentile(90.0) > 0);
         });

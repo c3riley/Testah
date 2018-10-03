@@ -278,12 +278,12 @@ public class ExchangeServiceUtilTest {
         Assert.assertEquals("setTimeToPoll", 60000, exchange.getTimeToPoll());
 
         Assert.assertEquals("default MaxNumberOfMessages", exchange.MAX_NUMBER_OF_MESSAGES,
-                exchange.getMaxNumberOfMessages());
+            exchange.getMaxNumberOfMessages());
         exchange.setMaxNumberOfMessages(1);
         Assert.assertEquals("getMaxNumberOfMessages", 1, exchange.getMaxNumberOfMessages());
 
         Assert.assertEquals("default debug", true,
-                exchange.isDebug());
+            exchange.isDebug());
         exchange.setDebug(false);
         Assert.assertEquals("isDebug", false, exchange.isDebug());
 
@@ -302,24 +302,25 @@ public class ExchangeServiceUtilTest {
         Assume.assumeTrue("If password is not found do not run the test", !StringUtils.isEmpty(TS.params().getEmailPassword()));
         try (ExchangeMailTest exchange = new ExchangeMailTest()) {
             exchange.setMaxNumberOfMessages(100).connect()
-                    .getMsgByFromEmail(TS.params().getEmailUserName()).stream().forEach(message -> {
-                try {
-                    TS.util().toJsonPrint(exchange.getEmailDto(message));
-                    TS.log().info(message.getSubject());
-                    TS.log().info(exchange.getMsgBody(message, "HTML"));
-                    TS.log().info(exchange.getMsgBody(message, "Text"));
-                    exchange.getAttachmentFiles(message).stream().forEach(file -> {
-                        TS.log().info(file.getAbsolutePath());
-                        try {
-                            TS.log().info(FileUtils.readFileToString(file, Charset.forName("UTF-8")));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                } catch (Exception e) {
-                    TS.log().error(e);
-                }
-            });
+                .getMsgByFromEmail(TS.params().getEmailUserName()).stream()
+                .forEach(message -> {
+                    try {
+                        TS.util().toJsonPrint(exchange.getEmailDto(message));
+                        TS.log().info(message.getSubject());
+                        TS.log().info(exchange.getMsgBody(message, "HTML"));
+                        TS.log().info(exchange.getMsgBody(message, "Text"));
+                        exchange.getAttachmentFiles(message).stream().forEach(file -> {
+                            TS.log().info(file.getAbsolutePath());
+                            try {
+                                TS.log().info(FileUtils.readFileToString(file, Charset.forName("UTF-8")));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                    } catch (Exception e) {
+                        TS.log().error(e);
+                    }
+                });
         }
     }
 

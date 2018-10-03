@@ -54,16 +54,18 @@ public class HttpAuthUtil {
      * @return the header
      */
     public Header createBasicAuthHeader() {
+        final String basicAuthValue = Base64.encodeBase64String((getUserName() + ":" +
+            getPassword()).getBytes(Charset.forName(getEncoding())));
         try {
             if (useMask) {
                 TS.addMask(getUserName());
                 TS.addMask(getPassword());
+                TS.addMask(basicAuthValue);
             }
         } catch (Throwable issueAddingMatch) {
             TS.log().trace("Adding match", issueAddingMatch);
         }
-        return new BasicHeader(HEADER_NAME, "Basic "
-                + Base64.encodeBase64String((getUserName() + ":" + getPassword()).getBytes(Charset.forName(getEncoding()))));
+        return new BasicHeader(HEADER_NAME, "Basic " + basicAuthValue);
     }
 
     /**

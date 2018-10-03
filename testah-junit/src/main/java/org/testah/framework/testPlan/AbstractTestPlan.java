@@ -475,8 +475,9 @@ public abstract class AbstractTestPlan {
         if (!getTestFilter().filterTestCase(test, name)) {
             addIgnoredTest(name, "METADATA_FILTER");
             setAssumeTrue(true);
-            Assume.assumeTrue("Filtered out, For details use Trace level logging"
-                    + "\nCheck your filter settings in Testah.properties for filter_DEFAULT_filterIgnoreKnownProblem", false);
+            Assume.assumeTrue("Filtered out, For details use Trace level logging" +
+                    "\nCheck your filter settings in Testah.properties for " +
+                    "filter_DEFAULT_filterIgnoreKnownProblem", false);
         }
 
         if (null != TS.params().getFilterIgnoreKnownProblem()) {
@@ -484,15 +485,16 @@ public abstract class AbstractTestPlan {
                 if ("true".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                     setAssumeTrue(true);
                     addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
-                    Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description()
-                            + "\nCheck your filter settings in Testah.properties for filter_DEFAULT_filterIgnoreKnownProblem", false);
+                    Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description() +
+                            "\nCheck your filter settings in Testah.properties for " +
+                            "filter_DEFAULT_filterIgnoreKnownProblem", false);
                 }
             } else if ("false".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                 setAssumeTrue(true);
                 addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
                 Assume.assumeTrue(
-                        "Filtered out, KnownProblem Not found and is required\nCheck your filter settings in "
-                                + "Testah.properties for filter_DEFAULT_filterIgnoreKnownProblem",
+                        "Filtered out, KnownProblem Not found and is required\nCheck your filter" +
+                                " settings in Testah.properties for filter_DEFAULT_filterIgnoreKnownProblem",
                         false);
             }
         }

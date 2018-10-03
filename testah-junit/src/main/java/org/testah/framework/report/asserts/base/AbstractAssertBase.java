@@ -152,8 +152,8 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
             expectedWithCase = ((T) expected);
             return equalsTo(expectedWithCase).isPassed();
         } catch (ClassCastException castError) {
-            throw new RuntimeException("Unable to case expected to be what the actual "
-                    + "class is so equals will not work", castError);
+            throw new RuntimeException("Unable to case expected to be what the actual " +
+                    "class is so equals will not work", castError);
         }
     }
 

@@ -77,25 +77,25 @@ public class AssertStringsTest {
     @Test
     public void testWithSomeSameLinesAndSomeDifferentLinesSameNumberOfLines() {
         assertStrings = new AssertStrings(getStringUsedWithNumberOfLines(testLineB, 10), new VerboseAsserts().onlyVerify());
-        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 5)
-                + getStringUsedWithNumberOfLines(testLineB, 2)
-                + getStringUsedWithNumberOfLines(testLineA, 3));
+        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 5) +
+                getStringUsedWithNumberOfLines(testLineB, 2) +
+                getStringUsedWithNumberOfLines(testLineA, 3));
     }
 
     @Test
     public void testWithSomeSameLinesAndSomeDifferentLinesActualHasMoreLines() {
         assertStrings = new AssertStrings(getStringUsedWithNumberOfLines(testLineB, 12), new VerboseAsserts().onlyVerify());
-        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 5)
-                + getStringUsedWithNumberOfLines(testLineB, 2)
-                + getStringUsedWithNumberOfLines(testLineA, 3));
+        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 5) +
+                getStringUsedWithNumberOfLines(testLineB, 2) +
+                getStringUsedWithNumberOfLines(testLineA, 3));
     }
 
     @Test
     public void testWithSomeSameLinesAndSomeDifferentLinesExpectedHasMoreLines() {
         assertStrings = new AssertStrings(getStringUsedWithNumberOfLines(testLineB, 9), new VerboseAsserts().onlyVerify());
-        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 5)
-                + getStringUsedWithNumberOfLines(testLineB, 2)
-                + getStringUsedWithNumberOfLines(testLineA, 3));
+        assertStrings.equalsTo(getStringUsedWithNumberOfLines(testLineA, 5) +
+                getStringUsedWithNumberOfLines(testLineB, 2) +
+                getStringUsedWithNumberOfLines(testLineA, 3));
     }
 
     @Test

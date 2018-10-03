@@ -15,8 +15,8 @@ public class BuildClasses {
         StringBuilder logMsg;
         StringBuilder param;
         for (final Method method : Assert.class.getMethods()) {
-            if (Modifier.isPublic(method.getModifiers())
-                    && (method.getName().startsWith("assert") || method.getName().startsWith("fail"))) {
+            if (Modifier.isPublic(method.getModifiers()) &&
+                    (method.getName().startsWith("assert") || method.getName().startsWith("fail"))) {
                 logMsg = new StringBuilder("public static " + method.getGenericReturnType() + " " + method.getName() + "(");
                 param = new StringBuilder("Assert." + method.getName() + "(");
                 int count = 0;

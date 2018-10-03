@@ -36,9 +36,9 @@ public class TestahUtilTest {
 
     @Test
     public void getResourceAsString() {
-        Assert.assertEquals("test1.json\n"
-                + "test2.txt\n"
-                + "test3.log\n", testahUtil.getResourceAsString("/util"));
+        Assert.assertEquals("test1.json\n" +
+                "test2.txt\n" +
+                "test3.log\n", testahUtil.getResourceAsString("/util"));
         Assert.assertNull(testahUtil.getResourceAsString("util"));
         Assert.assertNull(testahUtil.getResourceAsString("util/test1.json"));
         Assert.assertNull(testahUtil.getResourceAsString("util/test5.json"));
@@ -119,7 +119,7 @@ public class TestahUtilTest {
         }
         TS.log().info("test");
         new AssertStrings(content)
-               .contains("JSON Output for class [Ljava.lang.String;\n[ \"test\" ]");
+                .contains("JSON Output for class [Ljava.lang.String;\n[ \"test\" ]");
         TS.log().info(content);
     }
 

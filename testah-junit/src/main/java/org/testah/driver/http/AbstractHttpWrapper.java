@@ -178,8 +178,8 @@ public abstract class AbstractHttpWrapper {
      */
     public ResponseDto doRequestWithAssert(final AbstractRequestDto<?> request, final ResponseDto expected) {
         final ResponseDto response = doRequest(request);
-        if (getVerboseAsserts().notNull("preformRequestWithAssert actual response is not null", response)
-                && getVerboseAsserts().notNull("preformRequestWithAssert expected response is not null", expected)) {
+        if (getVerboseAsserts().notNull("preformRequestWithAssert actual response is not null", response) &&
+                getVerboseAsserts().notNull("preformRequestWithAssert expected response is not null", expected)) {
             response.assertStatus(expected.getStatusCode());
         }
         return response;

@@ -119,8 +119,8 @@ public class Cli {
                 "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
         System.out.println(
                 "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
-        System.out.println("=======================================================[Version: " + Cli.version
-                + "]======================");
+        System.out.println("=======================================================[Version: " + Cli.version +
+                "]======================");
 
         System.out.println(Cli.BAR_LONG);
     }
@@ -220,8 +220,8 @@ public class Cli {
 
             } else {
                 TS.log().debug(Cli.BAR_LONG);
-                TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ "
-                        + ParamLoader.getDefaultPropFilePath() + " ]");
+                TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ " +
+                        ParamLoader.getDefaultPropFilePath() + " ]");
                 TS.log().debug(Cli.BAR_LONG);
             }
 
@@ -283,8 +283,8 @@ public class Cli {
                         } else {
                             totalTestCases += result.getJunitResult().getRunCount();
                             totalTestCasesFailed += result.getJunitResult().getFailureCount();
-                            totalTestCasesPassed += result.getJunitResult().getRunCount()
-                                    - (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
+                            totalTestCasesPassed += result.getJunitResult().getRunCount() -
+                                    (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
                             totalTestCasesIgnored += result.getJunitResult().getIgnoreCount();
                         }
                     }
@@ -324,8 +324,8 @@ public class Cli {
         }
 
         if (!initializationErrorFailures.isEmpty()) {
-            throw new RuntimeException("There are test failures due to test classes not being able to load: "
-                    + initializationErrorFailures);
+            throw new RuntimeException("There are test failures due to test classes not being able to load: " +
+                    initializationErrorFailures);
         }
     }
 
@@ -381,9 +381,9 @@ public class Cli {
                     }
                 });
                 if (!missingRelatedIds.isEmpty()) {
-                    throw new RuntimeException("Metadata audit failure: At least 1 testcase is missing required "
-                            + "related field value! The value can be applied at the testplan level for all "
-                            + "testcases to get - " + TS.util().toJson(missingRelatedIds));
+                    throw new RuntimeException("Metadata audit failure: At least 1 testcase is missing required " +
+                            "related field value! The value can be applied at the testplan level for all " +
+                            "testcases to get - " + TS.util().toJson(missingRelatedIds));
                 }
             }
 
@@ -392,8 +392,8 @@ public class Cli {
         }
 
         FileUtils.writeStringToFile(results, TS.util().toJson(resultObject), Charset.forName("UTF-8"));
-        TS.log().info("Query Results: Found[" + getTestPlanFilter().getTestClassesMetFilters().size() + "] "
-                + results.getAbsolutePath());
+        TS.log().info("Query Results: Found[" + getTestPlanFilter().getTestClassesMetFilters().size() + "] " +
+                results.getAbsolutePath());
 
         if (res.getBoolean("showInConsole")) {
             TS.log().info(TS.util().toJson(resultObject));

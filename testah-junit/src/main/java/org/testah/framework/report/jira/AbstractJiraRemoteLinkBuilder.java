@@ -248,8 +248,8 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
      */
     protected String getSourceLinkToUse() {
         String sourceUrl = validateUrl(TS.params().getSourceUrl(), "IssueGetting_param_sourceUrl");
-        return sourceUrl + (sourceUrl.endsWith("/") ? "" : "/")
-                + getSourceWithSlash(getLastTestPlanDtoUsed().getSource()) + getFileExt();
+        return sourceUrl + (sourceUrl.endsWith("/") ? "" : "/") +
+                getSourceWithSlash(getLastTestPlanDtoUsed().getSource()) + getFileExt();
     }
 
     /**

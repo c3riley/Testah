@@ -28,7 +28,7 @@ public class BashUtilTest {
     @Test
     public void executeCommands() throws IOException, InterruptedException {
         BashUtil bashUtil = new BashUtil();
-        if(Params.isWindows()) {
+        if (Params.isWindows()) {
             Assume.assumeTrue("Bash will not work on windows", true);
         } else {
             String output = bashUtil.executeCommands("echo TEST2");
@@ -39,18 +39,18 @@ public class BashUtilTest {
     @Test
     public void createBashFile() throws IOException {
         runBaseCreateTest("ls -an");
-        runBaseCreateTest("ls -an","echo hello", "# this is a test run");
+        runBaseCreateTest("ls -an", "echo hello", "# this is a test run");
     }
 
     private void runBaseCreateTest(final String... commands) throws IOException {
         BashUtil bashUtil = new BashUtil();
         File baseFile = bashUtil.createBashFile(commands);
         Assert.assertTrue(baseFile.exists());
-        AssertFile assertFile =  new AssertFile(baseFile);
+        AssertFile assertFile = new AssertFile(baseFile);
 
-        assertFile.exists().contentEquals(
-        "#!/bin/bash" + System.lineSeparator() + "source ~/.bashrc" + System.lineSeparator() + "source ~/profile"
-                + System.lineSeparator() + Joiner.on(System.lineSeparator()).join(commands) + System.lineSeparator());
+        assertFile.exists().contentEquals("#!/bin/bash" + System.lineSeparator() + "source ~/.bashrc" +
+                System.lineSeparator() + "source ~/profile" + System.lineSeparator() +
+                Joiner.on(System.lineSeparator()).join(commands) + System.lineSeparator());
     }
 
 

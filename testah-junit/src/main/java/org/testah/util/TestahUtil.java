@@ -464,8 +464,8 @@ public class TestahUtil {
             if (path != null) {
                 final File[] arrayOfFiles = new File(path).listFiles();
                 if (arrayOfFiles != null) {
-                    return Arrays.asList(arrayOfFiles).stream().filter(file -> !excludeDirectories
-                            || !file.isDirectory()).collect(Collectors.toList());
+                    return Arrays.asList(arrayOfFiles).stream().filter(file -> !excludeDirectories ||
+                            !file.isDirectory()).collect(Collectors.toList());
                 }
             }
         }

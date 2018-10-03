@@ -19,21 +19,22 @@ public class ListUtilTest {
     private static final String json1 =
             "[[\"a\"],[\"b\"],[\"c\"],[\"d\"],[\"e\"],[\"f\"]]";
     private static final String json2 =
-            "[[\"a\",\"b\"],[\"a\",\"c\"],[\"a\",\"d\"],[\"a\",\"e\"],[\"a\",\"f\"],[\"b\",\"c\"],[\"b\",\"d\"],"
-                    + "[\"b\",\"e\"],[\"b\",\"f\"],[\"c\",\"d\"],[\"c\",\"e\"],[\"c\",\"f\"],[\"d\",\"e\"],[\"d\",\"f\"],[\"e\",\"f\"]]";
+            "[[\"a\",\"b\"],[\"a\",\"c\"],[\"a\",\"d\"],[\"a\",\"e\"],[\"a\",\"f\"],[\"b\",\"c\"],[\"b\",\"d\"]," +
+                    "[\"b\",\"e\"],[\"b\",\"f\"],[\"c\",\"d\"],[\"c\",\"e\"],[\"c\",\"f\"],[\"d\",\"e\"]," +
+                    "[\"d\",\"f\"],[\"e\",\"f\"]]";
     private static final String json3 =
-            "[[\"a\",\"b\",\"c\"],[\"a\",\"b\",\"d\"],[\"a\",\"b\",\"e\"],[\"a\",\"b\",\"f\"],[\"a\",\"c\",\"d\"],"
-                    + "[\"a\",\"c\",\"e\"],[\"a\",\"c\",\"f\"],[\"a\",\"d\",\"e\"],[\"a\",\"d\",\"f\"],[\"a\",\"e\",\"f\"],"
-                    + "[\"b\",\"c\",\"d\"],[\"b\",\"c\",\"e\"],[\"b\",\"c\",\"f\"],[\"b\",\"d\",\"e\"],[\"b\",\"d\",\"f\"],"
-                    + "[\"b\",\"e\",\"f\"],[\"c\",\"d\",\"e\"],[\"c\",\"d\",\"f\"],[\"c\",\"e\",\"f\"],[\"d\",\"e\",\"f\"]]";
+            "[[\"a\",\"b\",\"c\"],[\"a\",\"b\",\"d\"],[\"a\",\"b\",\"e\"],[\"a\",\"b\",\"f\"],[\"a\",\"c\",\"d\"]," +
+                    "[\"a\",\"c\",\"e\"],[\"a\",\"c\",\"f\"],[\"a\",\"d\",\"e\"],[\"a\",\"d\",\"f\"],[\"a\",\"e\",\"f\"]," +
+                    "[\"b\",\"c\",\"d\"],[\"b\",\"c\",\"e\"],[\"b\",\"c\",\"f\"],[\"b\",\"d\",\"e\"],[\"b\",\"d\",\"f\"]," +
+                    "[\"b\",\"e\",\"f\"],[\"c\",\"d\",\"e\"],[\"c\",\"d\",\"f\"],[\"c\",\"e\",\"f\"],[\"d\",\"e\",\"f\"]]";
     private static final String json4 =
-            "[[\"a\",\"b\",\"c\",\"d\"],[\"a\",\"b\",\"c\",\"e\"],[\"a\",\"b\",\"c\",\"f\"],[\"a\",\"b\",\"d\",\"e\"],"
-                    + "[\"a\",\"b\",\"d\",\"f\"],[\"a\",\"b\",\"e\",\"f\"],[\"a\",\"c\",\"d\",\"e\"],[\"a\",\"c\",\"d\",\"f\"],"
-                    + "[\"a\",\"c\",\"e\",\"f\"],[\"a\",\"d\",\"e\",\"f\"],[\"b\",\"c\",\"d\",\"e\"],[\"b\",\"c\",\"d\",\"f\"],"
-                    + "[\"b\",\"c\",\"e\",\"f\"],[\"b\",\"d\",\"e\",\"f\"],[\"c\",\"d\",\"e\",\"f\"]]";
-    private static final String json5 = "[[\"a\",\"b\",\"c\",\"d\",\"e\"],[\"a\",\"b\",\"c\",\"d\",\"f\"],"
-            + "[\"a\",\"b\",\"c\",\"e\",\"f\"],[\"a\",\"b\",\"d\",\"e\",\"f\"],"
-            + "[\"a\",\"c\",\"d\",\"e\",\"f\"],[\"b\",\"c\",\"d\",\"e\",\"f\"]]";
+            "[[\"a\",\"b\",\"c\",\"d\"],[\"a\",\"b\",\"c\",\"e\"],[\"a\",\"b\",\"c\",\"f\"],[\"a\",\"b\",\"d\",\"e\"]," +
+                    "[\"a\",\"b\",\"d\",\"f\"],[\"a\",\"b\",\"e\",\"f\"],[\"a\",\"c\",\"d\",\"e\"],[\"a\",\"c\",\"d\",\"f\"]," +
+                    "[\"a\",\"c\",\"e\",\"f\"],[\"a\",\"d\",\"e\",\"f\"],[\"b\",\"c\",\"d\",\"e\"],[\"b\",\"c\",\"d\",\"f\"]," +
+                    "[\"b\",\"c\",\"e\",\"f\"],[\"b\",\"d\",\"e\",\"f\"],[\"c\",\"d\",\"e\",\"f\"]]";
+    private static final String json5 = "[[\"a\",\"b\",\"c\",\"d\",\"e\"],[\"a\",\"b\",\"c\",\"d\",\"f\"]," +
+            "[\"a\",\"b\",\"c\",\"e\",\"f\"],[\"a\",\"b\",\"d\",\"e\",\"f\"]," +
+            "[\"a\",\"c\",\"d\",\"e\",\"f\"],[\"b\",\"c\",\"d\",\"e\",\"f\"]]";
 
     private static final Map<Integer, List<List<String>>> expectedLists = new HashMap<>();
 
@@ -73,8 +74,8 @@ public class ListUtilTest {
         List<List<String>> listOfSubLists = getAllSublists(strings);
 
         TS.asserts().equalsTo("Number of subsets.",
-                1 + expectedLists.get(1).size() + expectedLists.get(2).size() + expectedLists.get(3).size()
-                        + expectedLists.get(4).size() + expectedLists.get(5).size(),
+                1 + expectedLists.get(1).size() + expectedLists.get(2).size() + expectedLists.get(3).size() +
+                        expectedLists.get(4).size() + expectedLists.get(5).size(),
                 listOfSubLists.size());
 
         Map<Integer, List<List<String>>> actualSublists = new HashMap<>();
@@ -88,7 +89,8 @@ public class ListUtilTest {
             TS.asserts().equalsTo("Number of subsets with " + lengthOfSublists + " elements.",
                     expectedLists.get(lengthOfSublists).size(),
                     actualSublists.get(lengthOfSublists).size());
-            TS.asserts().equalsTo("Check sublists", expectedLists.get(lengthOfSublists), actualSublists.get(lengthOfSublists));
+            TS.asserts().equalsTo("Check sublists", expectedLists.get(lengthOfSublists),
+                    actualSublists.get(lengthOfSublists));
         }
     }
 }

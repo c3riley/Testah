@@ -72,8 +72,8 @@ public class TestPlanReporter {
         final org.testah.client.dto.RunInfoDto ri = testPlan.getRunInfo();
         System.out.println("\n\n\n");
         TS.log().info(Cli.BAR_LONG);
-        TS.log().info(Cli.BAR_WALL + "TestPlan[" + testPlan.getSource() + " (thread:" + Thread.currentThread().getId() + ") Status: "
-                + testPlan.getStatusEnum());
+        TS.log().info(Cli.BAR_WALL + "TestPlan[" + testPlan.getSource() + " (thread:" + Thread.currentThread().getId() +
+                ") Status: " + testPlan.getStatusEnum());
         TS.log().info(Cli.BAR_WALL + "Passed: " + ri.getPass());
         TS.log().info(Cli.BAR_WALL + "Failed: " + ri.getFail());
         TS.log().info(Cli.BAR_WALL + "Ignore/NA/FilteredOut: " + ri.getIgnore());
@@ -113,8 +113,8 @@ public class TestPlanReporter {
                 final JiraReporter jiraReporter = new JiraReporter();
                 jiraReporter.createOrUpdateTestPlanRemoteLink(testPlan, this.getJiraRemoteLinkBuilder());
             } else {
-                TS.log().warn("Use Jira is On, but JiraRemoteLinkBuilder is not set, can set ex: "
-                        + "TS.getTestPlanReporter().setJiraRemoteLinkBuilder(jiraRemoteLinkBuilder);");
+                TS.log().warn("Use Jira is On, but JiraRemoteLinkBuilder is not set, can set ex: " +
+                        "TS.getTestPlanReporter().setJiraRemoteLinkBuilder(jiraRemoteLinkBuilder);");
             }
         }
         if (null == TS.params().getSendJsonTestDataToService() || TS.params().getSendJsonTestDataToService().length() > 0) {

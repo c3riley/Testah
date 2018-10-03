@@ -161,8 +161,8 @@ public class TestFilter {
                 if (filterByTestType) {
                     if (!isFilterByTestType(meta.testType())) {
                         TS.log().trace(
-                                "test[" + test.getName() + "] filtered out by isFilterByTestType["
-                                        + TS.params().getFilterByTestType() + "]");
+                                "test[" + test.getName() + "] filtered out by isFilterByTestType[" +
+                                        TS.params().getFilterByTestType() + "]");
                         continue;
                     }
                 }
@@ -277,8 +277,8 @@ public class TestFilter {
                         if (!externalTests.exists()) {
                             if (loadCompiledTestClass(path) == 0) {
                                 TS.log().error(
-                                        "Param LookAtExternalTests is set to a class/file/directory not found: "
-                                                + externalTests.getAbsolutePath());
+                                        "Param LookAtExternalTests is set to a class/file/directory not found: " +
+                                                externalTests.getAbsolutePath());
                             }
                         } else if (externalTests.isDirectory()) {
                             files.addAll(FileUtils.getFilesRecurse(externalTests, "(.?)*\\.groovy"));

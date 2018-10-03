@@ -97,8 +97,8 @@ public abstract class AbstractWebElementWrapper {
      */
     public boolean elementIsOk(final String activity, final boolean autoReport) {
         if (null == getDriverWebElement()) {
-            final String msg = "Unable to preform activity[" + activity + "], webelement[" + by
-                    + "] is null and not available.";
+            final String msg = "Unable to preform activity[" + activity + "], webelement[" + by +
+                    "] is null and not available.";
             if (autoReport) {
                 TS.asserts().notNull(msg, webElement);
             } else {
@@ -510,8 +510,8 @@ public abstract class AbstractWebElementWrapper {
             TS.util().pause("getElementsWithIn", count);
         }
         if (autoAssert) {
-            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] using By[" + locator
-                    + "] - error: " + error, true, false);
+            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by +
+                    "] using By[" + locator + "] - error: " + error, true, false);
         }
         return new ArrayList<>();
     }
@@ -589,8 +589,8 @@ public abstract class AbstractWebElementWrapper {
             TS.util().pause("getElementWithIn", count);
         }
         if (autoAssert) {
-            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] using By[" + locator
-                    + "] - error: " + error, true, false);
+            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by +
+                    "] using By[" + locator + "] - error: " + error, true, false);
         }
         return null;
     }
@@ -640,8 +640,8 @@ public abstract class AbstractWebElementWrapper {
     public String getText() {
         String rtn = null;
         if (elementIsOk("getText", isAutoReport())) {
-            if (webElement.getTagName().equalsIgnoreCase("input")
-                    || webElement.getTagName().equalsIgnoreCase("textarea")) {
+            if (webElement.getTagName().equalsIgnoreCase("input") ||
+                    webElement.getTagName().equalsIgnoreCase("textarea")) {
                 rtn = webElement.getAttribute("value");
             } else {
                 rtn = webElement.getText();

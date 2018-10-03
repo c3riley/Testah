@@ -295,8 +295,8 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
             setFolder(mailBoxFolder);
             TS.step().action().createInfo("Connected to Mailbox: " + getFolderName(), "email: " + emailUserName);
         } catch (final Exception e) {
-            throw new RuntimeException("Conneting to Mail Domain: " + getMailServerAddress() + " with user: "
-                    + emailUserName, e);
+            throw new RuntimeException("Conneting to Mail Domain: " + getMailServerAddress() + " with user: " +
+                    emailUserName, e);
         }
         return this;
     }
@@ -462,8 +462,8 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
      * @throws MessagingException the messaging exception
      */
     public boolean isAttachment(final BodyPart bodyPart) throws MessagingException {
-        return StringUtils.equalsIgnoreCase(Part.ATTACHMENT, bodyPart.getDisposition())
-                && StringUtils.isBlank(bodyPart.getFileName());
+        return StringUtils.equalsIgnoreCase(Part.ATTACHMENT, bodyPart.getDisposition()) &&
+                StringUtils.isBlank(bodyPart.getFileName());
     }
 
     /**

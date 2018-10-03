@@ -46,7 +46,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * The headers.
      */
-    protected List<Header> headers = null;
+    protected List<Header> headers = new ArrayList<>();
 
     /**
      * The expected status.
@@ -98,9 +98,10 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     protected AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
         this.httpRequestBase = httpRequestBase;
         this.httpMethod = httpMethod;
+        if (httpRequestBase != null && httpRequestBase.getURI() != null) {
+            this.uri = httpRequestBase.getURI().toString();
+        }
     }
-
-    ;
 
     /**
      * Gets the http method.
@@ -177,9 +178,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T addHeader(final Header header) {
-        if (null == headers) {
-            headers = new ArrayList<>();
-        }
         headers.add(header);
         return getSelf();
     }
@@ -189,8 +187,9 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      *
      * @return the abstract request dto
      */
+    @SuppressWarnings("checkstyle:abbreviationaswordinnamecheck")
     public T withJsonUTF8() {
-        addHeader("content-type", "application/json; charset=UTF-8");
+        addHeader("Content-Type", "application/json; charset=UTF-8");
         return getSelf();
     }
 
@@ -200,7 +199,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T withFormUrlEncoded() {
-        addHeader("content-type", "application/x-www-form-urlencoded");
+        addHeader("Content-Type", "application/x-www-form-urlencoded");
         return getSelf();
     }
 
@@ -210,9 +209,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the headers array
      */
     public Header[] getHeadersArray() {
-        if (null == headers) {
-            return null;
-        }
         return headers.toArray(new Header[]{});
     }
 
@@ -223,7 +219,12 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T setHeaders(final List<Header> headers) {
-        this.headers = headers;
+        if (headers == null) {
+            TS.log().debug("Clearing headers on request as null was sent in, headers cannot be null");
+            this.headers.clear();
+        } else {
+            this.headers = headers;
+        }
         return getSelf();
     }
 
@@ -318,7 +319,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
 
     public T addBasicAuthHeader(final String userName, final String password, final boolean useMask) {
         return addHeader(new HttpAuthUtil().setUserName(userName).setPassword(password).useEncodingIso()
-                .setUseMask(useMask).createBasicAuthHeader());
+            .setUseMask(useMask).createBasicAuthHeader());
     }
 
     /**
@@ -478,7 +479,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T setContentType(final String value) {
-        addHeader("content-type", value);
+        addHeader("Content-Type", value);
         return getSelf();
     }
 
@@ -539,9 +540,9 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     public StepActionDto createRequestInfoStep() {
         StepActionDto stepAction = null;
         stepAction = TS.step().action().createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
-                "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
-                        : Arrays.toString(headers.toArray())),
-                getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+            "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
+                : Arrays.toString(headers.toArray())),
+            getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         printComplete();
         return stepAction;
     }

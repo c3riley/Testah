@@ -154,8 +154,8 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public ResponseDto assertResponseBodyContains(final String expectedContents) {
         TS.asserts().notNull("assertResponseBodyContains", responseBody);
-        TS.asserts().isTrue("assertResponseBodyContains responseBody[" + responseBody + "] expected to contain["
-                + expectedContents + "]", responseBody.contains(expectedContents));
+        TS.asserts().isTrue("assertResponseBodyContains responseBody[" + responseBody + "] expected to contain[" +
+                expectedContents + "]", responseBody.contains(expectedContents));
         return this;
     }
 

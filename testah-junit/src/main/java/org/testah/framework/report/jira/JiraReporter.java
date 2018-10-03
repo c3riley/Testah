@@ -168,8 +168,8 @@ public class JiraReporter {
     public List<RemoteIssueLinkDto> getRemoteLinks(final String issue) {
         try {
             if (!StringUtils.isEmpty(issue)) {
-                GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue
-                        + "/remotelink");
+                GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue +
+                        "/remotelink");
                 return TS.http().doRequest(addAuthHeader(get.withJson())).getResponse(new TypeReference<List<RemoteIssueLinkDto>>() {
                 });
             }

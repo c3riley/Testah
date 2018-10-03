@@ -28,7 +28,7 @@ public class SshLoggerTest {
 
     @Test
     public void log() throws UnsupportedEncodingException {
-        try(SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
+        try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
             sshLogger.log(0, "Debug Message");
             assertEquals("DEBUG: Debug Message" + System.lineSeparator(), systemOutCapture.getSystemErr());
 

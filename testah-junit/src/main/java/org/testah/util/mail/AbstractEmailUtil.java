@@ -287,8 +287,8 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
             TS.util().pause(DEFAULT_POLL_PAUSE_ITERATION, "polling for message(s) to arrive", pollIndex);
         }
         if (autoFail) {
-            TS.asserts().fail("Giving Up on polling, Found " + messages.size()
-                    + " Messages but waiting till found: " + expectedMatchCount);
+            TS.asserts().fail("Giving Up on polling, Found " + messages.size() +
+                    " Messages but waiting till found: " + expectedMatchCount);
         }
         return new ArrayList<M>();
     }

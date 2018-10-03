@@ -123,8 +123,8 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
     public AssertBigDecimal shouldNotHaveDecimalValue() {
         AssertFunctionReturnBooleanActual<BigDecimal> assertRun = (expected, actual, history) -> {
             history.setExpectedForHistory("Should not have a decimal value");
-            Assert.assertTrue((getActual().scale() <= 0)
-                    || (getActual().setScale(0, RoundingMode.HALF_UP).compareTo(getActual()) == 0));
+            Assert.assertTrue((getActual().scale() <= 0) ||
+                    (getActual().setScale(0, RoundingMode.HALF_UP).compareTo(getActual()) == 0));
             return true;
         };
         return runAssert("Actual[" + getActual() + "] should not have a decimal", "shouldNotHaveDecimalValue",
@@ -139,8 +139,8 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
     public AssertBigDecimal shouldHaveDecimalValue() {
         AssertFunctionReturnBooleanActual<BigDecimal> assertRun = (expected, actual, history) -> {
             history.setExpectedForHistory("Should have a decimal");
-            Assert.assertTrue((getActual().scale() > 0)
-                    || (getActual().setScale(0, RoundingMode.HALF_UP).compareTo(getActual()) != 0));
+            Assert.assertTrue((getActual().scale() > 0) ||
+                    (getActual().setScale(0, RoundingMode.HALF_UP).compareTo(getActual()) != 0));
             return true;
         };
         return runAssert("Actual[" + getActual() + "] should have a decimal", "shouldHaveDecimalValue",
@@ -186,8 +186,8 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
             isLessThan(maxRangeValue, allowEqualTo);
             return true;
         };
-        return runAssert("Check if actual is in the ranger [ "
-                        + minRangeValue + " < " + getActual() + " < " + maxRangeValue, "isWithinRange",
+        return runAssert("Check if actual is in the ranger [ " +
+                        minRangeValue + " < " + getActual() + " < " + maxRangeValue, "isWithinRange",
                 assertRun, null, getActual());
     }
 
@@ -245,6 +245,7 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
     public AssertBigDecimal isLessThan(final Number valueToBeLessThan) {
         return isLessThan(valueToBeLessThan, false);
     }
+
     /**
      * Is less than assert big decimal.
      *
@@ -320,8 +321,8 @@ public class AssertBigDecimal extends AbstractAssertBase<AssertBigDecimal, BigDe
             }
             return true;
         };
-        return runAssert("Actual[" + getActual() + "] to equal Expected[" + expectedValue + "] "
-                        + "with delta[" + delta + "]", "equalsTo",
+        return runAssert("Actual[" + getActual() + "] to equal Expected[" + expectedValue + "] " +
+                        "with delta[" + delta + "]", "equalsTo",
                 assertRun, expectedValue, getActual());
     }
 }

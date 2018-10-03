@@ -104,8 +104,8 @@ public class Params {
     /**
      * The look at external tests.
      */
-    @Comment(info = "Provide a path where to look for external uncompiled Test Classes, "
-            + "can be stored as .java or .groovy, can supply a directory or specific file")
+    @Comment(info = "Provide a path where to look for external uncompiled Test Classes, " +
+            "can be stored as .java or .groovy, can supply a directory or specific file")
     @Arg(dest = "lookAtExternalTests")
     private String lookAtExternalTests = "";
     /**
@@ -118,25 +118,27 @@ public class Params {
      * The throw exception on fail.
      */
     @Comment(
-            info = "Should the System work as normal JUnit and stop a test case method on first fail, if false will continue to end "
-                    + "then check for any fails")
+            info = "Should the System work as normal JUnit and stop a test case method on first fail, " +
+                    "if false will continue to end " +
+                    "then check for any fails")
     @Arg(dest = "throwExceptionOnFail")
     private boolean throwExceptionOnFail = true;
     @Comment(
-            info = "timezone to use for runtime data, if empty will use system default. "
-                    + "If supplied should be string representation of timezone like America/New_York")
+            info = "timezone to use for runtime data, if empty will use system default. " +
+                    "If supplied should be string representation of timezone like America/New_York")
     @Arg(dest = "timezone")
     private String timezone = TimeZone.getDefault().getID();
     @Comment(
-            info = "timeFormat to use for runtime data, if empty will use default. "
-                    + "If supplied should be string representation of timezone like yyyy-MM-dd'T'HH:mm:ss.SSZ")
+            info = "timeFormat to use for runtime data, if empty will use default. " +
+                    "If supplied should be string representation of timezone like yyyy-MM-dd'T'HH:mm:ss.SSZ")
     @Arg(dest = "timeFormat")
     private String timeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSZ";
     /**
      * The web driver_user agent value.
      */
     @Comment(
-            info = "[BAR1]Webdriver properties[BAR2]Override Browser UserAgent property, allows tests to act as mobile device, etc")
+            info = "[BAR1]Webdriver properties[BAR2]Override Browser UserAgent property, " +
+                    "allows tests to act as mobile device, etc")
     @Arg(dest = "webDriver_userAgentValue")
     private String webDriverUserAgentValue = "";
     /**
@@ -162,14 +164,16 @@ public class Params {
      * The web driver_phantom js driver binary.
      */
     @Comment(
-            info = "Add a path to the Phantomjs Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
+            info = "Add a path to the Phantomjs Driver Binary, required if using phatomjs, " +
+                    "system will try to pull it locally if not found")
     @Arg(dest = "webDriver_PhantomJsDriverBinary")
     private String webDriverPhantomJsDriverBinary = "";
     /**
      * The web driver_chrome driver binary.
      */
     @Comment(
-            info = "Add a path to the Chrome Driver Binary, required if using phatomjs, system will try to pull it locally if not found")
+            info = "Add a path to the Chrome Driver Binary, required if using phatomjs, " +
+                    "system will try to pull it locally if not found")
     @Arg(dest = "webDriver_ChromeDriverBinary")
     private String webDriverChromeDriverBinary = "";
     @Comment(info = "Default window Width to open browser window to. If empty then browser will be maximized")
@@ -182,8 +186,8 @@ public class Params {
      * The output.
      */
     @Comment(
-            info = "Should rest response get written to file and linked into the html report "
-                    + "which normally truncates the responses.")
+            info = "Should rest response get written to file and linked into the html report " +
+                    "which normally truncates the responses.")
     @Arg(dest = "writeResponseToFile")
     private boolean writeResponseToFile = false;
     /**
@@ -226,16 +230,16 @@ public class Params {
     /**
      * The unique Report Name.
      */
-    @Comment(info = "Should the reports use unique names.  If the test report runner is used, it is on by default, "
-            + "else is false and will cause reports to get overridden each run.")
+    @Comment(info = "Should the reports use unique names.  If the test report runner is used, it is on by default, " +
+            "else is false and will cause reports to get overridden each run.")
     @Arg(dest = "uniqueReportName")
     private boolean uniqueReportName = false;
     /**
      * The send json test data to service.
      */
     @Comment(
-            info = "Should the Runner Post info to a service in Json Format. If Uri is supplied it will attempt to send "
-                    + "the json info as a List of 1 to many TestPlans")
+            info = "Should the Runner Post info to a service in Json Format. If Uri is supplied it will attempt to send " +
+                    "the json info as a List of 1 to many TestPlans")
     @Arg(dest = "sendJsonTestDataToService")
     private String sendJsonTestDataToService = "";
     /**
@@ -254,96 +258,96 @@ public class Params {
      * The run info_version id.
      */
     @Comment(
-            info = "[BAR1]Run Info Properties[BAR2]Version Id is a value that can be used to tell what version the test is "
-                    + "testing against. Can be passed runtime via -Dtestah.versionId=login-0.0.2")
+            info = "[BAR1]Run Info Properties[BAR2]Version Id is a value that can be used to tell what version the test is " +
+                    "testing against. Can be passed runtime via -Dtestah.versionId=login-0.0.2")
     @Arg(dest = "runInfo_versionId")
     private String runInfoVersionId = "";
     /**
      * The run info_build number.
      */
     @Comment(
-            info = "Build Number is a value that can be used to tell what build the test is testing against. "
-                    + "Can be passed runtime via -Dtestah.buildNumber=login-0.0.2")
+            info = "Build Number is a value that can be used to tell what build the test is testing against. " +
+                    "Can be passed runtime via -Dtestah.buildNumber=login-0.0.2")
     @Arg(dest = "runInfo_buildNumber")
     private String runInfoBuildNumber = "";
     /**
      * The run info_run id.
      */
     @Comment(
-            info = "Run Id is a value that can be used to group many different results together. "
-                    + "Can be passed runtime via -Dtestah.runId=run23")
+            info = "Run Id is a value that can be used to group many different results together. " +
+                    "Can be passed runtime via -Dtestah.runId=run23")
     @Arg(dest = "runInfo_runId")
     private String runInfoRunId = "";
     /**
      * The run location.
      */
     @Comment(
-            info = "Run Location is a way to tell where the test ran, can be local machine name, or Jenkins Job Url. "
-                    + "Can be passed runtime via -Dtestah.runLocation=local")
+            info = "Run Location is a way to tell where the test ran, can be local machine name, or Jenkins Job Url. " +
+                    "Can be passed runtime via -Dtestah.runLocation=local")
     @Arg(dest = "runInfo_runLocation")
     private String runLocation = "localhost";
     /**
      * The run type.
      */
     @Comment(
-            info = "Run Type is a way to tell what type of run the test execution was involved in, smoke, regression, other. "
-                    + "Can be passed runtime via -Dtestah.runType=smoke")
+            info = "Run Type is a way to tell what type of run the test execution was involved in, smoke, regression, other. " +
+                    "Can be passed runtime via -Dtestah.runType=smoke")
     @Arg(dest = "runInfo_runType")
     private String runType = "";
     /**
      * The usefilter schema.
      */
     @Comment(
-            info = "[BAR1]Filter Properties[BAR2]Filter Schema To Use. Leave empty to not apply filters, to use default filter, "
-                    + "set value to DEFAULT.  You can also create your own, like REG, or SMOKE")
+            info = "[BAR1]Filter Properties[BAR2]Filter Schema To Use. Leave empty to not apply filters, to use default filter, " +
+                    "set value to DEFAULT.  You can also create your own, like REG, or SMOKE")
     @Arg(dest = "usefilterSchema")
     private String usefilterSchema = "DEFAULT";
     /**
      * The filter by platform.
      */
     @Comment(
-            info = "Filter using the Platform metadata field. Can be a comma separated list of values that a test must match. "
-                    + "Value can use the (~) for [Must Not Have], any match will be excluded.")
+            info = "Filter using the Platform metadata field. Can be a comma separated list of values that a test must match. " +
+                    "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByPlatform")
     private String filterByPlatform = "";
     /**
      * The filter by device.
      */
     @Comment(
-            info = "Filter using the Device metadata field. Can be a comma separated list of values that a test must match. "
-                    + "Value can use the (~) for [Must Not Have], any match will be excluded.")
+            info = "Filter using the Device metadata field. Can be a comma separated list of values that a test must match. " +
+                    "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByDevice")
     private String filterByDevice = "";
     /**
      * The filter by component.
      */
     @Comment(
-            info = "Filter using the Component metadata field. Can be a comma separated list of values that a test must match. "
-                    + "Value can use the (~) for [Must Not Have], any match will be excluded.")
+            info = "Filter using the Component metadata field. Can be a comma separated list of values that a test must match. " +
+                    "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByComponent")
     private String filterByComponent = "";
     /**
      * The filter by run type.
      */
     @Comment(
-            info = "Filter using the RunType metadata field. Can be a comma separated list of values that a test must match. "
-                    + "Value can use the (~) for [Must Not Have], any match will be excluded.")
+            info = "Filter using the RunType metadata field. Can be a comma separated list of values that a test must match. " +
+                    "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByRunType")
     private String filterByRunType = "";
     /**
      * The filter ignore known problem.
      */
     @Comment(
-            info = "Filter Using The @KnownProblem Annotation.  True means testplan/testcase must not be a known problem. "
-                    + "False means must be a known problem. Empty means do not use filter.")
+            info = "Filter Using The @KnownProblem Annotation.  True means testplan/testcase must not be a known problem. " +
+                    "False means must be a known problem. Empty means do not use filter.")
     @Arg(dest = "filterIgnoreKnownProblem")
     private String filterIgnoreKnownProblem = "";
     /**
      * The filter by tag.
      */
     @Comment(
-            info = "Filter using the Tag metadata field. Can be a comma separated list of values that a test must match. "
-                    + "Value can use the (~) for [Must Not Have], any match will be excluded.")
+            info = "Filter using the Tag metadata field. Can be a comma separated list of values that a test must match. " +
+                    "Value can use the (~) for [Must Not Have], any match will be excluded.")
     @Arg(dest = "filterByTag")
     private String filterByTag = "";
     /**

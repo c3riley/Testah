@@ -26,15 +26,15 @@ public class TestLongRunning extends AbstractLongRunningTest {
     private static final String requestRegexLineCounter = "(.*\\}\\n){10}";
     private static final String requestRegexIndexCounter = "(.*index.*\\n.*\\n){5}";
     private static final String requestRegexSingle =
-            ".*\\{\"statusCode\":%d,\"duration\":\\d+,"
-                    + "\"collectionTime\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\","
-                    + "\"domain\":\"%s\",\"service\":\"ServiceUnderTest\",\"testClass\":\"TestLongRunning\","
-                    + "\"testMethod\":\"%s\",\"timestamp\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\","
-                    + "\"aggregation\":\"single\"\\}.*";
+            ".*\\{\"statusCode\":%d,\"duration\":\\d+," +
+                    "\"collectionTime\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\"," +
+                    "\"domain\":\"%s\",\"service\":\"ServiceUnderTest\",\"testClass\":\"TestLongRunning\"," +
+                    "\"testMethod\":\"%s\",\"timestamp\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\"," +
+                    "\"aggregation\":\"single\"\\}.*";
     private static final String requestRegexChunk =
-            ".*\\{\"duration\":\\d+,\"domain\":\"%s\",\"service\":\"ServiceUnderTest\","
-                    + "\"testClass\":\"TestLongRunning\",\"testMethod\":\"%s\","
-                    + "\"timestamp\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\",\"aggregation\":\"chunk\"\\}.*";
+            ".*\\{\"duration\":\\d+,\"domain\":\"%s\",\"service\":\"ServiceUnderTest\"," +
+                    "\"testClass\":\"TestLongRunning\",\"testMethod\":\"%s\"," +
+                    "\"timestamp\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\",\"aggregation\":\"chunk\"\\}.*";
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(9200);

@@ -10,6 +10,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.report.asserts.*;
+import org.testah.util.unittest.dtotest.SystemOutCapture;
 import org.unitils.reflectionassert.ReflectionAssert;
 import org.unitils.reflectionassert.ReflectionComparatorMode;
 
@@ -94,8 +95,8 @@ public class VerboseAsserts {
      * @return true, if successful
      */
     public boolean sizeEquals(final String message, final Object objectToCheckSizeOrLengthOf, final int expectedSize) {
-        return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLengthOf
-                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLengthOf), expectedSize);
+        return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLengthOf +
+            "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLengthOf), expectedSize);
     }
 
 
@@ -109,8 +110,8 @@ public class VerboseAsserts {
      */
     public boolean notSizeEquals(final String message, final Object objectToCheckSizeOrLengthOf,
                                  final int expectedSize) {
-        return this.notEquals(message + " - expected Object[" + objectToCheckSizeOrLengthOf
-                + "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLengthOf), expectedSize);
+        return this.notEquals(message + " - expected Object[" + objectToCheckSizeOrLengthOf +
+            "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLengthOf), expectedSize);
     }
 
     /**
@@ -136,8 +137,8 @@ public class VerboseAsserts {
         if (null != actual) {
             return actual;
         } else {
-            throw new RuntimeException("Issue with object to Check for notEmpty Assert, object must be String, "
-                    + "ArrayList, Set, List or HashMap");
+            throw new RuntimeException("Issue with object to Check for notEmpty Assert, object must be String, " +
+                "ArrayList, Set, List or HashMap");
         }
     }
 
@@ -465,7 +466,7 @@ public class VerboseAsserts {
     public boolean equalsToIgnoreCase(final String message, final String expected, final String actual) {
         try {
             Assert.assertEquals(message + " - expected[" + expected + "] == actual[" + actual + "]",
-                    StringUtils.lowerCase(expected), StringUtils.lowerCase(actual));
+                StringUtils.lowerCase(expected), StringUtils.lowerCase(actual));
             return addAssertHistory(message, true, "equalsToIgnoreCase", expected, actual);
         } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "equalsToIgnoreCase", expected, actual, e);
@@ -486,11 +487,11 @@ public class VerboseAsserts {
      */
     public boolean equalsToMultilineString(final String message, final String expected, final String actual) {
         if (actual == null) {
-            return isTrue("The Actual is null, checking to see if Expected is null, "
-                    + "else will fail and not go further for the assert.", (expected == null));
+            return isTrue("The Actual is null, checking to see if Expected is null, " +
+                "else will fail and not go further for the assert.", (expected == null));
         }
         return new AssertCollections<String>(StringUtils.split(actual, System.lineSeparator()), this)
-                .equalsTo(StringUtils.split(expected, System.lineSeparator())).isPassed();
+            .equalsTo(StringUtils.split(expected, System.lineSeparator())).isPassed();
     }
 
     /**
@@ -547,7 +548,7 @@ public class VerboseAsserts {
      */
     public boolean equalsTo(final String message, final long expected, final long actual) {
         return new AssertNumber<Long>(actual, this).setMessage(message)
-                .equalsTo(expected).isPassed();
+            .equalsTo(expected).isPassed();
     }
 
     /**
@@ -730,7 +731,7 @@ public class VerboseAsserts {
      */
     public boolean equalsTo(final String message, final double expected, final double actual) {
         return new AssertNumber<Double>(actual, this).setMessage(message)
-                .equalsTo(expected).isPassed();
+            .equalsTo(expected).isPassed();
     }
 
     /**
@@ -1164,8 +1165,8 @@ public class VerboseAsserts {
             if (expected == null && actual == null) {
                 TS.log().debug("Both expected and actual are null, so are equal");
             } else {
-                Assert.assertNotNull("Check if expected is null",expected);
-                Assert.assertNotNull("Check if actual is null",actual);
+                Assert.assertNotNull("Check if expected is null", expected);
+                Assert.assertNotNull("Check if actual is null", actual);
                 Assert.assertEquals("Assert that both arrays are the same size", expected.length, actual.length);
                 int index = 0;
                 for (boolean expectedValue : expected) {
@@ -1395,8 +1396,8 @@ public class VerboseAsserts {
         if (null != actual) {
             return actual;
         } else {
-            throw new RuntimeException("Issue with object to Check for notEmpty Assert, object must be String, "
-                    + "ArrayList, Set, List or HashMap");
+            throw new RuntimeException("Issue with object to Check for notEmpty Assert, object must be String, " +
+                "ArrayList, Set, List or HashMap");
         }
     }
 
@@ -1756,5 +1757,33 @@ public class VerboseAsserts {
      */
     public <T extends Number & Comparable<T>> AssertNumber<T> given(final T actual) {
         return new AssertNumber<T>(actual, this);
+    }
+
+    public boolean assertSystemErrContains(final Runnable code, final String... textToContain) {
+        return assertSystemOutContains(code, textToContain, true);
+    }
+
+    public boolean assertSystemOutContains(final Runnable code, final String... textToContain) {
+        return assertSystemOutContains(code, textToContain, false);
+    }
+
+    private boolean assertSystemOutContains(final Runnable code, final String[] textToContain, final boolean useErr) {
+        String content = null;
+        try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
+            code.run();
+            if (useErr) {
+                content = systemOutCapture.getSystemErr();
+            } else {
+                content = systemOutCapture.getSystemOut();
+            }
+        }
+        if (textToContain != null) {
+            AssertStrings assertStrings = new AssertStrings(content);
+            for (final String containString : textToContain) {
+                assertStrings.contains(containString);
+            }
+            return assertStrings.isPassed();
+        }
+        return false;
     }
 }

@@ -103,8 +103,8 @@ public class StepAction extends StepActionDto {
             step.setSnapShotPath(TS.browser().takeScreenShot());
             step.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());
         }
-        TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message + " - expected[" + expected
-                + "] actual[" + actual + "]");
+        TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message +
+                " - expected[" + expected + "] actual[" + actual + "]");
         if (null != step.getExceptionString()) {
             TS.log().trace("Exception Related to above Assert\n" + step.getExceptionString());
         }
@@ -133,8 +133,8 @@ public class StepAction extends StepActionDto {
         step.setException(null);
         step.setTestStepActionType(TestStepActionType.VERIFY);
 
-        TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " + status + " - " + message + " - expected[" + expected
-                + "] actual[" + actual + "]");
+        TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " + status + " - " + message +
+                " - expected[" + expected + "] actual[" + actual + "]");
         return step;
     }
 
