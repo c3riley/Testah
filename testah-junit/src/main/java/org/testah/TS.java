@@ -217,7 +217,9 @@ public class TS {
      * @return the abstract browser
      */
     public static AbstractBrowser<?> setBrowser(final AbstractBrowser<?> browser) {
-        _browser.set(browser);
+        final ThreadLocal<AbstractBrowser<?>> browserTemp = new ThreadLocal<>();
+        browserTemp.set(browser);
+        _browser = browserTemp;
         return _browser.get();
     }
 
@@ -251,8 +253,10 @@ public class TS {
      * @return the abstract http wrapper
      */
     public static AbstractHttpWrapper setHttp(final AbstractHttpWrapper http) {
-        _http.set(http);
-        return _http.get();
+        ThreadLocal<AbstractHttpWrapper> tempHttp = new ThreadLocal<>();
+        tempHttp.set(http);
+        TS._http = tempHttp;
+        return TS._http.get();
     }
 
     /**
