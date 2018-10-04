@@ -17,6 +17,15 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
 
     private Charset defaultCharset = Charset.forName("UTF-8");
 
+
+    public AssertFile(final String actual) {
+        this(new File(actual));
+    }
+
+    public AssertFile(final String actual, VerboseAsserts asserts) {
+        this(new File(actual), asserts);
+    }
+
     /**
      * Instantiates a new Assert file.
      *
@@ -49,7 +58,7 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
             return true;
         };
         return runAssert("Check that file[" + getAbsolutePath() + "] exists", "exists",
-                assertRun, null, getActual());
+            assertRun, null, getActual());
     }
 
     /**
@@ -77,7 +86,7 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
             return true;
         };
         return runAssert("Check that file[" + getAbsolutePath() + "] does not exist", "notExists",
-                assertRun, null, getActual());
+            assertRun, null, getActual());
     }
 
     /**
@@ -132,6 +141,14 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
      */
     public AssertFile contentEquals(final String expected, Charset charset) {
         return this.addStatus(new AssertStrings(getContentAsString(charset)).equalsTo(expected).isPassed());
+    }
+
+    public AssertFile contentContains(final String... expected) {
+        return contentContains(Charset.forName("UTF-8"), expected);
+    }
+
+    public AssertFile contentContains(Charset charset, final String... expected) {
+        return this.addStatus(new AssertStrings(getContentAsString(charset)).contains(expected).isPassed());
     }
 
     /**
