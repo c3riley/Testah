@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.junit.Assert.assertThat;
+
 public class TestHttpAkkaRunner {
 
     @Test
@@ -137,5 +139,12 @@ public class TestHttpAkkaRunner {
             }
         }
         TS.asserts().equalsTo(values, responseValues);
+    }
+
+    @Test
+    public void getHttpAkkaRunnerTest() {
+        final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
+        assertThat(HttpAkkaRunner.getHttpAkkaRunner();
+        HttpAkkaRunner.setHttpAkkaRunner(null);
     }
 }
