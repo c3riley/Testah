@@ -141,12 +141,4 @@ public class TestHttpAkkaRunner {
         }
         TS.asserts().equalsTo(values, responseValues);
     }
-
-    @Test
-    public void getHttpAkkaRunnerTest() {
-        final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
-        assertThat(HttpAkkaRunner.getHttpAkkaRunner(), equalTo(HttpAkkaRunner.getInstance()));
-        HttpAkkaRunner.setHttpAkkaRunner(null);
-        assertThat(null, equalTo(HttpAkkaRunner.getHttpAkkaRunner()));
-    }
 }
