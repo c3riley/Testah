@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 public class TestHttpAkkaRunner {
@@ -144,7 +145,8 @@ public class TestHttpAkkaRunner {
     @Test
     public void getHttpAkkaRunnerTest() {
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
-        assertThat(HttpAkkaRunner.getHttpAkkaRunner();
+        assertThat(HttpAkkaRunner.getHttpAkkaRunner(), equalTo(HttpAkkaRunner.getInstance()));
         HttpAkkaRunner.setHttpAkkaRunner(null);
+        assertThat(null, equalTo(HttpAkkaRunner.getHttpAkkaRunner()));
     }
 }
