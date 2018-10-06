@@ -61,9 +61,7 @@ jobs:
 
       - type: store_artifacts
         path: /home/circleci/repo/testah-junit/testah.log
-      - type: store_artifacts
         path: /home/circleci/repo/testah-junit/build/test-results/**/*
-      - type: store_artifacts
         path: /home/circleci/repo/testah-junit/build/reports/tests/**/*
       # Save artifacts
       - type: store_test_results

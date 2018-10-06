@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
 
 public class PutRequestDtoTest {
 
-   @Test
+    @Test
     public void testConstructorOnlyUrl() {
         PutRequestDto put = new PutRequestDto("https://postman-echo.com/put");
         Assert.assertNull(TS.http().doRequest(put).assertStatus().getResponse().get("data").textValue());

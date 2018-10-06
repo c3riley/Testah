@@ -14,9 +14,9 @@ import java.util.List;
 
 public class PatchRequestDtoTest {
 
-   @Test
+    @Test
     public void testConstructorOnlyUrl() {
-       PatchRequestDto patch = new PatchRequestDto("https://postman-echo.com/patch");
+        PatchRequestDto patch = new PatchRequestDto("https://postman-echo.com/patch");
         Assert.assertNull(TS.http().doRequest(patch).assertStatus().getResponse().get("data").textValue());
     }
 

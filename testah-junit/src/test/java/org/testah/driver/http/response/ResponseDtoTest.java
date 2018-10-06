@@ -132,7 +132,8 @@ public class ResponseDtoTest {
             equalTo(dto.getUrl()));
         assertThat(dto.getHeaders().size(),
             greaterThanOrEqualTo(5));
-        assertThat(dto.getHeaders().entrySet().stream().findFirst().filter(header -> {
+        assertThat(dto.getHeaders().entrySet().stream().findFirst().filter(
+            header -> {
                 return header.getKey().equals("host") &&
                     header.getValue().equals("postman-echo.com");
             }).isPresent(),
@@ -334,7 +335,7 @@ public class ResponseDtoTest {
         new AssertFile(getResponse.writeResponseInfoFile(true)).contentContains(
             "{\"args\":{},\"headers\":{\"host\":\"postman-echo.com\",",
             "\"accept-encoding\":\"gzip,deflate\",",
-            "\"user-agent\":\"Apache-HttpClient/4.5.5 (Java/1.8.0_162)\",\"x-forwarded-port\":\"443\",",
+            "\"user-agent\":\"Apache-HttpClient/4.5.5 (Java/",
             "\"x-forwarded-proto\":\"https\"},\"url\":\"https://postman-echo.com/get\"}");
 
     }
