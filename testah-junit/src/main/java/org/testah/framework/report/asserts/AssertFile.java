@@ -33,6 +33,7 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
      */
     public AssertFile(File actual) {
         super(actual);
+        setDefaultMessage();
     }
 
     /**
@@ -43,6 +44,15 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
      */
     public AssertFile(File actual, VerboseAsserts asserts) {
         super(actual, asserts);
+        setDefaultMessage();
+    }
+
+    private void setDefaultMessage() {
+        if (getActual() != null) {
+            setMessage(String.format("File[%s]", getActual().getAbsolutePath()));
+        } else {
+            setMessage("File[null]");
+        }
     }
 
     /**
@@ -148,7 +158,8 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
     }
 
     public AssertFile contentContains(Charset charset, final String... expected) {
-        return this.addStatus(new AssertStrings(getContentAsString(charset)).contains(expected).isPassed());
+        return this.addStatus(new AssertStrings(getContentAsString(charset))
+            .setMessage(getMessage("contains")).contains(expected).isPassed());
     }
 
     /**

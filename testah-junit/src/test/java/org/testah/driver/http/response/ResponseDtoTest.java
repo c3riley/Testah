@@ -243,8 +243,8 @@ public class ResponseDtoTest {
 
     @Test
     public void getHeadersTest() {
-        assertThat(7,
-            equalTo(getResponse.getHeaders().length));
+        assertThat(getResponse.getHeaders().length,
+            greaterThanOrEqualTo(6));
 
         assertThat(Arrays.stream(getResponse.getHeaders()).findFirst().filter(header -> {
                 return header.getName().equals("Content-Type") &&
@@ -330,17 +330,13 @@ public class ResponseDtoTest {
 
     @Test
     public void writeResponseInfoFileTest() {
-        boolean before = TS.params().getWriteResponseToFile();
-        try {
-            TS.params().setWriteResponseToFile(true);
-            new AssertFile(getResponse.writeResponseInfoFile()).contentContains(
-                "{\"args\":{},\"headers\":{\"host\":\"postman-echo.com\",",
-                "\"accept-encoding\":\"gzip,deflate\",",
-                "\"user-agent\":\"Apache-HttpClient/4.5.5 (Java/1.8.0_162)\",\"x-forwarded-port\":\"443\",",
-                "\"x-forwarded-proto\":\"https\"},\"url\":\"https://postman-echo.com/get\"}");
-        } finally {
-            TS.params().setWriteResponseToFile(before);
-        }
+
+        new AssertFile(getResponse.writeResponseInfoFile(true)).contentContains(
+            "{\"args\":{},\"headers\":{\"host\":\"postman-echo.com\",",
+            "\"accept-encoding\":\"gzip,deflate\",",
+            "\"user-agent\":\"Apache-HttpClient/4.5.5 (Java/1.8.0_162)\",\"x-forwarded-port\":\"443\",",
+            "\"x-forwarded-proto\":\"https\"},\"url\":\"https://postman-echo.com/get\"}");
+
     }
 
     @Test
