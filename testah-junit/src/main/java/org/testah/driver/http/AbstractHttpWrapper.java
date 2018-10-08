@@ -637,7 +637,7 @@ public abstract class AbstractHttpWrapper {
         rcb.setCookieSpec(getCookieSpecs())
             .setExpectContinueEnabled(false)
             .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
-            .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC)).build();
+            .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
 
         return rcb;
     }
