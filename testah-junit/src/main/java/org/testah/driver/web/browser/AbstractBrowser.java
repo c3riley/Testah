@@ -48,7 +48,7 @@ public abstract class AbstractBrowser<T> {
     /**
      * The desired capabilities.
      */
-    private DesiredCapabilities desiredCapabilities = null;
+    private MutableCapabilities desiredCapabilities = null;
 
     /**
      * Gets the default browser.
@@ -97,7 +97,7 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractBrowser<T> start(final boolean remote) {
         try {
-            final DesiredCapabilities capabilities = getCapabilities();
+            final MutableCapabilities capabilities = getCapabilities();
 
             if (remote) {
                 driver = getRemoteDriver(capabilities);
@@ -118,7 +118,7 @@ public abstract class AbstractBrowser<T> {
      *
      * @return the capabilities
      */
-    public DesiredCapabilities getCapabilities() {
+    public MutableCapabilities getCapabilities() {
         if (null == desiredCapabilities) {
             desiredCapabilities = createCapabilities();
         }
@@ -142,7 +142,7 @@ public abstract class AbstractBrowser<T> {
      * @param capabilities the capabilities
      * @return the remote driver
      */
-    public WebDriver getRemoteDriver(final DesiredCapabilities capabilities) {
+    public WebDriver getRemoteDriver(final MutableCapabilities capabilities) {
         try {
             return new RemoteWebDriver(new URL(remoteUri), capabilities);
         } catch (final Exception e) {
@@ -171,7 +171,7 @@ public abstract class AbstractBrowser<T> {
      * @param capabilities the capabilities
      * @return the web driver
      */
-    public abstract WebDriver getWebDriver(final DesiredCapabilities capabilities);
+    public abstract WebDriver getWebDriver(final MutableCapabilities capabilities);
 
     /**
      * Sets window size. Use the default values from TS.params(), if not found maximize window.
@@ -208,7 +208,7 @@ public abstract class AbstractBrowser<T> {
      *
      * @return the desired capabilities
      */
-    public abstract DesiredCapabilities createCapabilities();
+    public abstract MutableCapabilities createCapabilities();
 
     /**
      * Maximize.
@@ -485,7 +485,7 @@ public abstract class AbstractBrowser<T> {
             TS.util().pause("getWebElementsNative", count);
         }
         TS.asserts().isTrue("Expected to find WebElements with By[" + by + "] found: " + lst.size() + " " + error,
-                lst.size() > 0);
+            lst.size() > 0);
         return lst;
     }
 
@@ -985,7 +985,7 @@ public abstract class AbstractBrowser<T> {
      */
     public boolean verifyTextIsNotPresent(final String textExpected) {
         return TS.verify().isFalse("Looking for Text[" + textExpected + "] To Not be on Page",
-                isTextPresent(textExpected));
+            isTextPresent(textExpected));
     }
 
     /**

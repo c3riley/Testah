@@ -1,10 +1,12 @@
 package org.testah.driver.web.browser;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testah.TS;
 
 import java.io.File;
@@ -15,14 +17,13 @@ import java.io.IOException;
  */
 public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
 
-    private static final String DRIVER_PATH_VAR = "webdriver.gecko.driver";
-
     /*
      * (non-Javadoc)
      *
      * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary()
      */
     public FirefoxGeckoBrowser getDriverBinary() {
+        WebDriverManager.firefoxdriver().setup();
         return this;
     }
 
@@ -40,8 +41,12 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
      *
      * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
      */
-    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
-        return new FirefoxDriver(capabilities);
+    public WebDriver getWebDriver(final MutableCapabilities capabilities) {
+        if (capabilities instanceof FirefoxOptions) {
+            return new FirefoxDriver((FirefoxOptions) capabilities);
+        } else {
+            return new FirefoxDriver(capabilities);
+        }
     }
 
     /**
@@ -49,12 +54,9 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
      *
      * @return DesiredCapabilities
      */
-    public DesiredCapabilities createCapabilities() {
-        final DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-        final String driverPath = TS.params().getValue(DRIVER_PATH_VAR);
-        if (driverPath != null) {
-            capabilities.setCapability("marionette", true);
-        }
+    public MutableCapabilities createCapabilities() {
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+
         final FirefoxProfile profile = new FirefoxProfile();
         profile.setAcceptUntrustedCertificates(true);
         if (null != getUserAgentValue()) {
@@ -62,19 +64,23 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
         }
         profile.setPreference("browser.download.folderList", 2);
         profile.setPreference("browser.helperApps.neverAsk.saveToDisk",
-                "text/csv;application/pdf;application/vnd.ms-excelapplication/txt;application/txt;");
+            "text/csv;application/pdf;application/vnd.ms-excelapplication/txt;application/txt;");
         profile.setPreference("pdfjs.disabled", true);
         profile.setPreference("pdfjs.firstRun", false);
         profile.setPreference("dom.max_script_run_time", 0);
-        capabilities.setCapability("nativeEvents", false);
-        capabilities.setCapability(FirefoxDriver.PROFILE, profile);
-        capabilities.setCapability("elementScrollBehavior", 1);
+        firefoxOptions.setProfile(profile);
+
+        firefoxOptions.setCapability("elementScrollBehavior", 1);
+
         if (null != TS.params().getWebDriver_firefoxDriverBinary() &&
-                TS.params().getWebDriver_firefoxDriverBinary().length() > 0) {
-            capabilities.setCapability(FirefoxDriver.BINARY,
-                    new FirefoxBinary(new File(TS.params().getWebDriver_firefoxDriverBinary())));
+            TS.params().getWebDriver_firefoxDriverBinary().length() > 0) {
+            String binPath = TS.params().getWebDriver_firefoxDriverBinary();
+            firefoxOptions.setCapability(FirefoxDriver.BINARY,
+                new FirefoxBinary(new File(binPath)));
         }
-        return capabilities;
+
+
+        return firefoxOptions;
     }
 
     /*

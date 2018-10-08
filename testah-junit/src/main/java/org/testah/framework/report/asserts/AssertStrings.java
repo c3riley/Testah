@@ -10,6 +10,8 @@ import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.base.AbstractAssertBase;
 import org.testah.framework.report.asserts.base.AssertFunctionReturnBooleanActual;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -279,6 +281,18 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
                 Assert.assertTrue(StringUtils.endsWithIgnoreCase(getActual(), expectedSuffix));
                 return true;
             }, expectedSuffix, getActual());
+    }
+
+    public AssertStrings contains(final String[] expectedValuesToContain) {
+        return contains(Arrays.asList(expectedValuesToContain));
+    }
+
+    public AssertStrings contains(final List<String> expectedValuesToContain) {
+        getAsserts().notNull("Ensure expectedValuesToContain is not null", expectedValuesToContain);
+        expectedValuesToContain.stream().forEach(expectedValueToContain -> {
+            contains(expectedValueToContain);
+        });
+        return this;
     }
 
     /**

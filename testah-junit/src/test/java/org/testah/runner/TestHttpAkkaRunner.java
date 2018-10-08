@@ -16,6 +16,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+
 public class TestHttpAkkaRunner {
 
     @Test
@@ -36,7 +39,7 @@ public class TestHttpAkkaRunner {
         akkaRunner.runAndReport(5, new GetRequestDto("http://www.google.com"), 5);
     }
 
-    @Ignore
+
     @Test
     public void happyPathPostChangingPayload() {
         final int totalNumberOfPosts = 4;
@@ -89,7 +92,6 @@ public class TestHttpAkkaRunner {
         TS.asserts().equalsTo(values, responseValues);
     }
 
-    @Ignore
     @Test
     public void happyPathGetChangingPath() {
         final int totalNumberOfGets = 4;

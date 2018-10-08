@@ -1,12 +1,14 @@
 package org.testah.driver.http.requests;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +19,8 @@ import org.testah.framework.report.asserts.AssertStrings;
 import org.testah.util.unittest.dtotest.DtoTest;
 import org.testah.util.unittest.dtotest.SystemOutCapture;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -437,5 +441,47 @@ public class PostRequestDtoTest {
         Assert.assertEquals(ToStringStyle.JSON_STYLE, postWithData.getToStringStyle());
         postWithData.setToStringStyle(ToStringStyle.SIMPLE_STYLE);
         Assert.assertEquals(ToStringStyle.SIMPLE_STYLE, postWithData.getToStringStyle());
+    }
+
+    @Test
+    public void testConstructorOnlyUrl() {
+        PostRequestDto post = new PostRequestDto("https://postman-echo.com/post");
+        Assert.assertNull(TS.http().doRequest(post).assertStatus().getResponse().get("data").textValue());
+    }
+
+    @Test
+    public void testConstructorUrlAndPayloadAsObject() {
+        final List<String> payload = new ArrayList<>();
+        payload.add("this is a test");
+        PostRequestDto post = new PostRequestDto("https://postman-echo.com/post", payload);
+        Assert.assertEquals("[ \"this is a test\" ]", TS.http().doRequest(post).assertStatus().getResponse().get("data").textValue());
+    }
+
+    @Test
+    public void testConstructorUrlAndPayloadAsString() {
+        final String payload = "This is a test";
+        PostRequestDto post = new PostRequestDto("https://postman-echo.com/post", "This is a test");
+        Assert.assertEquals(payload, TS.http().doRequest(post).assertStatus().getResponse().get("data").textValue());
+    }
+
+    @Test
+    public void testConstructorUrlAndPayloadAsByteArray() {
+        final String payload = "This is a test";
+        PostRequestDto post = new PostRequestDto("https://postman-echo.com/post",
+            payload.getBytes(Charset.forName("UTF8")));
+        JsonNode json = TS.http().doRequest(post).assertStatus().getResponse();
+        Assert.assertEquals("application/octet-stream", json.get("headers").get("content-type").textValue());
+        Assert.assertEquals("Buffer", json.get("data").get("type").textValue());
+        Assert.assertEquals("[84,104,105,115,32,105,115,32,97,32,116,101,115,116]", json.get("data").get("data").toString());
+    }
+
+    @Test
+    public void testConstructorUrlAndPayloadAsHttpEntity() throws UnsupportedEncodingException {
+        final String payload = "This is a test";
+        HttpEntity entity = new StringEntity(payload);
+        PostRequestDto post = new PostRequestDto("https://postman-echo.com/post", entity);
+        JsonNode json = TS.http().doRequest(post).assertStatus().getResponse();
+        Assert.assertEquals("text/plain; charset=ISO-8859-1", json.get("headers").get("content-type").textValue());
+        Assert.assertEquals(payload, json.get("data").textValue());
     }
 }

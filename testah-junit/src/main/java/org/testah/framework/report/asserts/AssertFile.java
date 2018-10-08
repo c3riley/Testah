@@ -1,7 +1,10 @@
 package org.testah.framework.report.asserts;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.junit.Assert;
+import org.testah.TS;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.base.AbstractAssertBase;
 import org.testah.framework.report.asserts.base.AssertFunctionReturnBooleanActual;
@@ -17,6 +20,15 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
 
     private Charset defaultCharset = Charset.forName("UTF-8");
 
+
+    public AssertFile(final String actual) {
+        this(new File(actual));
+    }
+
+    public AssertFile(final String actual, VerboseAsserts asserts) {
+        this(new File(actual), asserts);
+    }
+
     /**
      * Instantiates a new Assert file.
      *
@@ -24,6 +36,7 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
      */
     public AssertFile(File actual) {
         super(actual);
+        setDefaultMessage();
     }
 
     /**
@@ -34,6 +47,15 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
      */
     public AssertFile(File actual, VerboseAsserts asserts) {
         super(actual, asserts);
+        setDefaultMessage();
+    }
+
+    private void setDefaultMessage() {
+        if (getActual() != null) {
+            setMessage(String.format("File[%s]", getActual().getAbsolutePath()));
+        } else {
+            setMessage("File[null]");
+        }
     }
 
     /**
@@ -49,7 +71,7 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
             return true;
         };
         return runAssert("Check that file[" + getAbsolutePath() + "] exists", "exists",
-                assertRun, null, getActual());
+            assertRun, null, getActual());
     }
 
     /**
@@ -77,7 +99,7 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
             return true;
         };
         return runAssert("Check that file[" + getAbsolutePath() + "] does not exist", "notExists",
-                assertRun, null, getActual());
+            assertRun, null, getActual());
     }
 
     /**
@@ -134,6 +156,15 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
         return this.addStatus(new AssertStrings(getContentAsString(charset)).equalsTo(expected).isPassed());
     }
 
+    public AssertFile contentContains(final String... expected) {
+        return contentContains(Charset.forName("UTF-8"), expected);
+    }
+
+    public AssertFile contentContains(Charset charset, final String... expected) {
+        return this.addStatus(new AssertStrings(getContentAsString(charset))
+            .setMessage(getMessage("contains")).contains(expected).isPassed());
+    }
+
     /**
      * Gets content as string.
      *
@@ -146,6 +177,21 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
             return FileUtils.readFileToString(getActual(), charset);
         } catch (IOException e) {
             getAsserts().fail("Issue getting the String Content of the file[" + file.getAbsolutePath() + "]", e);
+        }
+        return null;
+    }
+
+    public T getContentAsObject(final File file, final Class<T> valueType) {
+        return getContentAsObject(file, valueType, defaultCharset, TS.util().getMap());
+    }
+
+    public T getContentAsObject(final File file, final Class<T> valueType, Charset charset, ObjectMapper mapper) {
+        String content = getContentAsString(getActual(), charset);
+        try {
+            return TS.util().getMap().readValue(content, valueType);
+        } catch (IOException e) {
+            getAsserts().fail("Issue getting the Content of the file[" + file.getAbsolutePath() +
+                "] as an object - content[" + content + "]", e);
         }
         return null;
     }
