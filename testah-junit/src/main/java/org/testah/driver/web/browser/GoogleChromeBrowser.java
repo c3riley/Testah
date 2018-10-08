@@ -2,6 +2,7 @@ package org.testah.driver.web.browser;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.DriverManagerType;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
@@ -44,7 +45,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
      */
     public GoogleChromeBrowser startService() throws IOException {
         service = new ChromeDriverService.Builder().usingDriverExecutable(new File(getChromePath())).usingAnyFreePort()
-                .withLogFile(File.createTempFile("googleChromeLog", ".log")).build();
+            .withLogFile(File.createTempFile("googleChromeLog", ".log")).build();
         service.start();
         return this;
     }
@@ -55,11 +56,20 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
      * @param capabilities the capabilities
      * @return WebDriver
      */
-    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
-        if (null == service) {
-            return new ChromeDriver(capabilities);
+    public WebDriver getWebDriver(final MutableCapabilities capabilities) {
+        if (capabilities instanceof ChromeOptions) {
+            ChromeOptions chromeOptions = (ChromeOptions) capabilities;
+            if (null == service) {
+                return new ChromeDriver(chromeOptions);
+            } else {
+                return new ChromeDriver(service, chromeOptions);
+            }
         } else {
-            return new ChromeDriver(service, capabilities);
+            if (null == service) {
+                return new ChromeDriver(capabilities);
+            } else {
+                return new ChromeDriver(service, capabilities);
+            }
         }
     }
 
@@ -68,11 +78,11 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
      *
      * @return DesiredCapabilities
      */
-    public DesiredCapabilities createCapabilities() {
-        final DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+    public MutableCapabilities createCapabilities() {
+        final ChromeOptions chromeOptions = new ChromeOptions();
 
         if (null != getUserAgentValue()) {
-            capabilities.setCapability("user-agent", getUserAgentValue());
+            chromeOptions.setCapability("user-agent", getUserAgentValue());
         }
 
         final Map<String, Object> prefs = new HashMap<>();
@@ -80,15 +90,12 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         prefs.put("profile.default_content_settings.popups", 0);
         prefs.put("download.prompt_for_download", false);
         prefs.put("download.default_directory", TS.params().getOutput());
-        final ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("start-maximized");
         chromeOptions.setExperimentalOption("prefs", prefs);
+        chromeOptions.setCapability("chrome.switches",
+            Arrays.asList("--disable-default-apps", "--allow-running-insecure-content", "--start-maximized"));
 
-        capabilities.setCapability("chrome.switches",
-                Arrays.asList("--disable-default-apps", "--allow-running-insecure-content", "--start-maximized"));
-
-        capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-        return capabilities;
+        return chromeOptions;
     }
 
     /**

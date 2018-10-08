@@ -43,16 +43,11 @@ public class HttpWrapperV2 extends AbstractHttpWrapper {
 
     private AbstractHttpWrapper initRequestConfig(final Integer timeout) {
 
-        final RequestConfig.Builder rcb = RequestConfig.custom();
+        final RequestConfig.Builder rcb = getRequestConfigDefaultBuilder();
 
         if (null != timeout) {
-            rcb.setSocketTimeout(timeout).setConnectTimeout(timeout)
-                    .setConnectionRequestTimeout(getDefaultConnectionTimeout());
+            rcb.setSocketTimeout(timeout).setConnectTimeout(timeout);
         }
-
-        rcb.setCookieSpec(CookieSpecs.DEFAULT).setExpectContinueEnabled(false)
-                .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
-                .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
 
         return setRequestConfig(rcb.build());
     }

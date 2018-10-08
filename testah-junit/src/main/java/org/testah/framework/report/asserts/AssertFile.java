@@ -1,7 +1,10 @@
 package org.testah.framework.report.asserts;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.junit.Assert;
+import org.testah.TS;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.base.AbstractAssertBase;
 import org.testah.framework.report.asserts.base.AssertFunctionReturnBooleanActual;
@@ -174,6 +177,21 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
             return FileUtils.readFileToString(getActual(), charset);
         } catch (IOException e) {
             getAsserts().fail("Issue getting the String Content of the file[" + file.getAbsolutePath() + "]", e);
+        }
+        return null;
+    }
+
+    public T getContentAsObject(final File file, final Class<T> valueType) {
+        return getContentAsObject(file, valueType, defaultCharset, TS.util().getMap());
+    }
+
+    public T getContentAsObject(final File file, final Class<T> valueType, Charset charset, ObjectMapper mapper) {
+        String content = getContentAsString(getActual(), charset);
+        try {
+            return TS.util().getMap().readValue(content, valueType);
+        } catch (IOException e) {
+            getAsserts().fail("Issue getting the Content of the file[" + file.getAbsolutePath() +
+                "] as an object - content[" + content + "]", e);
         }
         return null;
     }

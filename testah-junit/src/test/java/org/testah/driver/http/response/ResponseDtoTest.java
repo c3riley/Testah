@@ -159,7 +159,9 @@ public class ResponseDtoTest {
 
     @Test
     public void printTest() {
-        TS.asserts().assertSystemOutContains(() -> {
+        TS.asserts().assertSystemOutContains(
+            () ->
+            {
                 getResponse.print();
             }, "DEBUG - ResponseDto               - # Response",
             "DEBUG - ResponseDto               - # URI: https://postman-echo.com/get",
@@ -173,7 +175,9 @@ public class ResponseDtoTest {
 
     @Test
     public void print1Test() {
-        TS.asserts().assertSystemOutContains(() -> {
+        TS.asserts().assertSystemOutContains(
+            () ->
+            {
                 getResponse.print(true);
             }, "DEBUG - ResponseDto               - # Response",
             "DEBUG - ResponseDto               - # URI: https://postman-echo.com/get",
@@ -186,7 +190,8 @@ public class ResponseDtoTest {
 
     @Test
     public void print2Test() {
-        TS.asserts().assertSystemOutContains(() -> {
+        TS.asserts().assertSystemOutContains(
+            () -> {
                 getResponse.print(true, 10);
             }, "DEBUG - ResponseDto               - # Response",
             "DEBUG - ResponseDto               - # URI: https://postman-echo.com/get",
@@ -247,10 +252,11 @@ public class ResponseDtoTest {
         assertThat(getResponse.getHeaders().length,
             greaterThanOrEqualTo(6));
 
-        assertThat(Arrays.stream(getResponse.getHeaders()).findFirst().filter(header -> {
-                return header.getName().equals("Content-Type") &&
-                    header.getValue().equals("application/json; charset=utf-8");
-            }).isPresent(),
+        assertThat(Arrays.stream(getResponse.getHeaders()).findFirst()
+                .filter(header -> {
+                    return header.getName().equals("Content-Type") &&
+                        header.getValue().equals("application/json; charset=utf-8");
+                }).isPresent(),
             is(true));
 
         assertThat("application/json; charset=utf-8", equalTo(getResponse.getHeaderHash().get("Content-Type")));

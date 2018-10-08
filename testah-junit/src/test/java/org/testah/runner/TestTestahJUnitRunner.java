@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 public class TestTestahJUnitRunner {
 
-    @Ignore
+
     @Test
     public void testWithOneTest() {
         final TestahJUnitRunner runner = new TestahJUnitRunner();
@@ -27,7 +27,6 @@ public class TestTestahJUnitRunner {
 
     }
 
-    @Ignore
     @Test
     public void testWithTwoDifferentTestOnlyOneConcurrent() {
         final TestahJUnitRunner runner = new TestahJUnitRunner();
@@ -40,7 +39,6 @@ public class TestTestahJUnitRunner {
 
     }
 
-    @Ignore
     @Test
     public void testWithTwoDifferentTestOnlyTwoConcurrent() {
         final TestahJUnitRunner runner = new TestahJUnitRunner();
@@ -52,7 +50,6 @@ public class TestTestahJUnitRunner {
         Assert.assertEquals(2, results.size());
     }
 
-    @Ignore
     @Test
     public void testWithManyDifferentTestOnlyManyConcurrent() {
         final TestahJUnitRunner runner = new TestahJUnitRunner();

@@ -17,23 +17,23 @@ import java.io.Closeable;
 import java.util.concurrent.Future;
 
 /**
- * The Class HttpAsynchWrapperV1.
+ * The Class HttpAsyncWrapperV1.
  */
-public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeable {
+public class HttpAsyncWrapperV1 extends AbstractHttpWrapper implements Closeable {
 
     /**
-     * The http asynch client.
+     * The http async client.
      */
-    private CloseableHttpAsyncClient httpAsynchClient;
+    private CloseableHttpAsyncClient httpAsyncClient;
 
     /**
-     * Do request asynch.
+     * Do request async.
      *
      * @param request the request
      * @param verbose the verbose
      * @return the future
      */
-    public Future<HttpResponse> doRequestAsynch(final AbstractRequestDto<?> request, final boolean verbose) {
+    public Future<HttpResponse> doRequestAsync(final AbstractRequestDto<?> request, final boolean verbose) {
         try {
             final HttpClientContext context = HttpClientContext.create();
             if (null != getCookieStore()) {
@@ -99,29 +99,33 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
      * @return the http async client
      */
     public CloseableHttpAsyncClient getHttpAsyncClient() {
-        if (null == httpAsynchClient) {
-            setHttpAsynchClient();
+        if (null == httpAsyncClient) {
+            setHttpAsyncClient();
         }
-        return httpAsynchClient;
+        return httpAsyncClient;
     }
 
     /**
      * Sets the http async client.
      *
-     * @param httpAsynchClient the http asynch client
-     * @return the http asynch wrapper v1
+     * @param httpAsyncClient the http async client
+     * @return the http async wrapper v1
      */
-    public HttpAsynchWrapperV1 setHttpAsyncClient(final CloseableHttpAsyncClient httpAsynchClient) {
-        this.httpAsynchClient = httpAsynchClient;
+    public HttpAsyncWrapperV1 setHttpAsyncClient(final CloseableHttpAsyncClient httpAsyncClient) {
+        this.httpAsyncClient = httpAsyncClient;
         return this;
     }
 
+    public AbstractHttpWrapper setHttpAsyncClient() {
+        return setHttpAsyncClient(getHttpAsyncClientBuilder().build());
+    }
+    
     /**
-     * Sets the http asynch client.
+     * Sets the http async client.
      *
      * @return the abstract http wrapper
      */
-    public AbstractHttpWrapper setHttpAsynchClient() {
+    public HttpAsyncClientBuilder getHttpAsyncClientBuilder() {
         final HttpAsyncClientBuilder hcb = HttpAsyncClients.custom();
         if (null != getProxy()) {
             hcb.setProxy(getProxy());
@@ -148,7 +152,7 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
         if (isTrustAllCerts()) {
             // hcb.setSSLHostnameVerifier(new NoopHostnameVerifier());
         }
-        return setHttpAsyncClient(hcb.build());
+        return hcb;
     }
 
     /**
