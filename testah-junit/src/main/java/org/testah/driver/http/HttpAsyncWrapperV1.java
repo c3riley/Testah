@@ -14,6 +14,7 @@ import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 
 import java.io.Closeable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
@@ -119,7 +120,7 @@ public class HttpAsyncWrapperV1 extends AbstractHttpWrapper implements Closeable
     public AbstractHttpWrapper setHttpAsyncClient() {
         return setHttpAsyncClient(getHttpAsyncClientBuilder().build());
     }
-    
+
     /**
      * Sets the http async client.
      *
@@ -156,6 +157,28 @@ public class HttpAsyncWrapperV1 extends AbstractHttpWrapper implements Closeable
     }
 
     /**
+     * Wait for future response http response.
+     *
+     * @param response               the response
+     * @param maxTimeToWaitInSeconds the max time to wait in seconds
+     * @return the http response
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+    public HttpResponse waitForFutureResponse(final Future<HttpResponse> response, final int maxTimeToWaitInSeconds)
+        throws ExecutionException, InterruptedException {
+        int ctr = 1;
+        while (!response.isDone() || response.isCancelled()) {
+            TS.util().pause(200L, "Waiting for response future to be done", ctr++);
+            if (ctr > maxTimeToWaitInSeconds) {
+                break;
+            }
+        }
+        getVerboseAsserts().isTrue("Check that the future is done after waiting for it", response.isDone());
+        return response.get();
+    }
+
+    /**
      * Gets the response dto from future.
      *
      * @param response the response
@@ -166,6 +189,11 @@ public class HttpAsyncWrapperV1 extends AbstractHttpWrapper implements Closeable
         return getResponseDtoFromFuture(response, null);
     }
 
+    public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response,
+                                                final AbstractRequestDto<?> request) throws Exception {
+        return getResponseDtoFromFuture(response, request, 120);
+    }
+
     /**
      * Gets the response dto from future.
      *
@@ -174,17 +202,14 @@ public class HttpAsyncWrapperV1 extends AbstractHttpWrapper implements Closeable
      * @return the response dto from future
      * @throws Exception the exception
      */
-    public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response, final AbstractRequestDto<?> request)
+    public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response,
+                                                final AbstractRequestDto<?> request, final int maxTimeToWaitInSeconds)
         throws Exception {
         if (null != response) {
-            try {
-                TS.log().debug("Getting response from future, current done state is: " + response.isDone() +
-                    " will block until done.");
-                final HttpResponse responseFromFuture = response.get();
-                return getResponseDto(responseFromFuture, request);
-            } catch (final Exception e) {
-                TS.log().debug(e);
-            }
+            TS.log().debug("Getting response from future, current done state is: " + response.isDone() +
+                " will block until done if needed.");
+            final HttpResponse responseFromFuture = waitForFutureResponse(response, maxTimeToWaitInSeconds);
+            return getResponseDto(responseFromFuture, request);
         }
         return null;
     }

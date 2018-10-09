@@ -39,7 +39,7 @@ public class TestLongRunning extends AbstractLongRunningTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(9200);
 
-    @Ignore("need to work on wire mock")
+    //@Ignore("need to work on wire mock")
     @Test
     public void testGet() throws Exception {
         final Integer[] expectedStatusCodes = {200, 300, 400, 500};
@@ -65,7 +65,7 @@ public class TestLongRunning extends AbstractLongRunningTest {
     private void setupWiremock(ElasticSearchResponseTimesPublisher elasticSearchExecutionStatsPublisher, String domain,
                                String testMethod, Integer[] expectedStatusCodes) {
         wireMockRule.stubFor(post(urlEqualTo(elasticSearchExecutionStatsPublisher.getUrlPathUpload()))
-                .withRequestBody(matching(requestRegexLineCounter))
+                //.withRequestBody(matching(requestRegexLineCounter))
                 .withRequestBody(matching(requestRegexIndexCounter))
                 .withRequestBody(matching(String.format(requestRegexSingle, expectedStatusCodes[0], domain, testMethod)))
                 .withRequestBody(matching(String.format(requestRegexSingle, expectedStatusCodes[1], domain, testMethod)))
@@ -80,7 +80,7 @@ public class TestLongRunning extends AbstractLongRunningTest {
 
     }
 
-    @Ignore("need to work on wire mock")
+    //@Ignore("need to work on wire mock")
     @Test
     public void testPost() throws Exception {
         final Integer[] expectedStatusCodes = {200, 200, 200, 200};

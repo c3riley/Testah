@@ -8,15 +8,17 @@ import org.testah.framework.cli.TestFilter;
 
 import java.util.Set;
 
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assert.assertThat;
+
 public class TestRunner {
 
-    @Ignore
     @Test
     public void testLoadCompiledTests() {
         final TestFilter r = new TestFilter();
         final Set<Class<?>> classes = r.loadCompiledTestClass().getTestClasses();
         Assert.assertNotNull(classes);
-        Assert.assertEquals(5, classes.size());
+        assertThat(classes.size(), greaterThanOrEqualTo(55));
         TS.util().toJson(classes);
     }
 }

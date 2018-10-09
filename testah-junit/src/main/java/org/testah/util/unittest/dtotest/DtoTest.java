@@ -120,7 +120,7 @@ public class DtoTest {
      * @throws InvocationTargetException if the underlying method throws an exception.
      */
     private <T> void callGetter(T instance, String fieldName, Method getter, Object expected)
-            throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
         final Object getResult = getter.invoke(instance);
         try {
@@ -152,7 +152,7 @@ public class DtoTest {
      * @throws IllegalAccessException If the class or its nullary constructor is not accessible.
      */
     private Object createObject(String fieldName, Class<?> clazz)
-            throws InstantiationException, IllegalAccessException {
+        throws InstantiationException, IllegalAccessException {
         try {
             final Supplier<?> supplier = getMappers().get(clazz);
             if (supplier != null) {
@@ -264,10 +264,18 @@ public class DtoTest {
                 /* Create an object. */
                 final Class<?> parameterType = pair.getSetter().getParameterTypes()[0];
                 final Object newObject = createObject(fieldName, parameterType);
-
-                pair.getSetter().invoke(instance, newObject);
-
-                callGetter(instance, fieldName, pair.getGetter(), newObject);
+                try {
+                    pair.getSetter().invoke(instance, newObject);
+                } catch (Exception e) {
+                    TS.log().error("Issue with invoke for setter: " + pair.getSetter().getName());
+                    throw e;
+                }
+                try {
+                    callGetter(instance, fieldName, pair.getGetter(), newObject);
+                } catch (Exception e) {
+                    TS.log().error("Issue with invoke for getter: " + pair.getGetter().getName());
+                    throw e;
+                }
             } else if (pair.getGetter() != null) {
                 /*
                  * Object is immutable (no setter but Hibernate or something else sets it via reflection). Use
