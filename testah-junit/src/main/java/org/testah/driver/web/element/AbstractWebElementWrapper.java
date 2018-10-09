@@ -808,7 +808,7 @@ public abstract class AbstractWebElementWrapper {
     public AbstractWebElementWrapper waitTillAttributeEquals(final String attributeName, final String value,
                                                              final int timeout) {
         for (int count = 1; count <= timeout; count++) {
-            if (verifytAttributeValue(attributeName, value)) {
+            if (verifyAttributeValue(attributeName, value)) {
                 break;
             }
             TS.util().pause("waitTillAttributeEquals", count);
@@ -823,8 +823,8 @@ public abstract class AbstractWebElementWrapper {
      * @param attributeExpectedValue the attribute expected value
      * @return true, if successful
      */
-    public boolean verifytAttributeValue(final String attributeName, final String attributeExpectedValue) {
-        return TS.verify().equalsTo("verifytAttributeValue", attributeExpectedValue, getAttribute(attributeName));
+    public boolean verifyAttributeValue(final String attributeName, final String attributeExpectedValue) {
+        return TS.verify().equalsTo("verifyAttributeValue", attributeExpectedValue, getAttribute(attributeName));
     }
 
     /**

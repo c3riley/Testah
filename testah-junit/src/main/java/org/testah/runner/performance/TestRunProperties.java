@@ -17,7 +17,6 @@ public class TestRunProperties {
     protected final Long defaultMillisBetweenChunks = 3000L;
     private Integer numberOfChunks;
     private Long runDuration = null;
-    private Duration runDurationAsDuration = null;
     private Long stopTime = null;
     private LocalDateTime stopDateTime = null;
     private Integer chunkSize;
@@ -33,6 +32,7 @@ public class TestRunProperties {
         this.serviceUnderTest = serviceUnderTest;
         this.testClass = testClass;
         this.testMethod = testMethod;
+        this.runDuration = this.defaultRunDuration;
     }
 
     /**
@@ -45,11 +45,11 @@ public class TestRunProperties {
      * @param millisBetweenChunks time to pause between chunks
      */
     public TestRunProperties(
-            String serviceUnderTest,
-            String testClass,
-            String testMethod,
-            int numberOfAkkaThreads,
-            long millisBetweenChunks) {
+        String serviceUnderTest,
+        String testClass,
+        String testMethod,
+        int numberOfAkkaThreads,
+        long millisBetweenChunks) {
         this.serviceUnderTest = serviceUnderTest;
         this.testClass = testClass;
         this.testMethod = testMethod;
@@ -63,7 +63,7 @@ public class TestRunProperties {
      *
      * @return the numberOfChunks
      */
-    public int getNumberOfChunks() {
+    public Integer getNumberOfChunks() {
         return numberOfChunks;
     }
 
@@ -125,7 +125,7 @@ public class TestRunProperties {
      *
      * @return the chunkSize
      */
-    public int getChunkSize() {
+    public Integer getChunkSize() {
         return chunkSize;
     }
 
@@ -156,7 +156,7 @@ public class TestRunProperties {
      *
      * @return the numberOfAkkaThreads
      */
-    public int getNumberOfAkkaThreads() {
+    public Integer getNumberOfAkkaThreads() {
         return numberOfAkkaThreads;
     }
 
@@ -187,7 +187,7 @@ public class TestRunProperties {
      *
      * @return the milliseconds between chunks
      */
-    public long getMillisBetweenChunks() {
+    public Long getMillisBetweenChunks() {
         return millisBetweenChunks;
     }
 
@@ -277,13 +277,20 @@ public class TestRunProperties {
         return this;
     }
 
+    /**
+     * Gets runtime.
+     *
+     * @return the runtime
+     */
     public String getRuntime() {
-        return runDurationAsDuration.toString();
+        if (runDuration != null) {
+            return Duration.ofMillis(runDuration).toString();
+        }
+        return null;
     }
 
     @Override
     public String toString() {
-        runDurationAsDuration = Duration.ofMillis(runDuration);
         getStopDateTime();
         return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
