@@ -3,6 +3,17 @@ package org.testah.driver.web.element;
 import org.junit.*;
 import org.openqa.selenium.By;
 import org.testah.TS;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.testah.TS;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -22,6 +33,10 @@ public class WebElementWrapperV1Test {
         if (!TS.browser().getTitle().equals("We Leave From Here")) {
             TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
         }
+    }
+
+    public void formPage() {
+        TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
     }
 
     @Test
@@ -47,7 +62,7 @@ public class WebElementWrapperV1Test {
      */
     public AbstractWebElementWrapper testForTextTypeElements(final String elementId) {
         By selector = By.id(elementId);
-
+        formPage();
         AbstractWebElementWrapper ele = TS.browser().getWebElement(selector);
         assertThat(selector, is(ele.getBy()));
         assertThat(ele.verifyFound(), is(true));
@@ -79,7 +94,7 @@ public class WebElementWrapperV1Test {
     @Test
     public void testDropDown() {
         By selector = By.name("selectomatic");
-
+        formPage();
         AbstractWebElementWrapper ele = TS.browser().getWebElement(selector);
         assertThat(ele.assertFound().isEnabled(), is(true));
         ele.getAsSelectList().selectByIndex(1);
@@ -92,7 +107,7 @@ public class WebElementWrapperV1Test {
     @Test
     public void testCheckbox() {
         By selector = By.name("checky");
-
+        formPage();
         AbstractWebElementWrapper ele = TS.browser().getWebElement(selector);
         assertThat(ele.assertFound().assertIsEnabled().isEnabled(), is(true));
         assertThat(ele.assertIsNotSelected().isSelected(), is(false));
@@ -389,7 +404,7 @@ public class WebElementWrapperV1Test {
 
     @Test
     public void waitTillNotDisplayed() {
-
+        formPage();
         TS.browser().getWebElement(By.cssSelector("input[value='Click!']"))
             .waitTillIsDisplayed().click().waitTillGone().assertNotFound();
     }
@@ -401,6 +416,5 @@ public class WebElementWrapperV1Test {
     @Test
     public void scrollIntoView1() {
     }
-
 
 }
