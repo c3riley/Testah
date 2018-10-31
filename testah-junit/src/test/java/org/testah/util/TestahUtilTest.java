@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -145,8 +146,10 @@ public class TestahUtilTest {
         file.size().assertThat(greaterThan(0L));
         File dir = testahUtil.unZip(file.getActual(), Files.createTempDirectory("temp").toFile());
         TS.log().debug("zip file: " + dir.getAbsolutePath());
-        assertThat(dir.listFiles().length,equalTo(2));
-        assertThat(dir.listFiles()[0].getName(),equalTo("META-INF"));
+
+        ArrayList<File> files = new ArrayList<File>(Arrays.asList(dir.listFiles()));
+        assertThat(files.size(),equalTo(2));
+        assertThat(files.stream().filter(fileInList-> fileInList.getName().equals("META-INF")).findFirst().isPresent(),is(true));
     }
 
 
