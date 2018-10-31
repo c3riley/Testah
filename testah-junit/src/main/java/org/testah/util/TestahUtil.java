@@ -322,17 +322,17 @@ public class TestahUtil {
     /**
      * Un zip.
      *
-     * @param zip         the zip
-     * @param destination the destination
+     * @param zip               the zip
+     * @param destinationFolder the destination folder
      * @return the file
      */
-    public File unZip(final File zip, final File destination) {
-        TS.log().trace("destination mkdirs: " + destination.mkdirs());
+    public File unZip(final File zip, final File destinationFolder) {
+        TS.log().trace("destination mkdirs: " + destinationFolder.mkdirs());
         try (ZipFile zipFile = new ZipFile(zip)) {
             final Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 final ZipEntry entry = entries.nextElement();
-                final File entryDestination = new File(destination, entry.getName());
+                final File entryDestination = new File(destinationFolder, entry.getName());
                 if (entry.isDirectory()) {
                     TS.log().trace("entryDestination mkdirs: " + entryDestination.mkdirs());
                 } else {
@@ -347,17 +347,17 @@ public class TestahUtil {
         } catch (final Exception e) {
             TS.log().warn(e);
         }
-        return destination;
+        return destinationFolder;
     }
 
     /**
      * Split camel case.
      *
-     * @param s the s
+     * @param stringToUse the string To Use
      * @return the string
      */
-    public String splitCamelCase(final String s) {
-        return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
+    public String splitCamelCase(final String stringToUse) {
+        return stringToUse.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
                 "(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
     }
 

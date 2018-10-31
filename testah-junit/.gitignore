@@ -2,3 +2,7 @@ testah.log
 jira.properties
 velocity.log*
 fixVersionReport*.htm
+download*
+drivers
+testah-junit.ipr
+testah-junit.iws

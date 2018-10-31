@@ -58,7 +58,7 @@ public class TestFilter {
      * @param internalClass the internal class
      * @return the int
      */
-    private int loadCompiledTestClass(final String internalClass) {
+    public int loadCompiledTestClass(final String internalClass) {
         if (null != internalClass && internalClass.length() > 0) {
             final Reflections reflections = new Reflections(internalClass);
             Set<Class<?>> lst = reflections.getTypesAnnotatedWith(TestPlan.class);

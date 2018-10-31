@@ -117,6 +117,11 @@ public class HttpAsyncWrapperV1 extends AbstractHttpWrapper implements Closeable
         return this;
     }
 
+    /**
+     * Sets http async client.
+     *
+     * @return the http async client
+     */
     public AbstractHttpWrapper setHttpAsyncClient() {
         return setHttpAsyncClient(getHttpAsyncClientBuilder().build());
     }
@@ -189,6 +194,14 @@ public class HttpAsyncWrapperV1 extends AbstractHttpWrapper implements Closeable
         return getResponseDtoFromFuture(response, null);
     }
 
+    /**
+     * Gets response dto from future.
+     *
+     * @param response the response
+     * @param request  the request
+     * @return the response dto from future
+     * @throws Exception the exception
+     */
     public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response,
                                                 final AbstractRequestDto<?> request) throws Exception {
         return getResponseDtoFromFuture(response, request, 120);
@@ -197,8 +210,9 @@ public class HttpAsyncWrapperV1 extends AbstractHttpWrapper implements Closeable
     /**
      * Gets the response dto from future.
      *
-     * @param response the response
-     * @param request  the request
+     * @param response               the response
+     * @param request                the request
+     * @param maxTimeToWaitInSeconds the max time to wait in seconds
      * @return the response dto from future
      * @throws Exception the exception
      */

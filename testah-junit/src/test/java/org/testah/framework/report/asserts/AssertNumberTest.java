@@ -50,6 +50,9 @@ public class AssertNumberTest {
         return equalsTo(expected, actual, true, null);
     }
 
+
+
+
     private <T extends Number & Comparable<T>> boolean equalsTo(T expected, T actual, boolean expectedPassResult, Integer delta) {
         if (delta == null) {
             Assert.assertTrue(new AssertNumber<T>(actual, negAsserts)

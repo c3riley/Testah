@@ -455,6 +455,14 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         return createResponseInfoStep(true, true, 2000);
     }
 
+    /**
+     * Create response info step step action dto.
+     *
+     * @param shortResponseBody the short response body
+     * @param escapeBody        the escape body
+     * @param truncate          the truncate
+     * @return the step action dto
+     */
     public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapeBody,
                                                 final int truncate) {
         return createResponseInfoStep(shortResponseBody, escapeBody, truncate, TS.step().action().create());
@@ -466,6 +474,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @param shortResponseBody the short response body
      * @param escapeBody        the escape body
      * @param truncate          the truncate
+     * @param step              the step
      * @return the step action dto
      */
     public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapeBody,
@@ -509,6 +518,11 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         return this;
     }
 
+    /**
+     * Write response info file string.
+     *
+     * @return the string
+     */
     public String writeResponseInfoFile() {
         return writeResponseInfoFile(TS.params().getWriteResponseToFile());
     }
@@ -517,6 +531,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     /**
      * Write response to a file for it to be linked to from the report.
      *
+     * @param writeToFile the write to file
      * @return the string
      */
     public String writeResponseInfoFile(final boolean writeToFile) {

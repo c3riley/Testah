@@ -52,4 +52,5 @@ public class AssertNumber<T extends Number & Comparable<T>> extends AbstractAsse
                 "] with delta allowed: " + delta, "equalsTo", assertRun, expectedValue, getActual());
     }
 
+
 }
