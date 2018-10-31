@@ -132,11 +132,12 @@ public class ResponseDtoTest {
             equalTo(dto.getUrl()));
         assertThat(dto.getHeaders().size(),
             greaterThanOrEqualTo(5));
-        assertThat(dto.getHeaders().entrySet().stream().findFirst().filter(
+        assertThat(dto.getHeaders().entrySet().stream().filter(
             header -> {
+                TS.log().debug(header);
                 return header.getKey().equals("host") &&
                     header.getValue().equals("postman-echo.com");
-            }).isPresent(),
+            }).findFirst().isPresent(),
             equalTo(true));
         assertThat(dto.getArgs().size(),
             equalTo(0));
@@ -169,7 +170,7 @@ public class ResponseDtoTest {
             "DEBUG - ResponseDto               - # Headers: ",
             "DEBUG - ResponseDto               - =========================================",
             "DEBUG - ResponseDto               - # Body: (see below)",
-            "{\"args\":{},\"headers\":{\"host\":\"postman-echo.com\",");
+            "{\"args\":{},\"headers\":{");
 
     }
 
@@ -185,7 +186,7 @@ public class ResponseDtoTest {
             "DEBUG - ResponseDto               - # Headers: ",
             "DEBUG - ResponseDto               - =========================================",
             "DEBUG - ResponseDto               - # Body: (see below)",
-            "{\"args\":{},\"headers\":{\"host\":\"postman-echo.com\",");
+            "{\"args\":{},\"headers\":{");
     }
 
     @Test
@@ -252,11 +253,11 @@ public class ResponseDtoTest {
         assertThat(getResponse.getHeaders().length,
             greaterThanOrEqualTo(6));
 
-        assertThat(Arrays.stream(getResponse.getHeaders()).findFirst()
+        assertThat(Arrays.stream(getResponse.getHeaders())
                 .filter(header -> {
                     return header.getName().equals("Content-Type") &&
                         header.getValue().equals("application/json; charset=utf-8");
-                }).isPresent(),
+                }).findFirst().isPresent(),
             is(true));
 
         assertThat("application/json; charset=utf-8", equalTo(getResponse.getHeaderHash().get("Content-Type")));
@@ -274,7 +275,7 @@ public class ResponseDtoTest {
     @Test
     public void getResponseBodyTest() {
         assertThat(getResponse.getResponseBody(), containsString(
-            "{\"args\":{},\"headers\":{\"host\":\"postman-echo.com\",\"accept-encoding\":\"gzip,deflate"
+            "{\"args\":{},\"headers\":{"
         ));
 
     }
@@ -282,7 +283,7 @@ public class ResponseDtoTest {
     @Test
     public void getResponseBody1Test() {
         assertThat(getResponse.getResponseBody(true), containsString(
-            "{&quot;args&quot;:{},&quot;headers&quot;:{&quot;host&quot;:&quot;postman-echo.com&quot;"
+            "{&quot;args&quot;:{},&quot;headers&quot;:{"
         ));
     }
 
@@ -295,13 +296,9 @@ public class ResponseDtoTest {
         StepActionDto stepActionDto = getResponse
             .createResponseInfoStep(true, true, 100);
         assertThat(stepActionDto.toString(),
-            equalTo("{\"testStepActionType\":\"HTTP_REQUEST\",\"description\":null," +
+            startsWith("{\"testStepActionType\":\"HTTP_REQUEST\",\"description\":null," +
                 "\"message1\":\"GET - Uri: https://postman-echo.com/get\",\"message2\":" +
-                "\"Status: 200 [ OK ]\",\"message3\":\"{&quot;args&quot;:{},&quot;headers&quot;:" +
-                "{&quot;host&quot;:&quot;postman-echo.com&quot;,&quot;acc...\",\"status\":null,\"" +
-                "statusEnum\":null,\"actionName\":null,\"exception\":\"java.lang.Throwable\"," +
-                "\"exceptionString\":null,\"snapShotPath\":null,\"htmlSnapShotPath\":null," +
-                "\"restResponsePath\":null}"));
+                "\"Status: 200 [ OK ]\",\"message3\":\"{&quot;args&quot;:{},&quot;headers&quot;:"));
     }
 
     @Test
@@ -311,13 +308,10 @@ public class ResponseDtoTest {
             .createResponseInfoStep(true, true, 100, original);
         assertThat(stepActionDto, is(original));
         assertThat(stepActionDto.toString(),
-            equalTo("{\"testStepActionType\":\"HTTP_REQUEST\",\"description\":null," +
+            startsWith("{\"testStepActionType\":\"HTTP_REQUEST\",\"description\":null," +
                 "\"message1\":\"GET - Uri: https://postman-echo.com/get\",\"message2\":" +
-                "\"Status: 200 [ OK ]\",\"message3\":\"{&quot;args&quot;:{},&quot;headers&quot;:" +
-                "{&quot;host&quot;:&quot;postman-echo.com&quot;,&quot;acc...\",\"status\":null,\"" +
-                "statusEnum\":null,\"actionName\":null,\"exception\":\"java.lang.Throwable\"," +
-                "\"exceptionString\":null,\"snapShotPath\":null,\"htmlSnapShotPath\":null," +
-                "\"restResponsePath\":null}"));
+                "\"Status: 200 [ OK ]\",\"message3\":\"{&quot;args&quot;:{},&quot;headers&quot;:"));
+
     }
 
     @Test
@@ -339,10 +333,11 @@ public class ResponseDtoTest {
     public void writeResponseInfoFileTest() {
 
         new AssertFile(getResponse.writeResponseInfoFile(true)).contentContains(
-            "{\"args\":{},\"headers\":{\"host\":\"postman-echo.com\",",
+            "{\"args\":{},\"headers\":{",
+            "\"host\":\"postman-echo.com\",",
             "\"accept-encoding\":\"gzip,deflate\",",
             "\"user-agent\":\"Apache-HttpClient/4.5.5 (Java/",
-            "\"x-forwarded-proto\":\"https\"},\"url\":\"https://postman-echo.com/get\"}");
+            "\"url\":\"https://postman-echo.com/get\"");
 
     }
 

@@ -1,16 +1,10 @@
 package org.testah.driver.web.element;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.By;
 import org.testah.TS;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 public class WebElementWrapperV1Test {
@@ -18,8 +12,16 @@ public class WebElementWrapperV1Test {
     private static final String formPage = "http://htmlpreview.github.io/?https://raw.githubusercontent.com/" +
         "SeleniumHQ/selenium/master/common/src/web/formPage.html";
 
-    public void formPage() {
+    @BeforeClass
+    public static void setupForClass() {
         TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
+    }
+
+    @Before
+    public void setup() {
+        if (!TS.browser().getTitle().equals("We Leave From Here")) {
+            TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
+        }
     }
 
     @Test
@@ -45,7 +47,7 @@ public class WebElementWrapperV1Test {
      */
     public AbstractWebElementWrapper testForTextTypeElements(final String elementId) {
         By selector = By.id(elementId);
-        formPage();
+
         AbstractWebElementWrapper ele = TS.browser().getWebElement(selector);
         assertThat(selector, is(ele.getBy()));
         assertThat(ele.verifyFound(), is(true));
@@ -77,7 +79,7 @@ public class WebElementWrapperV1Test {
     @Test
     public void testDropDown() {
         By selector = By.name("selectomatic");
-        formPage();
+
         AbstractWebElementWrapper ele = TS.browser().getWebElement(selector);
         assertThat(ele.assertFound().isEnabled(), is(true));
         ele.getAsSelectList().selectByIndex(1);
@@ -90,7 +92,7 @@ public class WebElementWrapperV1Test {
     @Test
     public void testCheckbox() {
         By selector = By.name("checky");
-        formPage();
+
         AbstractWebElementWrapper ele = TS.browser().getWebElement(selector);
         assertThat(ele.assertFound().assertIsEnabled().isEnabled(), is(true));
         assertThat(ele.assertIsNotSelected().isSelected(), is(false));
@@ -103,19 +105,33 @@ public class WebElementWrapperV1Test {
 
     @Test
     public void getSelf() {
+
+        AbstractWebElementWrapper element = TS.browser().getWebElement(By.cssSelector("input[value='Click!']"));
+        assertThat(element.getSelf(), equalTo(element));
     }
 
     @Test
     public void assertAttributeExists() {
+
+        assertThat(TS.browser().getWebElement(By.cssSelector("input[value='Click!']"))
+            .assertAttributeExists("value").getAttribute("value"), equalTo("Click!"));
+
+        try {
+            TS.browser().getWebElement(By.cssSelector("input[value='Click!']")).assertAttributeExists("value2");
+            Assert.fail("Expected error to be thrown");
+        } catch (AssertionError expectedError) {
+
+        }
+
+        try {
+            assertThat(TS.browser().getWebElement(By.cssSelector("input[value='Click!']"))
+                .assertAttributeExists("value").getAttribute("value"), equalTo("NOT_FOUND"));
+            Assert.fail("Expected error to be thrown");
+        } catch (AssertionError expectedError) {
+
+        }
     }
 
-    @Test
-    public void getAttribute() {
-    }
-
-    @Test
-    public void getSelf1() {
-    }
 
     @Test
     public void elementIsOk() {
@@ -323,10 +339,28 @@ public class WebElementWrapperV1Test {
 
     @Test
     public void verfifyElementsWithIn() {
-    }
+        By selector = By.name("login");
+        AbstractWebElementWrapper loginElement = TS.browser().getWebElement(selector);
+        assertThat(loginElement.verfifyElementsWithIn(By.id("email")), is(true));
+        assertThat(loginElement.verfifyElementsWithIn(By.id("not_found")), is(false));
+        loginElement.getElementWithIn(By.id("email")).assertIsDisplayed();
+        try {
+            loginElement.getElementWithIn(By.id("not_found"));
+            Assert.fail("Expected to throw error");
+        } catch (AssertionError expectedError) {
 
-    @Test
-    public void verifyElementWithIn() {
+        }
+        try {
+            loginElement.getElementWithIn(By.id("not_found"),true,true);
+            Assert.fail("Expected to throw error");
+        } catch (AssertionError expectedError) {
+
+        }
+        try {
+            assertThat(loginElement.getElementWithIn(By.id("not_found"),true,false),is(nullValue()));
+        } catch (AssertionError unExpectedError) {
+            Assert.fail("Expected to throw error");
+        }
     }
 
     @Test
@@ -355,7 +389,7 @@ public class WebElementWrapperV1Test {
 
     @Test
     public void waitTillNotDisplayed() {
-        formPage();
+
         TS.browser().getWebElement(By.cssSelector("input[value='Click!']"))
             .waitTillIsDisplayed().click().waitTillGone().assertNotFound();
     }
@@ -367,5 +401,6 @@ public class WebElementWrapperV1Test {
     @Test
     public void scrollIntoView1() {
     }
+
 
 }

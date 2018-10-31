@@ -8,6 +8,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.Map.Entry;
@@ -285,6 +286,10 @@ public class DtoTest {
                 final Field field = getField(fieldName, instance.getClass());
                 if (field == null) {
                     throw new NoSuchFieldException("Unable to find field[" + fieldName + "] in the object or its supers");
+                }
+                if (Modifier.isFinal(field.getModifiers())) {
+                    TS.log().debug("Field[" + field.getName() + "] is final and cannot be tested");
+                    continue;
                 }
 
                 field.setAccessible(true);

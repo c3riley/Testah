@@ -2,6 +2,7 @@ package org.testah.framework.report.asserts.base;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hamcrest.Matcher;
 import org.junit.Assert;
 import org.testah.TS;
 import org.testah.framework.report.VerboseAsserts;
@@ -218,5 +219,11 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
         };
         return runAssert("isNotEmpty", assertStatement, null, getActual(), false, null);
     }
+
+    public H assertThat(Matcher matcher) {
+        getAsserts().that(getActual(), matcher);
+        return (H) this;
+    }
+
 
 }

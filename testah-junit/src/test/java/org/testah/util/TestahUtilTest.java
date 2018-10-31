@@ -5,9 +5,20 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.framework.report.asserts.AssertBigDecimal;
+import org.testah.framework.report.asserts.AssertFile;
 import org.testah.framework.report.asserts.AssertNumber;
 import org.testah.framework.report.asserts.AssertStrings;
 import org.testah.util.unittest.dtotest.SystemOutCapture;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class TestahUtilTest {
 
@@ -43,6 +54,10 @@ public class TestahUtilTest {
         Assert.assertNull(testahUtil.getResourceAsString("util/test1.json"));
         Assert.assertNull(testahUtil.getResourceAsString("util/test5.json"));
         Assert.assertEquals("{\"hello\" : \"world test1\"}", testahUtil.getResourceAsString("/util/test1.json"));
+
+        assertThat(testahUtil.getResourceFolderFiles("/utilNotFound", true),
+            is(new ArrayList<File>()));
+
     }
 
     @Test
@@ -121,6 +136,17 @@ public class TestahUtilTest {
         new AssertStrings(content)
                 .contains("JSON Output for class [Ljava.lang.String;\n[ \"test\" ]");
         TS.log().info(content);
+    }
+
+    @Test
+    public void testDownload() throws IOException {
+        final String uri = "https://github.com/c3riley/maven-repository/raw/master/org/testah/testah-client/0.0.1/testah-client-0.0.1.jar";
+        AssertFile file = new AssertFile(testahUtil.downloadFile(uri)).exists();
+        file.size().assertThat(greaterThan(0L));
+        File dir = testahUtil.unZip(file.getActual(), Files.createTempDirectory("temp").toFile());
+        TS.log().debug("zip file: " + dir.getAbsolutePath());
+        assertThat(dir.listFiles().length,equalTo(2));
+        assertThat(dir.listFiles()[0].getName(),equalTo("META-INF"));
     }
 
 
