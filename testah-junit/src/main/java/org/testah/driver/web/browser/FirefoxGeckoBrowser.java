@@ -55,7 +55,7 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
      * @return DesiredCapabilities
      */
     public MutableCapabilities createCapabilities() {
-        FirefoxOptions firefoxOptions = new FirefoxOptions();
+
 
         final FirefoxProfile profile = new FirefoxProfile();
         profile.setAcceptUntrustedCertificates(true);
@@ -68,6 +68,7 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
         profile.setPreference("pdfjs.disabled", true);
         profile.setPreference("pdfjs.firstRun", false);
         profile.setPreference("dom.max_script_run_time", 0);
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
         firefoxOptions.setProfile(profile);
 
         firefoxOptions.setCapability("elementScrollBehavior", 1);

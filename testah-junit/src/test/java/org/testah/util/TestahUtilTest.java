@@ -15,10 +15,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class TestahUtilTest {
@@ -30,7 +29,7 @@ public class TestahUtilTest {
         Assert.assertEquals("this+is+a+test", testahUtil.urlEncode("this is a test"));
         Assert.assertEquals("", testahUtil.urlEncode(""));
         Assert.assertEquals("%3Ca+href%3D%22http%3A%2F%2Fwww.goolge.com%22%3Etest%3C%2Fa%3E",
-                testahUtil.urlEncode("<a href=\"http://www.goolge.com\">test</a>"));
+            testahUtil.urlEncode("<a href=\"http://www.goolge.com\">test</a>"));
         Assert.assertEquals("%3Ftest%3D20%25%26test2%3D2.34", testahUtil.urlEncode("?test=20%&test2=2.34"));
     }
 
@@ -39,7 +38,7 @@ public class TestahUtilTest {
         Assert.assertEquals("this is a test", testahUtil.htmlEncode("this is a test"));
         Assert.assertEquals("", testahUtil.htmlEncode(""));
         Assert.assertEquals("&lt;a href=&quot;http://www.goolge.com&quot;&gt;test&lt;/a&gt;",
-                testahUtil.htmlEncode("<a href=\"http://www.goolge.com\">test</a>"));
+            testahUtil.htmlEncode("<a href=\"http://www.goolge.com\">test</a>"));
     }
 
     @Test
@@ -49,8 +48,8 @@ public class TestahUtilTest {
     @Test
     public void getResourceAsString() {
         Assert.assertEquals("test1.json\n" +
-                "test2.txt\n" +
-                "test3.log\n", testahUtil.getResourceAsString("/util"));
+            "test2.txt\n" +
+            "test3.log\n", testahUtil.getResourceAsString("/util"));
         Assert.assertNull(testahUtil.getResourceAsString("util"));
         Assert.assertNull(testahUtil.getResourceAsString("util/test1.json"));
         Assert.assertNull(testahUtil.getResourceAsString("util/test5.json"));
@@ -102,16 +101,16 @@ public class TestahUtilTest {
     @Test
     public void testToDateString() {
         new AssertStrings(testahUtil.toDateString(1537329320L, "MM/dd/yyyy HH:mm:ss.S", "EST"))
-                .equalsTo("01/18/1970 14:02:09.320");
+            .equalsTo("01/18/1970 14:02:09.320");
 
         new AssertStrings(testahUtil.toDateString(1537329320L, "MM/dd/yyyy HH:mm:ss.S"))
-                .contains("01/18/1970");
+            .contains("01/18/1970");
     }
 
     @Test
     public void testGetDurationPretty() {
         new AssertStrings(testahUtil.getDurationPretty(102325456L))
-                .equalsTo("28 hours, 25 minutes, 25 seconds and 456 milliseconds");
+            .equalsTo("28 hours, 25 minutes, 25 seconds and 456 milliseconds");
     }
 
     @Test
@@ -135,7 +134,7 @@ public class TestahUtilTest {
         }
         TS.log().info("test");
         new AssertStrings(content)
-                .contains("JSON Output for class [Ljava.lang.String;\n[ \"test\" ]");
+            .contains("JSON Output for class [Ljava.lang.String;\n[ \"test\" ]");
         TS.log().info(content);
     }
 
@@ -146,10 +145,14 @@ public class TestahUtilTest {
         file.size().assertThat(greaterThan(0L));
         File dir = testahUtil.unZip(file.getActual(), Files.createTempDirectory("temp").toFile());
         TS.log().debug("zip file: " + dir.getAbsolutePath());
-
-        ArrayList<File> files = new ArrayList<File>(Arrays.asList(dir.listFiles()));
-        assertThat(files.size(),equalTo(2));
-        assertThat(files.stream().filter(fileInList-> fileInList.getName().equals("META-INF")).findFirst().isPresent(),is(true));
+        assertThat(dir, notNullValue());
+        assertThat(dir.listFiles(), notNullValue());
+        File[] fileArray = dir.listFiles();
+        assertThat(fileArray, notNullValue());
+        ArrayList<File> files = new ArrayList<>(Arrays.asList(fileArray));
+        assertThat(files, notNullValue());
+        assertThat(files.size(), equalTo(2));
+        assertThat(files.stream().filter(fileInList -> fileInList.getName().equals("META-INF")).findFirst().isPresent(), is(true));
     }
 
 

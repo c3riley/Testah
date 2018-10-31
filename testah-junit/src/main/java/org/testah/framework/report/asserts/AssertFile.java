@@ -165,21 +165,6 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
             .setMessage(getMessage("contains")).contains(expected).isPassed());
     }
 
-    /**
-     * Gets content as string.
-     *
-     * @param file    the file
-     * @param charset the charset
-     * @return the content as string
-     */
-    public String getContentAsString(final File file, Charset charset) {
-        try {
-            return FileUtils.readFileToString(getActual(), charset);
-        } catch (IOException e) {
-            getAsserts().fail("Issue getting the String Content of the file[" + file.getAbsolutePath() + "]", e);
-        }
-        return null;
-    }
 
     public T getContentAsObject(final File file, final Class<T> valueType) {
         return getContentAsObject(file, valueType, defaultCharset, TS.util().getMap());
@@ -192,6 +177,23 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
         } catch (IOException e) {
             getAsserts().fail("Issue getting the Content of the file[" + file.getAbsolutePath() +
                 "] as an object - content[" + content + "]", e);
+        }
+        return null;
+    }
+
+
+    /**
+     * Gets content as string.
+     *
+     * @param file    the file
+     * @param charset the charset
+     * @return the content as string
+     */
+    public String getContentAsString(final File file, Charset charset) {
+        try {
+            return FileUtils.readFileToString(getActual(), charset);
+        } catch (IOException e) {
+            getAsserts().fail("Issue getting the String Content of the file[" + file.getAbsolutePath() + "]", e);
         }
         return null;
     }

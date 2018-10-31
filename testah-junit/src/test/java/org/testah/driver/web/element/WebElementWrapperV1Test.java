@@ -28,6 +28,10 @@ public class WebElementWrapperV1Test {
         TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
     }
 
+
+    /**
+     * Before method setup .
+     */
     @Before
     public void setup() {
         if (!TS.browser().getTitle().equals("We Leave From Here")) {
