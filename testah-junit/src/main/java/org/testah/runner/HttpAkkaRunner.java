@@ -25,7 +25,7 @@ public class HttpAkkaRunner {
      */
     private AbstractHttpWrapper httpWrapper;
 
-    private HttpAkkaRunner() {
+    protected HttpAkkaRunner() {
     }
 
     public static HttpAkkaRunner getHttpAkkaRunner() {
@@ -56,11 +56,11 @@ public class HttpAkkaRunner {
             int responseCount = 1;
             for (final ResponseDto response : responses) {
                 TS.log().info(String.format(rptInfo,
-                        responseCount++,
-                        response.getStatusCode(),
-                        response.getStatusText(),
-                        TS.util().toDateString(response.getStart()),
-                        TS.util().toDateString(response.getEnd())));
+                    responseCount++,
+                    response.getStatusCode(),
+                    response.getStatusText(),
+                    TS.util().toDateString(response.getStart()),
+                    TS.util().toDateString(response.getEnd())));
             }
         }
         return responses;
@@ -81,11 +81,11 @@ public class HttpAkkaRunner {
             int responseCount = 1;
             for (final ResponseDto response : responses) {
                 TS.log().info(String.format(rptInfo,
-                        responseCount++,
-                        response.getStatusCode(),
-                        response.getStatusText(),
-                        TS.util().toDateString(response.getStart()),
-                        TS.util().toDateString(response.getEnd())));
+                    responseCount++,
+                    response.getStatusCode(),
+                    response.getStatusText(),
+                    TS.util().toDateString(response.getStart()),
+                    TS.util().toDateString(response.getEnd())));
             }
         }
         TS.util().toJsonPrint(new HttpAkkaStats(responses));
@@ -157,7 +157,7 @@ public class HttpAkkaRunner {
             httpWrapper = new HttpWrapperV2();
             httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
 
-            final ActorSystem system = ActorSystem.create("HttpAkkaRunner");
+            final ActorSystem system = getActorSystem();
             final ActorRef master = system.actorOf(new Props(new UntypedActorFactory() {
                 private static final long serialVersionUID = 1L;
 
@@ -180,6 +180,10 @@ public class HttpAkkaRunner {
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ActorSystem getActorSystem() {
+        return ActorSystem.create("HttpAkkaRunner");
     }
 
     /**
