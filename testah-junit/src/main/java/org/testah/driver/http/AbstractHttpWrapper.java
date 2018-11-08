@@ -179,7 +179,7 @@ public abstract class AbstractHttpWrapper {
     public ResponseDto doRequestWithAssert(final AbstractRequestDto<?> request, final ResponseDto expected) {
         final ResponseDto response = doRequest(request);
         if (getVerboseAsserts().notNull("preformRequestWithAssert actual response is not null", response) &&
-                getVerboseAsserts().notNull("preformRequestWithAssert expected response is not null", expected)) {
+            getVerboseAsserts().notNull("preformRequestWithAssert expected response is not null", expected)) {
             response.assertStatus(expected.getStatusCode());
         }
         return response;
@@ -239,7 +239,7 @@ public abstract class AbstractHttpWrapper {
                 TS.step().action().add(request.createRequestInfoStep());
             }
             try (final CloseableHttpResponse response = (CloseableHttpResponse) getHttpClient()
-                    .execute(request.getHttpRequestBase(), context)) {
+                .execute(request.getHttpRequestBase(), context)) {
                 final HttpEntity entity = response.getEntity();
                 responseDto.setEnd().setStatusCode(response.getStatusLine().getStatusCode());
                 responseDto.setStatusText(response.getStatusLine().getReasonPhrase());
@@ -253,8 +253,8 @@ public abstract class AbstractHttpWrapper {
             }
             if (verbose) {
                 TS.step().action().add(responseDto.createResponseInfoStep(
-                        request.isTruncateResponseBodyInReport(), true,
-                        request.getTruncateResponseBodyInReportBy()));
+                    request.isTruncateResponseBodyInReport(), true,
+                    request.getTruncateResponseBodyInReportBy()));
             }
             if (request.isAutoAssert() && request.getExpectedStatus() > 0) {
                 responseDto.assertStatus(request.getExpectedStatus());
@@ -264,7 +264,7 @@ public abstract class AbstractHttpWrapper {
             TS.log().error(e);
             if (!ignoreHttpError) {
                 getVerboseAsserts().equalsTo("Unexpected Exception thrown from preformRequest in IHttpWrapper", "",
-                        e.getMessage());
+                    e.getMessage());
             }
             return new ResponseDto(-1).setStatusText(e.toString()).setResponseBody(e.toString());
         }
@@ -351,17 +351,7 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setRequestConfig() {
-        final Builder rcb = RequestConfig.custom();
-
-        if (null != getDefaultConnectionTimeout()) {
-            rcb.setSocketTimeout(getDefaultConnectionTimeout()).setConnectTimeout(getDefaultConnectionTimeout())
-                    .setConnectionRequestTimeout(getDefaultConnectionTimeout());
-        }
-
-        rcb.setCookieSpec(CookieSpecs.DEFAULT).setExpectContinueEnabled(true)
-                .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
-                .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
-        return setRequestConfig(rcb.build());
+        return setRequestConfig(getRequestConfigDefault());
     }
 
     /**
@@ -402,6 +392,10 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setHttpClient() {
+        return setHttpClient(getHttpClientDefaultBuilder().build());
+    }
+
+    public HttpClientBuilder getHttpClientDefaultBuilder() {
         final HttpClientBuilder hcb = HttpClients.custom();
 
         if (null != getProxy()) {
@@ -422,7 +416,7 @@ public abstract class AbstractHttpWrapper {
             // hcb.setSSLHostnameVerifier(new NoopHostnameVerifier());
         }
 
-        return setHttpClient(hcb.build());
+        return hcb;
     }
 
     /**
@@ -614,6 +608,7 @@ public abstract class AbstractHttpWrapper {
                 responseDto.setStatusText(response.getStatusLine().getReasonPhrase());
                 responseDto.setResponseBytes(EntityUtils.toByteArray(entity));
                 responseDto.setResponseBody(new String(responseDto.getResponseBytes(), "UTF-8"));
+                responseDto.setRequestUsed(request);
                 if (null != request) {
                     responseDto.setUrl(request.getHttpRequestBase().getURI().toString());
                     responseDto.setHeaders(response.getAllHeaders()).setRequestType(request.getHttpMethod());
@@ -631,12 +626,24 @@ public abstract class AbstractHttpWrapper {
      *
      * @return the request config default
      */
+    public Builder getRequestConfigDefaultBuilder() {
+        final Builder rcb = RequestConfig.custom();
+
+        if (null != getDefaultConnectionTimeout()) {
+            rcb.setSocketTimeout(getDefaultConnectionTimeout()).setConnectTimeout(getDefaultConnectionTimeout())
+                .setConnectionRequestTimeout(getDefaultConnectionTimeout());
+        }
+
+        rcb.setCookieSpec(getCookieSpecs())
+            .setExpectContinueEnabled(false)
+            .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
+            .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
+
+        return rcb;
+    }
+
     public RequestConfig getRequestConfigDefault() {
-        final RequestConfig defaultRequestConfig = RequestConfig.custom().setCookieSpec(getCookieSpecs())
-                .setExpectContinueEnabled(true)
-                .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
-                .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC)).build();
-        return defaultRequestConfig;
+        return getRequestConfigDefaultBuilder().build();
     }
 
     /**
@@ -695,7 +702,7 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setResponseParserFactory(
-            final HttpMessageParserFactory<HttpResponse> responseParserFactory) {
+        final HttpMessageParserFactory<HttpResponse> responseParserFactory) {
         this.responseParserFactory = responseParserFactory;
         return getSelf();
     }
@@ -778,7 +785,7 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setRequestWriterFactory(
-            final HttpMessageWriterFactory<HttpRequest> requestWriterFactory) {
+        final HttpMessageWriterFactory<HttpRequest> requestWriterFactory) {
         this.requestWriterFactory = requestWriterFactory;
         return getSelf();
     }
@@ -801,13 +808,13 @@ public abstract class AbstractHttpWrapper {
      * @throws KeyStoreException        the key store exception
      */
     public AbstractHttpWrapper setConnectionManagerPoolingAdvanced()
-            throws NoSuchAlgorithmException, KeyStoreException {
+        throws NoSuchAlgorithmException, KeyStoreException {
 
         final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory = new ManagedHttpClientConnectionFactory(
-                requestWriterFactory, responseParserFactory);
+            requestWriterFactory, responseParserFactory);
 
         final PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(
-                setSocketFactoryRegistry().getSocketFactoryRegistry(), connFactory, dnsResolver);
+            setSocketFactoryRegistry().getSocketFactoryRegistry(), connFactory, dnsResolver);
 
         connManager.setDefaultMaxPerRoute(getDefaultMaxPerRoute());
         connManager.setMaxTotal(getDefaultPoolSize());
@@ -842,8 +849,8 @@ public abstract class AbstractHttpWrapper {
      */
     public AbstractHttpWrapper setSocketFactoryRegistry() {
         return setSocketFactoryRegistry(RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("http", PlainConnectionSocketFactory.INSTANCE)
-                .register("https", new SSLConnectionSocketFactory(getSslcontext())).build());
+            .register("http", PlainConnectionSocketFactory.INSTANCE)
+            .register("https", new SSLConnectionSocketFactory(getSslcontext())).build());
     }
 
     /**
@@ -927,7 +934,7 @@ public abstract class AbstractHttpWrapper {
 
             public long getKeepAliveDuration(final HttpResponse response, final HttpContext context) {
                 final HeaderElementIterator it = new BasicHeaderElementIterator(
-                        response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+                    response.headerIterator(HTTP.CONN_KEEP_ALIVE));
                 while (it.hasNext()) {
                     final HeaderElement he = it.nextElement();
                     final String param = he.getName();
@@ -949,7 +956,7 @@ public abstract class AbstractHttpWrapper {
      * @return the abstract http wrapper
      */
     public AbstractHttpWrapper setConnectionKeepAliveStrategy(
-            final ConnectionKeepAliveStrategy connectionKeepAliveStrategy) {
+        final ConnectionKeepAliveStrategy connectionKeepAliveStrategy) {
         this.connectionKeepAliveStrategy = connectionKeepAliveStrategy;
         return getSelf();
     }
@@ -1232,7 +1239,7 @@ public abstract class AbstractHttpWrapper {
      */
     public AbstractHttpWrapper addBasicAuth(final String userName, final String password, final String encoding, final boolean useMask) {
         return addCustomHeader(new HttpAuthUtil().setUserName(userName).setPassword(password).useEncodingUtf8().setUseMask(useMask)
-                .createBasicAuthHeader());
+            .createBasicAuthHeader());
     }
 
     /**

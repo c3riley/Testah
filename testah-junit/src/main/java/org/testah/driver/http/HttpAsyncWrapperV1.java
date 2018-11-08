@@ -14,26 +14,27 @@ import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 
 import java.io.Closeable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
- * The Class HttpAsynchWrapperV1.
+ * The Class HttpAsyncWrapperV1.
  */
-public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeable {
+public class HttpAsyncWrapperV1 extends AbstractHttpWrapper implements Closeable {
 
     /**
-     * The http asynch client.
+     * The http async client.
      */
-    private CloseableHttpAsyncClient httpAsynchClient;
+    private CloseableHttpAsyncClient httpAsyncClient;
 
     /**
-     * Do request asynch.
+     * Do request async.
      *
      * @param request the request
      * @param verbose the verbose
      * @return the future
      */
-    public Future<HttpResponse> doRequestAsynch(final AbstractRequestDto<?> request, final boolean verbose) {
+    public Future<HttpResponse> doRequestAsync(final AbstractRequestDto<?> request, final boolean verbose) {
         try {
             final HttpClientContext context = HttpClientContext.create();
             if (null != getCookieStore()) {
@@ -99,29 +100,38 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
      * @return the http async client
      */
     public CloseableHttpAsyncClient getHttpAsyncClient() {
-        if (null == httpAsynchClient) {
-            setHttpAsynchClient();
+        if (null == httpAsyncClient) {
+            setHttpAsyncClient();
         }
-        return httpAsynchClient;
+        return httpAsyncClient;
     }
 
     /**
      * Sets the http async client.
      *
-     * @param httpAsynchClient the http asynch client
-     * @return the http asynch wrapper v1
+     * @param httpAsyncClient the http async client
+     * @return the http async wrapper v1
      */
-    public HttpAsynchWrapperV1 setHttpAsyncClient(final CloseableHttpAsyncClient httpAsynchClient) {
-        this.httpAsynchClient = httpAsynchClient;
+    public HttpAsyncWrapperV1 setHttpAsyncClient(final CloseableHttpAsyncClient httpAsyncClient) {
+        this.httpAsyncClient = httpAsyncClient;
         return this;
     }
 
     /**
-     * Sets the http asynch client.
+     * Sets http async client.
+     *
+     * @return the http async client
+     */
+    public AbstractHttpWrapper setHttpAsyncClient() {
+        return setHttpAsyncClient(getHttpAsyncClientBuilder().build());
+    }
+
+    /**
+     * Sets the http async client.
      *
      * @return the abstract http wrapper
      */
-    public AbstractHttpWrapper setHttpAsynchClient() {
+    public HttpAsyncClientBuilder getHttpAsyncClientBuilder() {
         final HttpAsyncClientBuilder hcb = HttpAsyncClients.custom();
         if (null != getProxy()) {
             hcb.setProxy(getProxy());
@@ -148,7 +158,29 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
         if (isTrustAllCerts()) {
             // hcb.setSSLHostnameVerifier(new NoopHostnameVerifier());
         }
-        return setHttpAsyncClient(hcb.build());
+        return hcb;
+    }
+
+    /**
+     * Wait for future response http response.
+     *
+     * @param response               the response
+     * @param maxTimeToWaitInSeconds the max time to wait in seconds
+     * @return the http response
+     * @throws ExecutionException   the execution exception
+     * @throws InterruptedException the interrupted exception
+     */
+    public HttpResponse waitForFutureResponse(final Future<HttpResponse> response, final int maxTimeToWaitInSeconds)
+        throws ExecutionException, InterruptedException {
+        int ctr = 1;
+        while (!response.isDone() || response.isCancelled()) {
+            TS.util().pause(200L, "Waiting for response future to be done", ctr++);
+            if (ctr > maxTimeToWaitInSeconds) {
+                break;
+            }
+        }
+        getVerboseAsserts().isTrue("Check that the future is done after waiting for it", response.isDone());
+        return response.get();
     }
 
     /**
@@ -163,24 +195,35 @@ public class HttpAsynchWrapperV1 extends AbstractHttpWrapper implements Closeabl
     }
 
     /**
-     * Gets the response dto from future.
+     * Gets response dto from future.
      *
      * @param response the response
      * @param request  the request
      * @return the response dto from future
      * @throws Exception the exception
      */
-    public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response, final AbstractRequestDto<?> request)
+    public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response,
+                                                final AbstractRequestDto<?> request) throws Exception {
+        return getResponseDtoFromFuture(response, request, 120);
+    }
+
+    /**
+     * Gets the response dto from future.
+     *
+     * @param response               the response
+     * @param request                the request
+     * @param maxTimeToWaitInSeconds the max time to wait in seconds
+     * @return the response dto from future
+     * @throws Exception the exception
+     */
+    public ResponseDto getResponseDtoFromFuture(final Future<HttpResponse> response,
+                                                final AbstractRequestDto<?> request, final int maxTimeToWaitInSeconds)
         throws Exception {
         if (null != response) {
-            try {
-                TS.log().debug("Getting response from future, current done state is: " + response.isDone() +
-                    " will block until done.");
-                final HttpResponse responseFromFuture = response.get();
-                return getResponseDto(responseFromFuture, request);
-            } catch (final Exception e) {
-                TS.log().debug(e);
-            }
+            TS.log().debug("Getting response from future, current done state is: " + response.isDone() +
+                " will block until done if needed.");
+            final HttpResponse responseFromFuture = waitForFutureResponse(response, maxTimeToWaitInSeconds);
+            return getResponseDto(responseFromFuture, request);
         }
         return null;
     }

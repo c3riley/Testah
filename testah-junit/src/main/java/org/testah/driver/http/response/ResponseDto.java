@@ -155,7 +155,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     public ResponseDto assertResponseBodyContains(final String expectedContents) {
         TS.asserts().notNull("assertResponseBodyContains", responseBody);
         TS.asserts().isTrue("assertResponseBodyContains responseBody[" + responseBody + "] expected to contain[" +
-                expectedContents + "]", responseBody.contains(expectedContents));
+            expectedContents + "]", responseBody.contains(expectedContents));
         return this;
     }
 
@@ -198,7 +198,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public File saveToFile(final File downloadFile) throws IOException {
         try (
-                FileOutputStream fileOutputStream = new FileOutputStream(downloadFile)) {
+            FileOutputStream fileOutputStream = new FileOutputStream(downloadFile)) {
             fileOutputStream.write(this.getResponseBytes());
             return downloadFile;
         }
@@ -333,7 +333,8 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         TS.log().debug(Cli.BAR_SHORT);
         TS.log().debug(Cli.BAR_WALL + "Body: (see below)");
         if (shortResponseBody) {
-            System.out.println(StringUtils.abbreviate(getResponseBody(), truncate));
+            // Need to add 3 for the ... that is added and counted into the body length to show
+            System.out.println(StringUtils.abbreviate(getResponseBody(), truncate + 3));
         } else {
             System.out.println(getResponseBody());
         }
@@ -454,6 +455,14 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         return createResponseInfoStep(true, true, 2000);
     }
 
+    /**
+     * Create response info step step action dto.
+     *
+     * @param shortResponseBody the short response body
+     * @param escapeBody        the escape body
+     * @param truncate          the truncate
+     * @return the step action dto
+     */
     public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapeBody,
                                                 final int truncate) {
         return createResponseInfoStep(shortResponseBody, escapeBody, truncate, TS.step().action().create());
@@ -465,6 +474,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      * @param shortResponseBody the short response body
      * @param escapeBody        the escape body
      * @param truncate          the truncate
+     * @param step              the step
      * @return the step action dto
      */
     public StepActionDto createResponseInfoStep(final boolean shortResponseBody, final boolean escapeBody,
@@ -472,15 +482,15 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         StepActionDto stepAction = null;
         if (shortResponseBody) {
             stepAction = TS.step().action()
-                    .info(this.getRequestType() + " - Uri: " + getUrl(),
-                            "Status: " + getStatusCode() + " [ " + getStatusText() + " ]",
-                            StringUtils.abbreviate(getResponseBody(escapeBody), truncate), false, step)
-                    .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+                .info(this.getRequestType() + " - Uri: " + getUrl(),
+                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]",
+                    StringUtils.abbreviate(getResponseBody(escapeBody), truncate), false, step)
+                .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         } else {
             stepAction = TS.step().action()
-                    .info(this.getRequestType() + " - Uri: " + getUrl(),
-                            "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapeBody), false, step)
-                    .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+                .info(this.getRequestType() + " - Uri: " + getUrl(),
+                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapeBody), false, step)
+                .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
 
         }
         print(shortResponseBody, truncate);
@@ -509,12 +519,23 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     }
 
     /**
-     * Write response to a file for it to be linked to from the report.
+     * Write response info file string.
      *
      * @return the string
      */
     public String writeResponseInfoFile() {
-        if (TS.params().getWriteResponseToFile()) {
+        return writeResponseInfoFile(TS.params().getWriteResponseToFile());
+    }
+
+
+    /**
+     * Write response to a file for it to be linked to from the report.
+     *
+     * @param writeToFile the write to file
+     * @return the string
+     */
+    public String writeResponseInfoFile(final boolean writeToFile) {
+        if (writeToFile) {
             try {
                 File file = File.createTempFile("response", ".txt", new File(TS.params().getOutput()));
                 FileUtils.writeStringToFile(file, getResponseBody(), Charset.defaultCharset());
@@ -547,7 +568,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public String toStringStatus() {
         return new StringBuilder("Uri:").append(getUrl()).append("\nStatus: ").append(statusCode).append(" [ ")
-                .append(statusText).append(" ]").toString();
+            .append(statusText).append(" ]").toString();
     }
 
     /**
