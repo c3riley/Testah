@@ -3,6 +3,7 @@ package org.testah.runner;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.testah.TS;
+import org.testah.driver.http.HttpWrapperV2;
 import org.testah.driver.http.requests.GetRequestDto;
 import org.testah.driver.http.requests.PostRequestDto;
 import org.testah.driver.http.response.ResponseDto;
@@ -16,10 +17,34 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class TestHttpAkkaRunner {
+
+    @Test
+    public void getHttpAkkaRunnerTest() {
+        assertThat(HttpAkkaRunner.getHttpAkkaRunner(), notNullValue());
+        HttpAkkaRunner httpAkkaRunner = new HttpAkkaRunner();
+        HttpAkkaRunner.setHttpAkkaRunner(httpAkkaRunner);
+        assertThat(HttpAkkaRunner.getHttpAkkaRunner(), is(httpAkkaRunner));
+    }
+
+    @Test
+    public void testHttpWrapper() {
+        HttpWrapperV2 http = new HttpWrapperV2();
+        HttpAkkaRunner.getInstance().setHttpWrapper(http);
+        assertThat(HttpAkkaRunner.getInstance().getHttpWrapper(), is(http));
+
+        HttpAkkaRunner.getInstance().setHttpWrapper(null);
+        assertThat(HttpAkkaRunner.getInstance().getHttpWrapper(), notNullValue());
+        assertThat(HttpAkkaRunner.getInstance().getHttpWrapper(), not(http));
+        assertThat(HttpAkkaRunner.getInstance().getHttpWrapper(), instanceOf(HttpWrapperV2.class));
+
+    }
 
     @Test
     public void invalidUrl() {
@@ -39,7 +64,6 @@ public class TestHttpAkkaRunner {
         akkaRunner.runAndReport(5, new GetRequestDto("http://www.google.com"), 5);
     }
 
-
     @Test
     public void happyPathPostChangingPayload() {
         final int totalNumberOfPosts = 4;
@@ -55,13 +79,13 @@ public class TestHttpAkkaRunner {
             values.add(value);
             payload = "{\"key\": \"" + value + "\"}";
             postRequest =
-                    new PostRequestDto(testUrl, payload);
+                new PostRequestDto(testUrl, payload);
             postRequest.setContentType("application/json");
             postRequests.add(postRequest);
         }
 
         ConcurrentLinkedQueue<PostRequestDto> concurrentLinkedQueue =
-                new ConcurrentLinkedQueue<PostRequestDto>(postRequests);
+            new ConcurrentLinkedQueue<PostRequestDto>(postRequests);
         List<HttpAkkaStats> statsList = new ArrayList<>();
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
@@ -76,7 +100,7 @@ public class TestHttpAkkaRunner {
             TS.asserts().isTrue(stats.getDuration() instanceof Long);
             TS.asserts().isTrue(stats.getDuration() > 0);
             TS.log().info("Number of calls: " + stats.getStatsDuration().getN() + ", 90% = " +
-                    stats.getStatsDuration().getPercentile(90.0));
+                stats.getStatsDuration().getPercentile(90.0));
             TS.asserts().isTrue(stats.getTotalResponses() == totalNumberOfPosts);
             TS.asserts().isTrue(stats.getStatsDuration().getPercentile(90.0) > 0);
         });
@@ -110,7 +134,7 @@ public class TestHttpAkkaRunner {
         }
 
         ConcurrentLinkedQueue<GetRequestDto> concurrentLinkedQueue =
-                new ConcurrentLinkedQueue<>(getRequests);
+            new ConcurrentLinkedQueue<>(getRequests);
         List<HttpAkkaStats> statsList = new ArrayList<>();
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
@@ -125,7 +149,7 @@ public class TestHttpAkkaRunner {
             TS.asserts().isTrue(stats.getDuration() instanceof Long);
             TS.asserts().isTrue(stats.getDuration() > 0);
             TS.log().info("Number of calls: " + stats.getStatsDuration().getN() + ", 90% = " +
-                    stats.getStatsDuration().getPercentile(90.0));
+                stats.getStatsDuration().getPercentile(90.0));
             TS.asserts().isTrue(stats.getTotalResponses() == totalNumberOfGets);
             TS.asserts().isTrue(stats.getStatsDuration().getPercentile(90.0) > 0);
         });
@@ -140,4 +164,20 @@ public class TestHttpAkkaRunner {
         }
         TS.asserts().equalsTo(values, responseValues);
     }
+
+    @Test
+    public void runTestsTestWithBadValue() {
+        final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
+        TS.asserts().assertThat(akkaRunner.runTests(0, null, true), nullValue());
+        TS.asserts().assertThat(akkaRunner.runTests(0, new ConcurrentLinkedQueue(), true), nullValue());
+        TS.asserts().assertThat(akkaRunner.runTests(0, null, 0), nullValue());
+    }
+
+    @Test(expected = ExceptionInInitializerError.class)
+    public void runTestsTestWithError() {
+        final HttpAkkaRunner akkaRunner = spy(HttpAkkaRunner.getInstance());
+        when(akkaRunner.getActorSystem()).thenThrow(new ExceptionInInitializerError());
+        akkaRunner.runTests(-1, new GetRequestDto("exit"), -1);
+    }
+
 }
