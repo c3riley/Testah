@@ -1,6 +1,8 @@
 package org.testah.util.database;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.http.Header;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
@@ -159,7 +161,7 @@ public class PostgresDatabaseTest {
         return rows;
     }
 
-
+    @SuppressFBWarnings("OBL_UNSATISFIED_OBLIGATION")
     public void setupExecuteSelectSol(List<String> columns,
                                       LinkedHashMap<Integer, List<String>> rows,
                                       String testSql) throws SQLException {
@@ -217,4 +219,5 @@ public class PostgresDatabaseTest {
         assertThat(postgresDatabase.getDatabaseName(),
             equalTo("dbTest"));
     }
+
 }
