@@ -4,14 +4,38 @@ import org.testah.TS;
 
 import java.util.Date;
 
+/**
+ * The type Sql execution dto.
+ */
 public class SqlExecutionDto {
 
+    /**
+     * The Sql.
+     */
     final String sql;
+    /**
+     * The Start time.
+     */
     Date startTime;
+    /**
+     * The End time.
+     */
     Date endTime;
+    /**
+     * The Duration.
+     */
     Long duration;
+    /**
+     * The Duration pretty.
+     */
     String durationPretty;
+    /**
+     * The Result count.
+     */
     Integer resultCount = null;
+    /**
+     * The Update count.
+     */
     Integer updateCount = null;
 
     /**
@@ -29,8 +53,22 @@ public class SqlExecutionDto {
      * @return this object
      */
     public SqlExecutionDto start() {
-        this.startTime = new Date();
+        return start(new Date());
+    }
+
+    /**
+     * Start sql execution dto.
+     *
+     * @param date the date
+     * @return the sql execution dto
+     */
+    public SqlExecutionDto start(final Date date) {
+        this.startTime = date;
         return this;
+    }
+
+    public SqlExecutionDto end() {
+        return end(new Date());
     }
 
     /**
@@ -38,8 +76,8 @@ public class SqlExecutionDto {
      *
      * @return this object
      */
-    public SqlExecutionDto end() {
-        this.endTime = new Date();
+    public SqlExecutionDto end(final Date date) {
+        this.endTime = date;
         this.duration = (this.endTime.getTime() - this.startTime.getTime());
         this.durationPretty = TS.util().getDurationPretty(this.duration);
         return this;

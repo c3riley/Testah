@@ -46,7 +46,7 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
      * @throws SQLException query execution fails
      */
     public List<HashMap<String, Object>> executeSelectSol(final String sql, final Connection conn)
-            throws SQLException {
+        throws SQLException {
         if (null == sql || !sql.toLowerCase().startsWith("select")) {
             throw new RuntimeException("executeSelectSol can only use Select sql statement!");
         }
