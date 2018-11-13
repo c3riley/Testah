@@ -370,6 +370,11 @@ public class VerboseAssertsTest
     @Test
     public void critical()
     {
+
+        if (1 != 2)
+        {
+            va.critical("Critical method");
+        }
     }
 
     @Test
@@ -440,11 +445,30 @@ public class VerboseAssertsTest
     @Test
     public void notSame()
     {
+        HashMap<String, Integer> hash1 = new HashMap<String, Integer>();
+        hash1.put("1", 1);
+        hash1.put("2", 2);
+        hash1.put("3", 3);
+
+        HashMap<String, Integer> hash2 = new HashMap<String, Integer>();
+        hash2.put("1", 1);
+        hash2.put("2", 2);
+
+        Assert.assertThat(va.notSame(hash1, hash2), is(true));
+
+        String obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+        String obj2 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}, {\"id\":4}]}";
+
+        Assert.assertThat(va.notSame("Same objects should match", obj1, obj2), is(true));
     }
 
-    @Test
-    public void notSame1()
+    @Test(expected = AssertionError.class)
+    public void notSameWithException()
     {
+        String obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+
+        VerboseAsserts verboseAsserts = new VerboseAsserts(true);
+        verboseAsserts.notSame(obj1, obj1);
     }
 
     @Test
