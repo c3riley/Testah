@@ -1,6 +1,8 @@
 package org.testah.framework.report;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Assert;
@@ -251,15 +253,15 @@ public class VerboseAssertsTest
     }
 
     @Test
-    public void sameJsonWithMatchingObjects() throws IOException
+    public void sameJsonWithMatchingObjects() throws IOException, JSONException
     {
         String obj1 = "{ \"name\":\"John\", \"age\":30, \"car\":null }";
         String obj2 = "{\"age\":30,  \"name\":\"John\", \"car\":null }";
 
         Assert.assertThat(va.sameJson("Identical String objects should match", obj1, obj2), is(true));
 
-        JSONObject json1 = TS.util().getMap().readValue(obj1, JSONObject.class);
-        JSONObject json2 = TS.util().getMap().readValue(obj2, JSONObject.class);
+        JsonNode json1 = TS.util().getMap().readValue(obj1, JsonNode.class);
+        JsonNode json2 = TS.util().getMap().readValue(obj2, JsonNode.class);
 
         Assert.assertThat(va.sameJson("Identical Json Objects should match", json1, json2, true), is(true));
     }
@@ -274,15 +276,15 @@ public class VerboseAssertsTest
     }
 
     @Test
-    public void sameJsonWithoutMatchingObjects() throws IOException
+    public void sameJsonWithoutMatchingObjects() throws IOException, JSONException
     {
         String obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
         String obj2 = "{\"id\":1, \"friends\":[{\"id\":3}, {\"id\":2}, {\"id\":4}]}";
 
         Assert.assertThat(va.sameJson("Extra field in the expected object should not match the actual", obj1, obj2, true), is(false));
 
-        JSONObject json1 = TS.util().getMap().readValue(obj1, JSONObject.class);
-        JSONObject json2 = TS.util().getMap().readValue(obj2, JSONObject.class);
+        JSONObject json1 = new JSONObject(obj1);
+        JSONObject json2 = new JSONObject(obj2);
 
         Assert.assertThat(va.sameJson("Extra field in the expected JsonObject should not match", json1, json2, true), is(false));
 
