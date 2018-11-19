@@ -11,7 +11,9 @@ import org.junit.Test;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestStepDto;
+import org.testah.framework.report.asserts.AssertStrings;
 import org.testah.framework.report.asserts.base.AssertNotAllowedWithNullActual;
+import org.testah.util.unittest.dtotest.SystemOutCapture;
 import org.unitils.reflectionassert.ReflectionAssert;
 
 import java.io.IOException;
@@ -372,11 +374,15 @@ public class VerboseAssertsTest
     @Test
     public void critical()
     {
+       SystemOutCapture systemOutCapture = new SystemOutCapture().start();
 
-        if (1 != 2)
-        {
-            va.critical("Critical method");
-        }
+        va.critical("Unit test for Critical method");
+        String content = systemOutCapture.getSystemOut();
+
+        new AssertStrings(content)
+                .contains("Critical Issue Occurred and test should be stopped! Message[Unit test for Critical method]");
+        Assert.assertEquals("", TS.step().current().getStepActions().get(0).getTestStepActionType().toString(), "VERIFY");
+        Assert.assertEquals("", TS.step().current().getStepActions().get(1).getTestStepActionType().toString(), "ASSERT");
     }
 
     @Test
@@ -614,6 +620,22 @@ public class VerboseAssertsTest
         Assert.assertTrue(va.equalsTo("", "", ""));
         String nullString = null;
         Assert.assertTrue(va.equalsTo("", null, nullString));
+        Assert.assertTrue(va.equalsTo(10L, 10L));
+
+        Assert.assertTrue(va.equalsTo(10.0, 10.0));
+
+        Assert.assertTrue(va.equalsTo("Testing with Double values", 10.0, 10.0));
+        Assert.assertTrue(va.equalsTo("Testing with Double values with Delta", 4.5, 4.5000, 0.000));
+
+        List<String> lst1 = new ArrayList<>();
+        lst1.add("1");
+        lst1.add("1");
+        lst1.add("2");
+        List<String> lst2 = new ArrayList<>();
+        lst2.add("1");
+        lst2.add("1");
+        lst2.add("2");
+        Assert.assertTrue(va.equalsTo("Testing with object", lst1, lst2));
     }
 
     @Test
