@@ -236,7 +236,7 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
 
     @Override
     public ExchangeEmailUtil sendMessage(SendMailDto sendMailDto) {
-        throw new NotImplementedException("Not Implimented Yet");
+        throw new NotImplementedException("Not Implemented Yet");
     }
 
     @Override

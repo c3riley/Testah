@@ -36,10 +36,10 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
         return this;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getWebDriver(org.openqa.selenium.remote.DesiredCapabilities)
+    /**
+     * getWebDriver will return a webdriver object for firefox.
+     * @param capabilities the capabilities
+     * @return
      */
     public WebDriver getWebDriver(final MutableCapabilities capabilities) {
         if (capabilities instanceof FirefoxOptions) {

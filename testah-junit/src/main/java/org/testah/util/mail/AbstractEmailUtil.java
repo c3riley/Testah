@@ -663,7 +663,7 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
      */
     public EmailDto<M> getEmailDto(final M message) throws Exception {
         final EmailDto<M> emailDto = new EmailDto();
-        emailDto.setAssertments(getAttachmentFiles(message));
+        emailDto.setAttachments(getAttachmentFiles(message));
         emailDto.setBodyHtml(getMsgBodyHtml(message));
         emailDto.setBodyText(getMsgBodyText(message));
         emailDto.setHeaders(getMessageHeadersAsMap(message));

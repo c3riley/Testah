@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @TestPlan
-public class TestAsynchHttp {
+public class TestAsyncHttp {
 
     @TestCase
     @Test

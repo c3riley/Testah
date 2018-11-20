@@ -48,7 +48,7 @@ public class AssertNumber<T extends Number & Comparable<T>> extends AbstractAsse
             Assert.assertTrue(Math.abs(getActual().compareTo(expected)) <= delta);
             return true;
         };
-        return runAssert("equalsTo expected[" + expectedValue + "] and actuals[" + getActual() +
+        return runAssert("equalsTo expected[" + expectedValue + "] and actual[" + getActual() +
                 "] with delta allowed: " + delta, "equalsTo", assertRun, expectedValue, getActual());
     }
 

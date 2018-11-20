@@ -246,7 +246,7 @@ public abstract class AbstractTestPlan {
     }
 
     /**
-     * Clean up all Threadlocal.
+     * Clean up all ThreadLocal.
      */
     public static void cleanUpTestplanThreadLocal() {
         TS.cleanUpThreadLocal(testPlan);

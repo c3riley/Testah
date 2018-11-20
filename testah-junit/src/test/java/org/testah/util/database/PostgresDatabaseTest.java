@@ -25,14 +25,37 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * The type Postgres database test.
+ */
 public class PostgresDatabaseTest {
 
+    /**
+     * The Connection.
+     */
     Connection connection;
+    /**
+     * The Prepared statement.
+     */
     PreparedStatement preparedStatement;
+    /**
+     * The Result set.
+     */
     ResultSet resultSet;
+    /**
+     * The Result set meta data.
+     */
     ResultSetMetaData resultSetMetaData;
+    /**
+     * The Postgres database.
+     */
     PostgresDatabase postgresDatabase;
 
+    /**
+     * Sets up.
+     *
+     * @throws Exception the exception
+     */
     @Before
     public void setUp() throws Exception {
         connection = mock(Connection.class);
@@ -44,23 +67,43 @@ public class PostgresDatabaseTest {
     }
 
 
+    /**
+     * Is driver loaded test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void isDriverLoadedTest() throws Exception {
         assertThat(postgresDatabase.isDriverLoaded(), is(true));
     }
 
+    /**
+     * Gets connection string test.
+     *
+     * @throws Exception the exception
+     */
     @Test
     public void getConnectionStringTest() throws Exception {
         assertThat(postgresDatabase.getConnectionString(),
             equalTo("jdbc:postgresql://hostTest:4454/dbTest"));
     }
 
+    /**
+     * Gets connection test negative.
+     *
+     * @throws Exception the exception
+     */
     @Test(expected = SQLException.class)
     public void getConnectionTestNegative() throws Exception {
         assertThat(postgresDatabase.getConnection(),
             instanceOf(Connection.class));
     }
 
+    /**
+     * Gets sql performance test.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     public void getSqlPerformanceTest() throws SQLException {
         final String testSql = "SELECT TEST FROM TEST_TABLE";
@@ -77,12 +120,16 @@ public class PostgresDatabaseTest {
         };
         doAnswer(answerGetObject).when(preparedStatement).execute(any());
 
-        SqlExecutionDto actual = postgresDatabase.
-            getSqlPerformance(testSql, connection);
+        SqlExecutionDto actual = postgresDatabase.getSqlPerformance(testSql, connection);
         assertThat(actual.getDuration(), greaterThanOrEqualTo(1000L));
         assertThat(actual.getSql(), equalTo(testSql));
     }
 
+    /**
+     * Gets sql performance no conn test.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     public void getSqlPerformanceNoConnTest() throws SQLException {
         final String testSql = "SELECT TEST FROM TEST_TABLE";
@@ -100,12 +147,16 @@ public class PostgresDatabaseTest {
         doAnswer(answerGetObject).when(preparedStatement).execute(any());
 
         doReturn(connection).when(postgresDatabase).getConnection();
-        SqlExecutionDto actual = postgresDatabase.
-            getSqlPerformance(testSql);
+        SqlExecutionDto actual = postgresDatabase.getSqlPerformance(testSql);
         assertThat(actual.getDuration(), greaterThanOrEqualTo(1000L));
         assertThat(actual.getSql(), equalTo(testSql));
     }
 
+    /**
+     * Execute select sol.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     public void executeSelectSol() throws SQLException {
         final String testSql = "SELECT TEST FROM TEST_TABLE";
@@ -113,12 +164,16 @@ public class PostgresDatabaseTest {
         LinkedHashMap<Integer, List<String>> rows = getRows(columns, 10);
         setupExecuteSelectSol(columns, rows, testSql);
 
-        List<HashMap<String, Object>> actual = postgresDatabase.
-            executeSelectSol(testSql, connection);
+        List<HashMap<String, Object>> actual = postgresDatabase.executeSelectSol(testSql, connection);
 
         assertValues(rows, actual);
     }
 
+    /**
+     * Execute select sol pass conn.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     public void executeSelectSolPassConn() throws SQLException {
         final String testSql = "SELECT TEST FROM TEST_TABLE";
@@ -127,8 +182,7 @@ public class PostgresDatabaseTest {
         setupExecuteSelectSol(columns, rows, testSql);
 
         doReturn(connection).when(postgresDatabase).getConnection();
-        List<HashMap<String, Object>> actual = postgresDatabase.
-            executeSelectSol(testSql);
+        List<HashMap<String, Object>> actual = postgresDatabase.executeSelectSol(testSql);
 
         assertValues(rows, actual);
 
@@ -143,17 +197,17 @@ public class PostgresDatabaseTest {
 
     private List<String> getColumns(int numberOfColumns) {
         List<String> cols = new ArrayList<>();
-        for (int i = 1; i < numberOfColumns; i++) {
-            cols.add("columnName_" + i);
+        for (int ctr = 1; ctr < numberOfColumns; ctr++) {
+            cols.add("columnName_" + ctr);
         }
         return cols;
     }
 
     private LinkedHashMap<Integer, List<String>> getRows(List<String> columns, int rowCount) {
         LinkedHashMap<Integer, List<String>> rows = new LinkedHashMap<>();
-        for (int i = 1; i < rowCount; i++) {
+        for (int ctr = 1; ctr < rowCount; ctr++) {
             List<String> row = new ArrayList<>();
-            rows.put(i, row);
+            rows.put(ctr, row);
             columns.forEach(col -> {
                 row.add(col + "_value_" + (rows.size()));
             });
@@ -161,11 +215,22 @@ public class PostgresDatabaseTest {
         return rows;
     }
 
+    /**
+     * Sets execute select sol.
+     *
+     * @param columns the columns
+     * @param rows    the rows
+     * @param testSql the test sql
+     * @throws SQLException the sql exception
+     */
     @SuppressFBWarnings("OBL_UNSATISFIED_OBLIGATION")
     public void setupExecuteSelectSol(List<String> columns,
                                       LinkedHashMap<Integer, List<String>> rows,
                                       String testSql) throws SQLException {
 
+        /**
+         * Answer for use with the mock, will return true while there are rows available.
+         */
         Answer answerNext = new Answer() {
             private int row = 0;
 
@@ -206,6 +271,9 @@ public class PostgresDatabaseTest {
     }
 
 
+    /**
+     * Test getter setters.
+     */
     @Test
     public void testGetterSetters() {
         assertThat(postgresDatabase.getHost(),

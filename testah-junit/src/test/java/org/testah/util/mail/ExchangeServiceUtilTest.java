@@ -37,14 +37,14 @@ public class ExchangeServiceUtilTest {
         doCallRealMethod().when(exchange).getMsgByBccEmail(any());
         doCallRealMethod().when(exchange).getMessages(any());
 
-        Assert.assertEquals(messages.get(1), exchange.getMsgByToEmail("Test1to1@nullmailer.com").get(0));
-        Assert.assertEquals(0, exchange.getMsgByToEmail("TestMissing@nullmailer.com").size());
+        Assert.assertEquals(messages.get(1), exchange.getMsgByToEmail("Test1to1@nullmailer.nodomain1242434532.com").get(0));
+        Assert.assertEquals(0, exchange.getMsgByToEmail("TestMissing@nullmailer.nodomain1242434532.com").size());
 
-        Assert.assertEquals(messages.get(2), exchange.getMsgByCcEmail("Test2cc1@nullmailer.com").get(0));
-        Assert.assertEquals(0, exchange.getMsgByCcEmail("Testbcc2@nullmailer.com").size());
+        Assert.assertEquals(messages.get(2), exchange.getMsgByCcEmail("Test2cc1@nullmailer.nodomain1242434532.com").get(0));
+        Assert.assertEquals(0, exchange.getMsgByCcEmail("Testbcc2@nullmailer.nodomain1242434532.com").size());
 
-        Assert.assertEquals(messages.get(3), exchange.getMsgByBccEmail("Test3bcc0@nullmailer.com").get(0));
-        Assert.assertEquals(0, exchange.getMsgByBccEmail("TestMissing@nullmailer.com").size());
+        Assert.assertEquals(messages.get(3), exchange.getMsgByBccEmail("Test3bcc0@nullmailer.nodomain1242434532.com").get(0));
+        Assert.assertEquals(0, exchange.getMsgByBccEmail("TestMissing@nullmailer.nodomain1242434532.com").size());
 
         Assert.assertEquals(messages.get(4), exchange.getMsgBySubject("this is a test 4").get(0));
         Assert.assertEquals(0, exchange.getMsgBySubject("NotFound").size());
@@ -79,7 +79,7 @@ public class ExchangeServiceUtilTest {
         String name;
         for (int ctr = 0; ctr < number; ctr++) {
             name = "Test" + suffix + ctr;
-            addresses.add(name, name + "@nullmailer.com");
+            addresses.add(name, name + "@nullmailer.nodomain1242434532.com");
         }
         return addresses;
     }

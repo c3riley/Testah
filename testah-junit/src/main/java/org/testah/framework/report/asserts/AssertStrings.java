@@ -152,7 +152,7 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
      */
     public AssertStrings addStepForStringDifferences(final String expected, final String actual, boolean ignoreCase) {
         final String diff = getEasyToDebugStringForStringDifferences(expected, actual, ignoreCase);
-        TS.step().action().createInfo("Differnce in Lines this will break it out to help debug.  " +
+        TS.step().action().createInfo("Difference in Lines this will break it out to help debug.  " +
                 "Will show like << char >> char[Ascii char value].",
             "To help see issues, right click and inspect the textarea.",
             diff, true);
@@ -287,6 +287,12 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
         return contains(Arrays.asList(expectedValuesToContain));
     }
 
+    /**
+     * Contains assert strings.
+     *
+     * @param expectedValuesToContain the expected values to contain
+     * @return the assert strings
+     */
     public AssertStrings contains(final List<String> expectedValuesToContain) {
         getAsserts().notNull("Ensure expectedValuesToContain is not null", expectedValuesToContain);
         expectedValuesToContain.stream().forEach(expectedValueToContain -> {

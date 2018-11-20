@@ -395,6 +395,11 @@ public abstract class AbstractHttpWrapper {
         return setHttpClient(getHttpClientDefaultBuilder().build());
     }
 
+    /**
+     * Gets http client default builder.
+     *
+     * @return the http client default builder
+     */
     public HttpClientBuilder getHttpClientDefaultBuilder() {
         final HttpClientBuilder hcb = HttpClients.custom();
 

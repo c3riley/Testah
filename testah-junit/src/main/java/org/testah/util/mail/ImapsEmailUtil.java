@@ -145,7 +145,7 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
 
     @Override
     public ImapsEmailUtil deleteMsg(Message message) throws Exception {
-        TS.step().action().createInfo("Deleting Messag", message.getSubject());
+        TS.step().action().createInfo("Deleting Message", message.getSubject());
         message.setFlag(Flags.Flag.DELETED, true);
         folder.expunge();
         return this;
@@ -295,7 +295,7 @@ public class ImapsEmailUtil extends AbstractEmailUtil<ImapsEmailUtil, Message, P
             setFolder(mailBoxFolder);
             TS.step().action().createInfo("Connected to Mailbox: " + getFolderName(), "email: " + emailUserName);
         } catch (final Exception e) {
-            throw new RuntimeException("Conneting to Mail Domain: " + getMailServerAddress() + " with user: " +
+            throw new RuntimeException("Connecting to Mail Domain: " + getMailServerAddress() + " with user: " +
                     emailUserName, e);
         }
         return this;

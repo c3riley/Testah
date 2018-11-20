@@ -170,6 +170,15 @@ public class AssertFile extends AbstractAssertBase<AssertFile, File> {
         return getContentAsObject(file, valueType, defaultCharset, TS.util().getMap());
     }
 
+    /**
+     * Gets content as object.
+     *
+     * @param file      the file
+     * @param valueType the value type
+     * @param charset   the charset
+     * @param mapper    the mapper
+     * @return the content as object
+     */
     public T getContentAsObject(final File file, final Class<T> valueType, Charset charset, ObjectMapper mapper) {
         String content = getContentAsString(getActual(), charset);
         try {

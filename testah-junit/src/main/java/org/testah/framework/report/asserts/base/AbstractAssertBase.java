@@ -72,7 +72,7 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
 
     protected H runAssert(final String message, final String assertName,
                           final AssertFunctionReturnBooleanActual runnableAssertBlock, final T expected,
-                          final T actual, final boolean allowActualToBeNull, final Runnable onFailureRunableBlock) {
+                          final T actual, final boolean allowActualToBeNull, final Runnable onFailureRunnableBlock) {
 
         AssertHistoryItem assertHistoryItem = new AssertHistoryItem(actual).setAssertName(assertName)
                 .setExpected(expected).setMessage(getMessage(message));
@@ -83,8 +83,8 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
                 getStatus().add(assertHistoryItem.addHistoryForPass(getAsserts()));
             } catch (final Throwable e) {
                 getStatus().add(assertHistoryItem.addHistoryForFail(getAsserts(), e));
-                if (onFailureRunableBlock != null) {
-                    onFailureRunableBlock.run();
+                if (onFailureRunnableBlock != null) {
+                    onFailureRunnableBlock.run();
                 }
                 if (getAsserts().getThrowExceptionOnFail()) {
                     throw e;
@@ -96,9 +96,9 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
 
     protected H runAssert(final String assertName,
                           final AssertFunctionReturnBooleanActual runnableAssertBlock, final T expected,
-                          final T actual, final boolean allowActualToBeNull, final Runnable onFailureRunableBlock) {
+                          final T actual, final boolean allowActualToBeNull, final Runnable onFailureRunnableBlock) {
         return runAssert("", assertName, runnableAssertBlock, expected, actual,
-                allowActualToBeNull, onFailureRunableBlock);
+                allowActualToBeNull, onFailureRunnableBlock);
     }
 
 

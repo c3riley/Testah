@@ -119,10 +119,10 @@ public class HttpPollerTest {
     }
 
     /**
-     * Poll request get wronge status code to start.
+     * Poll request get wrong status code to start.
      */
     @Test(expected = java.lang.AssertionError.class)
-    public void pollRequestGetWrongeStatusCodeToStart() {
+    public void pollRequestGetWrongStatusCodeToStart() {
         GetRequestDto request = new GetRequestDto("http://www.testah.com");
         AbstractHttpWrapper http = spy(HttpWrapperV2.class);
         doAnswer(getAnswer(
@@ -141,10 +141,10 @@ public class HttpPollerTest {
     }
 
     /**
-     * Poll request get wronge status code to after.
+     * Poll request get wrong status code to after.
      */
     @Test(expected = java.lang.AssertionError.class)
-    public void pollRequestGetWrongeStatusCodeToAfter() {
+    public void pollRequestGetWrongStatusCodeToAfter() {
         GetRequestDto request = new GetRequestDto("http://www.testah.com");
         AbstractHttpWrapper http = spy(HttpWrapperV2.class);
         doAnswer(getAnswer(
@@ -162,10 +162,10 @@ public class HttpPollerTest {
     }
 
     /**
-     * Poll request get wronge status code to after ignore status check.
+     * Poll request get wrong status code to after ignore status check.
      */
     @Test()
-    public void pollRequestGetWrongeStatusCodeToAfterIgnoreStatusCheck() {
+    public void pollRequestGetWrongStatusCodeToAfterIgnoreStatusCheck() {
         GetRequestDto request = new GetRequestDto("http://www.testah.com");
         AbstractHttpWrapper http = spy(HttpWrapperV2.class);
         doAnswer(getAnswer(

@@ -12,7 +12,7 @@ import java.util.concurrent.Future;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
-public class HttpAsynchWrapperV1Test {
+public class HttpAsyncWrapperV1Test {
 
     @Before
     public void setUp() throws Exception {
@@ -23,7 +23,7 @@ public class HttpAsynchWrapperV1Test {
     }
 
     @Test
-    public void doRequestAsynchTest() throws Exception {
+    public void doRequestAsyncTest() throws Exception {
         try (HttpAsyncWrapperV1 client = new HttpAsyncWrapperV1()) {
             GetRequestDto get = new GetRequestDto("https://postman-echo.com/get");
             Future<HttpResponse> responseFuture = client.doRequestAsync(get, true);

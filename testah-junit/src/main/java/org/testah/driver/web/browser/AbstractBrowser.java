@@ -231,7 +231,7 @@ public abstract class AbstractBrowser<T> {
      * @return the abstract browser
      */
     public AbstractBrowser<T> assertTitle(final String expectedTitle) {
-        TS.asserts().equalsTo("Assert Web Browser Pagetitle", expectedTitle, getTitle());
+        TS.asserts().equalsTo("Assert Web Browser PageTitle", expectedTitle, getTitle());
         return getSelf();
     }
 
@@ -260,7 +260,7 @@ public abstract class AbstractBrowser<T> {
      * @return the abstract browser
      */
     public AbstractBrowser<T> assertUrl(final String expectedUrl) {
-        TS.asserts().equalsTo("Assert Web Browser Pagetitle", expectedUrl, getUrl());
+        TS.asserts().equalsTo("Assert Web Browser PageTitle", expectedUrl, getUrl());
         return getSelf();
     }
 
@@ -853,7 +853,7 @@ public abstract class AbstractBrowser<T> {
      * @return true, if successful
      */
     public boolean verifyTitle(final String expectedTitle) {
-        return TS.verify().equalsTo("Verify Browser Pagetitle", expectedTitle, getTitle());
+        return TS.verify().equalsTo("Verify Browser PageTitle", expectedTitle, getTitle());
     }
 
     /**
@@ -863,7 +863,7 @@ public abstract class AbstractBrowser<T> {
      * @return true, if successful
      */
     public boolean verifyUrl(final String expectedUrl) {
-        return TS.verify().equalsTo("Verify Browser Pagetitle", expectedUrl, getUrl());
+        return TS.verify().equalsTo("Verify Browser PageTitle", expectedUrl, getUrl());
     }
 
     /**

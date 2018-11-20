@@ -20,9 +20,9 @@ import java.util.HashMap;
  * The Class TS - Test State Class.
  * This is the main entry point to the core testah functionality, it is designed to make it easy to write tests with
  * a limited amount of code.  The majority of objects this class holds are thread locals, so each thread will get its
- * own instance to avoid concurrent tests steping on each other.
+ * own instance to avoid concurrent tests stepping on each other.
  *
- * <p>The class has opted for not using the tradional get prefix, so calls like TS.browser().blah(), instead
+ * <p>The class has opted for not using the traditional get prefix, so calls like TS.browser().blah(), instead
  * of TS.getBrowser().blah()
  *
  * <p>The objects do offer a setter, but this is primarily there to make it easy to test the test code and framework and
@@ -348,7 +348,7 @@ public class TS {
     /**
      * Log.
      * A log4j instantiated object, to make it easier to log the write way.
-     * Should never use System.out.printlin in an e2e test.
+     * Should never use System.out.println in an e2e test.
      *
      * @return the logger
      */
