@@ -96,6 +96,7 @@ dependencies {
     compile "org.junit.jupiter:junit-jupiter-api:${junitPlatformVersion}"
     //compile "org.junit.platform:junit-platform-runner:${junitPlatformVersion}"
     compile "org.junit.jupiter:junit-jupiter-engine:${junitPlatformVersion}"
+    //testCompile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: "${junitPlatformVersion}"
 
     compile 'com.typesafe.akka:akka-actor_2.10:2.1.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'

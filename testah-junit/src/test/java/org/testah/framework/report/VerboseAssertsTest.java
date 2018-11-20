@@ -1,6 +1,9 @@
 package org.testah.framework.report;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,64 +14,81 @@ import org.testah.client.dto.TestStepDto;
 import org.testah.framework.report.asserts.base.AssertNotAllowedWithNullActual;
 import org.unitils.reflectionassert.ReflectionAssert;
 
+import java.io.IOException;
 import java.util.*;
 
-public class VerboseAssertsTest {
+import static org.hamcrest.Matchers.is;
+
+public class VerboseAssertsTest
+{
 
     private VerboseAsserts va;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         va = new VerboseAsserts().onlyVerify();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception
+    {
 
     }
 
     @Test
-    public void customAssert() {
+    public void customAssert()
+    {
 
         Assert.assertFalse(
-                va.customAssert(new Runnable() {
+                va.customAssert(new Runnable()
+                {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         throw new AssertionError("failure");
                     }
                 }));
 
         Assert.assertTrue(
-                va.customAssert(new Runnable() {
+                va.customAssert(new Runnable()
+                {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         //do nothing to pass
                     }
                 }));
     }
 
     @Test
-    public void customAssert1() {
+    public void customAssert1()
+    {
 
         Assert.assertFalse(
-                va.customAssert("Custome Assert Unit Test", new Runnable() {
+                va.customAssert("Custom Assert Unit Test", new Runnable()
+                {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         throw new AssertionError("failure");
                     }
                 }));
 
         Assert.assertTrue(
-                va.customAssert("Custome Assert Unit Test", new Runnable() {
+                va.customAssert("Custom Assert Unit Test", new Runnable()
+                {
                     @Override
-                    public void run() {
+                    public void run()
+                    {
                         //do nothing to pass
                     }
                 }));
     }
 
     @Test
-    public void startsWith() {
+    public void startsWith()
+    {
         Assert.assertTrue(va.given("test").startsWith(null).isFailed());
         Assert.assertTrue(va.given("t1234").startsWith("t").isPassed());
         Assert.assertTrue(va.given("t1234").startsWith("t1234").isPassed());
@@ -82,13 +102,15 @@ public class VerboseAssertsTest {
     }
 
     @Test(expected = AssertNotAllowedWithNullActual.class)
-    public void startsWithIgnoreCaseWithNullNotAllowed() {
+    public void startsWithIgnoreCaseWithNullNotAllowed()
+    {
         String nullValue = null;
         Assert.assertTrue(va.given(nullValue).startsWithIgnoreCase(null).isFailed());
     }
 
     @Test
-    public void startsWithIgnoreCase() {
+    public void startsWithIgnoreCase()
+    {
         String nullValue = null;
         Assert.assertTrue(va.given("t1234").startsWithIgnoreCase("t").isPassed());
         Assert.assertTrue(va.given("t1234").startsWithIgnoreCase("t1234").isPassed());
@@ -101,35 +123,40 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void endsWith() {
+    public void endsWith()
+    {
         Assert.assertTrue(va.given("ending").endsWith("ing").isPassed());
         Assert.assertFalse(va.given("ending").endsWith("Ing").isPassed());
         Assert.assertFalse(va.given("ending").endsWith("izng").isPassed());
     }
 
     @Test
-    public void endsWithIgnoreCase() {
+    public void endsWithIgnoreCase()
+    {
         Assert.assertTrue(va.given("ending").endsWithIgnoreCase("ing").isPassed());
         Assert.assertTrue(va.given("ending").endsWithIgnoreCase("Ing").isPassed());
         Assert.assertFalse(va.given("ending").endsWithIgnoreCase("izng").isPassed());
     }
 
     @Test
-    public void contains() {
+    public void contains()
+    {
         Assert.assertTrue(va.given("contains-me And this").contains(" And ").isPassed());
         Assert.assertFalse(va.given("contains-me And this").contains(" and ").isPassed());
         Assert.assertFalse(va.given("contains-me And this").contains("-me  ").isPassed());
     }
 
     @Test
-    public void containsIgnoreCase() {
+    public void containsIgnoreCase()
+    {
         Assert.assertTrue(va.given("contains-me And this").containsIgnoreCase(" And ").isPassed());
         Assert.assertTrue(va.given("contains-me And this").containsIgnoreCase(" and ").isPassed());
         Assert.assertFalse(va.given("contains-me And this").containsIgnoreCase("-me  ").isPassed());
     }
 
     @Test
-    public void sizeEquals() {
+    public void sizeEquals()
+    {
         Assert.assertTrue(va.given("String").size().equalsTo(6).isPassed());
 
         Assert.assertTrue(va.given(new String[]{"1", "2", "3"}).size().equalsTo(3).isPassed());
@@ -161,35 +188,40 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void notEndsWith() {
+    public void notEndsWith()
+    {
         Assert.assertFalse(va.given("ending").notEndsWith("ing").isPassed());
         Assert.assertTrue(va.given("ending").notEndsWith("Ing").isPassed());
         Assert.assertTrue(va.given("ending").notEndsWith("izng").isPassed());
     }
 
     @Test
-    public void notEndsWithIgnoreCase() {
+    public void notEndsWithIgnoreCase()
+    {
         Assert.assertFalse(va.given("ending").notEndsWithIgnoreCase("ing").isPassed());
         Assert.assertFalse(va.given("ending").notEndsWithIgnoreCase("Ing").isPassed());
         Assert.assertTrue(va.given("ending").notEndsWithIgnoreCase("izng").isPassed());
     }
 
     @Test
-    public void notContains() {
+    public void notContains()
+    {
         Assert.assertFalse(va.given("contains-me And this").notContains(" And ").isPassed());
         Assert.assertTrue(va.given("contains-me And this").notContains(" and ").isPassed());
         Assert.assertTrue(va.given("contains-me and this").notContains("-me  ").isPassed());
     }
 
     @Test
-    public void notContainsIgnoreCase() {
+    public void notContainsIgnoreCase()
+    {
         Assert.assertFalse(va.given("contains-me And this").notContainsIgnoreCase(" And ").isPassed());
         Assert.assertFalse(va.given("contains-me And this").notContainsIgnoreCase(" and ").isPassed());
         Assert.assertTrue(va.given("contains-me and this").notContainsIgnoreCase("-me  ").isPassed());
     }
 
     @Test
-    public void notSizeEquals() {
+    public void notSizeEquals()
+    {
         Assert.assertFalse(va.notSizeEquals("String", "123", 3));
 
         Assert.assertFalse(va.notSizeEquals("String", new String[]{"1", "2", "3"}, 3));
@@ -221,51 +253,135 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void sameJson() {
+    public void sameJsonWithMatchingObjects() throws IOException, JSONException
+    {
+        String obj1 = "{ \"name\":\"John\", \"age\":30, \"car\":null }";
+        String obj2 = "{\"age\":30,  \"name\":\"John\", \"car\":null }";
+
+        Assert.assertThat(va.sameJson("Identical String objects should match", obj1, obj2), is(true));
+
+        JsonNode json1 = TS.util().getMap().readValue(obj1, JsonNode.class);
+        JsonNode json2 = TS.util().getMap().readValue(obj2, JsonNode.class);
+
+        Assert.assertThat(va.sameJson("Identical Json Objects should match", json1, json2, true), is(true));
     }
 
     @Test
-    public void sameJson1() {
+    public void sameJsonStrict()
+    {
+        String obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+        String obj2 = "{\"id\":1, \"friends\":[{\"id\":3}, {\"id\":2}]}";
+
+        Assert.assertThat(va.sameJson("Extra field in the expected Json should not match", obj1, obj2, true), is(true));
     }
 
     @Test
-    public void sameJson2() {
+    public void sameJsonWithoutMatchingObjects() throws IOException, JSONException
+    {
+        String obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+        String obj2 = "{\"id\":1, \"friends\":[{\"id\":3}, {\"id\":2}, {\"id\":4}]}";
+
+        Assert.assertThat(va.sameJson("Extra field in the expected object should not match the actual", obj1, obj2, true), is(false));
+
+        JSONObject json1 = new JSONObject(obj1);
+        JSONObject json2 = new JSONObject(obj2);
+
+        Assert.assertThat(va.sameJson("Extra field in the expected JsonObject should not match", json1, json2, true), is(false));
+
+        obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+        obj2 = "{\"id\":1, \"friends\":[{\"id\":3}, {\"id\":2}]}";
+
+        Assert.assertThat(va.sameJson("Extra field in the expected Json should not match", obj1, obj2, true), is(true));
+
+
+        obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+        obj2 = "{\"id\":null, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+
+        Assert.assertThat(va.sameJson("Null value in the expected Json should not match", obj1, obj2, true), is(false));
+
+        obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+        obj2 = "{\"friends\":[{\"id\":2}, {\"id\":3}]}";
+
+        Assert.assertThat(va.sameJson("Missing field in the expected Json should not match", obj1, obj2, true), is(false));
+
+        obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+        obj2 = "{\"id\":\"\", \"friends\":[{\"id\":2}, {\"id\":3}]}";
+
+        Assert.assertThat(va.sameJson("Empty value in the expected Json should not match", obj1, obj2, true), is(false));
+    }
+
+    @Test(expected = AssertionError.class)
+    public void sameJsonTestException()
+    {
+        String obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+        String obj2 = "{\"id\":1, \"friends\":[{\"id\":3}, {\"id\":2}, {\"id\":4}]}";
+
+        VerboseAsserts verboseAsserts = new VerboseAsserts(true);
+        verboseAsserts.sameJson("Should throw Assertion Error", obj1, obj2, true);
     }
 
     @Test
-    public void sameJson3() {
+    public void same()
+    {
+        HashMap<String, Integer> hash1 = new HashMap<String, Integer>();
+        hash1.put("1", 1);
+        hash1.put("2", 2);
+        hash1.put("3", 3);
+
+        Assert.assertThat(va.same(hash1, hash1), is(true));
+
+        String obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+
+        Assert.assertThat(va.same("Same objects should match", obj1, obj1), is(true));
+    }
+
+    @Test(expected = AssertionError.class)
+    public void sameTestException()
+    {
+        HashMap<String, Integer> hash1 = new HashMap<String, Integer>();
+        hash1.put("1", 1);
+        hash1.put("2", 2);
+        hash1.put("3", 3);
+
+        HashMap<String, Integer> hash2 = new HashMap<String, Integer>();
+        hash1.put("1", 1);
+        hash1.put("2", 2);
+
+        VerboseAsserts verboseAsserts = new VerboseAsserts(true);
+        verboseAsserts.same(hash1, hash2);
     }
 
     @Test
-    public void sameJson4() {
+    public void fail()
+    {
+        Assert.assertThat(va.fail(), is(false));
+
+        if (1 != 2)
+        {
+            Assert.assertThat(va.fail("Fail method should return false"), is(false));
+        }
+    }
+
+    @Test(expected = AssertionError.class)
+    public void failWithException()
+    {
+        VerboseAsserts verboseAsserts = new VerboseAsserts(true);
+        verboseAsserts.fail();
     }
 
     @Test
-    public void sameJson5() {
+    public void critical()
+    {
+
+        if (1 != 2)
+        {
+            va.critical("Critical method");
+        }
     }
 
     @Test
-    public void same() {
-    }
-
-    @Test
-    public void same1() {
-    }
-
-    @Test
-    public void fail() {
-    }
-
-    @Test
-    public void fail1() {
-    }
-
-    @Test
-    public void critical() {
-    }
-
-    @Test
-    public void notNull() {
+    public void notNull()
+    {
         Assert.assertFalse(va.notNull(null));
         String tempStringIsNull = null;
         Assert.assertFalse(va.notNull(tempStringIsNull));
@@ -280,7 +396,8 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void notNullWithMessage() {
+    public void notNullWithMessage()
+    {
         Assert.assertFalse(va.notNull("message", null));
         String tempStringIsNull = null;
         Assert.assertFalse(va.notNull("message", tempStringIsNull));
@@ -295,7 +412,8 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void isNull() {
+    public void isNull()
+    {
         Assert.assertTrue(va.isNull(null));
         String tempStringIsNull = null;
         Assert.assertTrue(va.isNull(tempStringIsNull));
@@ -311,7 +429,8 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void isNullWithMessage() {
+    public void isNullWithMessage()
+    {
         Assert.assertTrue(va.isNull("message", null));
         String tempStringIsNull = null;
         Assert.assertTrue(va.isNull("message", tempStringIsNull));
@@ -326,71 +445,107 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void notSame() {
+    public void notSame()
+    {
+        HashMap<String, Integer> hash1 = new HashMap<String, Integer>();
+        hash1.put("1", 1);
+        hash1.put("2", 2);
+        hash1.put("3", 3);
+
+        HashMap<String, Integer> hash2 = new HashMap<String, Integer>();
+        hash2.put("1", 1);
+        hash2.put("2", 2);
+
+        Assert.assertThat(va.notSame(hash1, hash2), is(true));
+
+        String obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+        String obj2 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}, {\"id\":4}]}";
+
+        Assert.assertThat(va.notSame("Same objects should match", obj1, obj2), is(true));
+    }
+
+    @Test(expected = AssertionError.class)
+    public void notSameWithException()
+    {
+        String obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
+
+        VerboseAsserts verboseAsserts = new VerboseAsserts(true);
+        verboseAsserts.notSame(obj1, obj1);
     }
 
     @Test
-    public void notSame1() {
+    public void equals()
+    {
     }
 
     @Test
-    public void equals() {
+    public void equals1()
+    {
     }
 
     @Test
-    public void equals1() {
+    public void equals2()
+    {
     }
 
     @Test
-    public void equals2() {
+    public void equals3()
+    {
     }
 
     @Test
-    public void equals3() {
+    public void equals4()
+    {
     }
 
     @Test
-    public void equals4() {
+    public void equals5()
+    {
     }
 
     @Test
-    public void equals5() {
+    public void equals6()
+    {
     }
 
     @Test
-    public void equals6() {
+    public void equals7()
+    {
     }
 
     @Test
-    public void equals7() {
+    public void equals8()
+    {
     }
 
     @Test
-    public void equals8() {
+    public void equals9()
+    {
     }
 
     @Test
-    public void equals9() {
+    public void equals10()
+    {
     }
 
     @Test
-    public void equals10() {
+    public void equals11()
+    {
     }
 
     @Test
-    public void equals11() {
+    public void equalsToIgnoreCase()
+    {
     }
 
     @Test
-    public void equalsToIgnoreCase() {
+    public void equalsToIgnoreCase1()
+    {
     }
 
     @Test
-    public void equalsToIgnoreCase1() {
-    }
-
-    @Test
-    public void assertFileExists() {
+    public void assertFileExists()
+    {
         TestCaseDto test1 = new TestCaseDto();
         test1.setName("test1");
         test1.addTestStep(new TestStepDto("test", "test1"));
@@ -399,9 +554,11 @@ public class VerboseAssertsTest {
         test2.setName("test2");
         test2.addTestStep(new TestStepDto("test", "test2"));
         test2.getTestSteps().get(0).setStatus(true);
-        try {
+        try
+        {
             ReflectionAssert.assertReflectionEquals(test1, test2);
-        } catch (Throwable throwable) {
+        } catch (Throwable throwable)
+        {
             TS.step().action().createInfo("assertReflectionEquals", throwable.getMessage());
         }
         EqualsBuilder.reflectionEquals(test1, test2);
@@ -417,9 +574,11 @@ public class VerboseAssertsTest {
         lst2.add("1");
         lst2.add("1");
 
-        try {
+        try
+        {
             ReflectionAssert.assertReflectionEquals(lst1, lst2);
-        } catch (Throwable throwable) {
+        } catch (Throwable throwable)
+        {
             TS.step().action().createInfo("assertReflectionEquals", throwable.getMessage());
         }
 
@@ -427,13 +586,15 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void assertFileExists1() {
+    public void assertFileExists1()
+    {
 
 
     }
 
     @Test
-    public void equalsToMultilineString() {
+    public void equalsToMultilineString()
+    {
         Assert.assertTrue(va.equalsToMultilineString("", "this is a test", "this is a test"));
         Assert.assertFalse(va.equalsToMultilineString("", "this is a test 1", "this is a test 2"));
 
@@ -446,7 +607,8 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void equalsTo() {
+    public void equalsTo()
+    {
         Assert.assertTrue(va.equalsTo("", "this is a test", "this is a test"));
         Assert.assertFalse(va.equalsTo("", "this is a test 1", "this is a test 2"));
         Assert.assertTrue(va.equalsTo("", "", ""));
@@ -455,187 +617,233 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void equalsTo2() {
+    public void equalsTo2()
+    {
     }
 
     @Test
-    public void equalsTo3() {
+    public void equalsTo3()
+    {
     }
 
     @Test
-    public void equalsTo4() {
+    public void equalsTo4()
+    {
     }
 
     @Test
-    public void equalsTo5() {
+    public void equalsTo5()
+    {
     }
 
     @Test
-    public void equalsTo6() {
+    public void equalsTo6()
+    {
     }
 
     @Test
-    public void equalsTo7() {
+    public void equalsTo7()
+    {
     }
 
     @Test
-    public void equalsTo8() {
+    public void equalsTo8()
+    {
     }
 
     @Test
-    public void equalsTo9() {
+    public void equalsTo9()
+    {
     }
 
     @Test
-    public void equalsTo10() {
+    public void equalsTo10()
+    {
     }
 
     @Test
-    public void equalsTo11() {
+    public void equalsTo11()
+    {
     }
 
     @Test
-    public void unExpectedException() {
+    public void unExpectedException()
+    {
     }
 
     @Test
-    public void assertThat() {
+    public void assertThat()
+    {
     }
 
     @Test
-    public void assertThat1() {
+    public void assertThat1()
+    {
     }
 
     @Test
-    public void isFalse() {
+    public void isFalse()
+    {
     }
 
     @Test
-    public void isFalse1() {
+    public void isFalse1()
+    {
     }
 
     @Test
-    public void isTrue() {
+    public void isTrue()
+    {
     }
 
     @Test
-    public void isTrue1() {
+    public void isTrue1()
+    {
     }
 
     @Test
-    public void notEquals() {
+    public void notEquals()
+    {
     }
 
     @Test
-    public void notEquals1() {
+    public void notEquals1()
+    {
     }
 
     @Test
-    public void notEquals2() {
+    public void notEquals2()
+    {
     }
 
     @Test
-    public void notEquals3() {
+    public void notEquals3()
+    {
     }
 
     @Test
-    public void notEquals4() {
+    public void notEquals4()
+    {
     }
 
     @Test
-    public void notEquals5() {
+    public void notEquals5()
+    {
     }
 
     @Test
-    public void notEquals6() {
+    public void notEquals6()
+    {
     }
 
     @Test
-    public void notEquals7() {
+    public void notEquals7()
+    {
     }
 
     @Test
-    public void that() {
+    public void that()
+    {
     }
 
     @Test
-    public void that1() {
+    public void that1()
+    {
     }
 
     @Test
-    public void arrayEquals() {
+    public void arrayEquals()
+    {
     }
 
     @Test
-    public void arrayEquals1() {
+    public void arrayEquals1()
+    {
     }
 
     @Test
-    public void arrayEquals2() {
+    public void arrayEquals2()
+    {
     }
 
     @Test
-    public void arrayEquals3() {
+    public void arrayEquals3()
+    {
     }
 
     @Test
-    public void arrayEquals4() {
+    public void arrayEquals4()
+    {
     }
 
     @Test
-    public void arrayEquals5() {
+    public void arrayEquals5()
+    {
     }
 
     @Test
-    public void arrayEquals6() {
+    public void arrayEquals6()
+    {
     }
 
     @Test
-    public void arrayEquals7() {
+    public void arrayEquals7()
+    {
     }
 
     @Test
-    public void arrayEquals8() {
+    public void arrayEquals8()
+    {
     }
 
     @Test
-    public void arrayEquals9() {
+    public void arrayEquals9()
+    {
     }
 
     @Test
-    public void arrayEquals10() {
+    public void arrayEquals10()
+    {
     }
 
     @Test
-    public void arrayEquals11() {
+    public void arrayEquals11()
+    {
     }
 
     @Test
-    public void arrayEquals12() {
+    public void arrayEquals12()
+    {
     }
 
     @Test
-    public void arrayEquals13() {
+    public void arrayEquals13()
+    {
     }
 
     @Test
-    public void arrayEquals14() {
+    public void arrayEquals14()
+    {
     }
 
     @Test
-    public void arrayEquals15() {
+    public void arrayEquals15()
+    {
     }
 
     @Test
-    public void arrayEquals16() {
+    public void arrayEquals16()
+    {
     }
 
     @Test
-    public void arrayEquals17() {
+    public void arrayEquals17()
+    {
     }
 
     @Test
-    public void isEmpty() {
+    public void isEmpty()
+    {
 
         Assert.assertTrue(va.isEmpty("String", ""));
         Assert.assertTrue(va.isEmpty("String array", new String[]{}));
@@ -659,7 +867,8 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void isNotEmpty() {
+    public void isNotEmpty()
+    {
         Assert.assertFalse(va.isNotEmpty("String", ""));
         Assert.assertFalse(va.isNotEmpty("String array", new String[]{}));
         Assert.assertFalse(va.isNotEmpty("HashMap", new HashMap<String, String>()));
@@ -682,14 +891,17 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void testAssertGreaterThan() {
-        getNumberData().forEach((key, value) -> {
+    public void testAssertGreaterThan()
+    {
+        getNumberData().forEach((key, value) ->
+        {
             Assert.assertTrue(va.isGreaterThan("test " + key.getClass().getSimpleName(), key, value));
             Assert.assertTrue(va.isGreaterThanOrEqualTo("test " + key.getClass().getSimpleName(), key, key));
         });
     }
 
-    private HashMap<Number, Number> getNumberData() {
+    private HashMap<Number, Number> getNumberData()
+    {
         HashMap<Number, Number> numbers = new HashMap<>();
         numbers.put(2, 3);
         numbers.put(2.0, 3.0);
@@ -699,8 +911,10 @@ public class VerboseAssertsTest {
     }
 
     @Test()
-    public void testAssertGreaterThanNegativeCase() {
-        getNumberData().forEach((key, value) -> {
+    public void testAssertGreaterThanNegativeCase()
+    {
+        getNumberData().forEach((key, value) ->
+        {
             Assert.assertFalse("expecting to fail",
                     va.isGreaterThan("test " + key.getClass().getSimpleName(), value, key));
             Assert.assertFalse("expecting to fail",
@@ -709,16 +923,20 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void testAssertLessThan() {
-        getNumberData().forEach((key, value) -> {
+    public void testAssertLessThan()
+    {
+        getNumberData().forEach((key, value) ->
+        {
             Assert.assertTrue(va.isLessThan("test " + key.getClass().getSimpleName(), value, key));
             Assert.assertTrue(va.isLessThanOrEqualTo("test " + key.getClass().getSimpleName(), value, value));
         });
     }
 
     @Test
-    public void testAssertLessThanNegativeCase() {
-        getNumberData().forEach((key, value) -> {
+    public void testAssertLessThanNegativeCase()
+    {
+        getNumberData().forEach((key, value) ->
+        {
             Assert.assertFalse("expecting to fail",
                     va.isLessThan("test " + key.getClass().getSimpleName(), key, value));
             Assert.assertFalse("expecting to fail",
@@ -727,50 +945,62 @@ public class VerboseAssertsTest {
     }
 
     @Test
-    public void pass() {
+    public void pass()
+    {
     }
 
     @Test
-    public void pass1() {
+    public void pass1()
+    {
     }
 
     @Test
-    public void addAssertHistory() {
+    public void addAssertHistory()
+    {
     }
 
     @Test
-    public void addAssertHistory1() {
+    public void addAssertHistory1()
+    {
     }
 
     @Test
-    public void getThrowExceptionOnFail() {
+    public void getThrowExceptionOnFail()
+    {
     }
 
     @Test
-    public void isThrowExceptionOnFail() {
+    public void isThrowExceptionOnFail()
+    {
     }
 
     @Test
-    public void onlyVerify() {
+    public void onlyVerify()
+    {
     }
 
     @Test
-    public void isRecordSteps() {
+    public void isRecordSteps()
+    {
     }
 
     @Test
-    public void setThrowExceptionOnFail() {
+    public void setThrowExceptionOnFail()
+    {
     }
 
     @Test
-    public void setRecordSteps() {
+    public void setRecordSteps()
+    {
     }
 
     @Test
-    public void isVerifyOnly() {
+    public void isVerifyOnly()
+    {
     }
 
     @Test
-    public void setVerifyOnly() {
+    public void setVerifyOnly()
+    {
     }
 }

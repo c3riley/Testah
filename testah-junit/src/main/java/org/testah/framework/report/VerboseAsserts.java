@@ -404,6 +404,17 @@ public class VerboseAsserts {
     /**
      * Not same.
      *
+     * @param expected the expected
+     * @param actual   the actual
+     * @return true, if successful
+     */
+    public boolean notSame(final Object expected, final Object actual) {
+        return notSame("", expected, actual);
+    }
+
+    /**
+     * Not same.
+     *
      * @param message  the message
      * @param expected the expected
      * @param actual   the actual
@@ -415,26 +426,6 @@ public class VerboseAsserts {
             return addAssertHistory(message, true, "assertNotSame", expected, actual);
         } catch (final Throwable e) {
             final boolean rtn = addAssertHistory(message, false, "assertNotSame", expected, actual, e);
-            if (getThrowExceptionOnFail()) {
-                throw e;
-            }
-            return rtn;
-        }
-    }
-
-    /**
-     * Not same.
-     *
-     * @param expected the expected
-     * @param actual   the actual
-     * @return true, if successful
-     */
-    public boolean notSame(final Object expected, final Object actual) {
-        try {
-            Assert.assertNotSame(expected, actual);
-            return addAssertHistory("", true, "assertNotSame", expected, actual);
-        } catch (final Throwable e) {
-            final boolean rtn = addAssertHistory("", false, "assertNotSame", expected, actual, e);
             if (getThrowExceptionOnFail()) {
                 throw e;
             }
