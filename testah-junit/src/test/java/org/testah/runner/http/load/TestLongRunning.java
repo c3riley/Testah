@@ -1,19 +1,15 @@
 package org.testah.runner.http.load;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.matching;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.testah.framework.annotations.TestCase;
 import org.testah.runner.performance.AbstractLongRunningTest;
 import org.testah.runner.performance.ChunkStatsLogPublisher;
 import org.testah.runner.performance.ElasticSearchResponseTimesPublisher;
 import org.testah.runner.performance.TestRunProperties;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 public class TestLongRunning extends AbstractLongRunningTest {
     private static final int numberOfChunks = 8;
@@ -30,79 +26,80 @@ public class TestLongRunning extends AbstractLongRunningTest {
     private static final String requestRegexLineCounter = "(.*\\}\\n){10}";
     private static final String requestRegexIndexCounter = "(.*index.*\\n.*\\n){5}";
     private static final String requestRegexSingle =
-                    ".*\\{\"statusCode\":%d,\"duration\":\\d+,"
-                                    + "\"collectionTime\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\","
-                                    + "\"domain\":\"%s\",\"service\":\"ServiceUnderTest\",\"testClass\":\"TestLongRunning\","
-                                    + "\"testMethod\":\"%s\",\"timestamp\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\","
-                                    + "\"aggregation\":\"single\"\\}.*";
+            ".*\\{\"statusCode\":%d,\"duration\":\\d+," +
+                    "\"collectionTime\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\"," +
+                    "\"domain\":\"%s\",\"service\":\"ServiceUnderTest\",\"testClass\":\"TestLongRunning\"," +
+                    "\"testMethod\":\"%s\",\"timestamp\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\"," +
+                    "\"aggregation\":\"single\"\\}.*";
     private static final String requestRegexChunk =
-                    ".*\\{\"duration\":\\d+,\"domain\":\"%s\",\"service\":\"ServiceUnderTest\","
-                                    + "\"testClass\":\"TestLongRunning\",\"testMethod\":\"%s\","
-                                    + "\"timestamp\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\",\"aggregation\":\"chunk\"\\}.*";
+            ".*\\{\"duration\":\\d+,\"domain\":\"%s\",\"service\":\"ServiceUnderTest\"," +
+                    "\"testClass\":\"TestLongRunning\",\"testMethod\":\"%s\"," +
+                    "\"timestamp\":\"\\d\\d\\d\\d-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d\",\"aggregation\":\"chunk\"\\}.*";
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(9200);
 
+    //@Ignore("need to work on wire mock")
     @Test
-    @TestCase()
     public void testGet() throws Exception {
         final Integer[] expectedStatusCodes = {200, 300, 400, 500};
         String testClass = this.getClass().getSimpleName();
         String testMethod = Thread.currentThread().getStackTrace()[1].getMethodName();
         TestRunProperties runProps =
-                        new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, millisBetweenChunks);
+                new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, millisBetweenChunks);
         ElasticSearchResponseTimesPublisher elasticSearchExecutionStatsPublisher =
-                        new ElasticSearchResponseTimesPublisher(baseUrl, index, type, username, password, runProps).setVerbose(true);
+                new ElasticSearchResponseTimesPublisher(baseUrl, index, type, username, password, runProps).setVerbose(true);
         ChunkStatsLogPublisher chunkStatsLogPublisher = new ChunkStatsLogPublisher();
 
         setupWiremock(elasticSearchExecutionStatsPublisher, new TestServiceGetRequestGenerator(chunkSize, numberOfChunks).getDomain(),
-                        testMethod, expectedStatusCodes);
+                testMethod, expectedStatusCodes);
 
         executeTest(new TestServiceGetRequestGenerator(chunkSize, numberOfChunks),
-                        runProps
+                runProps
                         .setVerbose(true)
                         .setRunDuration(runDuration),
-                        elasticSearchExecutionStatsPublisher,
-                        chunkStatsLogPublisher);
+                elasticSearchExecutionStatsPublisher,
+                chunkStatsLogPublisher);
     }
 
+    private void setupWiremock(ElasticSearchResponseTimesPublisher elasticSearchExecutionStatsPublisher, String domain,
+                               String testMethod, Integer[] expectedStatusCodes) {
+        wireMockRule.stubFor(post(urlEqualTo(elasticSearchExecutionStatsPublisher.getUrlPathUpload()))
+                //.withRequestBody(matching(requestRegexLineCounter))
+                .withRequestBody(matching(requestRegexIndexCounter))
+                .withRequestBody(matching(String.format(requestRegexSingle, expectedStatusCodes[0], domain, testMethod)))
+                .withRequestBody(matching(String.format(requestRegexSingle, expectedStatusCodes[1], domain, testMethod)))
+                .withRequestBody(matching(String.format(requestRegexSingle, expectedStatusCodes[2], domain, testMethod)))
+                .withRequestBody(matching(String.format(requestRegexSingle, expectedStatusCodes[3], domain, testMethod)))
+                .withRequestBody(matching(String.format(requestRegexChunk, domain, testMethod)))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("<response>Some content</response>")));
+
+
+    }
+
+    //@Ignore("need to work on wire mock")
     @Test
-    @TestCase()
     public void testPost() throws Exception {
         final Integer[] expectedStatusCodes = {200, 200, 200, 200};
         String testClass = this.getClass().getSimpleName();
         String testMethod = Thread.currentThread().getStackTrace()[1].getMethodName();
         TestRunProperties runProps =
-            new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, millisBetweenChunks);
+                new TestRunProperties(serviceUnderTest, testClass, testMethod, nthreads, millisBetweenChunks);
         ElasticSearchResponseTimesPublisher elasticSearchExecutionStatsPublisher =
-            new ElasticSearchResponseTimesPublisher(baseUrl, index, type, username, password, runProps).setVerbose(true);
+                new ElasticSearchResponseTimesPublisher(baseUrl, index, type, username, password, runProps).setVerbose(true);
         ChunkStatsLogPublisher chunkStatsLogPublisher = new ChunkStatsLogPublisher();
 
         setupWiremock(elasticSearchExecutionStatsPublisher, new TestServicePostRequestGenerator(chunkSize, numberOfChunks).getDomain(),
-                        testMethod, expectedStatusCodes);
+                testMethod, expectedStatusCodes);
 
         executeTest(new TestServicePostRequestGenerator(chunkSize, numberOfChunks),
-                        runProps
+                runProps
                         .setVerbose(true)
                         .setRunDuration(runDuration),
-                        elasticSearchExecutionStatsPublisher,
-                        chunkStatsLogPublisher);
-    }
-
-    private void setupWiremock(ElasticSearchResponseTimesPublisher elasticSearchExecutionStatsPublisher, String domain,
-                    String testMethod, Integer[] expectedStatusCodes)
-    {
-        wireMockRule.stubFor(post(urlEqualTo(elasticSearchExecutionStatsPublisher.getUrlPathUpload()))
-                        .withRequestBody(matching(requestRegexLineCounter))
-                        .withRequestBody(matching(requestRegexIndexCounter))
-                        .withRequestBody(matching(String.format(requestRegexSingle, expectedStatusCodes[0], domain, testMethod)))
-                        .withRequestBody(matching(String.format(requestRegexSingle, expectedStatusCodes[1], domain, testMethod)))
-                        .withRequestBody(matching(String.format(requestRegexSingle, expectedStatusCodes[2], domain, testMethod)))
-                        .withRequestBody(matching(String.format(requestRegexSingle, expectedStatusCodes[3], domain, testMethod)))
-                        .withRequestBody(matching(String.format(requestRegexChunk, domain, testMethod)))
-                        .willReturn(aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
-                                        .withBody("<response>Some content</response>")));
+                elasticSearchExecutionStatsPublisher,
+                chunkStatsLogPublisher);
     }
 }

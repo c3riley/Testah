@@ -7,11 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractPerformanceRestRequest {
+    protected TupleGenerator tupleGenerator;
+
     public AbstractPerformanceRestRequest(List<?>... lists) {
         tupleGenerator = new TupleGenerator(Arrays.stream(lists).mapToInt(list -> list.size()).toArray());
     }
-
-    protected TupleGenerator tupleGenerator;
 
     public abstract AbstractRequestDto<?> next();
 

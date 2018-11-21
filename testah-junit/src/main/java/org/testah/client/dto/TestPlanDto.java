@@ -125,6 +125,26 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
     }
 
     /**
+     * Gets the test cases.
+     *
+     * @return the test cases
+     */
+    public List<TestCaseDto> getTestCases() {
+        return testCases;
+    }
+
+    /**
+     * Sets the test cases.
+     *
+     * @param testCases the test cases
+     * @return the test plan dto
+     */
+    public TestPlanDto setTestCases(final List<TestCaseDto> testCases) {
+        this.testCases = testCases;
+        return this;
+    }
+
+    /**
      * Start.
      *
      * @return the test plan dto
@@ -132,6 +152,26 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
     public TestPlanDto start() {
         setStatus(null);
         getRunTime().start();
+        return this;
+    }
+
+    /**
+     * Gets the run time.
+     *
+     * @return the run time
+     */
+    public RunTimeDto getRunTime() {
+        return runTime;
+    }
+
+    /**
+     * Sets the run time.
+     *
+     * @param runTime the run time
+     * @return the test plan dto
+     */
+    public TestPlanDto setRunTime(final RunTimeDto runTime) {
+        this.runTime = runTime;
         return this;
     }
 
@@ -145,15 +185,6 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
         getRunTime().stop();
         runInfo.recalc(this);
         return this;
-    }
-
-    /**
-     * Gets the run info.
-     *
-     * @return the run info
-     */
-    public RunInfoDto getRunInfo() {
-        return runInfo;
     }
 
     /**
@@ -187,22 +218,22 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
     }
 
     /**
-     * Gets the run time.
+     * Gets the run info.
      *
-     * @return the run time
+     * @return the run info
      */
-    public RunTimeDto getRunTime() {
-        return runTime;
+    public RunInfoDto getRunInfo() {
+        return runInfo;
     }
 
     /**
-     * Sets the run time.
+     * Sets the run info.
      *
-     * @param runTime the run time
+     * @param runInfo the new run info
      * @return the test plan dto
      */
-    public TestPlanDto setRunTime(final RunTimeDto runTime) {
-        this.runTime = runTime;
+    public TestPlanDto setRunInfo(final RunInfoDto runInfo) {
+        this.runInfo = runInfo;
         return this;
     }
 
@@ -213,26 +244,6 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      */
     public Boolean getStatus() {
         return status;
-    }
-
-    /**
-     * Gets the test cases.
-     *
-     * @return the test cases
-     */
-    public List<TestCaseDto> getTestCases() {
-        return testCases;
-    }
-
-    /**
-     * Sets the test cases.
-     *
-     * @param testCases the test cases
-     * @return the test plan dto
-     */
-    public TestPlanDto setTestCases(final List<TestCaseDto> testCases) {
-        this.testCases = testCases;
-        return this;
     }
 
     /**
@@ -359,6 +370,17 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      */
     public KnownProblemDto getKnownProblem() {
         return knownProblem;
+    }
+
+    /**
+     * Sets the known problem.
+     *
+     * @param knownProblem the known problem
+     * @return the test plan dto
+     */
+    public TestPlanDto setKnownProblem(final KnownProblemDto knownProblem) {
+        this.knownProblem = knownProblem;
+        return this;
     }
 
     /**
@@ -502,17 +524,6 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
     }
 
     /**
-     * Sets the known problem.
-     *
-     * @param knownProblem the known problem
-     * @return the test plan dto
-     */
-    public TestPlanDto setKnownProblem(final KnownProblemDto knownProblem) {
-        this.knownProblem = knownProblem;
-        return this;
-    }
-
-    /**
      * Gets the id.
      *
      * @return the id
@@ -529,17 +540,6 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      */
     public TestPlanDto setId(final int id) {
         this.id = id;
-        return this;
-    }
-
-    /**
-     * Sets the run info.
-     *
-     * @param runInfo the new run info
-     * @return the test plan dto
-     */
-    public TestPlanDto setRunInfo(final RunInfoDto runInfo) {
-        this.runInfo = runInfo;
         return this;
     }
 

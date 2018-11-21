@@ -13,14 +13,6 @@ import org.testah.framework.testPlan.AbstractTestPlan;
 public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBuilder {
 
     /**
-     * The Icon 1 url 16 x 16 used with the main remote link object.
-     */
-    protected final String icon1Url16x16;
-    /**
-     * The Icon 2 url 16 x 16 used with the status object.
-     */
-    protected final String icon2Url16x16;
-    /**
      * The constant ISSUE_LINK_TYPE_TESTPLAN can be used with the link type and relationship.
      */
     public static final String ISSUE_LINK_TYPE_TESTPLAN = "E2E Testplan";
@@ -36,7 +28,14 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
      * The constant ISSUE_LINK_TYPE_KNOWNPROBLEM_TESTCASE can be used with the link type and relationship.
      */
     public static final String ISSUE_LINK_TYPE_KNOWNPROBLEM_TESTCASE = "E2E KP Testcase";
-
+    /**
+     * The Icon 1 url 16 x 16 used with the main remote link object.
+     */
+    protected final String icon1Url16x16;
+    /**
+     * The Icon 2 url 16 x 16 used with the status object.
+     */
+    protected final String icon2Url16x16;
     /**
      * Test test class file extension, include the . with it, ex: .java
      */
@@ -54,7 +53,7 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
     /**
      * Instantiates a new Abstract jira remote link builder.
      *
-     * @param icon1Url16x16 the icon 1 url 16 x 16 for use with both icons on the remote link object and status obje ct
+     * @param icon1Url16x16 the icon 1 url 16 x 16 for use with both icons on the remote link object and status object
      */
     protected AbstractJiraRemoteLinkBuilder(final String icon1Url16x16) {
         this(icon1Url16x16, icon1Url16x16);
@@ -145,19 +144,6 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
     }
 
     /**
-     * Gets icon 1.
-     *
-     * @param title the title
-     * @return the icon 1
-     */
-    protected Icon getIcon1(final String title) {
-        Icon icon = new Icon();
-        icon.setTitle(title);
-        icon.setUrl16x16(icon1Url16x16);
-        return icon;
-    }
-
-    /**
      * Gets status.
      *
      * @param title    the title
@@ -173,6 +159,19 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
     }
 
     /**
+     * Gets icon 1.
+     *
+     * @param title the title
+     * @return the icon 1
+     */
+    protected Icon getIcon1(final String title) {
+        Icon icon = new Icon();
+        icon.setTitle(title);
+        icon.setUrl16x16(icon1Url16x16);
+        return icon;
+    }
+
+    /**
      * Gets icon 2.
      *
      * @param title the title
@@ -185,6 +184,34 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
         icon2.setTitle(title);
         icon2.setUrl16x16(icon2Url16x16);
         return icon2;
+    }
+
+    /**
+     * Gets run link to use. Can be used to set the testplan the testcase methods will use to get source and run info
+     *
+     * @return the run link to use
+     */
+    protected String getRunLinkToUse() {
+        return validateUrl(getLastTestPlanDtoUsed().getRunInfo().getRunLocation(), "Use-Envir-Param=param_runLocation");
+    }
+
+    /**
+     * Validate url string.  Checks that the string is not empty, if it is will put in a placeholder. Also ensures it starts with http
+     * Jira requires a valid link, and will fail if it is not.
+     *
+     * @param link     the link must be a valid link starting with http
+     * @param errorTip the error tip is added as a query param to the fake link to help know what why fake link is used.
+     * @return the string the link or a value that is not empty using a fake link
+     */
+    protected String validateUrl(String link, final String errorTip) {
+        if (StringUtils.isEmpty(link)) {
+            return "http://noLinkFoundToUsePlease.com/?errorTip=" + errorTip;
+        }
+        if (!StringUtils.startsWithIgnoreCase(link, "http")) {
+            link = "http://" + link;
+        }
+        return link;
+
     }
 
     /**
@@ -215,52 +242,24 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
     }
 
     /**
-     * Gets run link to use. Can be used to set the testplan the testcase methods will use to get source and run info
-     *
-     * @return the run link to use
-     */
-    protected String getRunLinkToUse() {
-        return validateUrl(getLastTestPlanDtoUsed().getRunInfo().getRunLocation(), "Use-Envir-Param=param_runLocation");
-    }
-
-    /**
      * Gets source link to use.
      *
      * @return the source link to use
      */
     protected String getSourceLinkToUse() {
         String sourceUrl = validateUrl(TS.params().getSourceUrl(), "IssueGetting_param_sourceUrl");
-        return sourceUrl + (sourceUrl.endsWith("/") ? "" : "/")
-                + getSourceWithSlash(getLastTestPlanDtoUsed().getSource()) + getFileExt();
+        return sourceUrl + (sourceUrl.endsWith("/") ? "" : "/") +
+                getSourceWithSlash(getLastTestPlanDtoUsed().getSource()) + getFileExt();
     }
 
     /**
-     * Gets source with slash. For use with source code mgmt, turn the classpath seperator from dot to slash.
+     * Gets source with slash. For use with source code mgmt, turn the classpath separator from dot to slash.
      *
      * @param source the source is the absolute classpath to the testplan class
      * @return the source with slash
      */
     protected String getSourceWithSlash(final String source) {
         return StringUtils.replace(source, ".", "/");
-    }
-
-    /**
-     * Validate url string.  Checks that the string is not empty, if it is will put in a placeholder. Also ensures it starts with http
-     * Jira requires a valid link, and will fail if it is not.
-     *
-     * @param link     the link must be a valid link starting with http
-     * @param errorTip the error tip is added as a query parma to the fake link to help know what why fake link is used.
-     * @return the string the link or a value that is not empty using a fake link
-     */
-    protected String validateUrl(String link, final String errorTip) {
-        if (StringUtils.isEmpty(link)) {
-            return "http://noLinkFoundToUsePlease.com/?errorTip=" + errorTip;
-        }
-        if (!StringUtils.startsWithIgnoreCase(link, "http")) {
-            link = "http://" + link;
-        }
-        return link;
-
     }
 
     public String getFileExt() {

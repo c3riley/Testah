@@ -133,6 +133,26 @@ public class TestCaseDto {
     }
 
     /**
+     * Gets the test steps.
+     *
+     * @return the test steps
+     */
+    public List<TestStepDto> getTestSteps() {
+        return testSteps;
+    }
+
+    /**
+     * Sets the test steps.
+     *
+     * @param testSteps the test steps
+     * @return the test case dto
+     */
+    public TestCaseDto setTestSteps(final List<TestStepDto> testSteps) {
+        this.testSteps = testSteps;
+        return this;
+    }
+
+    /**
      * Start.
      *
      * @return the test case dto
@@ -140,6 +160,26 @@ public class TestCaseDto {
     public TestCaseDto start() {
         setStatus(null);
         getRunTime().start();
+        return this;
+    }
+
+    /**
+     * Gets the run time.
+     *
+     * @return the run time
+     */
+    public RunTimeDto getRunTime() {
+        return runTime;
+    }
+
+    /**
+     * Sets the run time.
+     *
+     * @param runTime the run time
+     * @return the test case dto
+     */
+    public TestCaseDto setRunTime(final RunTimeDto runTime) {
+        this.runTime = runTime;
         return this;
     }
 
@@ -199,52 +239,44 @@ public class TestCaseDto {
     }
 
     /**
-     * Gets the run time.
-     *
-     * @return the run time
-     */
-    public RunTimeDto getRunTime() {
-        return runTime;
-    }
-
-    /**
-     * Sets the run time.
-     *
-     * @param runTime the run time
-     * @return the test case dto
-     */
-    public TestCaseDto setRunTime(final RunTimeDto runTime) {
-        this.runTime = runTime;
-        return this;
-    }
-
-    /**
-     * Gets the test steps.
-     *
-     * @return the test steps
-     */
-    public List<TestStepDto> getTestSteps() {
-        return testSteps;
-    }
-
-    /**
-     * Sets the test steps.
-     *
-     * @param testSteps the test steps
-     * @return the test case dto
-     */
-    public TestCaseDto setTestSteps(final List<TestStepDto> testSteps) {
-        this.testSteps = testSteps;
-        return this;
-    }
-
-    /**
      * Gets the status.
      *
      * @return the status
      */
     public Boolean getStatus() {
         return status;
+    }
+
+    /**
+     * Gets the assertion error.
+     *
+     * <p>throws Assertion Error for Errors in the steps
+     */
+    @JsonIgnore
+    public void getAssertionError() {
+        if (null != status && !status) {
+            throw new AssertionError("TestCase: " + getName() + " Failed!\n " + getExceptions());
+        }
+    }
+
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name.
+     *
+     * @param name the name
+     * @return the test case dto
+     */
+    public TestCaseDto setName(final String name) {
+        this.name = name;
+        return this;
     }
 
     /**
@@ -274,18 +306,6 @@ public class TestCaseDto {
     public TestCaseDto setExceptions(final String exceptions) {
         this.exceptions = exceptions;
         return this;
-    }
-
-    /**
-     * Gets the assertion error.
-     *
-     * <p>throws Assertion Error for Errors in the steps
-     */
-    @JsonIgnore
-    public void getAssertionError() {
-        if (null != status && !status) {
-            throw new AssertionError("TestCase: " + getName() + " Failed!\n " + getExceptions());
-        }
     }
 
     /**
@@ -348,26 +368,6 @@ public class TestCaseDto {
      */
     public TestCaseDto setId(final int id) {
         this.id = id;
-        return this;
-    }
-
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the name.
-     *
-     * @param name the name
-     * @return the test case dto
-     */
-    public TestCaseDto setName(final String name) {
-        this.name = name;
         return this;
     }
 

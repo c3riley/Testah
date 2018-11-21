@@ -15,40 +15,35 @@ import java.util.Map;
 public class RemoteIssueLinkDto {
 
     /**
+     * The additional properties.
+     */
+    @JsonIgnore
+    private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
+    /**
      * The id.
      */
     @JsonProperty("id")
     private int id = 0;
-
     /**
      * The global id.
      */
     @JsonProperty("globalId")
     private String globalId;
-
     /**
      * The application.
      */
     @JsonProperty("application")
     private Application application;
-
     /**
      * The relationship.
      */
     @JsonProperty("relationship")
     private String relationship;
-
     /**
      * The object.
      */
     @JsonProperty("object")
     private RemoteIssueLinkObject object;
-
-    /**
-     * The additional properties.
-     */
-    @JsonIgnore
-    private final Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
     /**
      * Gets the global id.

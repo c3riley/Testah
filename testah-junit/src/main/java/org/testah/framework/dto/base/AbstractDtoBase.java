@@ -34,77 +34,14 @@ public abstract class AbstractDtoBase<T> {
     private ToStringStyle toStringStyle = ToStringStyle.JSON_STYLE;
     @JsonIgnore
     private List<String> toStringListOfFieldsToExclude = null;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * Instantiates a new Abstract dto base.
      */
     public AbstractDtoBase() {
 
-    }
-
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    @SuppressWarnings("unchecked")
-    @JsonIgnore
-    private T getSelf() {
-        return (T) this;
-    }
-
-    /**
-     * To json string.
-     *
-     * @return the string
-     */
-    @JsonIgnore
-    public String toJson() {
-        return TS.util().toJson(getSelf());
-    }
-
-    /**
-     * Clone will return a new identical copy of the current object.
-     *
-     * @return Return this.
-     */
-    @SuppressWarnings("unchecked")
-    @JsonIgnore
-    public T clone() {
-        try {
-            TS.log().info(getSelf().getClass());
-            return (T) TS.util().getMap().readValue(this.toJson(), getSelf().getClass());
-        } catch (Exception e) {
-            throw new RuntimeException(String.format("Issue Trying to Clone: %s - err: %s", getClassPath(), e.getMessage()), e);
-        }
-    }
-
-    /**
-     * Gets class path.
-     *
-     * @return the class path
-     */
-    @JsonIgnore
-    public String getClassPath() {
-        return getSelf().getClass().getCanonicalName();
-    }
-
-    public String toString() {
-        return toString(ToStringStyle.JSON_STYLE);
-    }
-
-    /**
-     * To string string.
-     *
-     * @param style the style
-     * @return the string
-     */
-    public String toString(final ToStringStyle style) {
-        ReflectionToStringBuilder toStringBuilder = new ReflectionToStringBuilder(this, style);
-        toStringBuilder.setExcludeFieldNames(getToStringListOfFieldsToExclude().stream().toArray(String[]::new));
-        return toStringBuilder.toString();
-    }
-
-    public boolean equals(final Object obj) {
-        return EqualsBuilder.reflectionEquals(getSelf(), obj);
     }
 
     /**
@@ -125,8 +62,100 @@ public abstract class AbstractDtoBase<T> {
         return equals(obj);
     }
 
+    @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(getSelf());
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return EqualsBuilder.reflectionEquals(getSelf(), obj);
+    }
+
+    /**
+     * Clone will return a new identical copy of the current object.
+     *
+     * @return Return this.
+     */
+    @SuppressWarnings("unchecked")
+    @JsonIgnore
+    public T clone() {
+        try {
+            TS.log().info(getSelf().getClass());
+            return (T) TS.util().getMap().readValue(this.toJson(), getSelf().getClass());
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Issue Trying to Clone: %s - err: %s", getClassPath(), e.getMessage()), e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return toString(ToStringStyle.JSON_STYLE);
+    }
+
+    /**
+     * To string string.
+     *
+     * @param style the style
+     * @return the string
+     */
+    public String toString(final ToStringStyle style) {
+        ReflectionToStringBuilder toStringBuilder = new ReflectionToStringBuilder(this, style);
+        toStringBuilder.setExcludeFieldNames(getToStringListOfFieldsToExclude().stream().toArray(String[]::new));
+        return toStringBuilder.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    @JsonIgnore
+    private T getSelf() {
+        return (T) this;
+    }
+
+    /**
+     * To json string.
+     *
+     * @return the string
+     */
+    @JsonIgnore
+    public String toJson() {
+        return TS.util().toJson(getSelf());
+    }
+
+    /**
+     * Gets class path.
+     *
+     * @return the class path
+     */
+    @JsonIgnore
+    public String getClassPath() {
+        return getSelf().getClass().getCanonicalName();
+    }
+
+    /**
+     * Gets to string list of fields to exclude.
+     *
+     * @return the to string list of fields to exclude
+     */
+    @JsonIgnore
+    public List<String> getToStringListOfFieldsToExclude() {
+        if (null == toStringListOfFieldsToExclude) {
+            toStringListOfFieldsToExclude = new ArrayList<String>();
+            toStringListOfFieldsToExclude.add("toStringStyle");
+            toStringListOfFieldsToExclude.add("toStringListOfFieldsToExclude");
+            toStringListOfFieldsToExclude.add("allowUnknown");
+            toStringListOfFieldsToExclude.add("additionalProperties");
+        }
+        return toStringListOfFieldsToExclude;
+    }
+
+    /**
+     * Sets to string list of fields to exclude.
+     *
+     * @param toStringListOfFieldsToExclude the to string list of fields to exclude
+     */
+    @JsonIgnore
+    public void setToStringListOfFieldsToExclude(final List<String> toStringListOfFieldsToExclude) {
+        this.toStringListOfFieldsToExclude = toStringListOfFieldsToExclude;
     }
 
     /**
@@ -222,33 +251,6 @@ public abstract class AbstractDtoBase<T> {
     @JsonIgnore
     public void setToStringStyle(final ToStringStyle toStringStyle) {
         this.toStringStyle = toStringStyle;
-    }
-
-    /**
-     * Gets to string list of fields to exclude.
-     *
-     * @return the to string list of fields to exclude
-     */
-    @JsonIgnore
-    public List<String> getToStringListOfFieldsToExclude() {
-        if (null == toStringListOfFieldsToExclude) {
-            toStringListOfFieldsToExclude = new ArrayList<String>();
-            toStringListOfFieldsToExclude.add("toStringStyle");
-            toStringListOfFieldsToExclude.add("toStringListOfFieldsToExclude");
-            toStringListOfFieldsToExclude.add("allowUnknown");
-            toStringListOfFieldsToExclude.add("additionalProperties");
-        }
-        return toStringListOfFieldsToExclude;
-    }
-
-    /**
-     * Sets to string list of fields to exclude.
-     *
-     * @param toStringListOfFieldsToExclude the to string list of fields to exclude
-     */
-    @JsonIgnore
-    public void setToStringListOfFieldsToExclude(final List<String> toStringListOfFieldsToExclude) {
-        this.toStringListOfFieldsToExclude = toStringListOfFieldsToExclude;
     }
 
 }

@@ -104,19 +104,19 @@ public class RunTimeDto {
     }
 
     /**
+     * Calculate duration.
+     */
+    public void calculateDuration() {
+        this.duration = (this.endTime - this.startTime);
+    }
+
+    /**
      * Gets the duration.
      *
      * @return the duration
      */
     public long getDuration() {
         return duration;
-    }
-
-    /**
-     * Calculate duration.
-     */
-    public void calculateDuration() {
-        this.duration = (this.endTime - this.startTime);
     }
 
     /**
@@ -147,15 +147,6 @@ public class RunTimeDto {
     }
 
     /**
-     * Returns the end date in the preset dateformat.
-     *
-     * @return end date
-     */
-    public String getEndDate() {
-        return formatDate(this.endDate);
-    }
-
-    /**
      * Format date string. Used to format a date like the getter for getStart and getEnd dates do.
      *
      * @param date the date
@@ -164,6 +155,15 @@ public class RunTimeDto {
     @JsonIgnore
     public String formatDate(final Date date) {
         return this.dateFormat.format(date);
+    }
+
+    /**
+     * Returns the end date in the preset dateformat.
+     *
+     * @return end date
+     */
+    public String getEndDate() {
+        return formatDate(this.endDate);
     }
 
 }

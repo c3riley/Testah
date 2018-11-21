@@ -6,7 +6,10 @@ import org.testah.framework.testPlan.AbstractTestPlan;
 
 /**
  * The Class Step.
+ *
+ * @deprecated Use TS.step() instead
  */
+@Deprecated
 public class Step extends TestStepDto {
 
     /**

@@ -12,11 +12,7 @@ import microsoft.exchange.webservices.data.core.service.folder.Folder;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
-import microsoft.exchange.webservices.data.property.complex.EmailAddress;
-import microsoft.exchange.webservices.data.property.complex.EmailAddressCollection;
-import microsoft.exchange.webservices.data.property.complex.FileAttachment;
-import microsoft.exchange.webservices.data.property.complex.InternetMessageHeader;
-import microsoft.exchange.webservices.data.property.complex.ItemId;
+import microsoft.exchange.webservices.data.property.complex.*;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.ItemView;
 import org.apache.commons.lang3.NotImplementedException;
@@ -78,6 +74,35 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
     }
 
     @Override
+    public EmailMessageFilter<EmailMessage> getMsgBySubjectFilter(String subject) throws Exception {
+        return (message) -> {
+            try {
+                return StringUtils.equalsIgnoreCase(subject, message.getSubject());
+            } catch (ServiceLocalException e) {
+                TS.log().warn("Issue with subject filter for message: " + message, e);
+            }
+            return false;
+        };
+    }
+
+    /**
+     * Get Folder Name used.
+     *
+     * @return folder name
+     */
+    public String getFolderName() {
+        if (folder != null) {
+            return folder.name();
+        }
+        return null;
+    }
+
+    @Override
+    protected String getUserName() {
+        return this.auth.getUser();
+    }
+
+    @Override
     public List<EmailMessage> getAllMessages() throws Exception {
         List<EmailMessage> emailMessages = new ArrayList<EmailMessage>();
         try {
@@ -98,28 +123,6 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
             TS.log().warn("Issue with getting email from " + getFolder(), e);
         }
         return emailMessages;
-    }
-
-    @Override
-    public EmailMessageFilter<EmailMessage> getMsgBySubjectFilter(String subject) throws Exception {
-        return (message) -> {
-            try {
-                return StringUtils.equalsIgnoreCase(subject, message.getSubject());
-            } catch (ServiceLocalException e) {
-                TS.log().warn("Issue with subject filter for message: " + message, e);
-            }
-            return false;
-        };
-    }
-
-    private boolean getAddressFilter(String expectedAddress,
-                                     final EmailAddressCollection addresses) throws Exception {
-        for (final EmailAddress address : addresses) {
-            if (StringUtils.equalsIgnoreCase(expectedAddress, address.getAddress())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -199,16 +202,6 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
     }
 
     @Override
-    public String getMsgBodyText(EmailMessage message) throws Exception {
-        return getMsgBody(message, BodyType.Text.name());
-    }
-
-    @Override
-    public String getMsgBodyHtml(EmailMessage message) throws Exception {
-        return getMsgBody(message, BodyType.HTML.name());
-    }
-
-    @Override
     public String getMsgBody(EmailMessage message, String contentType) throws Exception {
         final PropertySet BindPropSet = new PropertySet(BasePropertySet.FirstClassProperties);
         BindPropSet.setRequestedBodyType(BodyType.valueOf((contentType != null ? contentType : BodyType.HTML.name())));
@@ -218,11 +211,19 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
 
     @Override
     public ExchangeEmailUtil deleteMsg(EmailMessage message) throws Exception {
-        return deleteMsg(message,DeleteMode.HardDelete);
+        return deleteMsg(message, DeleteMode.HardDelete);
     }
 
+    /**
+     * Delete msg exchange email util.
+     *
+     * @param message    the message
+     * @param deleteMode the delete mode
+     * @return the exchange email util
+     * @throws Exception the exception
+     */
     public ExchangeEmailUtil deleteMsg(EmailMessage message, final DeleteMode deleteMode) throws Exception {
-        if(message!=null) {
+        if (message != null) {
             message.delete(DeleteMode.HardDelete);
         }
         return self();
@@ -235,7 +236,7 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
 
     @Override
     public ExchangeEmailUtil sendMessage(SendMailDto sendMailDto) {
-        throw new NotImplementedException("Not Implimented Yet");
+        throw new NotImplementedException("Not Implemented Yet");
     }
 
     @Override
@@ -246,13 +247,87 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
     }
 
     @Override
-    protected String getUserName() {
-        return this.auth.getUser();
+    protected String getPassword() {
+        return this.auth.getPwd();
     }
 
     @Override
-    protected String getPassword() {
-        return this.auth.getPwd();
+    public void close() {
+        try {
+            if (service != null) {
+                service.close();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Issue trying to close Exchange connection", e);
+        }
+    }
+
+    @Override
+    public List<InternetMessageHeader> getMessageHeaders(final EmailMessage message) {
+        List<InternetMessageHeader> headers = new ArrayList<>();
+        try {
+            for (InternetMessageHeader internetMessageHeader : message.getInternetMessageHeaders()) {
+                headers.add(internetMessageHeader);
+            }
+        } catch (ServiceLocalException e) {
+            TS.log().debug("Issue with getMessageHeaders", e);
+        }
+        return headers;
+    }
+
+    @Override
+    public String getMsgBodyHtml(EmailMessage message) throws Exception {
+        return getMsgBody(message, BodyType.HTML.name());
+    }
+
+    @Override
+    public String getMsgBodyText(EmailMessage message) throws Exception {
+        return getMsgBody(message, BodyType.Text.name());
+    }
+
+    @Override
+    public HashMap<String, List<String>> getMessageHeadersAsMap(final EmailMessage message) {
+        HashMap<String, List<String>> headers = new HashMap<>();
+        try {
+            message.getInternetMessageHeaders().forEach(header -> {
+                if (headers.get(header.getName()) == null) {
+                    headers.put(header.getName(), new ArrayList<String>());
+                }
+                headers.get(header.getName()).add(header.getValue());
+            });
+        } catch (ServiceLocalException e) {
+            TS.log().debug("Issue with getMessageHeaders", e);
+        }
+        return headers;
+    }
+
+    @Override
+    protected EmailDto<EmailMessage> fillEmailDto(final EmailMessage message, final EmailDto<EmailMessage> emailDto) throws Exception {
+        emailDto.setSubject(message.getSubject());
+        emailDto.setToAddresses(getAddresses(message.getToRecipients()));
+        emailDto.setCcAddresses(getAddresses(message.getCcRecipients()));
+        emailDto.setBccAddresses(getAddresses(message.getBccRecipients()));
+        emailDto.setFromAddress(message.getFrom().getAddress());
+        emailDto.setSubject(message.getSubject());
+        return emailDto;
+    }
+
+    private boolean getAddressFilter(String expectedAddress,
+                                     final EmailAddressCollection addresses) throws Exception {
+        for (final EmailAddress address : addresses) {
+            if (StringUtils.equalsIgnoreCase(expectedAddress, address.getAddress())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<String> getAddresses(final EmailAddressCollection addresses) throws Exception {
+        List<String> addressList = new ArrayList<>();
+        for (final EmailAddress address : addresses) {
+            addressList.add(address.getAddress());
+        }
+        return addressList;
     }
 
     /**
@@ -275,29 +350,6 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
         return this;
     }
 
-    @Override
-    public void close() {
-        try {
-            if (service != null) {
-                service.close();
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Issue trying to close Exchange connection", e);
-        }
-    }
-
-    /**
-     * Get Folder Name used.
-     *
-     * @return folder name
-     */
-    public String getFolderName() {
-        if (folder != null) {
-            return folder.name();
-        }
-        return null;
-    }
-
     /**
      * Gets exchange version.
      *
@@ -316,54 +368,6 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
     public ExchangeEmailUtil setExchangeVersion(ExchangeVersion exchangeVersion) {
         this.exchangeVersion = exchangeVersion;
         return this;
-    }
-
-    @Override
-    public HashMap<String, List<String>> getMessageHeadersAsMap(final EmailMessage message) {
-        HashMap<String, List<String>> headers = new HashMap<>();
-        try {
-            message.getInternetMessageHeaders().forEach(header -> {
-                if (headers.get(header.getName()) == null) {
-                    headers.put(header.getName(), new ArrayList<String>());
-                }
-                headers.get(header.getName()).add(header.getValue());
-            });
-        } catch (ServiceLocalException e) {
-            TS.log().debug("Issue with getMessageHeaders", e);
-        }
-        return headers;
-    }
-
-    @Override
-    public List<InternetMessageHeader> getMessageHeaders(final EmailMessage message) {
-        List<InternetMessageHeader> headers = new ArrayList<>();
-        try {
-            for (InternetMessageHeader internetMessageHeader : message.getInternetMessageHeaders()) {
-                headers.add(internetMessageHeader);
-            }
-        } catch (ServiceLocalException e) {
-            TS.log().debug("Issue with getMessageHeaders", e);
-        }
-        return headers;
-    }
-
-    @Override
-    protected EmailDto<EmailMessage> fillEmailDto(final EmailMessage message, final EmailDto<EmailMessage> emailDto) throws Exception {
-        emailDto.setSubject(message.getSubject());
-        emailDto.setToAddresses(getAddresses(message.getToRecipients()));
-        emailDto.setCcAddresses(getAddresses(message.getCcRecipients()));
-        emailDto.setBccAddresses(getAddresses(message.getBccRecipients()));
-        emailDto.setFromAddress(message.getFrom().getAddress());
-        emailDto.setSubject(message.getSubject());
-        return emailDto;
-    }
-
-    private List<String> getAddresses(final EmailAddressCollection addresses) throws Exception {
-        List<String> addressList = new ArrayList<>();
-        for (final EmailAddress address : addresses) {
-            addressList.add(address.getAddress());
-        }
-        return addressList;
     }
 
 }

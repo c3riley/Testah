@@ -19,7 +19,7 @@ public class EmailDto<M> extends AbstractDtoBase<EmailDto> {
     private String bodyHtml;
     private String bodyText;
     private String body;
-    private List<File> assertments;
+    private List<File> attachments;
     private HashMap<String, List<String>> headers;
 
     public EmailDto() {
@@ -109,12 +109,12 @@ public class EmailDto<M> extends AbstractDtoBase<EmailDto> {
         return this;
     }
 
-    public List<File> getAssertments() {
-        return assertments;
+    public List<File> getAttachments() {
+        return attachments;
     }
 
-    public EmailDto<M> setAssertments(List<File> assertments) {
-        this.assertments = assertments;
+    public EmailDto<M> setAttachments(List<File> attachments) {
+        this.attachments = attachments;
         return this;
     }
 

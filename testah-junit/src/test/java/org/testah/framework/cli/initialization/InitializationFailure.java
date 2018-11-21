@@ -17,6 +17,18 @@ public class InitializationFailure {
     private static final String failure = getFailure();
 
     /**
+     * Gets failure.
+     *
+     * @return the failure
+     */
+    public static String getFailure() {
+        if (throwError) {
+            throw new RuntimeException("Test Not Loading");
+        }
+        return "Will not make it here";
+    }
+
+    /**
      * Test 1.
      */
     @TestCase()
@@ -28,17 +40,5 @@ public class InitializationFailure {
      */
     @TestCase(components = {"TEST_COMPONENT"})
     public void test2() {
-    }
-
-    /**
-     * Gets failure.
-     *
-     * @return the failure
-     */
-    public static String getFailure() {
-        if (throwError) {
-            throw new RuntimeException("Test Not Loading");
-        }
-        return "Will not make it here";
     }
 }

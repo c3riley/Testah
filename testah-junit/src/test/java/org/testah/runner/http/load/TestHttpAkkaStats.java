@@ -4,7 +4,6 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.driver.http.response.ResponseDto;
-import org.testah.runner.http.load.HttpAkkaStats;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,7 +12,7 @@ public class TestHttpAkkaStats {
     private static final long now = System.currentTimeMillis();
     private static final long elapsedTime = 660L;
     private static final double delta = 0.001;
-    private static final Integer[] statusCodes = new Integer[] {200, 300, 400, 500};
+    private static final Integer[] statusCodes = new Integer[]{200, 300, 400, 500};
 
     /**
      * Verify that the responses are properly processed into instances of org.apache.commons.math3.stat.descriptive.DescriptiveStatistics.
@@ -27,7 +26,7 @@ public class TestHttpAkkaStats {
         TS.asserts().equalsTo("shortest duration", 190L, httpAkkaStats.getShortestDuration().longValue());
         TS.asserts().equalsTo("average duration", 350, httpAkkaStats.getAvgDuration().longValue());
         TS.asserts().equalsTo("start time", now, httpAkkaStats.getStartTime().longValue());
-        TS.asserts().equalsTo("elapased time", elapsedTime, httpAkkaStats.getDuration().longValue());
+        TS.asserts().equalsTo("elapsed time", elapsedTime, httpAkkaStats.getDuration().longValue());
         TS.asserts().equalsTo("end time", now + elapsedTime, httpAkkaStats.getEndTime().longValue());
 
         DescriptiveStatistics descriptiveStatistics = httpAkkaStats.getStatsDuration();
@@ -38,9 +37,9 @@ public class TestHttpAkkaStats {
 
         for (Integer statusCode : statusCodes) {
             TS.asserts().equalsTo("number of data points for status " + statusCode, 3,
-                httpAkkaStats.getStatsDurationPerStatus().get(statusCode).getN());
+                    httpAkkaStats.getStatsDurationPerStatus().get(statusCode).getN());
             TS.asserts().equalsTo("average duration for status " + statusCode, statusCode.doubleValue(),
-                httpAkkaStats.getStatsDurationPerStatus().get(statusCode).getMean());
+                    httpAkkaStats.getStatsDurationPerStatus().get(statusCode).getMean());
         }
     }
 
@@ -65,9 +64,9 @@ public class TestHttpAkkaStats {
     }
 
     private List<ResponseDto> generateResponses(long startTime, int statusCode, long seed) {
-        Long[] durations = new Long[] {seed - 10L, seed, seed + 10L};
+        Long[] durations = new Long[]{seed - 10L, seed, seed + 10L};
         return Arrays.stream(durations).map(duration ->
-            new ResponseDto().setStatusCode(statusCode)
-                .setStart(startTime).setEnd(startTime + duration.longValue())).collect(Collectors.toList());
+                new ResponseDto().setStatusCode(statusCode)
+                        .setStart(startTime).setEnd(startTime + duration.longValue())).collect(Collectors.toList());
     }
 }

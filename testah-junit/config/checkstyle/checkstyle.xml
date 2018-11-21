@@ -133,7 +133,7 @@
             <property name="option" value="nl"/>
         </module>
         <module name="PackageName">
-            <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
+            <property name="format" value="^[a-z]+(\.[a-z][a-zP0-9]*|)*$"/>
             <message key="name.invalidPattern"
                      value="Package name ''{0}'' must match pattern ''{1}''."/>
         </module>
@@ -196,10 +196,10 @@
             <property name="lineWrappingIndentation" value="4"/>
             <property name="arrayInitIndent" value="4"/>
         </module>
-        <module name="AbbreviationAsWordInName">
+       <!-- <module name="AbbreviationAsWordInName">
             <property name="ignoreFinal" value="false"/>
             <property name="allowedAbbreviationLength" value="1"/>
-        </module>
+        </module>-->
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="VariableDeclarationUsageDistance"/>
         <!--<module name="CustomImportOrder">
@@ -215,7 +215,7 @@
         </module> -->
 
         <module name="OperatorWrap">
-            <property name="option" value="NL"/>
+            <property name="option" value="eol"/>
             <property name="tokens" value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR, LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR, METHOD_REF "/>
         </module>
         <module name="AnnotationLocation">

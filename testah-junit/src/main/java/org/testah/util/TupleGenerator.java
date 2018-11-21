@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
  */
 public class TupleGenerator {
     private final List<Integer> sizes;
-    private List<Integer> tuple;
     private final int distinctTuples;
+    private List<Integer> tuple;
 
     /**
      * Constructor.

@@ -39,6 +39,62 @@ public class StrongSwanClient {
     }
 
     /**
+     * Send message.
+     *
+     * @param messages the messages
+     * @throws Exception the exception
+     */
+    public void sendMessage(final String... messages) throws Exception {
+
+        if (null == messages) {
+            throw new Exception("Messages param is null");
+        }
+
+        final File socketFile = new File(getSocketFullPath());
+        if (!socketFile.exists()) {
+            throw new IOException("Missing socket file:" + getSocketFullPath());
+        }
+
+        final AFUNIXSocket sock = AFUNIXSocket.newInstance();
+        try {
+            sock.connect(new AFUNIXSocketAddress(socketFile));
+        } catch (final AFUNIXSocketException e) {
+            TS.log().error("Cannot connect to server. Have you started it?", e);
+            throw e;
+        }
+        TS.log().debug("Connected");
+        try (final InputStream is = sock.getInputStream(); final OutputStream os = sock.getOutputStream()) {
+
+            final byte[] buf = new byte[128];
+            final int read = is.read(buf);
+            TS.log().debug("Server says: " + new String(buf, 0, read, "UTF-8"));
+            TS.log().debug("Replying to server...");
+            for (final String message : messages) {
+                os.write(message.getBytes(Charset.forName("UTF-8")));
+            }
+        }
+        TS.log().debug("End of communication.");
+    }
+
+    /**
+     * Gets the socket full path.
+     *
+     * @return the socket full path
+     */
+    public String getSocketFullPath() {
+        return socketFullPath;
+    }
+
+    /**
+     * Sets the socket full path.
+     *
+     * @param socketFullPath the new socket full path
+     */
+    public void setSocketFullPath(final String socketFullPath) {
+        this.socketFullPath = socketFullPath;
+    }
+
+    /**
      * The Enum Message.
      */
     public static enum Message {
@@ -87,62 +143,6 @@ public class StrongSwanClient {
             return value;
         }
 
-    }
-
-    /**
-     * Send message.
-     *
-     * @param messages the messages
-     * @throws Exception the exception
-     */
-    public void sendMessage(final String... messages) throws Exception {
-
-        if (null == messages) {
-            throw new Exception("Messages param is null");
-        }
-
-        final File socketFile = new File(getSocketFullPath());
-        if (!socketFile.exists()) {
-            throw new IOException("Mising socket file:" + getSocketFullPath());
-        }
-
-        final AFUNIXSocket sock = AFUNIXSocket.newInstance();
-        try {
-            sock.connect(new AFUNIXSocketAddress(socketFile));
-        } catch (final AFUNIXSocketException e) {
-            TS.log().error("Cannot connect to server. Have you started it?", e);
-            throw e;
-        }
-        TS.log().debug("Connected");
-        try (final InputStream is = sock.getInputStream(); final OutputStream os = sock.getOutputStream()) {
-
-            final byte[] buf = new byte[128];
-            final int read = is.read(buf);
-            TS.log().debug("Server says: " + new String(buf, 0, read, "UTF-8"));
-            TS.log().debug("Replying to server...");
-            for (final String message : messages) {
-                os.write(message.getBytes(Charset.forName("UTF-8")));
-            }
-        }
-        TS.log().debug("End of communication.");
-    }
-
-    /**
-     * Gets the socket full path.
-     *
-     * @return the socket full path
-     */
-    public String getSocketFullPath() {
-        return socketFullPath;
-    }
-
-    /**
-     * Sets the socket full path.
-     *
-     * @param socketFullPath the new socket full path
-     */
-    public void setSocketFullPath(final String socketFullPath) {
-        this.socketFullPath = socketFullPath;
     }
 
 }
