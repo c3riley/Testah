@@ -1,16 +1,15 @@
 package org.testah.runner.http.load;
 
+import com.google.common.collect.Lists;
+import org.testah.driver.http.requests.AbstractRequestDto;
+import org.testah.runner.http.load.request.GetRestRequest;
+import org.testah.runner.performance.TestDataGenerator;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.testah.driver.http.requests.AbstractRequestDto;
-import org.testah.runner.http.load.request.GetRestRequest;
-import org.testah.runner.performance.TestDataGenerator;
-
-import com.google.common.collect.Lists;
 
 public class TestServiceGetRequestGenerator extends TestDataGenerator {
     private final List<Integer> statusCodes = Arrays.asList(200, 300, 400, 500);
@@ -23,7 +22,8 @@ public class TestServiceGetRequestGenerator extends TestDataGenerator {
 
     @Override
     public List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> generateRequests() throws Exception {
-        while (addRequest(getRestRequest.next())) {}
+        while (addRequest(getRestRequest.next())) {
+        }
 
         List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = new ArrayList<>();
         for (List<AbstractRequestDto<?>> getRequestSublist : Lists.partition(getRequestList(), getChunkSize())) {

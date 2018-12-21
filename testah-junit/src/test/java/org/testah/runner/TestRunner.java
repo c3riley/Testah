@@ -8,15 +8,19 @@ import org.testah.framework.cli.TestFilter;
 
 import java.util.Set;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assert.assertThat;
+
 public class TestRunner {
 
-    @Ignore
     @Test
     public void testLoadCompiledTests() {
-        final TestFilter r = new TestFilter();
-        final Set<Class<?>> classes = r.loadCompiledTestClase().getTestClasses();
+        final TestFilter filter = new TestFilter();
+        filter.loadCompiledTestClass("org.testah.runner.runnertests");
+        final Set<Class<?>> classes = filter.getTestClasses();
         Assert.assertNotNull(classes);
-        Assert.assertEquals(5, classes.size());
+        assertThat(classes.size(), equalTo(11));
         TS.util().toJson(classes);
     }
 }

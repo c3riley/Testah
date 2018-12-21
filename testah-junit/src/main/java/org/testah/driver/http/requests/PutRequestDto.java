@@ -34,17 +34,6 @@ public class PutRequestDto extends AbstractRequestDto<PutRequestDto> {
      * @param uri     the uri
      * @param payload the payload
      */
-    public PutRequestDto(final String uri, final byte[] payload) {
-        super(new HttpPut(uri), "PUT");
-        setPayload(payload);
-    }
-
-    /**
-     * Instantiates a new Put request dto.
-     *
-     * @param uri     the uri
-     * @param payload the payload
-     */
     public PutRequestDto(final String uri, final Object payload) {
         super(new HttpPut(uri), "PUT");
         if (payload instanceof byte[]) {

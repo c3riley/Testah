@@ -8,23 +8,13 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.function.Supplier;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * A utility class which allows for testing entity and transfer object classes. This is mainly for code coverage since
@@ -131,7 +121,7 @@ public class DtoTest {
      * @throws InvocationTargetException if the underlying method throws an exception.
      */
     private <T> void callGetter(T instance, String fieldName, Method getter, Object expected)
-            throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
         final Object getResult = getter.invoke(instance);
         try {
@@ -163,7 +153,7 @@ public class DtoTest {
      * @throws IllegalAccessException If the class or its nullary constructor is not accessible.
      */
     private Object createObject(String fieldName, Class<?> clazz)
-            throws InstantiationException, IllegalAccessException {
+        throws InstantiationException, IllegalAccessException {
         try {
             final Supplier<?> supplier = getMappers().get(clazz);
             if (supplier != null) {
@@ -275,10 +265,18 @@ public class DtoTest {
                 /* Create an object. */
                 final Class<?> parameterType = pair.getSetter().getParameterTypes()[0];
                 final Object newObject = createObject(fieldName, parameterType);
-
-                pair.getSetter().invoke(instance, newObject);
-
-                callGetter(instance, fieldName, pair.getGetter(), newObject);
+                try {
+                    pair.getSetter().invoke(instance, newObject);
+                } catch (Exception e) {
+                    TS.log().error("Issue with invoke for setter: " + pair.getSetter().getName());
+                    throw e;
+                }
+                try {
+                    callGetter(instance, fieldName, pair.getGetter(), newObject);
+                } catch (Exception e) {
+                    TS.log().error("Issue with invoke for getter: " + pair.getGetter().getName());
+                    throw e;
+                }
             } else if (pair.getGetter() != null) {
                 /*
                  * Object is immutable (no setter but Hibernate or something else sets it via reflection). Use
@@ -288,6 +286,10 @@ public class DtoTest {
                 final Field field = getField(fieldName, instance.getClass());
                 if (field == null) {
                     throw new NoSuchFieldException("Unable to find field[" + fieldName + "] in the object or its supers");
+                }
+                if (Modifier.isFinal(field.getModifiers())) {
+                    TS.log().debug("Field[" + field.getName() + "] is final and cannot be tested");
+                    continue;
                 }
 
                 field.setAccessible(true);
@@ -339,17 +341,6 @@ public class DtoTest {
     }
 
     /**
-     * Add to annotations to ignore dto test.
-     *
-     * @param annotation the annotation
-     * @return the dto test
-     */
-    public DtoTest addToAnnotationsToIgnore(final Class annotation) {
-        this.annotationsToIgnore.add(annotation);
-        return this;
-    }
-
-    /**
      * Sets annotations to ignore.
      *
      * @param annotationsToIgnore the annotations to ignore
@@ -357,6 +348,17 @@ public class DtoTest {
      */
     public DtoTest setAnnotationsToIgnore(final Set<Class> annotationsToIgnore) {
         this.annotationsToIgnore = annotationsToIgnore;
+        return this;
+    }
+
+    /**
+     * Add to annotations to ignore dto test.
+     *
+     * @param annotation the annotation
+     * @return the dto test
+     */
+    public DtoTest addToAnnotationsToIgnore(final Class annotation) {
+        this.annotationsToIgnore.add(annotation);
         return this;
     }
 

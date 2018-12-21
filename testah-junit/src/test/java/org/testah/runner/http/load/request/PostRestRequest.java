@@ -1,11 +1,11 @@
 package org.testah.runner.http.load.request;
 
-import java.util.List;
-
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.requests.PostRequestDto;
 import org.testah.runner.http.load.TestServiceClient;
 import org.testah.runner.performance.AbstractPerformanceRestRequest;
+
+import java.util.List;
 
 public class PostRestRequest extends AbstractPerformanceRestRequest {
     private final List<String> stringList;
@@ -14,8 +14,9 @@ public class PostRestRequest extends AbstractPerformanceRestRequest {
 
     /**
      * Constructor.
+     *
      * @param stringList list of strings
-     * @param longList list of longs
+     * @param longList   list of longs
      */
     public PostRestRequest(List<String> stringList, List<Long> longList) {
         super(stringList, longList);

@@ -6,9 +6,9 @@ package org.testah.framework.testPlan;
 public class HttpTestPlan extends AbstractTestPlan {
 
     /* (non-Javadoc)
-     * @see org.testah.framework.testPlan.AbstractTestPlan#initlizeTest()
+     * @see org.testah.framework.testPlan.AbstractTestPlan#initializeTest()
      */
-    public void initlizeTest() {
+    public void initializeTest() {
         // TODO Auto-generated method stub
 
     }

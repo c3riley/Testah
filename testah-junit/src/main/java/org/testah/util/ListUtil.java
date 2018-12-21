@@ -19,7 +19,7 @@ public class ListUtil {
     public static <T> List<List<T>> getSublists(List<T> list, int subListSize) throws Exception {
         // sublist cannot be longer than original list
         if (subListSize > list.size()) {
-            throw new Exception("A sublist cannot contain more elements than the orginal list.");
+            throw new Exception("A sublist cannot contain more elements than the original list.");
         }
         List<List<T>> listOfSubLists = new ArrayList<>();
         getSublists(list, new ArrayList<T>(), subListSize, listOfSubLists);

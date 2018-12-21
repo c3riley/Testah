@@ -6,15 +6,15 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
 import org.testah.TS;
 import org.testah.driver.web.browser.AbstractBrowser;
-import org.testah.framework.dto.StepAction;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Class AbstractWebElementWrapper is designed to wrap Webdriver WebElements and provide for more macrotized methods and chaining for less
+ * The Class AbstractWebElementWrapper is designed to wrap Webdriver WebElements and provide for more methods and chaining for less
  * code in tests.
  */
+@SuppressWarnings("SpellCheckingInspection")
 public abstract class AbstractWebElementWrapper {
 
     /**
@@ -43,13 +43,6 @@ public abstract class AbstractWebElementWrapper {
     private AbstractBrowser<?> driver = null;
 
     /**
-     * Gets the self.
-     *
-     * @return the self
-     */
-    protected abstract AbstractWebElementWrapper getSelf();
-
-    /**
      * Instantiates a new abstract web element wrapper.
      *
      * @param by         the by
@@ -74,26 +67,92 @@ public abstract class AbstractWebElementWrapper {
     }
 
     /**
-     * Assert attribute value.
+     * Gets the attribute.
      *
-     * @param attributeName          the attribute name
-     * @param attributeExpectedValue the attribute expected value
+     * @param attributeName the attribute name
+     * @return the attribute
+     */
+    public String getAttribute(final String attributeName) {
+        if (elementIsOk("getAttribute", isAutoReport())) {
+            final String v = webElement.getAttribute(attributeName);
+            TS.step().action().createBrowserAction("Element getAttribute", attributeName + " = " + v);
+            return v;
+        }
+        return null;
+    }
+
+    /**
+     * Gets the self.
+     *
+     * @return the self
+     */
+    protected abstract AbstractWebElementWrapper getSelf();
+
+    /**
+     * Element is ok.
+     *
+     * @param activity   the activity
+     * @param autoReport the auto report
+     * @return true, if successful
+     */
+    public boolean elementIsOk(final String activity, final boolean autoReport) {
+        if (null == getDriverWebElement()) {
+            final String msg = "Unable to preform activity[" + activity + "], webelement[" + by +
+                    "] is null and not available.";
+            if (autoReport) {
+                TS.asserts().notNull(msg, webElement);
+            } else {
+                TS.log().warn(msg);
+            }
+            return false;
+        }
+        TS.step().action().createInfo("Doing Activity: " + activity, "Element[" + getBy() + "]");
+        return (null != getDriverWebElement());
+    }
+
+    /**
+     * Checks if is auto report.
+     *
+     * @return true, if is auto report
+     */
+    public boolean isAutoReport() {
+        return autoReport;
+    }
+
+    /**
+     * Sets the auto report.
+     *
+     * @param autoReport the auto report
      * @return the abstract web element wrapper
      */
-    public AbstractWebElementWrapper assertAttributeValue(final String attributeName,
-                                                          final String attributeExpectedValue) {
-        TS.asserts().equalsTo("assertAttributeValue", attributeExpectedValue, getAttribute(attributeName));
+    public AbstractWebElementWrapper setAutoReport(final boolean autoReport) {
+        this.autoReport = autoReport;
         return getSelf();
     }
 
     /**
-     * Assert found.
+     * Gets the driver web element.
      *
-     * @return the abstract web element wrapper
+     * @return the driver web element
      */
-    public AbstractWebElementWrapper assertFound() {
-        elementIsOk("assertFound", true);
-        return getSelf();
+    public WebElement getDriverWebElement() {
+        try {
+            if (null != webElement) {
+                webElement.isDisplayed(); // check is still working
+            }
+        } catch (final Throwable e) {
+            webElement = null;
+        }
+        return webElement;
+    }
+
+    /**
+     * Gets the by.
+     *
+     * @return the by
+     */
+    public By getBy() {
+        return by;
     }
 
     /**
@@ -104,6 +163,18 @@ public abstract class AbstractWebElementWrapper {
     public AbstractWebElementWrapper assertIsEnabled() {
         TS.asserts().isTrue("Expecting Element is Enabled", isEnabled());
         return getSelf();
+    }
+
+    /**
+     * Checks if is enabled.
+     *
+     * @return the boolean
+     */
+    public Boolean isEnabled() {
+        if (elementIsOk("isEnabled", isAutoReport())) {
+            return webElement.isEnabled();
+        }
+        return false;
     }
 
     /**
@@ -127,6 +198,18 @@ public abstract class AbstractWebElementWrapper {
     }
 
     /**
+     * Checks if is selected.
+     *
+     * @return the boolean
+     */
+    public Boolean isSelected() {
+        if (elementIsOk("isSelected", isAutoReport())) {
+            return webElement.isSelected();
+        }
+        return false;
+    }
+
+    /**
      * Assert is selected.
      *
      * @return the abstract web element wrapper
@@ -147,6 +230,31 @@ public abstract class AbstractWebElementWrapper {
     }
 
     /**
+     * Checks if is displayed.
+     *
+     * @return the boolean
+     */
+    public boolean isDisplayed() {
+        return isDisplayed(false);
+    }
+
+    /**
+     * Checks if is displayed.
+     *
+     * @param autoReport the auto report
+     * @return true, if is displayed
+     */
+    public boolean isDisplayed(final boolean autoReport) {
+        if (null == webElement) {
+            TS.step().action().createInfo("Element is not Displayed as it is not found, element is null");
+            return false;
+        } else {
+            return webElement.isDisplayed();
+        }
+
+    }
+
+    /**
      * Verify is displayed.
      *
      * @return true, if successful
@@ -161,7 +269,7 @@ public abstract class AbstractWebElementWrapper {
      * @return the abstract web element wrapper
      */
     public AbstractWebElementWrapper assertNotFound() {
-        TS.asserts().isNull("assertNotfound WebElement[" + by + "]", getDriverWebElement());
+        TS.asserts().isNull("assertNotFound WebElement[" + by + "]", getDriverWebElement());
         return getSelf();
     }
 
@@ -177,6 +285,19 @@ public abstract class AbstractWebElementWrapper {
             webElement.sendKeys(value);
             assertAttributeValue("value", value);
         }
+        return getSelf();
+    }
+
+    /**
+     * Assert attribute value.
+     *
+     * @param attributeName          the attribute name
+     * @param attributeExpectedValue the attribute expected value
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper assertAttributeValue(final String attributeName,
+                                                          final String attributeExpectedValue) {
+        TS.asserts().equalsTo("assertAttributeValue", attributeExpectedValue, getAttribute(attributeName));
         return getSelf();
     }
 
@@ -201,46 +322,57 @@ public abstract class AbstractWebElementWrapper {
     public AbstractWebElementWrapper click() {
         waitTillIsDisplayed();
         if (elementIsOk("click", isAutoReport())) {
-            StepAction.createBrowserAction("Element Click", by).add();
+            TS.step().action().createBrowserAction("Element Click", by);
             webElement.click();
         }
         return getSelf();
     }
 
     /**
-     * Element is ok.
+     * Wait till is displayed.
      *
-     * @param activity   the activity
-     * @param autoReport the auto report
-     * @return true, if successful
+     * @return the abstract web element wrapper
      */
-    public boolean elementIsOk(final String activity, final boolean autoReport) {
-        if (null == getDriverWebElement()) {
-            final String msg = "Unable to preform activity[" + activity + "], webelement[" + by
-                    + "] is null and not availible.";
-            if (autoReport) {
-                TS.asserts().notNull(msg, webElement);
-            } else {
-                TS.log().warn(msg);
-            }
-            return false;
-        }
-        StepAction.createInfo("Doing Activity: " + activity, "Element[" + getBy() + "]");
-        return (null != getDriverWebElement());
+    public AbstractWebElementWrapper waitTillIsDisplayed() {
+        return waitTillIsDisplayed(timeout);
     }
 
     /**
-     * Gets the action builder.
+     * Wait till is displayed.
      *
-     * @return the action builder
+     * @param timeout the timeout
+     * @return the abstract web element wrapper
      */
-    public Actions getActionBuilder() {
+    public AbstractWebElementWrapper waitTillIsDisplayed(final int timeout) {
         try {
-            return new Actions(driver.getDriver());
+            for (int count = 1; count <= timeout; count++) {
+                if (null == getDriverWebElement()) {
+                    resetElement();
+                }
+                if (null != getDriverWebElement() && isDisplayed(false)) {
+                    break;
+                }
+                TS.util().pause("waitTillIsDisplayed", count);
+            }
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
+            TS.log().debug(e);
         }
-        return null;
+        TS.asserts().isTrue("Expected Element[" + by + "] to be displayed", isDisplayed(false));
+        return getSelf();
+    }
+
+    /**
+     * Reset element.
+     *
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper resetElement() {
+        try {
+            this.webElement = driver.getWebElementNoWait(getBy()).getDriverWebElement();
+        } catch (Throwable t) {
+            TS.log().warn("Unable to find element[" + by + "] to reset");
+        }
+        return getSelf();
     }
 
     /**
@@ -263,9 +395,23 @@ public abstract class AbstractWebElementWrapper {
         try {
             getActionBuilder().dragAndDrop(this.getDriverWebElement(), elementToDropOn.getDriverWebElement()).build().perform();
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with getActionBuilder for: " + by, e);
         }
         return getSelf();
+    }
+
+    /**
+     * Gets the action builder.
+     *
+     * @return the action builder
+     */
+    public Actions getActionBuilder() {
+        try {
+            return new Actions(driver.getDriver());
+        } catch (final Exception e) {
+            TS.asserts().unExpectedException("Issue Occurred with getActionBuilder for: " + by, e);
+        }
+        return null;
     }
 
     /**
@@ -279,7 +425,7 @@ public abstract class AbstractWebElementWrapper {
         try {
             getActionBuilder().dragAndDropBy(this.getDriverWebElement(), xoffset, yoffset);
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with getActionBuilder for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with getActionBuilder for: " + by, e);
         }
         return getSelf();
     }
@@ -299,8 +445,12 @@ public abstract class AbstractWebElementWrapper {
      * @param elementToMoveTo the element to move to
      * @return the abstract web element wrapper
      */
-    public AbstractWebElementWrapper moveTo(final By elementToMoveTo) {
-        return moveTo(driver.getWebElement(elementToMoveTo));
+    public AbstractWebElementWrapper moveTo(final AbstractWebElementWrapper elementToMoveTo) {
+        if (elementIsOk("moveTo", isAutoReport())) {
+            getActionBuilder().moveToElement(elementToMoveTo.getDriverWebElement()).build().perform();
+            return getSelf();
+        }
+        return null;
     }
 
     /**
@@ -309,12 +459,8 @@ public abstract class AbstractWebElementWrapper {
      * @param elementToMoveTo the element to move to
      * @return the abstract web element wrapper
      */
-    public AbstractWebElementWrapper moveTo(final AbstractWebElementWrapper elementToMoveTo) {
-        if (elementIsOk("moveTo", isAutoReport())) {
-            getActionBuilder().moveToElement(elementToMoveTo.getDriverWebElement()).build().perform();
-            return getSelf();
-        }
-        return null;
+    public AbstractWebElementWrapper moveTo(final By elementToMoveTo) {
+        return moveTo(driver.getWebElement(elementToMoveTo));
     }
 
     /**
@@ -327,46 +473,6 @@ public abstract class AbstractWebElementWrapper {
             return new Select(webElement);
         }
         return null;
-    }
-
-    /**
-     * Gets the attribute.
-     *
-     * @param attributeName the attribute name
-     * @return the attribute
-     */
-    public String getAttribute(final String attributeName) {
-        if (elementIsOk("getAttribute", isAutoReport())) {
-            final String v = webElement.getAttribute(attributeName);
-            StepAction.createBrowserAction("Element getAttribute", attributeName + " = " + v).add();
-            return v;
-        }
-        return null;
-    }
-
-    /**
-     * Gets the by.
-     *
-     * @return the by
-     */
-    public By getBy() {
-        return by;
-    }
-
-    /**
-     * Gets the driver web element.
-     *
-     * @return the driver web element
-     */
-    public WebElement getDriverWebElement() {
-        try {
-            if (null != webElement) {
-                webElement.isDisplayed(); // check is still working
-            }
-        } catch (final Throwable e) {
-            webElement = null;
-        }
-        return webElement;
     }
 
     /**
@@ -404,10 +510,38 @@ public abstract class AbstractWebElementWrapper {
             TS.util().pause("getElementsWithIn", count);
         }
         if (autoAssert) {
-            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
-                    + "] - error: " + error, true, false);
+            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by +
+                    "] using By[" + locator + "] - error: " + error, true, false);
         }
         return new ArrayList<>();
+    }
+
+    /**
+     * Assert found.
+     *
+     * @return the abstract web element wrapper
+     */
+    public AbstractWebElementWrapper assertFound() {
+        elementIsOk("assertFound", true);
+        return getSelf();
+    }
+
+    /**
+     * Gets the list of webelements wrapped.
+     *
+     * @param locator     the locator
+     * @param webElements the web elements
+     * @return the list of webelements wrapped
+     */
+    public List<AbstractWebElementWrapper> getListOfWebelementsWrapped(final By locator,
+                                                                       final List<WebElement> webElements) {
+        final List<AbstractWebElementWrapper> lst = new ArrayList<>();
+        if (null != webElements) {
+            for (final WebElement e : webElements) {
+                lst.add(new WebElementWrapperV1(locator, e, driver));
+            }
+        }
+        return lst;
     }
 
     /**
@@ -455,8 +589,8 @@ public abstract class AbstractWebElementWrapper {
             TS.util().pause("getElementWithIn", count);
         }
         if (autoAssert) {
-            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by + "] uisng By[" + locator
-                    + "] - error: " + error, true, false);
+            TS.asserts().equalsTo("Expected to find WebElements within Element[" + this.by +
+                    "] using By[" + locator + "] - error: " + error, true, false);
         }
         return null;
     }
@@ -472,39 +606,12 @@ public abstract class AbstractWebElementWrapper {
     }
 
     /**
-     * Gets the list of webelements wrapped.
-     *
-     * @param locator     the locator
-     * @param webElements the web elements
-     * @return the list of webelements wrapped
-     */
-    public List<AbstractWebElementWrapper> getListOfWebelementsWrapped(final By locator,
-                                                                       final List<WebElement> webElements) {
-        final List<AbstractWebElementWrapper> lst = new ArrayList<>();
-        if (null != webElements) {
-            for (final WebElement e : webElements) {
-                lst.add(new WebElementWrapperV1(locator, e, driver));
-            }
-        }
-        return lst;
-    }
-
-    /**
      * Gets the options.
      *
      * @return the options
      */
     public List<AbstractWebElementWrapper> getOptions() {
         return getElementsWithIn(new By.ByTagName("option"), false, true);
-    }
-
-    /**
-     * Gets the outer html.
-     *
-     * @return the outer html
-     */
-    public String getOuterHtml() {
-        return getAttribute("outerHTML");
     }
 
     /**
@@ -517,6 +624,15 @@ public abstract class AbstractWebElementWrapper {
     }
 
     /**
+     * Gets the outer html.
+     *
+     * @return the outer html
+     */
+    public String getOuterHtml() {
+        return getAttribute("outerHTML");
+    }
+
+    /**
      * Gets the text.
      *
      * @return the text
@@ -524,8 +640,8 @@ public abstract class AbstractWebElementWrapper {
     public String getText() {
         String rtn = null;
         if (elementIsOk("getText", isAutoReport())) {
-            if (webElement.getTagName().equalsIgnoreCase("input")
-                    || webElement.getTagName().equalsIgnoreCase("textarea")) {
+            if (webElement.getTagName().equalsIgnoreCase("input") ||
+                    webElement.getTagName().equalsIgnoreCase("textarea")) {
                 rtn = webElement.getAttribute("value");
             } else {
                 rtn = webElement.getText();
@@ -544,61 +660,14 @@ public abstract class AbstractWebElementWrapper {
     }
 
     /**
-     * Checks if is auto report.
+     * Sets the timeout.
      *
-     * @return true, if is auto report
+     * @param timeout the timeout
+     * @return the abstract web element wrapper
      */
-    public boolean isAutoReport() {
-        return autoReport;
-    }
-
-    /**
-     * Checks if is enabled.
-     *
-     * @return the boolean
-     */
-    public Boolean isEnabled() {
-        if (elementIsOk("isEnabled", isAutoReport())) {
-            return webElement.isEnabled();
-        }
-        return false;
-    }
-
-    /**
-     * Checks if is selected.
-     *
-     * @return the boolean
-     */
-    public Boolean isSelected() {
-        if (elementIsOk("isSelected", isAutoReport())) {
-            return webElement.isSelected();
-        }
-        return false;
-    }
-
-    /**
-     * Checks if is displayed.
-     *
-     * @return the boolean
-     */
-    public boolean isDisplayed() {
-        return isDisplayed(false);
-    }
-
-    /**
-     * Checks if is displayed.
-     *
-     * @param autoReport the auto report
-     * @return true, if is displayed
-     */
-    public boolean isDisplayed(final boolean autoReport) {
-        if (null == webElement) {
-            StepAction.createInfo("Element is not Displayed as it is not found, element is null");
-            return false;
-        } else {
-            return webElement.isDisplayed();
-        }
-
+    public AbstractWebElementWrapper setTimeout(final int timeout) {
+        this.timeout = timeout;
+        return getSelf();
     }
 
     /**
@@ -613,7 +682,7 @@ public abstract class AbstractWebElementWrapper {
                 builder.moveToElement(webElement).build().perform();
             }
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with mouseOver for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with mouseOver for: " + by, e);
         }
         return getSelf();
     }
@@ -630,7 +699,7 @@ public abstract class AbstractWebElementWrapper {
                 builder.moveToElement(webElement).click().build().perform();
             }
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with mouseOver for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with mouseOver for: " + by, e);
         }
         return getSelf();
     }
@@ -651,7 +720,7 @@ public abstract class AbstractWebElementWrapper {
                 }
             }
         } catch (final Exception e) {
-            TS.asserts().unExpectedException("Issue Occured with mouseOver for: " + by, e);
+            TS.asserts().unExpectedException("Issue Occurred with mouseOver for: " + by, e);
         }
         return getSelf();
     }
@@ -677,28 +746,6 @@ public abstract class AbstractWebElementWrapper {
     }
 
     /**
-     * Sets the auto report.
-     *
-     * @param autoReport the auto report
-     * @return the abstract web element wrapper
-     */
-    public AbstractWebElementWrapper setAutoReport(final boolean autoReport) {
-        this.autoReport = autoReport;
-        return getSelf();
-    }
-
-    /**
-     * Sets the timeout.
-     *
-     * @param timeout the timeout
-     * @return the abstract web element wrapper
-     */
-    public AbstractWebElementWrapper setTimeout(final int timeout) {
-        this.timeout = timeout;
-        return getSelf();
-    }
-
-    /**
      * Type text.
      *
      * @param value the value
@@ -706,7 +753,7 @@ public abstract class AbstractWebElementWrapper {
      */
     public AbstractWebElementWrapper typeText(final String value) {
         if (elementIsOk("typeText", isAutoReport())) {
-            StepAction.createInfo("typeText", "By[" + by + "] Type Text: " + value).add();
+            TS.step().action().createInfo("typeText", "By[" + by + "] Type Text: " + value);
             webElement.sendKeys(value);
         }
         return getSelf();
@@ -751,17 +798,6 @@ public abstract class AbstractWebElementWrapper {
     }
 
     /**
-     * Verifyt attribute value.
-     *
-     * @param attributeName          the attribute name
-     * @param attributeExpectedValue the attribute expected value
-     * @return true, if successful
-     */
-    public boolean verifytAttributeValue(final String attributeName, final String attributeExpectedValue) {
-        return TS.verify().equalsTo("verifytAttributeValue", attributeExpectedValue, getAttribute(attributeName));
-    }
-
-    /**
      * Wait till attribute equals.
      *
      * @param attributeName the attribute name
@@ -772,12 +808,23 @@ public abstract class AbstractWebElementWrapper {
     public AbstractWebElementWrapper waitTillAttributeEquals(final String attributeName, final String value,
                                                              final int timeout) {
         for (int count = 1; count <= timeout; count++) {
-            if (verifytAttributeValue(attributeName, value)) {
+            if (verifyAttributeValue(attributeName, value)) {
                 break;
             }
             TS.util().pause("waitTillAttributeEquals", count);
         }
         return getSelf();
+    }
+
+    /**
+     * Verifyt attribute value.
+     *
+     * @param attributeName          the attribute name
+     * @param attributeExpectedValue the attribute expected value
+     * @return true, if successful
+     */
+    public boolean verifyAttributeValue(final String attributeName, final String attributeExpectedValue) {
+        return TS.verify().equalsTo("verifyAttributeValue", attributeExpectedValue, getAttribute(attributeName));
     }
 
     /**
@@ -819,39 +866,6 @@ public abstract class AbstractWebElementWrapper {
     }
 
     /**
-     * Wait till is displayed.
-     *
-     * @return the abstract web element wrapper
-     */
-    public AbstractWebElementWrapper waitTillIsDisplayed() {
-        return waitTillIsDisplayed(timeout);
-    }
-
-    /**
-     * Wait till is displayed.
-     *
-     * @param timeout the timeout
-     * @return the abstract web element wrapper
-     */
-    public AbstractWebElementWrapper waitTillIsDisplayed(final int timeout) {
-        try {
-            for (int count = 1; count <= timeout; count++) {
-                if (null == getDriverWebElement()) {
-                    resetElement();
-                }
-                if (null != getDriverWebElement() && isDisplayed(false)) {
-                    break;
-                }
-                TS.util().pause("waitTillIsDisplayed", count);
-            }
-        } catch (final Exception e) {
-            TS.log().debug(e);
-        }
-        TS.asserts().isTrue("Expected Element[" + by + "] to be displayed", isDisplayed(false));
-        return getSelf();
-    }
-
-    /**
      * Wait till not displayed.
      *
      * @return the abstract web element wrapper
@@ -885,17 +899,12 @@ public abstract class AbstractWebElementWrapper {
     }
 
     /**
-     * Reset element.
+     * Scroll into view.
      *
      * @return the abstract web element wrapper
      */
-    public AbstractWebElementWrapper resetElement() {
-        try {
-            this.webElement = driver.getWebElementNoWait(getBy()).getDriverWebElement();
-        } catch (Throwable t) {
-            TS.log().warn("Unable to find element[" + by + "] to reset");
-        }
-        return getSelf();
+    public AbstractWebElementWrapper scrollIntoView() {
+        return scrollIntoView(100, 10);
     }
 
     /**
@@ -917,15 +926,6 @@ public abstract class AbstractWebElementWrapper {
             TS.browser().scrollDown(100);
         }
         return getSelf();
-    }
-
-    /**
-     * Scroll into view.
-     *
-     * @return the abstract web element wrapper
-     */
-    public AbstractWebElementWrapper scrollIntoView() {
-        return scrollIntoView(100, 10);
     }
 
 }

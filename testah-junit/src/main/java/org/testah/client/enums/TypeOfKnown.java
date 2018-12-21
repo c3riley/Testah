@@ -30,7 +30,7 @@ public enum TypeOfKnown {
     /**
      * The envir.
      */
-    ENVIR("Issue with the Testing enviroment"),
+    ENVIR("Issue with the Testing environment"),
 
     /**
      * The other.

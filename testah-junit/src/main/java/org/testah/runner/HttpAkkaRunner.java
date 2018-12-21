@@ -20,12 +20,12 @@ public class HttpAkkaRunner {
     private static final String rptInfo = "[%d] %d [%s] - %s - %s";
 
     private static HttpAkkaRunner httpAkkaRunner = new HttpAkkaRunner();
+    /**
+     * The http wrapper.
+     */
+    private AbstractHttpWrapper httpWrapper;
 
-    public static HttpAkkaRunner getInstance() {
-        return httpAkkaRunner;
-    }
-
-    private HttpAkkaRunner() {
+    protected HttpAkkaRunner() {
     }
 
     public static HttpAkkaRunner getHttpAkkaRunner() {
@@ -36,35 +36,8 @@ public class HttpAkkaRunner {
         HttpAkkaRunner.httpAkkaRunner = httpAkkaRunner;
     }
 
-    /**
-     * The http wrapper.
-     */
-    private AbstractHttpWrapper httpWrapper;
-
-    /**
-     * Run and report.
-     *
-     * @param numConcurrent       the num concurrent
-     * @param request             the request
-     * @param numOfRequestsToMake the num of requests to make
-     * @return the list
-     */
-    public List<ResponseDto> runAndReport(final int numConcurrent, final AbstractRequestDto<?> request,
-                                          final int numOfRequestsToMake) {
-        final List<ResponseDto> responses = runTests(numConcurrent, request, numOfRequestsToMake);
-        if (TS.http().isVerbose()) {
-            int responseCount = 1;
-            for (final ResponseDto response : responses) {
-                TS.log().info(String.format(rptInfo,
-                        responseCount++,
-                        response.getStatusCode(),
-                        response.getStatusText(),
-                        TS.util().toDateString(response.getStart()),
-                        TS.util().toDateString(response.getEnd())));
-            }
-        }
-        TS.util().toJsonPrint(new HttpAkkaStats(responses));
-        return responses;
+    public static HttpAkkaRunner getInstance() {
+        return httpAkkaRunner;
     }
 
     /**
@@ -83,59 +56,40 @@ public class HttpAkkaRunner {
             int responseCount = 1;
             for (final ResponseDto response : responses) {
                 TS.log().info(String.format(rptInfo,
-                        responseCount++,
-                        response.getStatusCode(),
-                        response.getStatusText(),
-                        TS.util().toDateString(response.getStart()),
-                        TS.util().toDateString(response.getEnd())));
+                    responseCount++,
+                    response.getStatusCode(),
+                    response.getStatusText(),
+                    TS.util().toDateString(response.getStart()),
+                    TS.util().toDateString(response.getEnd())));
             }
         }
         return responses;
     }
 
     /**
-     * Run tests.
+     * Run and report.
      *
      * @param numConcurrent       the num concurrent
      * @param request             the request
      * @param numOfRequestsToMake the num of requests to make
      * @return the list
      */
-    public List<ResponseDto> runTests(final int numConcurrent, final AbstractRequestDto<?> request,
-                                      final int numOfRequestsToMake) {
-        final Long hashId = Thread.currentThread().getId();
-        try {
-            if (null == request) {
-                TS.log().warn("No Request Found to Run!");
-                return null;
+    public List<ResponseDto> runAndReport(final int numConcurrent, final AbstractRequestDto<?> request,
+                                          final int numOfRequestsToMake) {
+        final List<ResponseDto> responses = runTests(numConcurrent, request, numOfRequestsToMake);
+        if (TS.http().isVerbose()) {
+            int responseCount = 1;
+            for (final ResponseDto response : responses) {
+                TS.log().info(String.format(rptInfo,
+                    responseCount++,
+                    response.getStatusCode(),
+                    response.getStatusText(),
+                    TS.util().toDateString(response.getStart()),
+                    TS.util().toDateString(response.getEnd())));
             }
-
-            httpWrapper = new HttpWrapperV2();
-            httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
-
-            final ActorSystem system = ActorSystem.create("HttpAkkaRunner");
-            final ActorRef master = system.actorOf(new Props(new UntypedActorFactory() {
-                private static final long serialVersionUID = 1L;
-
-                public UntypedActor create() {
-                    return new HttpActor(numConcurrent, numOfRequestsToMake, hashId);
-                }
-            }), "master");
-
-            HttpActor.resetResults();
-
-            master.tell(request, master);
-
-            while (null == HttpActor.getResults(hashId) || HttpActor.getResults(hashId).size() < numOfRequestsToMake) {
-                TS.log().info(HttpActor.getResults().size());
-                Thread.sleep(500);
-            }
-            system.shutdown();
-
-            return HttpActor.getResults(hashId);
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
         }
+        TS.util().toJsonPrint(new HttpAkkaStats(responses));
+        return responses;
     }
 
     /**
@@ -181,6 +135,55 @@ public class HttpAkkaRunner {
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Run tests.
+     *
+     * @param numConcurrent       the num concurrent
+     * @param request             the request
+     * @param numOfRequestsToMake the num of requests to make
+     * @return the list
+     */
+    public List<ResponseDto> runTests(final int numConcurrent, final AbstractRequestDto<?> request,
+                                      final int numOfRequestsToMake) {
+        final Long hashId = Thread.currentThread().getId();
+        try {
+            if (null == request) {
+                TS.log().warn("No Request Found to Run!");
+                return null;
+            }
+
+            httpWrapper = new HttpWrapperV2();
+            httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
+
+            final ActorSystem system = getActorSystem();
+            final ActorRef master = system.actorOf(new Props(new UntypedActorFactory() {
+                private static final long serialVersionUID = 1L;
+
+                public UntypedActor create() {
+                    return new HttpActor(numConcurrent, numOfRequestsToMake, hashId);
+                }
+            }), "master");
+
+            HttpActor.resetResults();
+
+            master.tell(request, master);
+
+            while (null == HttpActor.getResults(hashId) || HttpActor.getResults(hashId).size() < numOfRequestsToMake) {
+                TS.log().info(HttpActor.getResults().size());
+                Thread.sleep(500);
+            }
+            system.shutdown();
+
+            return HttpActor.getResults(hashId);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ActorSystem getActorSystem() {
+        return ActorSystem.create("HttpAkkaRunner");
     }
 
     /**

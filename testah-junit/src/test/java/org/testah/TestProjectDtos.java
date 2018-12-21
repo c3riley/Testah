@@ -7,6 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testah.client.dto.*;
 import org.testah.framework.cli.Params;
+import org.testah.framework.dto.Result;
+import org.testah.framework.dto.ResultDto;
+import org.testah.framework.dto.Step;
+import org.testah.framework.report.asserts.base.AssertHistoryItem;
 import org.testah.runner.performance.dto.LoadTestSequenceDto;
 import org.testah.util.database.dto.SqlExecutionDto;
 import org.testah.util.dto.ShellInfoDto;
@@ -15,6 +19,9 @@ import org.testah.util.mail.SendMailDto;
 
 import javax.mail.Message;
 import java.util.Date;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 /**
  * The type Test project dtos.
@@ -107,9 +114,26 @@ public class TestProjectDtos {
         test.testGettersAndSetters(new TestPlanDto());
         test.testGettersAndSetters(new TestStepDto());
         test.testGettersAndSetters(new LoadTestSequenceDto());
-        test.testGettersAndSetters(new SqlExecutionDto("SELECT 1"));
-        test.testGettersAndSetters(new ShellInfoDto());
 
+
+        test.testGettersAndSetters(new ShellInfoDto());
+        test.testGettersAndSetters(new AssertHistoryItem());
+
+        test.testGettersAndSetters(new ResultDto());
+        test.testGettersAndSetters(new Result());
+        test.testGettersAndSetters(new Step());
+
+    }
+
+    @Test
+    public void sqlExecutionDtoTest() throws Exception {
+        SqlExecutionDto sql = new SqlExecutionDto("SELECT 1");
+        assertThat(sql.getSql(), equalTo("SELECT 1"));
+        test.testGettersAndSetters(sql);
+        Date start = new Date(1541732632483L);
+        Date end = new Date(1541732643277L);
+        assertThat(sql.start(start).end(end).getDurationPretty(),
+            equalTo("10 seconds and 794 milliseconds"));
     }
 
 }

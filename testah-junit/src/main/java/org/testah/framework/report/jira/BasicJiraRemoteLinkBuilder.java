@@ -5,7 +5,7 @@ import org.testah.client.dto.TestPlanDto;
 import org.testah.framework.report.jira.dto.RemoteIssueLinkDto;
 
 /**
- * The type Basic jira remote link builder. This is a basic implimentation of JiraRemoteLinkBuilder to make it easier to have Jira
+ * The type Basic jira remote link builder. This is a basic implementation of JiraRemoteLinkBuilder to make it easier to have Jira
  * integration out of the box. This class needs to be instantiated and set into the global TS.getTestPlanReporter() at runtime. Best to do
  * this in a setup common to all testplans.
  *
@@ -66,13 +66,13 @@ public class BasicJiraRemoteLinkBuilder extends AbstractJiraRemoteLinkBuilder {
                 testCase.getKnownProblem().getDescription(), getSourceLinkToUse(), getLastTestPlanDtoUsed().getSource());
     }
 
-    private String getTestPlanSummary(TestPlanDto testPlan) {
-        return String.format("%s - status: %s - duration: %s", testPlan.getDescription(), testPlan.getStatusEnum(),
-                testPlan.getRunTime().getDuration());
-    }
-
     private String getTestCaseSummary(TestCaseDto testCase) {
         return String.format("%s - status: %s - duration: %s", testCase.getDescription(), testCase.getStatusEnum(),
                 testCase.getRunTime().getDuration());
+    }
+
+    private String getTestPlanSummary(TestPlanDto testPlan) {
+        return String.format("%s - status: %s - duration: %s", testPlan.getDescription(), testPlan.getStatusEnum(),
+                testPlan.getRunTime().getDuration());
     }
 }

@@ -1,11 +1,11 @@
 package org.testah.runner.http.load.request;
 
-import java.util.List;
-
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.requests.GetRequestDto;
 import org.testah.runner.http.load.TestServiceClient;
 import org.testah.runner.performance.AbstractPerformanceRestRequest;
+
+import java.util.List;
 
 public class GetRestRequest extends AbstractPerformanceRestRequest {
     private final List<Integer> statusCodes;

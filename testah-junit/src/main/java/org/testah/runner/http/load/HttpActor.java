@@ -14,9 +14,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class HttpActor extends UntypedActor {
+    public static final int UNKNOWN_ERROR_STATUS = 700;
     private static HashMap<Long, List<ResponseDto>> results = new HashMap<Long, List<ResponseDto>>();
-    public static final int UKNOWN_ERROR_STATUS = 700;
-
     private final ActorRef workerRouter;
     private final int nrOfWorkers;
     private final int numOfAttempts;
@@ -36,6 +35,36 @@ public class HttpActor extends UntypedActor {
         this.numOfAttempts = numOfAttempts;
         workerRouter = this.getContext()
                 .actorOf(new Props(HttpWorker.class).withRouter(new RoundRobinRouter(nrOfWorkers)), "workerRouter");
+    }
+
+    /**
+     * Get the responses for a particular Akka actor.
+     *
+     * @param hashId of Akka actor
+     * @return list of responses
+     */
+    public static List<ResponseDto> getResults(final Long hashId) {
+        HashMap<Long, List<ResponseDto>> resultsLocalPointer = getResults();
+        if (!resultsLocalPointer.containsKey(hashId)) {
+            resultsLocalPointer.put(hashId, new ArrayList<ResponseDto>());
+        }
+        return resultsLocalPointer.get(hashId);
+    }
+
+    /**
+     * Get responses per Akka actor hash.
+     *
+     * @return map of hash id to list of responses.
+     */
+    public static HashMap<Long, List<ResponseDto>> getResults() {
+        if (null == results) {
+            resetResults();
+        }
+        return results;
+    }
+
+    public static void resetResults() {
+        results = new HashMap<Long, List<ResponseDto>>();
     }
 
     /**
@@ -74,7 +103,7 @@ public class HttpActor extends UntypedActor {
 
     private ResponseDto getUnExpectedErrorResponseDto(final Throwable throwable) {
         ResponseDto response = new ResponseDto();
-        response.setStatusCode(UKNOWN_ERROR_STATUS);
+        response.setStatusCode(UNKNOWN_ERROR_STATUS);
         response.setStatusText(String.format("Unexpected Error[%s]", throwable.getMessage()));
         response.setResponseBody(org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace(throwable));
         return response;
@@ -83,36 +112,6 @@ public class HttpActor extends UntypedActor {
     public ActorRef getWorkerRouter() {
 
         return workerRouter;
-    }
-
-    /**
-     * Get the responses for a particular Akka actor.
-     *
-     * @param hashId of Akka actor
-     * @return list of responses
-     */
-    public static List<ResponseDto> getResults(final Long hashId) {
-        HashMap<Long, List<ResponseDto>> resultsLocalPointer = getResults();
-        if (!resultsLocalPointer.containsKey(hashId)) {
-            resultsLocalPointer.put(hashId, new ArrayList<ResponseDto>());
-        }
-        return resultsLocalPointer.get(hashId);
-    }
-
-    /**
-     * Get responses per Akka actor hash.
-     *
-     * @return map of hash id to list of responses.
-     */
-    public static HashMap<Long, List<ResponseDto>> getResults() {
-        if (null == results) {
-            resetResults();
-        }
-        return results;
-    }
-
-    public static void resetResults() {
-        results = new HashMap<Long, List<ResponseDto>>();
     }
 
     public int getNrOfWorkers() {

@@ -68,7 +68,7 @@ public class TestahUtil {
 
         try {
             return map.writeValueAsString(object);
-        } catch (final Exception ingoreFailOnFirstAttempt) {
+        } catch (final Exception ignoreFailOnFirstAttempt) {
             // Very odd bug fails first time then passes
         }
 
@@ -97,6 +97,29 @@ public class TestahUtil {
      */
     public TestahUtil pause(final Long milliseconds) {
         pause(milliseconds, null, null);
+        return this;
+    }
+
+    /**
+     * Pause.
+     *
+     * @param milliseconds   the milliseconds
+     * @param reasonForPause the reason for pause
+     * @param iteration      the iteration
+     * @return the testah util
+     */
+    public TestahUtil pause(final Long milliseconds, final String reasonForPause, final Integer iteration) {
+        try {
+            if (null == iteration) {
+                TS.log().debug("pause - " + reasonForPause + " - " + milliseconds + "ms");
+            } else {
+                TS.log().debug("pause - " + iteration + "] " + reasonForPause + " - " + milliseconds + "ms");
+            }
+
+            Thread.sleep(milliseconds);
+        } catch (final Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
         return this;
     }
 
@@ -158,44 +181,12 @@ public class TestahUtil {
     }
 
     /**
-     * Pause.
-     *
-     * @param milliseconds   the milliseconds
-     * @param reasonForPause the reason for pause
-     * @param iteration      the iteration
-     * @return the testah util
-     */
-    public TestahUtil pause(final Long milliseconds, final String reasonForPause, final Integer iteration) {
-        try {
-            if (null == iteration) {
-                TS.log().debug("pause - " + reasonForPause + " - " + milliseconds + "ms");
-            } else {
-                TS.log().debug("pause - " + iteration + "] " + reasonForPause + " - " + milliseconds + "ms");
-            }
-
-            Thread.sleep(milliseconds);
-        } catch (final Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
-        return this;
-    }
-
-    /**
      * Now unique.
      *
      * @return the string
      */
     public String nowUnique() {
         return now("MMddyyyyHHmmssS");
-    }
-
-    /**
-     * Now.
-     *
-     * @return the string
-     */
-    public String now() {
-        return now("MM/dd/yyyy HH:mm:ss.S");
     }
 
     /**
@@ -209,13 +200,12 @@ public class TestahUtil {
     }
 
     /**
-     * To date string.
+     * Now.
      *
-     * @param time the time
      * @return the string
      */
-    public String toDateString(final Long time) {
-        return toDateString(time, "MM/dd/yyyy HH:mm:ss.S");
+    public String now() {
+        return now("MM/dd/yyyy HH:mm:ss.S");
     }
 
     /**
@@ -226,8 +216,32 @@ public class TestahUtil {
      * @return the string
      */
     public String toDateString(final Long time, final String dateTimeFormat) {
-        final SimpleDateFormat f = new SimpleDateFormat(dateTimeFormat);
-        return f.format(new Date(time));
+        return toDateString(time, dateTimeFormat, TimeZone.getDefault().getID());
+    }
+
+    /**
+     * To date string string.
+     *
+     * @param time           the time
+     * @param dateTimeFormat the date time format
+     * @param timeZone       the time zone
+     * @return the string
+     */
+    public String toDateString(final Long time, final String dateTimeFormat, final String timeZone) {
+        final SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
+        sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
+        return sdf.format(new Date(time));
+    }
+
+
+    /**
+     * To date string.
+     *
+     * @param time the time
+     * @return the string
+     */
+    public String toDateString(final Long time) {
+        return toDateString(time, "MM/dd/yyyy HH:mm:ss.S");
     }
 
     /**
@@ -254,6 +268,28 @@ public class TestahUtil {
     /**
      * Download file.
      *
+     * @param urlToUse       the url to use
+     * @param destinationDir the target directory
+     * @return the file
+     */
+    public File downloadFile(final String urlToUse, final File destinationDir) {
+        try {
+            TS.log().trace("downloadFileDirectory mkdirs: " + destinationDir.mkdirs());
+            final File fileDownLoaded = File.createTempFile("download", "", destinationDir);
+            final byte[] fileBytes = TS.http().doGet(urlToUse).getResponseBytes();
+            try (FileOutputStream fileOutputStream = new FileOutputStream(fileDownLoaded)) {
+                fileOutputStream.write(fileBytes);
+            }
+            return fileDownLoaded;
+        } catch (final Exception e) {
+            TS.log().warn(e);
+        }
+        return null;
+    }
+
+    /**
+     * Download file.
+     *
      * @param urlToUse the url to use
      * @return the file
      */
@@ -274,28 +310,6 @@ public class TestahUtil {
     }
 
     /**
-     * Download file.
-     *
-     * @param urlToUse       the url to use
-     * @param destinationDir the target directory
-     * @return the file
-     */
-    public File downloadFile(final String urlToUse, final File destinationDir) {
-        try {
-            TS.log().trace("downloadFileDirectory mkdirs: " + destinationDir.mkdirs());
-            final File fileDownLoaded = File.createTempFile("download", "", destinationDir);
-            final byte[] fileBytes = TS.http().doGet(urlToUse).getResponseBytes();
-            try (FileOutputStream fileOuputStream = new FileOutputStream(fileDownLoaded)) {
-                fileOuputStream.write(fileBytes);
-            }
-            return fileDownLoaded;
-        } catch (final Exception e) {
-            TS.log().warn(e);
-        }
-        return null;
-    }
-
-    /**
      * Create File reference to parent directory of a file download.
      *
      * @param relativePath to download parent directory.
@@ -308,17 +322,17 @@ public class TestahUtil {
     /**
      * Un zip.
      *
-     * @param zip         the zip
-     * @param destination the destination
+     * @param zip               the zip
+     * @param destinationFolder the destination folder
      * @return the file
      */
-    public File unZip(final File zip, final File destination) {
-        TS.log().trace("destination mkdirs: " + destination.mkdirs());
+    public File unZip(final File zip, final File destinationFolder) {
+        TS.log().trace("destination mkdirs: " + destinationFolder.mkdirs());
         try (ZipFile zipFile = new ZipFile(zip)) {
             final Enumeration<? extends ZipEntry> entries = zipFile.entries();
             while (entries.hasMoreElements()) {
                 final ZipEntry entry = entries.nextElement();
-                final File entryDestination = new File(destination, entry.getName());
+                final File entryDestination = new File(destinationFolder, entry.getName());
                 if (entry.isDirectory()) {
                     TS.log().trace("entryDestination mkdirs: " + entryDestination.mkdirs());
                 } else {
@@ -333,17 +347,17 @@ public class TestahUtil {
         } catch (final Exception e) {
             TS.log().warn(e);
         }
-        return destination;
+        return destinationFolder;
     }
 
     /**
      * Split camel case.
      *
-     * @param s the s
+     * @param stringToUse the string To Use
      * @return the string
      */
-    public String splitCamelCase(final String s) {
-        return s.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
+    public String splitCamelCase(final String stringToUse) {
+        return stringToUse.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
                 "(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
     }
 
@@ -450,8 +464,8 @@ public class TestahUtil {
             if (path != null) {
                 final File[] arrayOfFiles = new File(path).listFiles();
                 if (arrayOfFiles != null) {
-                    return Arrays.asList(arrayOfFiles).stream().filter(file -> !excludeDirectories
-                            || !file.isDirectory()).collect(Collectors.toList());
+                    return Arrays.asList(arrayOfFiles).stream().filter(file -> !excludeDirectories ||
+                            !file.isDirectory()).collect(Collectors.toList());
                 }
             }
         }

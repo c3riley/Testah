@@ -30,7 +30,7 @@ public enum BrowserType {
      * The phantomjs.
      */
 
-    PHANTOMJS("PHANTOMJS"), JBROWSER("JBROWSER");
+    PHANTOMJS("PHANTOMJS");
 
     /**
      * The browser code.

@@ -1,6 +1,8 @@
 package org.testah.driver.web.browser;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.DriverManagerType;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
@@ -25,47 +27,62 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
      */
     private ChromeDriverService service = null;
 
-
-    public WebDriver getWebDriver(final DesiredCapabilities capabilities) {
-        if (null == service) {
-            return new ChromeDriver(capabilities);
-        } else {
-            return new ChromeDriver(service, capabilities);
-        }
-    }
-
     /*
      * (non-Javadoc).
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinay().
+     * @see org.testah.driver.web.browser.AbstractBrowser#getDriverBinary().
      */
-    public GoogleChromeBrowser getDriverBinay() {
-        ChromeDriverManager.getInstance().setup();
+    public GoogleChromeBrowser getDriverBinary() {
+        ChromeDriverManager.getInstance(DriverManagerType.CHROME).setup();
         return this;
     }
 
-    /*
-     * (non-Javadoc).
+    /**
+     * start Service for webdriver.
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#startService().
+     * @return GoogleChromeBrowser
+     * @throws IOException thrown if issues starting service
      */
     public GoogleChromeBrowser startService() throws IOException {
         service = new ChromeDriverService.Builder().usingDriverExecutable(new File(getChromePath())).usingAnyFreePort()
-                .withLogFile(File.createTempFile("googleChromeLog", ".log")).build();
+            .withLogFile(File.createTempFile("googleChromeLog", ".log")).build();
         service.start();
         return this;
     }
 
-    /*
-     * (non-Javadoc).
+    /**
+     * get Web Driver object.
      *
-     * @see org.testah.driver.web.browser.AbstractBrowser#createCapabilities().
+     * @param capabilities the capabilities
+     * @return WebDriver
      */
-    public DesiredCapabilities createCapabilities() {
-        final DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+    public WebDriver getWebDriver(final MutableCapabilities capabilities) {
+        if (capabilities instanceof ChromeOptions) {
+            ChromeOptions chromeOptions = (ChromeOptions) capabilities;
+            if (null == service) {
+                return new ChromeDriver(chromeOptions);
+            } else {
+                return new ChromeDriver(service, chromeOptions);
+            }
+        } else {
+            if (null == service) {
+                return new ChromeDriver(capabilities);
+            } else {
+                return new ChromeDriver(service, capabilities);
+            }
+        }
+    }
+
+    /**
+     * create Capabilities.
+     *
+     * @return DesiredCapabilities
+     */
+    public MutableCapabilities createCapabilities() {
+        final ChromeOptions chromeOptions = new ChromeOptions();
 
         if (null != getUserAgentValue()) {
-            capabilities.setCapability("user-agent", getUserAgentValue());
+            chromeOptions.setCapability("user-agent", getUserAgentValue());
         }
 
         final Map<String, Object> prefs = new HashMap<>();
@@ -73,15 +90,36 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         prefs.put("profile.default_content_settings.popups", 0);
         prefs.put("download.prompt_for_download", false);
         prefs.put("download.default_directory", TS.params().getOutput());
-        final ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("start-maximized");
         chromeOptions.setExperimentalOption("prefs", prefs);
+        chromeOptions.setCapability("chrome.switches",
+            Arrays.asList("--disable-default-apps", "--allow-running-insecure-content", "--start-maximized"));
 
-        capabilities.setCapability("chrome.switches",
-                Arrays.asList("--disable-default-apps", "--allow-running-insecure-content", "--start-maximized"));
+        return chromeOptions;
+    }
 
-        capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-        return capabilities;
+    /**
+     * stop Service for chrome driver.
+     *
+     * @return GoogleChromeBrowser
+     * @throws IOException thrown is issue stopping service
+     */
+    public GoogleChromeBrowser stopService() throws IOException {
+        if (null != service) {
+            service.stop();
+        }
+        return null;
+    }
+
+    /**
+     * logBrowserInfo will log info about the browser session.
+     *
+     * @return returns class instance
+     */
+    @Override
+    public AbstractBrowser<GoogleChromeBrowser> logBrowserInfo() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     /**
@@ -96,7 +134,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
             if (null == binPath || binPath.length() == 0 || !(new File(binPath)).exists()) {
                 final File downloadDestinationDir = TS.util().getDownloadDestinationDirectory("drivers");
                 final File unZipDestination = new File(downloadDestinationDir, "chrome");
-                File webDriverExecutable = findWebriverExecutable(unZipDestination);
+                File webDriverExecutable = findWebdriverExecutable(unZipDestination);
                 if (null == webDriverExecutable) {
                     String urlSource = "https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip";
                     if (Params.isWindows()) {
@@ -107,7 +145,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
                     final File zip = TS.util().downloadFile(urlSource, downloadDestinationDir);
                     TS.util().unZip(zip, unZipDestination);
                     cleanupDownloads(downloadDestinationDir);
-                    webDriverExecutable = findWebriverExecutable(unZipDestination);
+                    webDriverExecutable = findWebdriverExecutable(unZipDestination);
                 } else {
                     TS.log().info("WebDriver executable already downloaded : " + webDriverExecutable.getAbsolutePath());
                 }
@@ -123,17 +161,17 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
             TS.log().warn(e);
         }
         // return binPath;
-        return ChromeDriverManager.getInstance().getBinaryPath();
+        return ChromeDriverManager.getInstance(DriverManagerType.CHROME).getBinaryPath();
     }
 
-    private File findWebriverExecutable(final File driverParentDirectory) {
-        File webriverExecutable = null;
+    private File findWebdriverExecutable(final File driverParentDirectory) {
+        File webdriverExecutable = null;
         if (driverParentDirectory.exists()) {
-            webriverExecutable = Arrays.stream(driverParentDirectory.listFiles((d, s) -> {
+            webdriverExecutable = Arrays.stream(driverParentDirectory.listFiles((d, s) -> {
                 return d.exists() && d.isDirectory() && s.toLowerCase().contains("driver");
             })).findAny().orElse((File) null);
         }
-        return webriverExecutable;
+        return webdriverExecutable;
     }
 
     private void cleanupDownloads(final File downloadDestinationDir) {
@@ -142,29 +180,6 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
         })).filter(f -> {
             return f.isFile();
         }).forEach(File::delete);
-    }
-
-    /*
-     * (non-Javadoc).
-     *
-     * @see org.testah.driver.web.browser.AbstractBrowser#stopService().
-     */
-    public GoogleChromeBrowser stopService() throws IOException {
-        if (null != service) {
-            service.stop();
-        }
-        return null;
-    }
-
-    /**
-     * logBrowerInfo will log info about the browser session.
-     *
-     * @return returns class instance
-     */
-    @Override
-    public AbstractBrowser<GoogleChromeBrowser> logBrowerInfo() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }
