@@ -20,8 +20,8 @@
                 </thead>
                 <tbody>
                     #foreach( $result in $results )
-                    <tr>
                         #if( "$!result.getTestPlan()" != "" )
+                    <tr bgcolor=#if($result.getTestPlan().getStatusEnum()=="PASSED")MediumSeaGreen#{else}red#end >
                             <td class='label'>$result.getTestPlan().getName()</td>
                             <td class='label'>testah</td>
                             <td class='label'>$result.getTestPlan().getStatusEnum()</td>
@@ -30,6 +30,7 @@
                             <td class='value'>$result.getTestPlan().getRunInfo().getFail()</td>
                             <td class='value'>$result.getTestPlan().getRunInfo().getIgnore()</td>
                         #else
+                    <tr>                        
                             <td class='label'>$result.getClassName()</td>
                             <td class='label'>junit</td>
                             #if( "$result.getJunitResult().wasSuccessful()" == "true" )
