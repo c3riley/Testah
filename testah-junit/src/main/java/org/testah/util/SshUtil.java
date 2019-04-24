@@ -2,7 +2,6 @@ package org.testah.util;
 
 import com.jcraft.jsch.*;
 import org.testah.TS;
-import org.testah.framework.dto.StepAction;
 import org.testah.util.dto.ShellInfoDto;
 
 import java.io.*;
@@ -20,50 +19,41 @@ import java.util.List;
 public class SshUtil {
 
     /**
+     * The Constant LAST_EXIT_CODE_DEFAULT.
+     */
+    public static final int LAST_EXIT_CODE_DEFAULT = -999;
+    /**
      * The Constant mergeStreams.
      */
     private static final String mergeStreams = " 2>&1";
-
-    /**
-     * The ignore timeout.
-     */
-    private boolean ignoreTimeout = false;
-
-    /**
-     * The session timeout.
-     */
-    private int sessionTimeout = 100000;
-
-    /**
-     * The verbose.
-     */
-    private boolean verbose = true;
-
-    /**
-     * The max wait time in seconds.
-     */
-    private int maxWaitTimeInSeconds = 10;
-
-    /**
-     * The pty type value.
-     */
-    private String ptyTypeValue = "dumb";
-
-    /**
-     * The pem file.
-     */
-    private String pemFile = null;
-
     /**
      * The jsch.
      */
     private final JSch jsch = new JSch();
-
     /**
-     * The Constant LAST_EXIT_CODE_DEFAULT.
+     * The ignore timeout.
      */
-    public static final int LAST_EXIT_CODE_DEFAULT = -999;
-
+    private boolean ignoreTimeout = false;
+    /**
+     * The session timeout.
+     */
+    private int sessionTimeout = 100000;
+    /**
+     * The verbose.
+     */
+    private boolean verbose = true;
+    /**
+     * The max wait time in seconds.
+     */
+    private int maxWaitTimeInSeconds = 10;
+    /**
+     * The pty type value.
+     */
+    private String ptyTypeValue = "dumb";
+    /**
+     * The pem file.
+     */
+    private String pemFile = null;
     /**
      * The last exit code.
      */
@@ -80,13 +70,8 @@ public class SshUtil {
         setVerbose(true);
     }
 
-    /**
-     * Gets the jsch.
-     *
-     * @return the jsch
-     */
-    public JSch getJsch() {
-        return jsch;
+    public static String getMergestreams() {
+        return mergeStreams;
     }
 
     /**
@@ -126,14 +111,98 @@ public class SshUtil {
         if (null != getPemFile()) {
             getJsch().addIdentity(getPemFile());
         }
-        StepAction.createInfo("Getting Session", host + ":" + port + " for user: " + username).add();
+        TS.step().action().createInfo("Getting Session", host + ":" + port + " for user: " + username);
         return session;
+    }
+
+    /**
+     * Gets the pem file.
+     *
+     * @return the pem file
+     */
+    public String getPemFile() {
+        return pemFile;
+    }
+
+    /**
+     * Sets the pem file.
+     *
+     * @param pemFile the pem file
+     * @return the ssh util
+     */
+    public SshUtil setPemFile(final String pemFile) {
+        this.pemFile = pemFile;
+        return this;
+    }
+
+    /**
+     * Gets the jsch.
+     *
+     * @return the jsch
+     */
+    public JSch getJsch() {
+        return jsch;
+    }
+
+    /**
+     * Run shell enhanced.
+     *
+     * @param session  the session
+     * @param commands the commands
+     * @return the hash map
+     * @throws JSchException        the j sch exception
+     * @throws IOException          Signals that an I/O exception has occurred.
+     * @throws InterruptedException the interrupted exception
+     */
+    public HashMap<Integer, List<String>> runShellEnhanced(final Session session, final String... commands)
+            throws JSchException, IOException, InterruptedException {
+        final HashMap<Integer, List<String>> outputHash = new HashMap<>();
+        final List<String> commandList = new ArrayList<>();
+        int ctr = 0;
+        for (final String command : commands) {
+            commandList.add("echo @START" + ctr + "@T= $( date +%T )");
+            commandList.add(command);
+            commandList.add("echo @END" + ctr + "@T= $( date +%T )");
+            ctr++;
+        }
+
+        final String outputRaw = runShell(session, commandList.toArray(commands));
+
+        if (null != outputRaw) {
+            final List<String> lines = cleanOutput(outputRaw);
+            ctr = 0;
+            for (final String line : lines) {
+                if (line.contains("@START" + ctr + "@")) {
+                    outputHash.put(ctr, new ArrayList<String>());
+                    outputHash.get(ctr).add(commands[ctr]);
+                } else if (line.contains("@END" + ctr + "@")) {
+                    ctr++;
+                } else {
+                    outputHash.get(ctr).add(line);
+                }
+            }
+        }
+        return outputHash;
     }
 
     public String runShell(final Session session, final String... commands)
             throws JSchException, IOException, InterruptedException {
         return runShellRtnInfo(session, commands).getOutput().toString();
 
+    }
+
+    /**
+     * Clean output.
+     *
+     * @param output the output
+     * @return the list
+     */
+    public List<String> cleanOutput(String output) {
+        if (null != output) {
+            output = output.replace("\r", "").replace("\t", "");
+            return Arrays.asList(output.split("\n"));
+        }
+        return new ArrayList<>();
     }
 
     /**
@@ -168,7 +237,7 @@ public class SshUtil {
             channel.connect();
             for (final String command : commands) {
                 if (verbose) {
-                    StepAction.createInfo("Running Shell Commnad", command);
+                    TS.step().action().createInfo("Running Shell Command", command);
                 }
                 if (isAutoAddMergeFields()) {
                     commander.println(command + mergeStreams);
@@ -215,7 +284,7 @@ public class SshUtil {
             }
 
             if (verbose) {
-                StepAction.createInfo("Shell Output", TS.util().toJson(info)).add();
+                TS.step().action().createInfo("Shell Output", TS.util().toJson(info));
             }
         } finally {
             System.out.println("exit-status: " + channel.getExitStatus());
@@ -230,44 +299,51 @@ public class SshUtil {
     }
 
     /**
-     * Run shell enhanced.
+     * Gets the pty type value.
      *
-     * @param session  the session
-     * @param commands the commands
-     * @return the hash map
-     * @throws JSchException        the j sch exception
-     * @throws IOException          Signals that an I/O exception has occurred.
-     * @throws InterruptedException the interrupted exception
+     * @return the pty type value
      */
-    public HashMap<Integer, List<String>> runShellEnhanced(final Session session, final String... commands)
-            throws JSchException, IOException, InterruptedException {
-        final HashMap<Integer, List<String>> outputHash = new HashMap<>();
-        final List<String> commandList = new ArrayList<>();
-        int ctr = 0;
-        for (final String command : commands) {
-            commandList.add("echo @START" + ctr + "@T= $( date +%T )");
-            commandList.add(command);
-            commandList.add("echo @END" + ctr + "@T= $( date +%T )");
-            ctr++;
-        }
+    public String getPtyTypeValue() {
+        return ptyTypeValue;
+    }
 
-        final String outputRaw = runShell(session, commandList.toArray(commands));
+    /**
+     * Sets the pty type value.
+     *
+     * @param ptyTypeValue the new pty type value
+     * @return the ssh util
+     */
+    public SshUtil setPtyTypeValue(final String ptyTypeValue) {
+        this.ptyTypeValue = ptyTypeValue;
+        return this;
+    }
 
-        if (null != outputRaw) {
-            final List<String> lines = cleanOutput(outputRaw);
-            ctr = 0;
-            for (final String line : lines) {
-                if (line.contains("@START" + ctr + "@")) {
-                    outputHash.put(ctr, new ArrayList<String>());
-                    outputHash.get(ctr).add(commands[ctr]);
-                } else if (line.contains("@END" + ctr + "@")) {
-                    ctr++;
-                } else {
-                    outputHash.get(ctr).add(line);
-                }
-            }
-        }
-        return outputHash;
+    public boolean isAutoAddMergeFields() {
+        return autoAddMergeFields;
+    }
+
+    public void setAutoAddMergeFields(final boolean autoAddMergeFields) {
+        this.autoAddMergeFields = autoAddMergeFields;
+    }
+
+    /**
+     * Checks if is ignore timeout.
+     *
+     * @return true, if is ignore timeout
+     */
+    public boolean isIgnoreTimeout() {
+        return ignoreTimeout;
+    }
+
+    /**
+     * Sets the ignore timeout.
+     *
+     * @param ignoreTimeout the new ignore timeout
+     * @return the ssh util
+     */
+    public SshUtil setIgnoreTimeout(final boolean ignoreTimeout) {
+        this.ignoreTimeout = ignoreTimeout;
+        return this;
     }
 
     /**
@@ -292,44 +368,12 @@ public class SshUtil {
     }
 
     /**
-     * Clean output.
-     *
-     * @param output the output
-     * @return the list
-     */
-    public List<String> cleanOutput(String output) {
-        if (null != output) {
-            output = output.replace("\r", "").replace("\t", "");
-            return Arrays.asList(output.split("\n"));
-        }
-        return new ArrayList<>();
-    }
-
-    /**
      * Gets the session timeout.
      *
      * @return the session timeout
      */
     public int getSessionTimeout() {
         return sessionTimeout;
-    }
-
-    /**
-     * Checks if is verbose.
-     *
-     * @return true, if is verbose
-     */
-    public boolean isVerbose() {
-        return verbose;
-    }
-
-    /**
-     * Gets the max wait time in seconds.
-     *
-     * @return the max wait time in seconds
-     */
-    public int getMaxWaitTimeInSeconds() {
-        return maxWaitTimeInSeconds;
     }
 
     /**
@@ -344,15 +388,12 @@ public class SshUtil {
     }
 
     /**
-     * Sets the verbose.
+     * Gets the max wait time in seconds.
      *
-     * @param verbose the new verbose
-     * @return the ssh util
+     * @return the max wait time in seconds
      */
-    public SshUtil setVerbose(final boolean verbose) {
-        JSch.setLogger(new SshLogger());
-        this.verbose = verbose;
-        return this;
+    public int getMaxWaitTimeInSeconds() {
+        return maxWaitTimeInSeconds;
     }
 
     /**
@@ -363,66 +404,6 @@ public class SshUtil {
      */
     public SshUtil setMaxWaitTimeInSeconds(final int maxWaitTimeInSeconds) {
         this.maxWaitTimeInSeconds = maxWaitTimeInSeconds;
-        return this;
-    }
-
-    /**
-     * Gets the pty type value.
-     *
-     * @return the pty type value
-     */
-    public String getPtyTypeValue() {
-        return ptyTypeValue;
-    }
-
-    /**
-     * Sets the pty type value.
-     *
-     * @param ptyTypeValue the new pty type value
-     * @return the ssh util
-     */
-    public SshUtil setPtyTypeValue(final String ptyTypeValue) {
-        this.ptyTypeValue = ptyTypeValue;
-        return this;
-    }
-
-    /**
-     * Checks if is ignore timeout.
-     *
-     * @return true, if is ignore timeout
-     */
-    public boolean isIgnoreTimeout() {
-        return ignoreTimeout;
-    }
-
-    /**
-     * Sets the ignore timeout.
-     *
-     * @param ignoreTimeout the new ignore timeout
-     * @return the ssh util
-     */
-    public SshUtil setIgnoreTimeout(final boolean ignoreTimeout) {
-        this.ignoreTimeout = ignoreTimeout;
-        return this;
-    }
-
-    /**
-     * Gets the pem file.
-     *
-     * @return the pem file
-     */
-    public String getPemFile() {
-        return pemFile;
-    }
-
-    /**
-     * Sets the pem file.
-     *
-     * @param pemFile the pem file
-     * @return the ssh util
-     */
-    public SshUtil setPemFile(final String pemFile) {
-        this.pemFile = pemFile;
         return this;
     }
 
@@ -441,7 +422,7 @@ public class SshUtil {
             this.lastExitCode = LAST_EXIT_CODE_DEFAULT;
             final Channel channel = session.openChannel("exec");
             if (isVerbose()) {
-                StepAction.createInfo("runExec", command).add();
+                TS.step().action().createInfo("runExec", command);
             }
             if (isAutoAddMergeFields()) {
                 ((ChannelExec) channel).setCommand(command + mergeStreams);
@@ -500,6 +481,27 @@ public class SshUtil {
     }
 
     /**
+     * Checks if is verbose.
+     *
+     * @return true, if is verbose
+     */
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Sets the verbose.
+     *
+     * @param verbose the new verbose
+     * @return the ssh util
+     */
+    public SshUtil setVerbose(final boolean verbose) {
+        JSch.setLogger(new SshLogger());
+        this.verbose = verbose;
+        return this;
+    }
+
+    /**
      * Gets the last exit code.
      *
      * @return the last exit code
@@ -518,18 +520,6 @@ public class SshUtil {
      */
     public void setLastExitCode(final int lastExitCode) {
         this.lastExitCode = lastExitCode;
-    }
-
-    public static String getMergestreams() {
-        return mergeStreams;
-    }
-
-    public boolean isAutoAddMergeFields() {
-        return autoAddMergeFields;
-    }
-
-    public void setAutoAddMergeFields(final boolean autoAddMergeFields) {
-        this.autoAddMergeFields = autoAddMergeFields;
     }
 
 }

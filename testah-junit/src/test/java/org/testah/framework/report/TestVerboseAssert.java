@@ -25,7 +25,7 @@ public class TestVerboseAssert extends HttpTestPlan {
     @Ignore
     @TestCase()
     @Test
-    public void testDontStoponFirstFail() throws JsonGenerationException, JsonMappingException, IOException {
+    public void testDontStopOnFirstFail() throws JsonGenerationException, JsonMappingException, IOException {
         TS.verify().same("", "cool", "cool");
         TS.verify().same("", "cool", "cll");
         getTestPlan();
@@ -51,7 +51,6 @@ public class TestVerboseAssert extends HttpTestPlan {
         TS.asserts().isEmpty("", new HashMap<String, String>().keySet());
 
     }
-
 
 
 }

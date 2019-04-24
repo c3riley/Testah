@@ -11,25 +11,21 @@ import java.io.*;
 public class BashUtil {
 
     /**
+     * The Constant DEFAULT_EXIT_VALUE.
+     */
+    public static final int DEFAULT_EXIT_VALUE = -999;
+    /**
      * The verbose.
      */
     private boolean verbose = true;
-
     /**
      * The output.
      */
     private String output = "";
-
     /**
      * The error.
      */
     private String error = "";
-
-    /**
-     * The Constant DEFAULT_EXIT_VALUE.
-     */
-    public static final int DEFAULT_EXIT_VALUE = -999;
-
     /**
      * The exit value.
      */
@@ -43,7 +39,7 @@ public class BashUtil {
     /**
      * The bash source.
      */
-    private String bashSource = "source ~/.bashrc\nsource ~/profile";
+    private String bashSource = "source ~/.bashrc" + System.lineSeparator() + "source ~/profile";
 
     /**
      * Instantiates a new bash util.
@@ -94,36 +90,16 @@ public class BashUtil {
     public File createBashFile(final String... commands) throws IOException {
         final File tmpBashScript = File.createTempFile("tmpBashScript", null);
 
-        final Writer streamWriter = new OutputStreamWriter(new FileOutputStream(tmpBashScript), "UTF-8");
-        final PrintWriter printWriter = new PrintWriter(streamWriter);
-        printWriter.println(getBangLine());
-        printWriter.println(getBashSource());
-        for (final String command : commands) {
-            printWriter.println(command);
+        try (final Writer streamWriter = new OutputStreamWriter(new FileOutputStream(tmpBashScript), "UTF-8")) {
+            try (final PrintWriter printWriter = new PrintWriter(streamWriter)) {
+                printWriter.println(getBangLine());
+                printWriter.println(getBashSource());
+                for (final String command : commands) {
+                    printWriter.println(command);
+                }
+            }
         }
-        printWriter.close();
-
         return tmpBashScript;
-    }
-
-    /**
-     * Checks if is verbose.
-     *
-     * @return true, if is verbose
-     */
-    public boolean isVerbose() {
-        return verbose;
-    }
-
-    /**
-     * Sets the verbose.
-     *
-     * @param verbose the new verbose
-     * @return the bash util
-     */
-    public BashUtil setVerbose(final boolean verbose) {
-        this.verbose = verbose;
-        return this;
     }
 
     /**
@@ -209,6 +185,26 @@ public class BashUtil {
      */
     public BashUtil setBashSource(final String bashSource) {
         this.bashSource = bashSource;
+        return this;
+    }
+
+    /**
+     * Checks if is verbose.
+     *
+     * @return true, if is verbose
+     */
+    public boolean isVerbose() {
+        return verbose;
+    }
+
+    /**
+     * Sets the verbose.
+     *
+     * @param verbose the new verbose
+     * @return the bash util
+     */
+    public BashUtil setVerbose(final boolean verbose) {
+        this.verbose = verbose;
         return this;
     }
 

@@ -25,6 +25,52 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
     }
 
     /**
+     * Execute SQL query.
+     *
+     * @param sql the SQL query string
+     * @return the SQL response as a map
+     * @throws SQLException query execution fails
+     */
+    public List<HashMap<String, Object>> executeSelectSol(final String sql) throws SQLException {
+        try (Connection conn = getConnection()) {
+            return executeSelectSol(sql, conn);
+        }
+    }
+
+    /**
+     * Execute SQL query.
+     *
+     * @param sql  the SQL query string
+     * @param conn database connection
+     * @return the SQL response as a map
+     * @throws SQLException query execution fails
+     */
+    public List<HashMap<String, Object>> executeSelectSol(final String sql, final Connection conn)
+        throws SQLException {
+        if (null == sql || !sql.toLowerCase().startsWith("select")) {
+            throw new RuntimeException("executeSelectSol can only use Select sql statement!");
+        }
+
+        final List<HashMap<String, Object>> values = new ArrayList<>();
+
+        try (final PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            try (final ResultSet rs = pstmt.executeQuery()) {
+                final ResultSetMetaData md = rs.getMetaData();
+                final int columns = md.getColumnCount();
+
+                while (rs.next()) {
+                    final HashMap<String, Object> row = new HashMap<>(columns);
+                    for (int icolumn = 1; icolumn <= columns; ++icolumn) {
+                        row.put(md.getColumnName(icolumn), rs.getObject(icolumn));
+                    }
+                    values.add(row);
+                }
+            }
+        }
+        return values;
+    }
+
+    /**
      * Get the database connection.
      *
      * @see org.testah.util.database.AbstractDatabaseUtil#getConnection()
@@ -50,52 +96,6 @@ public class PostgresDatabase extends AbstractDatabaseUtil {
      */
     public String getConnectionString() {
         return "jdbc:postgresql://" + getHost() + ":" + getPort() + "/" + getDatabaseName();
-    }
-
-    /**
-     * Execute SQL query.
-     *
-     * @param sql the SQL query string
-     * @return the SQL response as a map
-     * @throws SQLException query execution fails
-     */
-    public List<HashMap<String, Object>> execuateSelectSql(final String sql) throws SQLException {
-        try (Connection conn = getConnection()) {
-            return execuateSelectSql(sql, conn);
-        }
-    }
-
-    /**
-     * Execute SQL query.
-     *
-     * @param sql  the SQL query string
-     * @param conn database connection
-     * @return the SQL response as a map
-     * @throws SQLException query execution fails
-     */
-    public List<HashMap<String, Object>> execuateSelectSql(final String sql, final Connection conn)
-            throws SQLException {
-        if (null == sql || !sql.toLowerCase().startsWith("select")) {
-            throw new RuntimeException("execuateSelectSql can only use Select sql statement!");
-        }
-
-        final List<HashMap<String, Object>> values = new ArrayList<>();
-
-        try (final PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            try (final ResultSet rs = pstmt.executeQuery()) {
-                final ResultSetMetaData md = rs.getMetaData();
-                final int columns = md.getColumnCount();
-
-                while (rs.next()) {
-                    final HashMap<String, Object> row = new HashMap<>(columns);
-                    for (int icolumn = 1; icolumn <= columns; ++icolumn) {
-                        row.put(md.getColumnName(icolumn), rs.getObject(icolumn));
-                    }
-                    values.add(row);
-                }
-            }
-        }
-        return values;
     }
 
     /**

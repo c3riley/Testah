@@ -13,10 +13,6 @@ import java.util.Arrays;
  */
 public class HttpWrapperV2 extends AbstractHttpWrapper {
 
-    protected AbstractHttpWrapper getSelf() {
-        return this;
-    }
-
     /**
      * The constant DEFAULT_TIMEOUT.
      */
@@ -31,30 +27,29 @@ public class HttpWrapperV2 extends AbstractHttpWrapper {
         initRequestConfig();
     }
 
-    private AbstractHttpWrapper initRequestConfig() {
-        return initRequestConfig(null);
-    }
-
-    private AbstractHttpWrapper initRequestConfig(final Integer timeout) {
-
-        final RequestConfig.Builder rcb = RequestConfig.custom();
-
-        if (null != timeout) {
-            rcb.setSocketTimeout(timeout).setConnectTimeout(timeout)
-                    .setConnectionRequestTimeout(getDefaultConnectionTimeout());
-        }
-
-        rcb.setCookieSpec(CookieSpecs.DEFAULT).setExpectContinueEnabled(false)
-                .setTargetPreferredAuthSchemes(Arrays.asList(AuthSchemes.NTLM, AuthSchemes.DIGEST))
-                .setProxyPreferredAuthSchemes(Arrays.asList(AuthSchemes.BASIC));
-
-        return setRequestConfig(rcb.build());
+    protected AbstractHttpWrapper getSelf() {
+        return this;
     }
 
     @Override
     public AbstractHttpWrapper setDefaultConnectionTimeout(final int defaultConnectionTimeout) {
         super.setDefaultConnectionTimeout(defaultConnectionTimeout);
         return initRequestConfig();
+    }
+
+    private AbstractHttpWrapper initRequestConfig() {
+        return initRequestConfig(null);
+    }
+
+    private AbstractHttpWrapper initRequestConfig(final Integer timeout) {
+
+        final RequestConfig.Builder rcb = getRequestConfigDefaultBuilder();
+
+        if (null != timeout) {
+            rcb.setSocketTimeout(timeout).setConnectTimeout(timeout);
+        }
+
+        return setRequestConfig(rcb.build());
     }
 
 }

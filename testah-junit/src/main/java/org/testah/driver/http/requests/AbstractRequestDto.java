@@ -17,11 +17,12 @@ import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.driver.http.HttpAuthUtil;
 import org.testah.framework.cli.Cli;
-import org.testah.framework.dto.StepAction;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +46,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     /**
      * The headers.
      */
-    protected List<Header> headers = null;
+    protected List<Header> headers = new ArrayList<>();
 
     /**
      * The expected status.
@@ -78,16 +79,29 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     protected boolean autoAssert = false;
 
     /**
-     * Gets the self.
-     *
-     * @return the self
+     * if the Http driver should use the short response in the report and truncate it.
+     * Default is true, and will use truncateResponseBodyInReportBy to tell how much to truncate it by
      */
-    @SuppressWarnings("unchecked")
-    protected T getSelf() {
-        return (T) this;
-    }
+    private boolean truncateResponseBodyInReport = true;
 
-    ;
+    /**
+     * if truncateResponseBodyInReport is true, this number will tell how much to truncate the response by.
+     */
+    private int truncateResponseBodyInReportBy = TS.params().getDefaultResponseTruncate();
+
+    /**
+     * Instantiates a new abstract request dto.
+     *
+     * @param httpRequestBase the http request base
+     * @param httpMethod      the http method
+     */
+    protected AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
+        this.httpRequestBase = httpRequestBase;
+        this.httpMethod = httpMethod;
+        if (httpRequestBase != null && httpRequestBase.getURI() != null) {
+            this.uri = httpRequestBase.getURI().toString();
+        }
+    }
 
     /**
      * Gets the http method.
@@ -110,25 +124,29 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     }
 
     /**
+     * Gets the self.
+     *
+     * @return the self
+     */
+    @SuppressWarnings("unchecked")
+    protected T getSelf() {
+        return (T) this;
+    }
+
+    /**
      * Sets the uri.
      *
      * @param uri the uri
      * @return the abstract request dto
      */
     public T setUri(final String uri) {
+        try {
+            httpRequestBase.setURI(new URI(uri));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
         this.uri = uri;
         return getSelf();
-    }
-
-    /**
-     * Instantiates a new abstract request dto.
-     *
-     * @param httpRequestBase the http request base
-     * @param httpMethod      the http method
-     */
-    protected AbstractRequestDto(final HttpRequestBase httpRequestBase, final String httpMethod) {
-        this.httpRequestBase = httpRequestBase;
-        this.httpMethod = httpMethod;
     }
 
     /**
@@ -138,26 +156,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      */
     public T withJson() {
         addHeader("Content-Type", "application/json");
-        return getSelf();
-    }
-
-    /**
-     * With json UTF 8.
-     *
-     * @return the abstract request dto
-     */
-    public T withJsonUTF8() {
-        addHeader("content-type", "application/json; charset=UTF-8");
-        return getSelf();
-    }
-
-    /**
-     * With form url encoded.
-     *
-     * @return the abstract request dto
-     */
-    public T withFormUrlEncoded() {
-        addHeader("content-type", "application/x-www-form-urlencoded");
         return getSelf();
     }
 
@@ -180,20 +178,29 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T addHeader(final Header header) {
-        if (null == headers) {
-            headers = new ArrayList<>();
-        }
         headers.add(header);
         return getSelf();
     }
 
     /**
-     * Gets the headers.
+     * With json UTF 8.
      *
-     * @return the headers
+     * @return the abstract request dto
      */
-    public List<Header> getHeaders() {
-        return headers;
+    @SuppressWarnings("checkstyle:abbreviationaswordinnamecheck")
+    public T withJsonUTF8() {
+        addHeader("Content-Type", "application/json; charset=UTF-8");
+        return getSelf();
+    }
+
+    /**
+     * With form url encoded.
+     *
+     * @return the abstract request dto
+     */
+    public T withFormUrlEncoded() {
+        addHeader("Content-Type", "application/x-www-form-urlencoded");
+        return getSelf();
     }
 
     /**
@@ -202,9 +209,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the headers array
      */
     public Header[] getHeadersArray() {
-        if (null == headers) {
-            return null;
-        }
         return headers.toArray(new Header[]{});
     }
 
@@ -215,7 +219,12 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T setHeaders(final List<Header> headers) {
-        this.headers = headers;
+        if (headers == null) {
+            TS.log().debug("Clearing headers on request as null was sent in, headers cannot be null");
+            this.headers.clear();
+        } else {
+            this.headers = headers;
+        }
         return getSelf();
     }
 
@@ -310,7 +319,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
 
     public T addBasicAuthHeader(final String userName, final String password, final boolean useMask) {
         return addHeader(new HttpAuthUtil().setUserName(userName).setPassword(password).useEncodingIso()
-                .setUseMask(useMask).createBasicAuthHeader());
+            .setUseMask(useMask).createBasicAuthHeader());
     }
 
     /**
@@ -348,6 +357,15 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     }
 
     /**
+     * Gets the headers.
+     *
+     * @return the headers
+     */
+    public List<Header> getHeaders() {
+        return headers;
+    }
+
+    /**
      * Sets the http request base.
      *
      * @param httpRequestBase the http request base
@@ -379,6 +397,14 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     }
 
     /**
+     * Sets entity.
+     *
+     * @param payload the payload
+     * @return the entity
+     */
+    protected abstract T setEntity(final HttpEntity payload);
+
+    /**
      * Sets payload.
      *
      * @param payload the payload
@@ -390,25 +416,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
                 payload = "";
             }
             return setPayload(new StringEntity(payload));
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Sets payload.
-     *
-     * @param payload the payload
-     * @return the payload
-     */
-    public T setPayload(final Object payload) {
-        try {
-            if (null == payload) {
-                TS.log().warn("payload was null so setting to empty string");
-                return setPayload(new StringEntity(""));
-            } else {
-                return setPayload(new StringEntity(TS.util().toJson(payload)));
-            }
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
@@ -441,18 +448,40 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @param payload the payload
      * @return the payload
      */
+    public T setPayload(final Object payload) {
+        try {
+            if (null == payload) {
+                TS.log().warn("payload was null so setting to empty string");
+                return setPayload(new StringEntity(""));
+            } else {
+                return setPayload(new StringEntity(TS.util().toJson(payload)));
+            }
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Sets payload.
+     *
+     * @param payload the payload
+     * @return the payload
+     */
     public T setPayload(final byte[] payload) {
         setContentType("application/octet-stream");
         return setPayload(new ByteArrayEntity(payload));
     }
 
     /**
-     * Sets entity.
+     * Sets the content type.
      *
-     * @param payload the payload
-     * @return the entity
+     * @param value the value
+     * @return the abstract request dto
      */
-    protected abstract T setEntity(final HttpEntity payload);
+    public T setContentType(final String value) {
+        addHeader("Content-Type", value);
+        return getSelf();
+    }
 
     /**
      * Gets the payload string.
@@ -510,10 +539,10 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      */
     public StepActionDto createRequestInfoStep() {
         StepActionDto stepAction = null;
-        stepAction = StepAction.createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
-                "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
-                        : Arrays.toString(headers.toArray())),
-                getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+        stepAction = TS.step().action().createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
+            "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
+                : Arrays.toString(headers.toArray())),
+            getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         printComplete();
         return stepAction;
     }
@@ -548,17 +577,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     }
 
     /**
-     * Sets the content type.
-     *
-     * @param value the value
-     * @return the abstract request dto
-     */
-    public T setContentType(final String value) {
-        addHeader("content-type", value);
-        return getSelf();
-    }
-
-    /**
      * Sets the upload file.
      *
      * @param payload the payload
@@ -581,19 +599,6 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
     public T setUploadFile(final File payload) throws IOException {
         TS.asserts().assertFileExists(payload);
         return setUpload(FileUtils.readFileToString(payload, Charset.forName("UTF-8")));
-    }
-
-    /**
-     * Sets the upload resource file.
-     *
-     * @param pathToResource the path to resource
-     * @return the abstract request dto
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    public T setUploadResourceFile(final String pathToResource) throws IOException {
-        final String fileContent = TS.util().getResourceAsString(pathToResource);
-        TS.asserts().notNull("setUploadResourceFile makue sure value is not null", fileContent);
-        return setUpload(fileContent.getBytes(Charset.forName("UTF-8")));
     }
 
     /**
@@ -629,4 +634,41 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         return getSelf();
     }
 
+    /**
+     * Sets the upload resource file.
+     *
+     * @param pathToResource the path to resource
+     * @return the abstract request dto
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public T setUploadResourceFile(final String pathToResource) throws IOException {
+        final String fileContent = TS.util().getResourceAsString(pathToResource);
+        TS.asserts().notNull("setUploadResourceFile make sure value is not null", fileContent);
+        return setUpload(fileContent.getBytes(Charset.forName("UTF-8")));
+    }
+
+    /**
+     * Is truncate response body in report boolean.
+     * If the boolean is true, but also the truncateResponseBodyInReportBy needs to be set to 0 or more, else it will
+     * turn off the truncation, and this will return false.
+     *
+     * @return the boolean
+     */
+    public boolean isTruncateResponseBodyInReport() {
+        return truncateResponseBodyInReport && truncateResponseBodyInReportBy > 0;
+    }
+
+    public T setTruncateResponseBodyInReport(boolean truncateResponseBodyInReport) {
+        this.truncateResponseBodyInReport = truncateResponseBodyInReport;
+        return getSelf();
+    }
+
+    public int getTruncateResponseBodyInReportBy() {
+        return truncateResponseBodyInReportBy;
+    }
+
+    public T setTruncateResponseBodyInReportBy(int truncateResponseBodyInReportBy) {
+        this.truncateResponseBodyInReportBy = truncateResponseBodyInReportBy;
+        return getSelf();
+    }
 }

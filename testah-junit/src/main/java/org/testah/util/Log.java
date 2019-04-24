@@ -24,19 +24,6 @@ public class Log {
     private final Logger logger;
 
     /**
-     * Gets the log.
-     *
-     * @return the log
-     */
-    public static Logger getLog() {
-        if (null == LOGGER) {
-            LOGGER = new Log("Testah");
-            MDC.put("threadId", "" + Thread.currentThread().getId());
-        }
-        return LOGGER.getLogger();
-    }
-
-    /**
      * Instantiates a new log.
      *
      * @param logName the log name
@@ -57,22 +44,6 @@ public class Log {
     }
 
     /**
-     * Gets the logger.
-     *
-     * @return the logger
-     */
-    public Logger getLogger() {
-        return logger;
-    }
-
-    /**
-     * Sets the level.
-     */
-    public void setLevel() {
-        setLevel(Level.DEBUG);
-    }
-
-    /**
      * Sets the level.
      *
      * @param level the new level
@@ -83,7 +54,40 @@ public class Log {
         final LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
         loggerConfig.setLevel(level);
         ctx.updateLoggers();
+    }
 
+    /**
+     * Sets the level.
+     */
+    public void setLevel() {
+        setLevel(Level.DEBUG);
+    }
+
+    /**
+     * Gets the log.
+     *
+     * @return the log
+     */
+    public static Logger getLog() {
+        if (null == LOGGER) {
+            LOGGER = new Log("Testah");
+            MDC.put("threadId", "" + Thread.currentThread().getId());
+        }
+        return LOGGER.getLogger();
+    }
+
+    /**
+     * Gets the logger.
+     *
+     * @return the logger
+     */
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public static void resetLogger() {
+        LOGGER = null;
+        LogManager.shutdown();
     }
 
 }

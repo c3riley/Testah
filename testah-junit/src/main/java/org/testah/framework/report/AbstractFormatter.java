@@ -44,11 +44,13 @@ public abstract class AbstractFormatter {
     }
 
     /**
-     * Gets the context base.
+     * Gets the default package.
      *
-     * @return the context base
+     * @return the default package
      */
-    public abstract VelocityContext getContextBase();
+    public static String getDefaultPackage() {
+        return DEFAULT_PACKAGE;
+    }
 
     /**
      * Gets the context.
@@ -57,58 +59,6 @@ public abstract class AbstractFormatter {
      * @return the context
      */
     public abstract VelocityContext getContext(final VelocityContext context);
-
-    public abstract String getBaseReportObject();
-
-    /**
-     * Gets the report.
-     *
-     * @return the report
-     */
-    public String getReport() {
-        return getReport(getContextBase());
-    }
-
-    /**
-     * Gets the report.
-     *
-     * @param context the context
-     * @return the report
-     */
-    public String getReport(final VelocityContext context) {
-        if (null == context || null == pathToTemplate) {
-            TS.log().trace("No report context so returing json for testplan info");
-            return getBaseReportObject();
-        }
-        try {
-
-            final VelocityEngine ve = new VelocityEngine();
-            ve.init();
-
-            final InputStream in = this.getClass().getClassLoader().getResourceAsStream(pathToTemplate);
-
-            final InputStreamReader reader = new InputStreamReader(in, "UTF-8");
-
-            final StringWriter writer = new StringWriter();
-            ve.evaluate(context, writer, pathToTemplate, reader);
-
-            return maskValuesInReport(writer.toString());
-
-        } catch (final Exception e) {
-            TS.log().error(e);
-            throw new RuntimeException("Velocity template", e);
-        }
-
-    }
-
-    private String maskValuesInReport(final String report) {
-        if (TS.getMaskValues().isEmpty()) {
-            return report;
-        }
-        final int size = TS.getMaskValues().keySet().size();
-        return StringUtils.replaceEach(report, TS.getMaskValues().keySet().toArray(new String[size]),
-                TS.getMaskValues().values().toArray(new String[size]));
-    }
 
     /**
      * Creates the report.
@@ -139,12 +89,62 @@ public abstract class AbstractFormatter {
     }
 
     /**
-     * Gets the default package.
+     * Gets the report.
      *
-     * @return the default package
+     * @return the report
      */
-    public static String getDefaultPackage() {
-        return DEFAULT_PACKAGE;
+    public String getReport() {
+        return getReport(getContextBase());
+    }
+
+    /**
+     * Gets the report.
+     *
+     * @param context the context
+     * @return the report
+     */
+    public String getReport(final VelocityContext context) {
+        if (null == context || null == pathToTemplate) {
+            TS.log().trace("No report context so retuning json for testplan info");
+            return getBaseReportObject();
+        }
+        try {
+
+            final VelocityEngine ve = new VelocityEngine();
+            ve.init();
+
+            final InputStream in = this.getClass().getClassLoader().getResourceAsStream(pathToTemplate);
+
+            final InputStreamReader reader = new InputStreamReader(in, "UTF-8");
+
+            final StringWriter writer = new StringWriter();
+            ve.evaluate(context, writer, pathToTemplate, reader);
+
+            return maskValuesInReport(writer.toString());
+
+        } catch (final Exception e) {
+            TS.log().error(e);
+            throw new RuntimeException("Velocity template", e);
+        }
+
+    }
+
+    /**
+     * Gets the context base.
+     *
+     * @return the context base
+     */
+    public abstract VelocityContext getContextBase();
+
+    public abstract String getBaseReportObject();
+
+    private String maskValuesInReport(final String report) {
+        if (TS.getMaskValues().isEmpty()) {
+            return report;
+        }
+        final int size = TS.getMaskValues().keySet().size();
+        return StringUtils.replaceEach(report, TS.getMaskValues().keySet().toArray(new String[size]),
+                TS.getMaskValues().values().toArray(new String[size]));
     }
 
     /**

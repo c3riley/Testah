@@ -17,8 +17,8 @@ import java.util.List;
 
 public class JiraReporter {
 
-    private final String baseUrl;
     private static final String apiUrl = "rest/api/latest";
+    private final String baseUrl;
 
     /**
      * Constructor.
@@ -98,32 +98,6 @@ public class JiraReporter {
         }
     }
 
-    private <T> T addAuthHeader(final AbstractRequestDto<T> request) {
-        return request.addBasicAuth(TS.params().getJiraUserName(), TS.params().getJiraPassword());
-    }
-
-    /**
-     * Get remote links.
-     *
-     * @param issue the issue
-     * @return list of remote issue link
-     */
-    public List<RemoteIssueLinkDto> getRemoteLinks(final String issue) {
-        try {
-            if (!StringUtils.isEmpty(issue)) {
-                GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue
-                        + "/remotelink");
-                return TS.http().doRequest(addAuthHeader(get.withJson())).getResponse(new TypeReference<List<RemoteIssueLinkDto>>()
-
-                {
-                });
-            }
-        } catch (Exception e) {
-            TS.log().error(e);
-        }
-        return new ArrayList<RemoteIssueLinkDto>();
-    }
-
     /**
      * Get remote link for global id.
      *
@@ -183,6 +157,30 @@ public class JiraReporter {
             TS.log().error(e);
         }
         return null;
+    }
+
+    /**
+     * Get remote links.
+     *
+     * @param issue the issue
+     * @return list of remote issue link
+     */
+    public List<RemoteIssueLinkDto> getRemoteLinks(final String issue) {
+        try {
+            if (!StringUtils.isEmpty(issue)) {
+                GetRequestDto get = new GetRequestDto(baseUrl + "/issue/" + issue +
+                        "/remotelink");
+                return TS.http().doRequest(addAuthHeader(get.withJson())).getResponse(new TypeReference<List<RemoteIssueLinkDto>>() {
+                });
+            }
+        } catch (Exception e) {
+            TS.log().error(e);
+        }
+        return new ArrayList<RemoteIssueLinkDto>();
+    }
+
+    private <T> T addAuthHeader(final AbstractRequestDto<T> request) {
+        return request.addBasicAuth(TS.params().getJiraUserName(), TS.params().getJiraPassword());
     }
 
 }

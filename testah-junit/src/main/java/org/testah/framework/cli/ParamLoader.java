@@ -29,21 +29,18 @@ public class ParamLoader {
      * Keeping the property causes java.lang.IllegalArgumentException when executing tests.
      */
     private static final String excludeJacocoInstrumentation = "$jacocoData";
-
-    /**
-     * The params from properties.
-     */
-    private PropertiesConfiguration paramsFromProperties = null;
-
     /**
      * The Constant fieldPrefix.
      */
     private static final String fieldPrefix = "param_";
-
     /**
      * The path to param prop file.
      */
     private final String pathToParamPropFile;
+    /**
+     * The params from properties.
+     */
+    private PropertiesConfiguration paramsFromProperties = null;
 
     /**
      * Instantiates a new param loader.
@@ -53,21 +50,21 @@ public class ParamLoader {
     }
 
     /**
-     * Gets the default prop file path.
-     *
-     * @return the default prop file path
-     */
-    public static String getDefaultPropFilePath() {
-        return System.getProperty("user.dir") + File.separator + "testah.properties";
-    }
-
-    /**
      * Instantiates a new param loader.
      *
      * @param pathToParamPropFile the path to param prop file
      */
     public ParamLoader(final String pathToParamPropFile) {
         this.pathToParamPropFile = pathToParamPropFile;
+    }
+
+    /**
+     * Gets the default prop file path.
+     *
+     * @return the default prop file path
+     */
+    public static String getDefaultPropFilePath() {
+        return System.getProperty("user.dir") + File.separator + "testah.properties";
     }
 
     /**
@@ -170,8 +167,8 @@ public class ParamLoader {
                                 field.setBoolean(params, Boolean.parseBoolean((String) propValue));
                             } else if (field.getType().isAssignableFrom(HashMap.class)) {
                                 field.set(params, mapper.readValue((String) propValue,
-                                        new TypeReference<HashMap<String, String>>() {
-                                        }));
+                                    new TypeReference<HashMap<String, String>>() {
+                                    }));
                             } else if (field.getType().isAssignableFrom(Boolean.class)) {
                                 TS.log().info(field.getName());
                                 if (0 == propValue.toString().trim().length()) {
@@ -199,8 +196,8 @@ public class ParamLoader {
                     }
                 }
             } else {
-                TS.log().warn("Issue loading custom properties[" + f.getAbsolutePath()
-                        + "] - was not found, will create one for the next runs use");
+                TS.log().warn("Issue loading custom properties[" + f.getAbsolutePath() +
+                    "] - was not found, will create one for the next runs use");
                 try {
                     paramsFromProperties.save(f);
                 } catch (final Exception e) {
@@ -238,8 +235,70 @@ public class ParamLoader {
                 }
             }
         } catch (final Throwable e) {
-            TS.log().warn("Problem Occured Loading local properties file", e);
+            TS.log().warn("Problem Occurred Loading local properties file", e);
         }
+    }
+
+    /**
+     * Gets the default param properties.
+     *
+     * @return the default param properties
+     */
+    public PropertiesConfiguration getDefaultParamProperties() {
+        final PropertiesConfiguration defaultConfig = new PropertiesConfiguration();
+        final PropertiesConfigurationLayout layout = defaultConfig.getLayout();
+        layout.setHeaderComment(Cli.BAR_LONG + "\nTestah Properties - version: " + Cli.version + " - File Created: " +
+            TS.util().now() +
+            "\nNo values are required. Leaving a key empty will not use the value, turning the property off." +
+            "\n" + Cli.BAR_LONG);
+        boolean accessible;
+        final Params params = new Params();
+        Comment comment = null;
+        String propName = null;
+        String commentValue = null;
+        for (final Field f : Params.class.getDeclaredFields()) {
+            if (f.getName().equals(excludeJacocoInstrumentation)) {
+                TS.log().info("Skipping field " + f.getName());
+            } else {
+                accessible = f.isAccessible();
+                try {
+                    f.setAccessible(true);
+                    if (f.getName().startsWith("filter")) {
+                        propName = "filter_DEFAULT_" + f.getName();
+                    } else {
+                        propName = fieldPrefix + f.getName();
+                    }
+                    defaultConfig.addProperty(propName, f.get(params));
+                    comment = f.getAnnotation(Comment.class);
+                    if (null != comment) {
+                        commentValue = comment.info().replace("[BAR1]", "\n\n" + Cli.BAR_SHORT + "\n").replace("[BAR2]",
+                            "\n" + Cli.BAR_SHORT + "\n\n");
+                        if (f.getType().isEnum()) {
+                            layout.setComment(propName,
+                                commentValue + "values: " + Arrays.toString(f.getType().getEnumConstants()));
+                        } else {
+                            layout.setComment(propName, commentValue);
+                        }
+                    }
+                } catch (final Exception e) {
+                    TS.log().warn(e);
+                } finally {
+                    f.setAccessible(accessible);
+                }
+            }
+        }
+        return defaultConfig;
+    }
+
+    /**
+     * Gets the custom param properties.
+     *
+     * @param customPropfile the custom propfile
+     * @return the custom param properties
+     * @throws ConfigurationException the configuration exception
+     */
+    public PropertiesConfiguration getCustomParamProperties(final File customPropfile) throws ConfigurationException {
+        return new PropertiesConfiguration(customPropfile);
     }
 
     /**
@@ -263,68 +322,6 @@ public class ParamLoader {
      */
     public PropertiesConfiguration getParams() {
         return paramsFromProperties;
-    }
-
-    /**
-     * Gets the custom param properties.
-     *
-     * @param customPropfile the custom propfile
-     * @return the custom param properties
-     * @throws ConfigurationException the configuration exception
-     */
-    public PropertiesConfiguration getCustomParamProperties(final File customPropfile) throws ConfigurationException {
-        return new PropertiesConfiguration(customPropfile);
-    }
-
-    /**
-     * Gets the default param properties.
-     *
-     * @return the default param properties
-     */
-    public PropertiesConfiguration getDefaultParamProperties() {
-        final PropertiesConfiguration defaultConfig = new PropertiesConfiguration();
-        final PropertiesConfigurationLayout layout = defaultConfig.getLayout();
-        layout.setHeaderComment(Cli.BAR_LONG + "\nTestah Properties - version: " + Cli.version + " - File Created: "
-                + TS.util().now()
-                + "\nNo values are required. Leaving a key empty will not use the value, turning the property off."
-                + "\n" + Cli.BAR_LONG);
-        boolean accessible;
-        final Params params = new Params();
-        Comment comment = null;
-        String propName = null;
-        String commentValue = null;
-        for (final Field f : Params.class.getDeclaredFields()) {
-            if (f.getName().equals(excludeJacocoInstrumentation)) {
-                TS.log().info("Skipping field " + f.getName());
-            } else {
-                accessible = f.isAccessible();
-                try {
-                    f.setAccessible(true);
-                    if (f.getName().startsWith("filter")) {
-                        propName = "filter_DEFAULT_" + f.getName();
-                    } else {
-                        propName = fieldPrefix + f.getName();
-                    }
-                    defaultConfig.addProperty(propName, f.get(params));
-                    comment = f.getAnnotation(Comment.class);
-                    if (null != comment) {
-                        commentValue = comment.info().replace("[BAR1]", "\n\n" + Cli.BAR_SHORT + "\n").replace("[BAR2]",
-                                "\n" + Cli.BAR_SHORT + "\n\n");
-                        if (f.getType().isEnum()) {
-                            layout.setComment(propName,
-                                    commentValue + "values: " + Arrays.toString(f.getType().getEnumConstants()));
-                        } else {
-                            layout.setComment(propName, commentValue);
-                        }
-                    }
-                } catch (final Exception e) {
-                    TS.log().warn(e);
-                } finally {
-                    f.setAccessible(accessible);
-                }
-            }
-        }
-        return defaultConfig;
     }
 
 }

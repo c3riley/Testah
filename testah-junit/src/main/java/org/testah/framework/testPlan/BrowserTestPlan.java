@@ -8,10 +8,26 @@ import org.junit.BeforeClass;
  */
 public class BrowserTestPlan extends AbstractTestPlan {
 
-    /* (non-Javadoc)
-     * @see org.testah.framework.testPlan.AbstractTestPlan#initlizeTest()
+    /**
+     * Setup browser test plan.
      */
-    public void initlizeTest() {
+    @BeforeClass
+    public static void setupBrowserTestPlan() {
+
+    }
+
+    /**
+     * Tear down browser test plan.
+     */
+    @AfterClass
+    public static void tearDownBrowserTestPlan() {
+
+    }
+
+    /* (non-Javadoc)
+     * @see org.testah.framework.testPlan.AbstractTestPlan#initializeTest()
+     */
+    public void initializeTest() {
 
     }
 
@@ -33,22 +49,6 @@ public class BrowserTestPlan extends AbstractTestPlan {
      * @see org.testah.framework.testPlan.AbstractTestPlan#doOnPass()
      */
     public void doOnPass() {
-
-    }
-
-    /**
-     * Setup browser test plan.
-     */
-    @BeforeClass
-    public static void setupBrowserTestPlan() {
-
-    }
-
-    /**
-     * Tear down browser test plan.
-     */
-    @AfterClass
-    public static void tearDownBrowserTestPlan() {
 
     }
 

@@ -6,6 +6,7 @@ import net.sourceforge.argparse4j.inf.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.testah.TS;
+import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
 import org.testah.client.enums.BrowserType;
 import org.testah.framework.annotations.KnownProblem;
@@ -34,45 +35,37 @@ import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
 public class Cli {
 
     /**
-     * The res.
-     */
-    private Namespace res;
-
-    /**
-     * The param loader.
-     */
-    private final ParamLoader paramLoader;
-
-    /**
-     * The opt.
-     */
-    private Params opt;
-
-    /**
      * The Constant version.
      */
-    public static final String version = "1.1.3";
+    public static final String version = "1.1.7";
 
     /**
      * The Constant BAR_LONG.
      */
     public static final String BAR_LONG = "=============================================================================================";
-
     /**
      * The Constant BAR_SHORT.
      */
     public static final String BAR_SHORT = "=========================================";
-
     /**
      * The Constant BAR_WALL.
      */
     public static final String BAR_WALL = "# ";
-
-    private TestFilter testPlanFilter;
-
-    private boolean underTest = false;
-
     private static boolean running = false;
+    /**
+     * The param loader.
+     */
+    private final ParamLoader paramLoader;
+    /**
+     * The res.
+     */
+    private Namespace res;
+    /**
+     * The opt.
+     */
+    private Params opt;
+    private TestFilter testPlanFilter;
+    private boolean underTest = false;
 
     /**
      * Instantiates a new cli.
@@ -87,6 +80,49 @@ public class Cli {
         this.paramLoader = new ParamLoader(propFilePath);
         this.opt = new ParamLoader(propFilePath).loadParamValues();
 
+    }
+
+    /**
+     * Is running boolean indicates if cli is processing a request.
+     *
+     * @return the boolean
+     */
+    public static boolean isRunning() {
+        return running;
+    }
+
+    /**
+     * Sets running.
+     *
+     * @param running the running
+     */
+    private static void setRunning(final boolean running) {
+        Cli.running = running;
+    }
+
+    /**
+     * Write out testah.
+     */
+    public static void writeOutTestah() {
+        System.out.println("\n" + Cli.BAR_LONG);
+        System.out.println(
+                "      _____________                    _                                         ============");
+        System.out.println(
+                "     /_____  _____/      ________     | |                                       =======/\\==||");
+        System.out.println(
+                "          | |           /___ ___/     | |                                      =======/  \\=||");
+        System.out.println(
+                "          | |   ___    __  | |        | |                                     =======/    \\||");
+        System.out.println(
+                "          | |  / __|  (    | |  ___   | |___                                  =======\\    /||");
+        System.out.println(
+                "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
+        System.out.println(
+                "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
+        System.out.println("=======================================================[Version: " + Cli.version +
+                "]======================");
+
+        System.out.println(Cli.BAR_LONG);
     }
 
     /**
@@ -123,17 +159,18 @@ public class Cli {
         run.addArgument("-i", "--lookAtInternalTests").setDefault(opt.getLookAtInternalTests()).type(String.class)
                 .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
         run.addArgument("-e", "--lookAtExternalTests").setDefault(opt.getLookAtExternalTests()).type(String.class).help(
-                "lookAtExternalTests is a path to a test file, java or groovy, or a comma seperated like, regex, for directory path");
+                "lookAtExternalTests is a path to a test file, java or groovy, or a comma separated like, regex, for directory path");
 
         final Subparser query = subparsers.addParser("query").help("query help");
         query.addArgument("--file").required(false).action(Arguments.store()).dest("queryResults")
                 .setDefault(Params.getUserDir());
         query.addArgument("--includeMeta").required(false).action(Arguments.storeTrue()).dest("includeMeta");
+        query.addArgument("--requireRelatedIds").required(false).action(Arguments.storeTrue()).dest("requireRelatedIds");
         query.addArgument("--show").required(false).action(Arguments.storeTrue()).dest("showInConsole");
         query.addArgument("-i", "--lookAtInternalTests").setDefault(opt.getLookAtInternalTests()).type(String.class)
                 .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
         query.addArgument("-e", "--lookAtExternalTests").setDefault(opt.getLookAtExternalTests()).type(String.class)
-                .help("lookAtExternalTests is a path to a test file, java or groovy, or a comma seperated like, regex, for directory path");
+                .help("lookAtExternalTests is a path to a test file, java or groovy, or a comma separated like, regex, for directory path");
 
         final Subparser create = subparsers.addParser("create").help("create help");
         create.addArgument("--prop", "--properties").required(false).action(Arguments.storeTrue()).dest("prop");
@@ -183,8 +220,8 @@ public class Cli {
 
             } else {
                 TS.log().debug(Cli.BAR_LONG);
-                TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ "
-                        + ParamLoader.getDefaultPropFilePath() + " ]");
+                TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ " +
+                        ParamLoader.getDefaultPropFilePath() + " ]");
                 TS.log().debug(Cli.BAR_LONG);
             }
 
@@ -195,15 +232,6 @@ public class Cli {
             setRunning(false);
         }
         return this;
-    }
-
-    /**
-     * Process create.
-     */
-    public void processCreate() {
-        if (res.getBoolean("prop")) {
-            paramLoader.overwriteDefaultConfig();
-        }
     }
 
     /**
@@ -255,8 +283,8 @@ public class Cli {
                         } else {
                             totalTestCases += result.getJunitResult().getRunCount();
                             totalTestCasesFailed += result.getJunitResult().getFailureCount();
-                            totalTestCasesPassed += result.getJunitResult().getRunCount()
-                                    - (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
+                            totalTestCasesPassed += result.getJunitResult().getRunCount() -
+                                    (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
                             totalTestCasesIgnored += result.getJunitResult().getIgnoreCount();
                         }
                     }
@@ -296,8 +324,8 @@ public class Cli {
         }
 
         if (!initializationErrorFailures.isEmpty()) {
-            throw new RuntimeException("There are test failures due to test classes not being able to load: "
-                    + initializationErrorFailures);
+            throw new RuntimeException("There are test failures due to test classes not being able to load: " +
+                    initializationErrorFailures);
         }
     }
 
@@ -338,17 +366,88 @@ public class Cli {
                     }
                 }
             }
+
+            if (res.getBoolean("requireRelatedIds")) {
+                HashMap<TestPlanDto, List<TestCaseDto>> missingRelatedIds = new HashMap<>();
+                testPlans.values().parallelStream().forEach(testPlan -> {
+                    List<TestCaseDto> testCaseDtos = new ArrayList<>();
+                    testPlan.getTestCases().parallelStream().forEach(testCaseDto -> {
+                        if (testCaseDto.getRelatedIds() == null || testCaseDto.getRelatedIds().isEmpty()) {
+                            testCaseDtos.add(testCaseDto);
+                        }
+                    });
+                    if (!testCaseDtos.isEmpty()) {
+                        missingRelatedIds.put(testPlan, testCaseDtos);
+                    }
+                });
+                if (!missingRelatedIds.isEmpty()) {
+                    throw new RuntimeException("Metadata audit failure: At least 1 testcase is missing required " +
+                            "related field value! The value can be applied at the testplan level for all " +
+                            "testcases to get - " + TS.util().toJson(missingRelatedIds));
+                }
+            }
+
+
             resultObject = testPlans;
         }
 
         FileUtils.writeStringToFile(results, TS.util().toJson(resultObject), Charset.forName("UTF-8"));
-        TS.log().info("Query Results: Found[" + getTestPlanFilter().getTestClassesMetFilters().size() + "] "
-                + results.getAbsolutePath());
+        TS.log().info("Query Results: Found[" + getTestPlanFilter().getTestClassesMetFilters().size() + "] " +
+                results.getAbsolutePath());
 
         if (res.getBoolean("showInConsole")) {
             TS.log().info(TS.util().toJson(resultObject));
         }
 
+    }
+
+    /**
+     * Process create.
+     */
+    public void processCreate() {
+        if (res.getBoolean("prop")) {
+            paramLoader.overwriteDefaultConfig();
+        }
+    }
+
+    /**
+     * Gets test plan filter.
+     *
+     * @return the test plan filter
+     */
+    public TestFilter getTestPlanFilter() {
+        return testPlanFilter;
+    }
+
+    /**
+     * Sets test plan filter.
+     *
+     * @param testPlanFilter the test plan filter
+     * @return the test plan filter
+     */
+    public Cli setTestPlanFilter(final TestFilter testPlanFilter) {
+        this.testPlanFilter = testPlanFilter;
+        return this;
+    }
+
+    /**
+     * Is under test boolean for use with unit tests testing cli class.
+     *
+     * @return the boolean
+     */
+    public boolean isUnderTest() {
+        return underTest;
+    }
+
+    /**
+     * Sets under test for use with unit tests testing cli class.
+     *
+     * @param underTest the under test
+     * @return the under test
+     */
+    public Cli setUnderTest(final boolean underTest) {
+        this.underTest = underTest;
+        return this;
     }
 
     /**
@@ -398,88 +497,5 @@ public class Cli {
     public Cli setOpt(final Params opt) {
         this.opt = opt;
         return this;
-    }
-
-    /**
-     * Gets test plan filter.
-     *
-     * @return the test plan filter
-     */
-    public TestFilter getTestPlanFilter() {
-        return testPlanFilter;
-    }
-
-    /**
-     * Sets test plan filter.
-     *
-     * @param testPlanFilter the test plan filter
-     * @return the test plan filter
-     */
-    public Cli setTestPlanFilter(final TestFilter testPlanFilter) {
-        this.testPlanFilter = testPlanFilter;
-        return this;
-    }
-
-    /**
-     * Write out testah.
-     */
-    public static void writeOutTestah() {
-        System.out.println("\n" + Cli.BAR_LONG);
-        System.out.println(
-                "      _____________                    _                                         ============");
-        System.out.println(
-                "     /_____  _____/      ________     | |                                       =======/\\==||");
-        System.out.println(
-                "          | |           /___ ___/     | |                                      =======/  \\=||");
-        System.out.println(
-                "          | |   ___    __  | |        | |                                     =======/    \\||");
-        System.out.println(
-                "          | |  / __|  (    | |  ___   | |___                                  =======\\    /||");
-        System.out.println(
-                "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
-        System.out.println(
-                "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
-        System.out.println("=======================================================[Version: " + Cli.version
-                + "]======================");
-
-        System.out.println(Cli.BAR_LONG);
-    }
-
-    /**
-     * Is under test boolean for use with unit tests testing cli class.
-     *
-     * @return the boolean
-     */
-    public boolean isUnderTest() {
-        return underTest;
-    }
-
-    /**
-     * Sets under test for use with unit tests testing cli class.
-     *
-     * @param underTest the under test
-     * @return the under test
-     */
-    public Cli setUnderTest(final boolean underTest) {
-        this.underTest = underTest;
-        return this;
-    }
-
-    /**
-     * Is running boolean indicates if cli is processing a request.
-     *
-     * @return the boolean
-     */
-    public static boolean isRunning() {
-        return running;
-    }
-
-    /**
-     * Sets running.
-     *
-     * @param running the running
-     */
-    private static void setRunning(final boolean running) {
-        Cli.running = running;
     }
 }

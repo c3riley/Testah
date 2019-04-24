@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     compile localGroovy()
-    compile 'org.testah:testah-junit:1.1.3'
+    compile 'org.testah:testah-junit:2.0.1'
 }
 ```
 
@@ -94,7 +94,7 @@ The TS object (Test State) is designed as a quick and easy way to interact with 
 
 #### TS.web
 
-This object encapsulates webdriver and macrofiys its usage.  It is designed to reduce the amount of code required to create tests, and removes all of the boiler plater setup, and has built in abilities to deal with the fragility of web testing.  It also has step action documentation built in, so will add actions to the running test to make the results more meaningful.  It is lazy loaded, so will not be loaded till called.
+This object encapsulates webdriver and macrofys its usage.  It is designed to reduce the amount of code required to create tests, and removes all of the boiler plate setup, and has built in abilities to deal with the fragility of web testing.  It also has step action documentation built in, so will add actions to the running test to make the results more meaningful.  It is lazy loaded, so will not be loaded till called.
 
 #### TS.http
 

@@ -1,6 +1,7 @@
 package org.testah.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.testah.TS;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestStepActionType;
 import org.testah.framework.dto.base.AbstractDtoBase;
@@ -74,6 +75,8 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      */
     private String htmlSnapShotPath = null;
 
+    private String restResponsePath = null;
+
     /**
      * Instantiates a new step action dto.
      */
@@ -105,85 +108,25 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     }
 
     /**
-     * Gets the status.
+     * Gets the action name.
      *
-     * @return the status
+     * @return the action name
      */
-    public Boolean getStatus() {
-        return status;
-    }
-
-    /**
-     * Gets the assert method.
-     *
-     * @return the assert method
-     */
-    public String getAssertMethod() {
+    public String getActionName() {
+        if (null == actionName) {
+            actionName = getTestStepActionType().name();
+        }
         return actionName;
     }
 
     /**
-     * Gets the actual.
+     * Sets the action name.
      *
-     * @return the actual
-     */
-    public Object getActual() {
-        return message3;
-    }
-
-    /**
-     * Gets the expected.
-     *
-     * @return the expected
-     */
-    public Object getExpected() {
-        return message2;
-    }
-
-    /**
-     * Gets the exception.
-     *
-     * @return the exception
-     */
-    @JsonIgnore
-    public Throwable getException() {
-        return exception;
-    }
-
-    /**
-     * Gets the exception string.
-     *
-     * @param isReturningJsonObject Used when the testplan object will be a json object
-     * @return the exception string
-     */
-    public String getExceptionString(boolean isReturningJsonObject) {
-        if (null == exception) {
-            return null;
-        } else if (isReturningJsonObject && (status == null || status.equals(Boolean.TRUE))) {
-            return null;
-        } else {
-            if (null == exceptionString) {
-                final StringWriter sWriter = new StringWriter();
-                exception.printStackTrace(new PrintWriter(sWriter));
-                exceptionString = sWriter.toString().replace("\t", "");
-            }
-        }
-
-        return exceptionString;
-    }
-
-    public String getExceptionString() {
-        return getExceptionString(true);
-    }
-
-    /**
-     * Sets the exception string.
-     *
-     * @param exceptionString the exception string
+     * @param actionName the action name
      * @return the step action dto
      */
-    public StepActionDto setExceptionString(final String exceptionString) {
-        this.exceptionString = exceptionString;
+    public StepActionDto setActionName(final String actionName) {
+        this.actionName = actionName;
         return this;
     }
 
@@ -208,47 +151,12 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     }
 
     /**
-     * Sets the message.
+     * Gets the assert method.
      *
-     * @param message the message
-     * @return the step action dto
+     * @return the assert method
      */
-    public StepActionDto setMessage(final String message) {
-        this.message1 = message;
-        return this;
-    }
-
-    /**
-     * Sets the actual.
-     *
-     * @param actual the actual
-     * @return the step action dto
-     */
-    public StepActionDto setActual(final Object actual) {
-        this.message3 = String.valueOf(actual);
-        return this;
-    }
-
-    /**
-     * Sets the expected.
-     *
-     * @param expected the expected
-     * @return the step action dto
-     */
-    public StepActionDto setExpected(final Object expected) {
-        this.message2 = String.valueOf(expected);
-        return this;
-    }
-
-    /**
-     * Sets the status.
-     *
-     * @param status the status
-     * @return the step action dto
-     */
-    public StepActionDto setStatus(final Boolean status) {
-        this.status = status;
-        return this;
+    public String getAssertMethod() {
+        return actionName;
     }
 
     /**
@@ -263,54 +171,22 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
     }
 
     /**
-     * Sets the exception.
+     * Gets the actual.
      *
-     * @param exception the exception
+     * @return the actual
+     */
+    public Object getActual() {
+        return getMessage3();
+    }
+
+    /**
+     * Sets the actual.
+     *
+     * @param actual the actual
      * @return the step action dto
      */
-    public StepActionDto setException(final Throwable exception) {
-        this.exception = exception;
-        return this;
-    }
-
-    /**
-     * Gets the message1.
-     *
-     * @return the message1
-     */
-    public String getMessage1() {
-        return message1;
-    }
-
-    /**
-     * Sets the message1.
-     *
-     * @param message1 the message1
-     * @return the step action dto
-     */
-    public StepActionDto setMessage1(final String message1) {
-        this.message1 = message1;
-        return this;
-    }
-
-    /**
-     * Gets the message2.
-     *
-     * @return the message2
-     */
-    public Object getMessage2() {
-        return message2;
-    }
-
-    /**
-     * Sets the message2.
-     *
-     * @param message2 the message2
-     * @return the step action dto
-     */
-    public StepActionDto setMessage2(final Object message2) {
-        this.message2 = String.valueOf(message2);
-        return this;
+    public StepActionDto setActual(final String actual) {
+        return setMessage3(actual);
     }
 
     /**
@@ -328,31 +204,121 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
      * @param message3 the message3
      * @return the step action dto
      */
-    public StepActionDto setMessage3(final Object message3) {
-        this.message3 = String.valueOf(message3);
+    public StepActionDto setMessage3(final String message3) {
+        this.message3 = message3;
         return this;
     }
 
     /**
-     * Gets the action name.
+     * Gets the expected.
      *
-     * @return the action name
+     * @return the expected
      */
-    public String getActionName() {
-        if (null == actionName) {
-            actionName = getTestStepActionType().name();
-        }
-        return actionName;
+    public Object getExpected() {
+        return getMessage2();
     }
 
     /**
-     * Sets the action name.
+     * Sets the expected.
      *
-     * @param actionName the action name
+     * @param expected the expected
      * @return the step action dto
      */
-    public StepActionDto setActionName(final String actionName) {
-        this.actionName = actionName;
+    public StepActionDto setExpected(final String expected) {
+        return setMessage2(expected);
+    }
+
+    /**
+     * Gets the message2.
+     *
+     * @return the message2
+     */
+    public Object getMessage2() {
+        return message2;
+    }
+
+    /**
+     * Sets the message2.
+     *
+     * @param message2 the message2
+     * @return the step action dto
+     */
+    public StepActionDto setMessage2(final String message2) {
+        this.message2 = message2;
+        return this;
+    }
+
+    /**
+     * Gets the exception.
+     *
+     * @return the exception
+     */
+    @JsonIgnore
+    public Throwable getException() {
+        return exception;
+    }
+
+    /**
+     * Sets the exception.
+     *
+     * @param exception the exception
+     * @return the step action dto
+     */
+    public StepActionDto setException(final Throwable exception) {
+        this.exception = exception;
+        return this;
+    }
+
+    /**
+     * Gets exception string.
+     *
+     * @return the exception string
+     */
+    public String getExceptionString() {
+        return getExceptionString(true);
+    }
+
+    /**
+     * Gets the exception string.
+     *
+     * @param isReturningJsonObject Used when the testplan object will be a json object
+     * @return the exception string
+     */
+    public String getExceptionString(boolean isReturningJsonObject) {
+        if (null == exception) {
+            return null;
+        } else if (isReturningJsonObject && (status == null || status.equals(Boolean.TRUE))) {
+            return null;
+        } else {
+            if (null == exceptionString) {
+                final StringWriter sWriter = new StringWriter();
+                exception.printStackTrace(new PrintWriter(sWriter));
+                exceptionString = sWriter.toString().replace("\t", "");
+            }
+        }
+
+        return exceptionString;
+    }
+
+    /**
+     * Sets the exception string.
+     *
+     * @param exceptionString the exception string
+     * @return the step action dto
+     */
+    public StepActionDto setExceptionString(final String exceptionString) {
+        this.exceptionString = exceptionString;
+        return this;
+    }
+
+    /**
+     * Sets the message.
+     *
+     * @param message the message
+     * @return the step action dto
+     */
+    public StepActionDto setMessage(final String message) {
+        this.message1 = message;
         return this;
     }
 
@@ -419,4 +385,87 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
         return this;
     }
 
+    /**
+     * Gets rest response path.
+     *
+     * @return the rest response path
+     */
+    public String getRestResponsePath() {
+        return restResponsePath;
+    }
+
+    /**
+     * Sets rest response path.
+     *
+     * @param restResponsePath the rest response path
+     */
+    public void setRestResponsePath(String restResponsePath) {
+        this.restResponsePath = restResponsePath;
+    }
+
+    /**
+     * Log step action dto.
+     *
+     * @return the step action dto
+     */
+    @JsonIgnore
+    public StepActionDto log() {
+        if (null != this) {
+            final StringBuilder sb = new StringBuilder("StepAction - ");
+            if (null != this.getStatus()) {
+                sb.append("status:").append(this.getStatus()).append(" - ");
+            }
+            if (null != this.getMessage1()) {
+                sb.append(" ").append(this.getMessage1());
+            }
+            if (null != this.getMessage2()) {
+                sb.append(" ").append(this.getMessage2());
+            }
+            if (null != this.getMessage3()) {
+                sb.append(" ").append(this.getMessage3());
+            }
+            TS.log().info(sb.toString());
+        }
+        return this;
+    }
+
+    /**
+     * Gets the status.
+     *
+     * @return the status
+     */
+    public Boolean getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @param status the status
+     * @return the step action dto
+     */
+    public StepActionDto setStatus(final Boolean status) {
+        this.status = status;
+        return this;
+    }
+
+    /**
+     * Gets the message1.
+     *
+     * @return the message1
+     */
+    public String getMessage1() {
+        return message1;
+    }
+
+    /**
+     * Sets the message1.
+     *
+     * @param message1 the message1
+     * @return the step action dto
+     */
+    public StepActionDto setMessage1(final String message1) {
+        this.message1 = message1;
+        return this;
+    }
 }

@@ -8,10 +8,33 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class TestDataGenerator {
     private List<AbstractRequestDto<?>> requestList = new ArrayList<>();
-    private final int totalRequests;
-    private final int chunkSize;
+    // total requests and chunk size typically change during a load test and should not be final
+    private int totalRequests;
+    private int chunkSize;
 
+    /**
+     * No arguments constructor. Properties to be set dynamically.
+     */
+    public TestDataGenerator() {
+    }
+
+    /**
+     * Constructor for long running tests where the parameters are fixed during execution.
+     *
+     * @param chunkSize      size a of chunk of requests
+     * @param numberOfChunks number of chunks
+     */
     public TestDataGenerator(int chunkSize, int numberOfChunks) {
+        init(chunkSize, numberOfChunks);
+    }
+
+    /**
+     * Allow dynamic setting of parameters.
+     *
+     * @param chunkSize      size a of chunk of requests
+     * @param numberOfChunks number of chunks
+     */
+    public void init(int chunkSize, int numberOfChunks) {
         totalRequests = chunkSize * numberOfChunks;
         this.chunkSize = chunkSize;
     }
@@ -55,5 +78,4 @@ public abstract class TestDataGenerator {
     protected void setRequestList(List<AbstractRequestDto<?>> requestList) {
         this.requestList = requestList;
     }
-
 }

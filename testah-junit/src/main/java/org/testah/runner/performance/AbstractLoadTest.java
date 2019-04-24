@@ -48,10 +48,6 @@ public abstract class AbstractLoadTest {
         });
     }
 
-    protected String getRunStepFile(Class<?> testClass) {
-        return testClass.getCanonicalName().replaceAll("\\.", "/") + ".json";
-    }
-
     /**
      * Execute the HTTP requests, gather and publish the statistics. A concrete test may have multiple
      * calls to ramp up, steady level and ramp down.
@@ -65,6 +61,7 @@ public abstract class AbstractLoadTest {
         runProps.setNumberOfAkkaThreads(numThreads);
         runProps.setChunkSize(chunkSize);
         runProps.setStopTime(DateTime.now().plusMinutes(timeIntervalMinutes).getMillis());
+        loadTestDataGenerator.init(chunkSize, runProps.getNumberOfChunks());
         List<ResponseDto> responses;
 
         while (System.currentTimeMillis() < runProps.getStopTime()) {
@@ -92,6 +89,10 @@ public abstract class AbstractLoadTest {
                 }
             }
         }
+    }
+
+    protected String getRunStepFile(Class<?> testClass) {
+        return testClass.getCanonicalName().replaceAll("\\.", "/") + ".json";
     }
 
 }

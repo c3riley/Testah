@@ -4,14 +4,38 @@ import org.testah.TS;
 
 import java.util.Date;
 
+/**
+ * The type Sql execution dto.
+ */
 public class SqlExecutionDto {
 
+    /**
+     * The Sql.
+     */
     final String sql;
-    Date startTime;
-    Date endTime;
+    /**
+     * The Start time.
+     */
+    Long startTime;
+    /**
+     * The End time.
+     */
+    Long endTime;
+    /**
+     * The Duration.
+     */
     Long duration;
+    /**
+     * The Duration pretty.
+     */
     String durationPretty;
+    /**
+     * The Result count.
+     */
     Integer resultCount = null;
+    /**
+     * The Update count.
+     */
     Integer updateCount = null;
 
     /**
@@ -29,8 +53,22 @@ public class SqlExecutionDto {
      * @return this object
      */
     public SqlExecutionDto start() {
-        this.startTime = new Date();
+        return start(new Date());
+    }
+
+    /**
+     * Start sql execution dto.
+     *
+     * @param date the date
+     * @return the sql execution dto
+     */
+    public SqlExecutionDto start(final Date date) {
+        this.startTime = date.getTime();
         return this;
+    }
+
+    public SqlExecutionDto end() {
+        return end(new Date());
     }
 
     /**
@@ -38,9 +76,9 @@ public class SqlExecutionDto {
      *
      * @return this object
      */
-    public SqlExecutionDto end() {
-        this.endTime = new Date();
-        this.duration = (this.endTime.getTime() - this.startTime.getTime());
+    public SqlExecutionDto end(final Date date) {
+        this.endTime = date.getTime();
+        this.duration = (this.endTime - this.startTime);
         this.durationPretty = TS.util().getDurationPretty(this.duration);
         return this;
     }
@@ -51,7 +89,7 @@ public class SqlExecutionDto {
      * @return the start date/time
      */
     public Date getStartTime() {
-        return (Date) startTime.clone();
+        return (Date) new Date(startTime);
     }
 
     /**
@@ -61,7 +99,7 @@ public class SqlExecutionDto {
      * @return this object
      */
     public SqlExecutionDto setStartTime(final Date startTime) {
-        this.startTime = (Date) startTime.clone();
+        this.startTime = startTime.getTime();
         return this;
     }
 
@@ -71,7 +109,7 @@ public class SqlExecutionDto {
      * @return the end date.
      */
     public Date getEndTime() {
-        return (Date) endTime.clone();
+        return new Date(endTime);
     }
 
     /**
@@ -81,7 +119,7 @@ public class SqlExecutionDto {
      * @return this object
      */
     public SqlExecutionDto setEndTime(final Date endTime) {
-        this.endTime = (Date) endTime.clone();
+        this.endTime = endTime.getTime();
         return this;
     }
 

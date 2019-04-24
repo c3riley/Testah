@@ -17,7 +17,6 @@ public class TestRunProperties {
     protected final Long defaultMillisBetweenChunks = 3000L;
     private Integer numberOfChunks;
     private Long runDuration = null;
-    private Duration runDurationAsDuration = null;
     private Long stopTime = null;
     private LocalDateTime stopDateTime = null;
     private Integer chunkSize;
@@ -33,6 +32,7 @@ public class TestRunProperties {
         this.serviceUnderTest = serviceUnderTest;
         this.testClass = testClass;
         this.testMethod = testMethod;
+        this.runDuration = this.defaultRunDuration;
     }
 
     /**
@@ -45,11 +45,11 @@ public class TestRunProperties {
      * @param millisBetweenChunks time to pause between chunks
      */
     public TestRunProperties(
-            String serviceUnderTest,
-            String testClass,
-            String testMethod,
-            int numberOfAkkaThreads,
-            long millisBetweenChunks) {
+        String serviceUnderTest,
+        String testClass,
+        String testMethod,
+        int numberOfAkkaThreads,
+        long millisBetweenChunks) {
         this.serviceUnderTest = serviceUnderTest;
         this.testClass = testClass;
         this.testMethod = testMethod;
@@ -63,7 +63,7 @@ public class TestRunProperties {
      *
      * @return the numberOfChunks
      */
-    public int getNumberOfChunks() {
+    public Integer getNumberOfChunks() {
         return numberOfChunks;
     }
 
@@ -121,47 +121,11 @@ public class TestRunProperties {
     }
 
     /**
-     * Get the time in milliseconds until the test will run.
-     *
-     * @return the stopTime
-     */
-    public long getStopTime() {
-        if (stopTime == null) {
-            stopTime = System.currentTimeMillis() + runDuration;
-        }
-        return stopTime;
-    }
-
-    /**
-     * Get the time as LocalDateTime until the test will run.
-     *
-     * @return the stopDateTime
-     */
-    public LocalDateTime getStopDateTime() {
-        if (stopDateTime == null) {
-            stopDateTime = Instant.ofEpochMilli(getStopTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
-        }
-        return stopDateTime;
-    }
-
-    /**
-     * Set the time in milliseconds until the test will run.
-     *
-     * @param stopTime the stopTime to set
-     * @return this object
-     */
-    public TestRunProperties setStopTime(long stopTime) {
-        TS.log().info("Setting stopTime to " + stopTime);
-        this.stopTime = stopTime;
-        return this;
-    }
-
-    /**
      * Get the number of requests in one chunk of requests.
      *
      * @return the chunkSize
      */
-    public int getChunkSize() {
+    public Integer getChunkSize() {
         return chunkSize;
     }
 
@@ -192,7 +156,7 @@ public class TestRunProperties {
      *
      * @return the numberOfAkkaThreads
      */
-    public int getNumberOfAkkaThreads() {
+    public Integer getNumberOfAkkaThreads() {
         return numberOfAkkaThreads;
     }
 
@@ -223,7 +187,7 @@ public class TestRunProperties {
      *
      * @return the milliseconds between chunks
      */
-    public long getMillisBetweenChunks() {
+    public Long getMillisBetweenChunks() {
         return millisBetweenChunks;
     }
 
@@ -301,10 +265,6 @@ public class TestRunProperties {
         return domain;
     }
 
-    public String getRuntime() {
-        return runDurationAsDuration.toString();
-    }
-
     /**
      * Set the domain for the service under test in the test run properties.
      *
@@ -317,11 +277,58 @@ public class TestRunProperties {
         return this;
     }
 
+    /**
+     * Gets runtime.
+     *
+     * @return the runtime
+     */
+    public String getRuntime() {
+        if (runDuration != null) {
+            return Duration.ofMillis(runDuration).toString();
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
-        runDurationAsDuration = Duration.ofMillis(runDuration);
         getStopDateTime();
         return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
+
+    /**
+     * Get the time as LocalDateTime until the test will run.
+     *
+     * @return the stopDateTime
+     */
+    public LocalDateTime getStopDateTime() {
+        if (stopDateTime == null) {
+            stopDateTime = Instant.ofEpochMilli(getStopTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+        return stopDateTime;
+    }
+
+    /**
+     * Get the time in milliseconds until the test will run.
+     *
+     * @return the stopTime
+     */
+    public long getStopTime() {
+        if (stopTime == null) {
+            stopTime = System.currentTimeMillis() + runDuration;
+        }
+        return stopTime;
+    }
+
+    /**
+     * Set the time in milliseconds until the test will run.
+     *
+     * @param stopTime the stopTime to set
+     * @return this object
+     */
+    public TestRunProperties setStopTime(long stopTime) {
+        TS.log().info("Setting stopTime to " + stopTime);
+        this.stopTime = stopTime;
+        return this;
     }
 }
 
