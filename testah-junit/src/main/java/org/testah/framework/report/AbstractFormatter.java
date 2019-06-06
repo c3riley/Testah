@@ -18,12 +18,12 @@ public abstract class AbstractFormatter {
     /**
      * The Constant DEFAULT_PACKAGE.
      */
-    protected static final String DEFAULT_PACKAGE = "org/testah/templates/";
+    public static final String DEFAULT_PACKAGE = "org/testah/templates/";
 
     /**
      * The path to template.
      */
-    protected final String pathToTemplate;
+    protected String pathToTemplate;
 
     /**
      * The report file.
@@ -174,4 +174,9 @@ public abstract class AbstractFormatter {
         this.reportFile = reportFile;
     }
 
+    public AbstractFormatter setPathToTemplate(final String pathToTemplate)
+    {
+        this.pathToTemplate = pathToTemplate;
+        return this;
+    }
 }
