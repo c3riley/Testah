@@ -412,7 +412,9 @@ public class TestahUtil {
      */
     public String getResourceAsString(final String path) {
         try (InputStream is = getClass().getResourceAsStream(path)) {
-            return IOUtils.toString(is, Charset.forName("UTF-8"));
+            if(is!=null) {
+                return IOUtils.toString(is, Charset.forName("UTF-8"));
+            }
         } catch (IOException e) {
             TS.log().error(e);
         }
