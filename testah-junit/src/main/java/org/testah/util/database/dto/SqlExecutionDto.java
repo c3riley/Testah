@@ -74,6 +74,7 @@ public class SqlExecutionDto {
     /**
      * Mark the end to the SQL execution.
      *
+     * @param date the date
      * @return this object
      */
     public SqlExecutionDto end(final Date date) {
