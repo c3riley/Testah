@@ -37,7 +37,7 @@ public class Cli {
     /**
      * The Constant version.
      */
-    public static final String version = "1.1.7";
+    public static final String version = "2.0.4";
 
     /**
      * The Constant BAR_LONG.
@@ -66,6 +66,8 @@ public class Cli {
     private Params opt;
     private TestFilter testPlanFilter;
     private boolean underTest = false;
+
+    List<ResultDto> results = null;
 
     /**
      * Instantiates a new cli.
@@ -239,15 +241,18 @@ public class Cli {
      */
     public void processRun() {
 
+        //Reset Results List
+        results = null;
         List<String> initializationErrorFailures = new ArrayList<>();
         this.setTestPlanFilter(new TestFilter());
         getTestPlanFilter().filterTestPlansToRun();
 
         final TestahJUnitRunner junitRunner = new TestahJUnitRunner();
         if (isUnderTest()) {
-            return;
+            return ;
         }
-        final List<ResultDto> results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
+
+        results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
                 getTestPlanFilter().getTestClassesMetFilters());
 
         int totalTestCases = 0;
@@ -327,6 +332,7 @@ public class Cli {
             throw new RuntimeException("There are test failures due to test classes not being able to load: " +
                     initializationErrorFailures);
         }
+
     }
 
     /**
@@ -497,5 +503,10 @@ public class Cli {
     public Cli setOpt(final Params opt) {
         this.opt = opt;
         return this;
+    }
+
+    public List<ResultDto> getResults()
+    {
+        return results;
     }
 }

@@ -7,6 +7,7 @@ import org.testah.TS;
 import org.testah.client.enums.BrowserType;
 import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.Comment;
+import org.testah.framework.report.AbstractFormatter;
 
 import java.io.File;
 import java.util.HashMap;
@@ -215,6 +216,11 @@ public class Params {
     @Comment(info = "Should the Runner create a html result file")
     @Arg(dest = "useHtmlFormatter")
     private boolean useHtmlFormatter = true;
+
+    @Comment(info = "Html Template the Runner should use")
+    @Arg(dest = "reportHtmlTemplate")
+    private String reportHtmlTemplate = AbstractFormatter.DEFAULT_PACKAGE + "htmlReportV1.vm";
+
     /**
      * The use meta formatter.
      */
@@ -1660,5 +1666,14 @@ public class Params {
 
     public void setWriteResponseToFile(boolean writeResponseToFile) {
         this.writeResponseToFile = writeResponseToFile;
+    }
+
+    public String getReportHtmlTemplate() {
+        return reportHtmlTemplate;
+    }
+
+    public Params setReportHtmlTemplate(final String reportHtmlTemplate) {
+        this.reportHtmlTemplate = reportHtmlTemplate;
+        return this;
     }
 }
