@@ -228,9 +228,12 @@ public class TestahUtil {
      * @return the string
      */
     public String toDateString(final Long time, final String dateTimeFormat, final String timeZone) {
-        final SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-        sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
-        return sdf.format(new Date(time));
+        if (time != null) {
+            final SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
+            sdf.setTimeZone(TimeZone.getTimeZone(timeZone));
+            return sdf.format(new Date(time));
+        }
+        return "";
     }
 
 
@@ -251,8 +254,11 @@ public class TestahUtil {
      * @return the duration pretty
      */
     public String getDurationPretty(final Long duration) {
-        final Period period = new Duration(duration).toPeriod().normalizedStandard(PeriodType.time());
-        return PeriodFormat.getDefault().print(period);
+        if (duration != null) {
+            final Period period = new Duration(duration).toPeriod().normalizedStandard(PeriodType.time());
+            return PeriodFormat.getDefault().print(period);
+        }
+        return "";
     }
 
     /**

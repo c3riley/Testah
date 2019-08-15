@@ -538,8 +538,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the step action dto
      */
     public StepActionDto createRequestInfoStep() {
-        StepActionDto stepAction = null;
-        stepAction = TS.step().action().createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
+        StepActionDto stepAction = TS.step().action().createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
             "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
                 : Arrays.toString(headers.toArray())),
             getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
