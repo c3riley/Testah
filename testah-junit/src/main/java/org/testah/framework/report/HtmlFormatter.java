@@ -1,6 +1,7 @@
 package org.testah.framework.report;
 
 import org.apache.velocity.VelocityContext;
+import org.testah.TS;
 import org.testah.client.dto.TestPlanDto;
 
 /**
@@ -14,7 +15,7 @@ public class HtmlFormatter extends AbstractTestPlanFormatter {
      * @param testPlan the test plan
      */
     public HtmlFormatter(final TestPlanDto testPlan) {
-        super(testPlan, AbstractFormatter.DEFAULT_PACKAGE + "htmlReportV1.vm");
+        super(testPlan, TS.params().getReportHtmlTemplate());
 
     }
 

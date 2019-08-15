@@ -4,7 +4,6 @@ Automation Testing tool for service and browser testing
 # Using Project
 In build.gradle
 
-
 ```
 repositories {
     jcenter()
