@@ -297,7 +297,7 @@ public class ResponseDtoTest {
             .createResponseInfoStep(true, true, 100);
         assertThat(stepActionDto.toString(),
             startsWith("{\"testStepActionType\":\"HTTP_REQUEST\",\"description\":null," +
-                "\"message1\":\"GET - Uri: https://postman-echo.com/get\",\"message2\":" +
+                "\"message1\":\"GET - Uri: https:\\/\\/postman-echo.com\\/get\",\"message2\":" +
                 "\"Status: 200 [ OK ]\",\"message3\":\"{&quot;args&quot;:{},&quot;headers&quot;:"));
     }
 
@@ -309,7 +309,7 @@ public class ResponseDtoTest {
         assertThat(stepActionDto, is(original));
         assertThat(stepActionDto.toString(),
             startsWith("{\"testStepActionType\":\"HTTP_REQUEST\",\"description\":null," +
-                "\"message1\":\"GET - Uri: https://postman-echo.com/get\",\"message2\":" +
+                "\"message1\":\"GET - Uri: https:\\/\\/postman-echo.com\\/get\",\"message2\":" +
                 "\"Status: 200 [ OK ]\",\"message3\":\"{&quot;args&quot;:{},&quot;headers&quot;:"));
 
     }
@@ -336,7 +336,7 @@ public class ResponseDtoTest {
             "{\"args\":{},\"headers\":{",
             "\"host\":\"postman-echo.com\",",
             "\"accept-encoding\":\"gzip,deflate\",",
-            "\"user-agent\":\"Apache-HttpClient/4.5.5 (Java/",
+            "\"user-agent\":\"Apache-HttpClient/",
             "\"url\":\"https://postman-echo.com/get\"");
 
     }
