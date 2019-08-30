@@ -3,7 +3,7 @@ package org.testah.runner.http.load;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
-import akka.routing.RoundRobinRouter;
+import akka.routing.RoundRobinPool;
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
@@ -34,7 +34,7 @@ public class HttpActor extends UntypedActor {
         this.nrOfWorkers = nrOfWorkers;
         this.numOfAttempts = numOfAttempts;
         workerRouter = this.getContext()
-                .actorOf(new Props(HttpWorker.class).withRouter(new RoundRobinRouter(nrOfWorkers)), "workerRouter");
+                .actorOf(Props.create(HttpWorker.class).withRouter(new RoundRobinPool(nrOfWorkers)), "workerRouter");
     }
 
     /**

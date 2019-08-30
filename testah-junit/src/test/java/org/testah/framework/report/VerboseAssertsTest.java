@@ -272,7 +272,7 @@ public class VerboseAssertsTest
         String obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
         String obj2 = "{\"id\":1, \"friends\":[{\"id\":3}, {\"id\":2}]}";
 
-        Assert.assertThat(va.sameJson("Extra field in the expected Json should not match", obj1, obj2, true), is(true));
+        Assert.assertThat(va.sameJson("Extra field in the expected Json should not match", obj1, obj2, true), is(false));
     }
 
     @Test
@@ -291,7 +291,7 @@ public class VerboseAssertsTest
         obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";
         obj2 = "{\"id\":1, \"friends\":[{\"id\":3}, {\"id\":2}]}";
 
-        Assert.assertThat(va.sameJson("Extra field in the expected Json should not match", obj1, obj2, true), is(true));
+        Assert.assertThat(va.sameJson("Extra field in the expected Json should not match", obj1, obj2, true), is(false));
 
 
         obj1 = "{\"id\":1, \"friends\":[{\"id\":2}, {\"id\":3}]}";

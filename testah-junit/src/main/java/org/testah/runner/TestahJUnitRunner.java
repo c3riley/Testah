@@ -1,6 +1,8 @@
 package org.testah.runner;
 
-import akka.actor.*;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.testah.TS;
@@ -84,13 +86,7 @@ public class TestahJUnitRunner {
             }
             final int numOfTests = junitTestPlanClasses.size();
             final ActorSystem system = ActorSystem.create("TestahJunitRunner");
-            final ActorRef master = system.actorOf(new Props(new UntypedActorFactory() {
-                private static final long serialVersionUID = 1L;
-
-                public UntypedActor create() {
-                    return new TestPlanActor(numConcurrent);
-                }
-            }), "master");
+            final ActorRef master = system.actorOf(Props.create(TestPlanActor.class, numConcurrent), "master");
 
             TestPlanActor.resetResults();
             //Setup thread locals to be used
@@ -103,7 +99,7 @@ public class TestahJUnitRunner {
                 Thread.sleep(1000);
             }
 
-            system.shutdown();
+            system.terminate();
 
             AbstractTestPlan.cleanUpTestplanThreadLocal();
             return TestPlanActor.getResults();

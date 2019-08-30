@@ -1,5 +1,7 @@
 package org.testah.framework.report;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
@@ -8,23 +10,14 @@ import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 import org.testah.framework.cli.Cli;
-import org.testah.framework.report.asserts.AssertCollections;
-import org.testah.framework.report.asserts.AssertFile;
-import org.testah.framework.report.asserts.AssertMaps;
-import org.testah.framework.report.asserts.AssertNumber;
-import org.testah.framework.report.asserts.AssertStrings;
+import org.testah.framework.report.asserts.*;
 import org.testah.util.unittest.dtotest.SystemOutCapture;
 import org.unitils.reflectionassert.ReflectionAssert;
 import org.unitils.reflectionassert.ReflectionComparatorMode;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The Class VerboseAsserts.
@@ -216,8 +209,12 @@ public class VerboseAsserts
      */
     public boolean sameJson(final String message, final Object expected, final Object actual, final boolean strict)
     {
-        final JSONObject expectedJsonNode = new JSONObject(expected);
-        final JSONObject actualJsonNode = new JSONObject(actual);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        JSONObject expectedJsonNode = mapper.convertValue(expected, JSONObject.class);
+        JSONObject actualJsonNode = mapper.convertValue(actual, JSONObject.class);
+        //final JSONObject expectedJsonNode = new JSONObject(expected);
+        //final JSONObject actualJsonNode = new JSONObject(actual);
         return sameJson(message, expectedJsonNode, actualJsonNode, strict);
     }
 
