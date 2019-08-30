@@ -2,7 +2,7 @@ package org.testah.runner.testPlan;
 
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import akka.actor.UntypedActor;
+import akka.actor.UntypedAbstractActor;
 import akka.routing.RoundRobinPool;
 import org.testah.TS;
 import org.testah.framework.dto.ResultDto;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class TestPlanActor extends UntypedActor {
+public class TestPlanActor extends UntypedAbstractActor {
     private static List<ResultDto> results = null;
     private final ActorRef workerRouter;
     private final int nrOfWorkers;
@@ -22,7 +22,7 @@ public class TestPlanActor extends UntypedActor {
      * @param nrOfWorkers number of workers
      */
     public TestPlanActor(final int nrOfWorkers) {
-        
+
 
         this.nrOfWorkers = nrOfWorkers;
         workerRouter = this.getContext()
@@ -59,9 +59,9 @@ public class TestPlanActor extends UntypedActor {
     }
 
     /**
-     * Override onReceive in UntypedActor.
+     * Override onReceive in UntypedAbstractActor.
      *
-     * @see akka.actor.UntypedActor#onReceive(java.lang.Object)
+     * @see akka.actor.UntypedAbstractActor#onReceive(java.lang.Object)
      */
     @SuppressWarnings("unchecked")
     public void onReceive(final Object message) throws Exception {
