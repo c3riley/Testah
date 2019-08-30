@@ -2,8 +2,8 @@ package org.testah.runner.http.load;
 
 import akka.actor.ActorRef;
 import akka.actor.Props;
-import akka.actor.UntypedActor;
-import akka.routing.RoundRobinRouter;
+import akka.actor.UntypedAbstractActor;
+import akka.routing.RoundRobinPool;
 import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class HttpActor extends UntypedActor {
+public class HttpActor extends UntypedAbstractActor {
     public static final int UNKNOWN_ERROR_STATUS = 700;
     private static HashMap<Long, List<ResponseDto>> results = new HashMap<Long, List<ResponseDto>>();
     private final ActorRef workerRouter;
@@ -34,7 +34,7 @@ public class HttpActor extends UntypedActor {
         this.nrOfWorkers = nrOfWorkers;
         this.numOfAttempts = numOfAttempts;
         workerRouter = this.getContext()
-                .actorOf(new Props(HttpWorker.class).withRouter(new RoundRobinRouter(nrOfWorkers)), "workerRouter");
+                .actorOf(Props.create(HttpWorker.class).withRouter(new RoundRobinPool(nrOfWorkers)), "workerRouter");
     }
 
     /**
@@ -68,9 +68,9 @@ public class HttpActor extends UntypedActor {
     }
 
     /**
-     * Implementation of UntypedActor.onReceiver(...).
+     * Implementation of UntypedAbstractActor.onReceiver(...).
      *
-     * @see akka.actor.UntypedActor#onReceive(java.lang.Object)
+     * @see akka.actor.UntypedAbstractActor#onReceive(java.lang.Object)
      */
     @SuppressWarnings("unchecked")
     public void onReceive(final Object message) throws Exception {

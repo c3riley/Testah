@@ -1,18 +1,18 @@
 package org.testah.runner.http.load;
 
-import akka.actor.UntypedActor;
+import akka.actor.UntypedAbstractActor;
 import org.testah.driver.http.AbstractHttpWrapper;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.runner.HttpAkkaRunner;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class HttpWorker extends UntypedActor {
+public class HttpWorker extends UntypedAbstractActor {
 
     /**
-     * Wrapper of UntypedActor.onReceive(...).
+     * Wrapper of UntypedAbstractActor.onReceive(...).
      *
-     * @see akka.actor.UntypedActor#onReceive(java.lang.Object)
+     * @see akka.actor.UntypedAbstractActor#onReceive(java.lang.Object)
      */
     public void onReceive(final Object arg0) throws Exception {
         AbstractHttpWrapper httpWrapper = HttpAkkaRunner.getInstance().getHttpWrapper();

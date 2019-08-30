@@ -2,20 +2,20 @@ package org.testah.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Assert;
+import org.junit.Assume;
+import org.junit.Test;
 import org.testah.TS;
+import org.testah.framework.cli.Params;
 import org.testah.framework.report.asserts.AssertBigDecimal;
 import org.testah.framework.report.asserts.AssertFile;
-import org.testah.framework.report.asserts.AssertNumber;
 import org.testah.framework.report.asserts.AssertStrings;
 import org.testah.util.unittest.dtotest.SystemOutCapture;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -141,6 +141,7 @@ public class TestahUtilTest {
 
     @Test
     public void testDownload() throws IOException {
+        Assume.assumeTrue("Only run on windows", Params.isMac() || Params.isWindows());
         final String uri = "https://github.com/c3riley/maven-repository/raw/master/org/testah/testah-client/0.0.1/testah-client-0.0.1.jar";
         AssertFile file = new AssertFile(testahUtil.downloadFile(uri)).exists();
         file.size().assertThat(greaterThan(0L));
