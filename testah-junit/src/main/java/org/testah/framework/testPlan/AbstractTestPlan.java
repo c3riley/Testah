@@ -290,9 +290,8 @@ public abstract class AbstractTestPlan {
      * Stop test case.
      *
      * @param status the status
-     * @return the boolean
      */
-    private static void stopTestCase(final Boolean status) {
+    protected static void stopTestCase(final Boolean status) {
         if (null != getTestCase()) {
             stopTestStep();
             getTestPlan().addTestCase(getTestCase().stop(status));
@@ -302,7 +301,7 @@ public abstract class AbstractTestPlan {
     /**
      * Stop test step.
      */
-    private static void stopTestStep() {
+    protected static void stopTestStep() {
         if (null != getTestStep()) {
             getTestCase().addTestStep(getTestStep().stop());
             testStep.set(null);
@@ -413,7 +412,7 @@ public abstract class AbstractTestPlan {
      *
      * @return true, if successful
      */
-    private static boolean didTestPlanStart() {
+    protected static boolean didTestPlanStart() {
         if (null == testPlanStart.get()) {
             testPlanStart.set(false);
         }
@@ -527,7 +526,7 @@ public abstract class AbstractTestPlan {
      * @param knowProblem the know problem
      * @return the test plan dto
      */
-    private TestPlanDto startTestPlan(final Description desc, final TestPlan testPlan, final KnownProblem knowProblem) {
+    protected TestPlanDto startTestPlan(final Description desc, final TestPlan testPlan, final KnownProblem knowProblem) {
         getTestPlanThreadLocal().set(TestDtoHelper.createTestPlanDto(desc, testPlan, knowProblem).start());
         setTestPlanStart(true);
         return AbstractTestPlan.testPlan.get();
@@ -542,7 +541,7 @@ public abstract class AbstractTestPlan {
      * @param knowProblem the know problem
      * @return the test case dto
      */
-    private TestCaseDto startTestCase(final Description desc, final TestCase testCase, final TestPlan testPlan,
+    protected TestCaseDto startTestCase(final Description desc, final TestCase testCase, final TestPlan testPlan,
                                       final KnownProblem knowProblem) {
         if (didTestPlanStart()) {
             getTestCaseThreadLocal()

@@ -39,7 +39,7 @@ public class FirefoxGeckoBrowser extends AbstractBrowser<FirefoxGeckoBrowser> {
     /**
      * getWebDriver will return a webdriver object for firefox.
      * @param capabilities the capabilities
-     * @return
+     * @return WebDriver
      */
     public WebDriver getWebDriver(final MutableCapabilities capabilities) {
         if (capabilities instanceof FirefoxOptions) {

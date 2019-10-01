@@ -19,7 +19,10 @@ public enum TestType {
     AUTOMATED(0, "Test is ready to be Automatically Run"),
 
     /** The default. */
-    DEFAULT(-1, "Used For test cases to take test plans test type");
+    DEFAULT(-1, "Used For test cases to take test plans test type"),
+
+    /** The perf test. */
+    PERF_PIPE(0, "Performance Test to be used in the pipeline");
 
     /** The priority. */
     final int    priority;

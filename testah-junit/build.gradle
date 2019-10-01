@@ -89,8 +89,7 @@ dependencies {
     compile 'net.sourceforge.argparse4j:argparse4j:0.7.0'
     // https://mvnrepository.com/artifact/org.unitils/unitils-core
     compile group: 'org.unitils', name: 'unitils-core', version: '3.4.6'
-    compile 'io.github.bonigarcia:webdrivermanager:3.0.0'
-
+    compile 'io.github.bonigarcia:webdrivermanager:3.6.2'
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.14.0'
 
     compile 'commons-cli:commons-cli:1.3.1'
@@ -99,7 +98,7 @@ dependencies {
     compile "org.junit.jupiter:junit-jupiter-engine:${junitPlatformVersion}"
     //testCompile group: 'org.junit.vintage', name: 'junit-vintage-engine', version: "${junitPlatformVersion}"
 
-    compile 'com.typesafe.akka:akka-actor_2.10:2.1.0'
+    compile 'com.typesafe.akka:akka-actor_2.11:2.5.25'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.2'
     compile 'org.apache.httpcomponents:httpclient:4.5'
@@ -149,7 +148,19 @@ dependencies {
     }
 }
 
+task testJUnitJupiter(type: Test) {
+    description = 'Runs JUnit Jupiter tests'
+    useJUnitPlatform()
+}
+
+task testJUnit4(type: Test) {
+    description = 'Runs JUnit 4 tests'
+    useJUnit()
+}
+
 test {
+    dependsOn testJUnitJupiter
+    dependsOn testJUnit4
     testLogging.showStandardStreams = true
 }
 
@@ -183,6 +194,28 @@ task fatJar(type: Jar) {
         attributes("Main-Class": "org.testah.Testah")
     }
     with jar
+}
+
+
+task runTests(type: JavaExec) {
+    dependsOn 'classes', compileTestJava
+    description = 'Run Testah Tests, use testah.properties to filter what to run'
+    group = 'Verification'
+    main = 'org.testah.Testah'
+    classpath = sourceSets.main.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+    args 'run'
+    systemProperties System.properties
+}
+
+task runTestsFast(type: JavaExec) {
+    dependsOn 'classes', compileTestJava
+    description = 'Run Testah Tests concurrently, use testah.properties to filter what to run'
+    group = 'Verification'
+    main = 'org.testah.Testah'
+    classpath = sourceSets.main.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+    args 'run'
+    systemProperties System.properties
+    systemProperty 'param_numConcurrentThreads', System.getProperty('param_numConcurrentThreads', '10')
 }
 
 task local(type: LocalizerTask)

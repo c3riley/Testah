@@ -114,13 +114,8 @@ public class HttpAkkaRunner {
             httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
 
             final ActorSystem system = ActorSystem.create("HttpAkkaRunner");
-            final ActorRef master = system.actorOf(new Props(new UntypedActorFactory() {
-                private static final long serialVersionUID = 1L;
-
-                public UntypedActor create() {
-                    return new HttpActor(numConcurrent, concurrentLinkedQueue.size(), hashId);
-                }
-            }), "master");
+            final ActorRef master = system.actorOf(Props.create(HttpActor.class, numConcurrent,
+                    concurrentLinkedQueue.size(), hashId),"master");
 
             HttpActor.resetResults();
 
@@ -129,7 +124,7 @@ public class HttpAkkaRunner {
             while (HttpActor.getResults(hashId) == null || HttpActor.getResults(hashId).size() < numOfRequestsToMake) {
                 Thread.sleep(500);
             }
-            system.shutdown();
+            system.terminate();
 
             return HttpActor.getResults(hashId);
         } catch (final Exception e) {
@@ -158,13 +153,8 @@ public class HttpAkkaRunner {
             httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
 
             final ActorSystem system = getActorSystem();
-            final ActorRef master = system.actorOf(new Props(new UntypedActorFactory() {
-                private static final long serialVersionUID = 1L;
-
-                public UntypedActor create() {
-                    return new HttpActor(numConcurrent, numOfRequestsToMake, hashId);
-                }
-            }), "master");
+            final ActorRef master = system.actorOf(Props.create(HttpActor.class,numConcurrent, numOfRequestsToMake,
+                    hashId), "master");
 
             HttpActor.resetResults();
 
@@ -174,7 +164,7 @@ public class HttpAkkaRunner {
                 TS.log().info(HttpActor.getResults().size());
                 Thread.sleep(500);
             }
-            system.shutdown();
+            system.terminate();
 
             return HttpActor.getResults(hashId);
         } catch (final Exception e) {
