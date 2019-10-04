@@ -289,6 +289,13 @@ public class TS {
     }
 
     /**
+     * Empty out the masking map.
+     */
+    public static void resetMaskValueMap() {
+        StringMasking.getInstance().resetMap();
+    }
+
+    /**
      * Gets masked string.
      * Used to help mask password and other sensitive strings from the logs/reports.
      *
@@ -297,6 +304,17 @@ public class TS {
      */
     public static String getMaskedValue(String plainString) {
         return StringMasking.getInstance().getValue(plainString);
+    }
+
+    /**
+     * Add mask irrespective of exceptions.
+     * Used to help mask password and other sensitive strings from the logs/reports.
+     *
+     * @param valueToMask the value to mask
+     */
+    public static void addMaskForce(final String valueToMask)
+    {
+        StringMasking.getInstance().forceAdd(valueToMask);
     }
 
     /**
@@ -331,7 +349,6 @@ public class TS {
     public static void setTestPlanReporter(final TestPlanReporter testPlanReporter) {
         _testPlanReporter = testPlanReporter;
     }
-
 
     /**
      * Tear down.

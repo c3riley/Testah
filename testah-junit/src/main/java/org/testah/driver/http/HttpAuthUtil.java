@@ -58,9 +58,9 @@ public class HttpAuthUtil {
             getPassword()).getBytes(Charset.forName(getEncoding())));
         try {
             if (useMask) {
-                TS.addMask(getUserName());
-                TS.addMask(getPassword());
-                TS.addMask(basicAuthValue);
+                TS.addMaskForce(getUserName());
+                TS.addMaskForce(getPassword());
+                TS.addMaskForce(basicAuthValue);
             }
         } catch (Throwable issueAddingMatch) {
             TS.log().trace("Adding match", issueAddingMatch);

@@ -208,6 +208,12 @@ public class StringMasking
         return instance;
     }
 
+    public StringMasking resetMap()
+    {
+        maskedValuesMap.clear();
+        return instance;
+    }
+
     protected void destroy()
     {
         if (null != instance)
