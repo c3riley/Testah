@@ -13,8 +13,10 @@ import org.testah.framework.report.TestPlanReporter;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.util.Log;
 import org.testah.util.TestahUtil;
+import org.testah.util.StringMasking;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class TS - Test State Class.
@@ -32,7 +34,7 @@ public class TS {
 
     private static final StepHelper stepHelper = new StepHelper();
     private static final StepActionHelper stepActionHelper = new StepActionHelper();
-    private static final HashMap<String, String> maskValues = new HashMap<>();
+
     /**
      * The _stateful data.
      * Allows a test to store data that helpers and other classes can use instead of always having to pass it.
@@ -282,8 +284,19 @@ public class TS {
      *
      * @return the mask values
      */
-    public static HashMap<String, String> getMaskValues() {
-        return maskValues;
+    public static Map<String, String> getMaskValues() {
+        return StringMasking.getInstance().getMap();
+    }
+
+
+    /**
+     * Gets masked string.
+     * Used to help mask password and other sensitive strings from the logs/reports.
+     *
+     * @return the masked string
+     */
+    public static String getMaskedValue(String plainString) {
+        return StringMasking.getInstance().getValue(plainString);
     }
 
     /**
@@ -292,8 +305,9 @@ public class TS {
      *
      * @param valueToMask the value to mask
      */
-    public static void addMask(final String valueToMask) {
-        maskValues.put(valueToMask, "*masked*");
+    public static void addMask(final String valueToMask)
+    {
+        StringMasking.getInstance().add(valueToMask);
     }
 
     /**
