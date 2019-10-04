@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.testah.util.StringMaskingConfig.INFO_USE_DEFAULT_CONFIG;
 
 class StringMaskingTest
@@ -121,7 +121,7 @@ class StringMaskingTest
                 .forceAdd(valForceShort)
                 .forceAdd(valForceLong);
         assertEquals("ab####yz", StringMasking.getInstance().getValue(valForceLong));
-        assertThat(StringMasking.getInstance().getValue(valForceShort), matchesPattern("..####.."));
+        assertTrue(StringMasking.getInstance().getValue(valForceShort).matches("..####.."));
     }
 
     @Test
