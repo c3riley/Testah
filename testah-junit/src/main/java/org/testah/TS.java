@@ -288,11 +288,11 @@ public class TS {
         return StringMasking.getInstance().getMap();
     }
 
-
     /**
      * Gets masked string.
      * Used to help mask password and other sensitive strings from the logs/reports.
      *
+     * @param plainString the string to mask
      * @return the masked string
      */
     public static String getMaskedValue(String plainString) {
