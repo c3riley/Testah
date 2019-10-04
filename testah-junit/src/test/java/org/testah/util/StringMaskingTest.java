@@ -21,17 +21,17 @@ import static org.testah.util.StringMaskingConfig.INFO_USE_DEFAULT_CONFIG;
 
 class StringMaskingTest
 {
-    private final String valShort = "abc";
-    private final String valTrue = "TRUE";
-    private final String valtrue = "true";
-    private final String valFalse = "FALSE";
-    private final String valfalse = "false";
+    private static final String valShort = "abc";
+    private static final String valTrue = "TRUE";
+    private static final String valtrue = "true";
+    private static final String valFalse = "FALSE";
+    private static final String valfalse = "false";
     //utfVal = "\u03B1\u03B2\u03B3\u03B4\u03B5\u03B6\u03B7\u03B8\u03B9\u03BA\u03BB";
-    private final String utfVal = "αβγδεζηθικλ";
+    private static final String utfVal = "αβγδεζηθικλ";
     //utfValMasked = "\u03B1\u03B2***\u03BA\u03BB";
-    private final String utfValMasked = "αβ***κλ";
-    private final String val = "this is a regular secret";
-    private final String valMasked = "th***et";
+    private static final String utfValMasked = "αβ***κλ";
+    private static final String val = "this is a regular secret";
+    private static final String valMasked = "th***et";
 
     @Test
     void testMasking()
