@@ -26,6 +26,7 @@ public enum StringMaskingEnum
     INSTANCE;
 
     private StringMaskingHelper stringMaskingHelper;
+    private volatile Map<String, String> maskedValuesMap;
 
     StringMaskingEnum()
     {
@@ -45,8 +46,8 @@ public enum StringMaskingEnum
                 stringMaskingHelper.stringMaskingConfig = StringMaskingConfigEnum.INSTANCE.getInstance();
                 stringMaskingHelper.literalMaskingExemptions = Stream.of("true", "TRUE", "false", "FALSE").collect(Collectors.toSet());
                 stringMaskingHelper.regexMaskingExemptions = new HashSet<>();
-                stringMaskingHelper.maskedValuesMap = new HashMap<>();
                 stringMaskingHelper.isInitialized = true;
+                maskedValuesMap = new HashMap<>();
             }
         }
         return INSTANCE;
@@ -74,7 +75,7 @@ public enum StringMaskingEnum
      */
     public Map<String, String> getMap()
     {
-        return ImmutableMap.copyOf(stringMaskingHelper.maskedValuesMap);
+        return ImmutableMap.copyOf(maskedValuesMap);
     }
 
     /**
@@ -85,7 +86,7 @@ public enum StringMaskingEnum
      */
     public String getValue(String plainValue)
     {
-        return stringMaskingHelper.maskedValuesMap.getOrDefault(plainValue, plainValue);
+        return maskedValuesMap.getOrDefault(plainValue, plainValue);
     }
 
     /**
@@ -166,10 +167,7 @@ public enum StringMaskingEnum
             start = plainValue.substring(0, stringMaskingHelper.stringMaskingConfig.getFirstN());
             end = plainValue.substring(plainValue.length() - stringMaskingHelper.stringMaskingConfig.getLastN());
         }
-        synchronized (stringMaskingHelper)
-        {
-            stringMaskingHelper.maskedValuesMap.put(plainValue, String.format(StringMaskingConfigEnum.MASKING_PATTERN, start, end));
-        }
+        maskedValuesMap.put(plainValue, String.format(StringMaskingConfigEnum.MASKING_PATTERN, start, end));
         return INSTANCE;
     }
 
@@ -224,7 +222,6 @@ public enum StringMaskingEnum
     private static class StringMaskingHelper {
         private volatile Set<String> literalMaskingExemptions;
         private volatile Set<String> regexMaskingExemptions;
-        private volatile Map<String, String> maskedValuesMap;
         private volatile StringMaskingConfigEnum stringMaskingConfig;
         private volatile boolean isInitialized = false;
     }
