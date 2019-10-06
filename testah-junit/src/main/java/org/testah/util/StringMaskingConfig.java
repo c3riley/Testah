@@ -18,11 +18,10 @@ public class StringMaskingConfig
     private static final int defaultMinStringLength = 7;
     private static final int defaultFirstN = 2;
     private static final int defaultLastN = 2;
-    private static final String defaultMaskingFiller = "***";
     public final int minStringLength;
     public final int firstN;
     public final int lastN;
-    public final String maskingPattern;
+    public static final String maskingPattern = "%s***%s";
 
     // use volatile to fix double-checked locking:
     // https://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html
@@ -30,16 +29,15 @@ public class StringMaskingConfig
 
     /**
      * Create configuration for masking strings.
-     * Strings shorter than {@code minStringLength} is not masked unless {@code StringMasking.forceAdd(...)} is used.
+     * Strings shorter than {@code minStringLength} is not masked unless {@code StringMasking.add(...)} is used.
      * The first {@code firstN} characters and {@code lastN} characters are not masked.
      * Using the default configuration, string {@code mySecretString} is masked as {@code my***ng}.
-     * @param minStringLength minial length of a String for being masked (unless using {@code StringMasking.forceAdd(...)})
+     * @param minStringLength minimal length of a String for being masked (unless using {@code StringMasking.add(...)})
      * @param firstN number of characters at the beginning of String that are shown in plain text
      * @param lastN number of characters at the end of String that are shown in plain text
-     * @param maskingFiller replacement string.
      * @return (singleton) instance of masking configuration
      */
-    public static StringMaskingConfig createInstance(int minStringLength, int firstN, int lastN, String maskingFiller)
+    public static StringMaskingConfig createInstance(int minStringLength, int firstN, int lastN)
     {
         if (null == instance)
         {
@@ -47,7 +45,7 @@ public class StringMaskingConfig
             {
                 if (null == instance)
                 {
-                    instance = new StringMaskingConfig(minStringLength, firstN, lastN, maskingFiller);
+                    instance = new StringMaskingConfig(minStringLength, firstN, lastN);
                 }
             }
         }
@@ -60,7 +58,7 @@ public class StringMaskingConfig
      */
     public static StringMaskingConfig createInstance()
     {
-        return createInstance(defaultMinStringLength, defaultFirstN, defaultLastN, defaultMaskingFiller);
+        return createInstance(defaultMinStringLength, defaultFirstN, defaultLastN);
     }
 
     /**
@@ -76,24 +74,28 @@ public class StringMaskingConfig
             TS.log().warn(INFO_USE_DEFAULT_CONFIG);
             if (TS.log().getLevel().equals(Level.DEBUG))
             {
-                try
-                {
-                    throw new ConfigurationException(INFO_USE_DEFAULT_CONFIG);
-                } catch (ConfigurationException x)
-                {
-                    TS.log().debug(x);
-                }
+                printStackTrace(INFO_USE_DEFAULT_CONFIG);
             }
             createInstance();
         }
         return instance;
     }
 
-    private StringMaskingConfig(int minStringLength, int firstN, int lastN, String maskingFiller)
+    private static void printStackTrace(String message)
+    {
+        try
+        {
+            throw new ConfigurationException(message);
+        } catch (ConfigurationException x)
+        {
+            TS.log().debug(x);
+        }
+    }
+
+    private StringMaskingConfig(int minStringLength, int firstN, int lastN)
     {
         this.firstN = firstN;
         this.lastN = lastN;
-        this.maskingPattern = "%s" + maskingFiller + "%s";
         this.minStringLength = minStringLength;
     }
 

@@ -289,10 +289,10 @@ public class TS {
     }
 
     /**
-     * Empty out the masking map.
+     * Empty out the masking map. For testing purposes only.
      */
-    public static void resetMaskValueMap() {
-        StringMasking.getInstance().resetMap();
+    public static void destroyMaskValueMap() {
+        StringMasking.getInstance().destroy();
     }
 
     /**
@@ -307,18 +307,7 @@ public class TS {
     }
 
     /**
-     * Add mask irrespective of exceptions.
-     * Used to help mask password and other sensitive strings from the logs/reports.
-     *
-     * @param valueToMask the value to mask
-     */
-    public static void addMaskForce(final String valueToMask)
-    {
-        StringMasking.getInstance().forceAdd(valueToMask);
-    }
-
-    /**
-     * Add mask.
+     * Add mask irrespective of exemptions.
      * Used to help mask password and other sensitive strings from the logs/reports.
      *
      * @param valueToMask the value to mask
@@ -326,6 +315,17 @@ public class TS {
     public static void addMask(final String valueToMask)
     {
         StringMasking.getInstance().add(valueToMask);
+    }
+
+    /**
+     * Add values to be masked, subject to exemptions.
+     * Used to help mask password and other sensitive strings from the logs/reports.
+     *
+     * @param valuesToMask the value to mask
+     */
+    public static void addMaskBulk(final String... valuesToMask)
+    {
+        StringMasking.getInstance().addBulk(valuesToMask);
     }
 
     /**
