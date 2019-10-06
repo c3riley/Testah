@@ -158,16 +158,13 @@ public enum StringMaskingEnum
      */
     public StringMaskingEnum add(String plainValue)
     {
-        String start;
-        String end;
+        String start = RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getFirstN());
+        String end = RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN());
+
         if (plainValue.length() > stringMaskingHelper.stringMaskingConfig.getMinStringLength())
         {
             start = plainValue.substring(0, stringMaskingHelper.stringMaskingConfig.getFirstN());
             end = plainValue.substring(plainValue.length() - stringMaskingHelper.stringMaskingConfig.getLastN());
-        } else
-        {
-            start = RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getFirstN());
-            end = RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN());
         }
         synchronized (stringMaskingHelper)
         {
@@ -230,6 +227,5 @@ public enum StringMaskingEnum
         private volatile Map<String, String> maskedValuesMap;
         private volatile StringMaskingConfigEnum stringMaskingConfig;
         private volatile boolean isInitialized = false;
-
     }
 }
