@@ -169,7 +169,8 @@ public enum StringMaskingEnum
             start = plainValue.substring(0, firstN);
             end = plainValue.substring(plainValue.length() - lastN);
         }
-        maskedValuesMap.put(plainValue, String.format(StringMaskingConfigEnum.MASKING_PATTERN, start, end));
+        String maskedValue = String.format(StringMaskingConfigEnum.MASKING_PATTERN, start, end);
+        maskedValuesMap.put(plainValue, maskedValue);
 
         return INSTANCE;
     }
