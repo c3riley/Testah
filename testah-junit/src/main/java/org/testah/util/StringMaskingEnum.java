@@ -159,16 +159,24 @@ public enum StringMaskingEnum
      */
     public StringMaskingEnum add(String plainValue)
     {
+        // If the original string is long enough display the starting and/or ending characters,
+        // otherwise add a randomized string fitting the pattern.
         if (plainValue.length() > stringMaskingHelper.stringMaskingConfig.getMinStringLength())
         {
-            maskedValuesMap.put(plainValue, getMaskedString());
+            maskedValuesMap.put(plainValue, getMaskedString(plainValue));
         } else
         {
-            maskedValuesMap.put(plainValue, getMaskedString(plainValue));
+            maskedValuesMap.put(plainValue, getMaskedString());
         }
         return INSTANCE;
     }
 
+    /**
+     * Creates a masked string based on the input string. The first and last characters are from
+     * the original string depending on the masking configuration.
+     * @param plainValue the original string
+     * @return the masked string
+     */
     public String getMaskedString(String plainValue)
     {
         String firstChars = plainValue.substring(0, stringMaskingHelper.stringMaskingConfig.getFirstN());
@@ -176,6 +184,10 @@ public enum StringMaskingEnum
         return String.format(StringMaskingConfigEnum.MASKING_PATTERN, firstChars, lastChars);
     }
 
+    /**
+     * Returns a randomized string satifying the masking pattern.
+     * @return a randomized string satifying the masking pattern
+     */
     public String getMaskedString()
     {
         return String.format(StringMaskingConfigEnum.MASKING_PATTERN,
