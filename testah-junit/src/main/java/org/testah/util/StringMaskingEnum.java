@@ -160,11 +160,20 @@ public enum StringMaskingEnum
     public StringMaskingEnum add(String plainValue)
     {
         boolean padMaskedValue = plainValue.length() <= stringMaskingHelper.stringMaskingConfig.getMinStringLength();
-        String start = padMaskedValue ? RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getFirstN()) : plainValue.substring(0, stringMaskingHelper.stringMaskingConfig.getFirstN());
-        String end = padMaskedValue ? RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN()) : plainValue.substring(plainValue.length() - stringMaskingHelper.stringMaskingConfig.getLastN());
+        String start = getChars(padMaskedValue,
+                RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getFirstN()),
+                plainValue.substring(0, stringMaskingHelper.stringMaskingConfig.getFirstN()));
+        String end = getChars(padMaskedValue,
+                RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN()),
+                plainValue.substring(plainValue.length() - stringMaskingHelper.stringMaskingConfig.getLastN()));
         String maskedValue = String.format(StringMaskingConfigEnum.MASKING_PATTERN, start, end);
         maskedValuesMap.put(plainValue, maskedValue);
         return INSTANCE;
+    }
+
+    private String getChars(boolean padMaskedValue, String padding, String actual)
+    {
+        return padMaskedValue ? padding : actual;
     }
 
     /**
