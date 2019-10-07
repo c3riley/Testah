@@ -12,9 +12,11 @@ import org.testah.framework.dto.StepHelper;
 import org.testah.framework.report.TestPlanReporter;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.util.Log;
+import org.testah.util.StringMasking;
 import org.testah.util.TestahUtil;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The Class TS - Test State Class.
@@ -32,7 +34,7 @@ public class TS {
 
     private static final StepHelper stepHelper = new StepHelper();
     private static final StepActionHelper stepActionHelper = new StepActionHelper();
-    private static final HashMap<String, String> maskValues = new HashMap<>();
+
     /**
      * The _stateful data.
      * Allows a test to store data that helpers and other classes can use instead of always having to pass it.
@@ -282,18 +284,48 @@ public class TS {
      *
      * @return the mask values
      */
-    public static HashMap<String, String> getMaskValues() {
-        return maskValues;
+    public static Map<String, String> getMaskValues() {
+        return StringMasking.INSTANCE.getInstance().getMap();
     }
 
     /**
-     * Add mask.
+     * Empty out the masking map. For testing purposes only.
+     */
+    public static void resetMaskValueMap() {
+        StringMasking.INSTANCE.getInstance().reset();
+    }
+
+    /**
+     * Gets masked string.
+     * Used to help mask password and other sensitive strings from the logs/reports.
+     *
+     * @param plainString the string to mask
+     * @return the masked string
+     */
+    public static String getMaskedValue(String plainString) {
+        return StringMasking.INSTANCE.getInstance().getValue(plainString);
+    }
+
+    /**
+     * Add mask irrespective of exemptions.
      * Used to help mask password and other sensitive strings from the logs/reports.
      *
      * @param valueToMask the value to mask
      */
-    public static void addMask(final String valueToMask) {
-        maskValues.put(valueToMask, "*masked*");
+    public static void addMask(final String valueToMask)
+    {
+        StringMasking.INSTANCE.getInstance().add(valueToMask);
+    }
+
+    /**
+     * Add values to be masked, subject to exemptions.
+     * Used to help mask password and other sensitive strings from the logs/reports.
+     *
+     * @param valuesToMask the value to mask
+     */
+    public static void addMaskBulk(final String... valuesToMask)
+    {
+        StringMasking.INSTANCE.getInstance().addBulk(valuesToMask);
     }
 
     /**
@@ -317,7 +349,6 @@ public class TS {
     public static void setTestPlanReporter(final TestPlanReporter testPlanReporter) {
         _testPlanReporter = testPlanReporter;
     }
-
 
     /**
      * Tear down.
