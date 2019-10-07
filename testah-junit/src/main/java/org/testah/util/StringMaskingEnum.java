@@ -180,7 +180,7 @@ public enum StringMaskingEnum
     {
         return String.format(StringMaskingConfigEnum.MASKING_PATTERN,
                 RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getFirstN()),
-                RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN())));
+                RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN()));
     }
 
     /**
