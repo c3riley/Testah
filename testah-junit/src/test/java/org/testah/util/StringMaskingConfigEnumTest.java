@@ -4,7 +4,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
+import org.junit.After;
 import org.junit.FixMethodOrder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runners.MethodSorters;
 import org.testah.util.unittest.dtotest.SystemOutCapture;
@@ -28,35 +30,42 @@ import static org.testah.util.StringMaskingConfigEnum.USING_DEFAULT_CONFIG;
 class StringMaskingConfigEnumTest
 {
     @Test
-    void testInstance()
+    void testNotification()
     {
-        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-        Configuration config = ctx.getConfiguration();
+        Configuration config = ((LoggerContext) LogManager.getContext(false)).getConfiguration();
         try (SystemOutCapture systemOutCapture = new SystemOutCapture().start())
         {
+            StringMaskingConfigEnum.INSTANCE.reset();
             config.getRootLogger().setLevel(Level.DEBUG);
             StringMaskingConfigEnum.INSTANCE.reset();
 
             assertEquals(StringMaskingConfigEnum.DEFAULT_MIN_STRING_LENGTH,
                     StringMaskingConfigEnum.INSTANCE.getInstance().getMinStringLength());
             assertThat(systemOutCapture.getSystemOut(), containsString(USING_DEFAULT_CONFIG));
-
-            assertEquals(StringMaskingConfigEnum.DEFAULT_FIRST_N, StringMaskingConfigEnum.INSTANCE.getInstance().getFirstN());
-            assertEquals(StringMaskingConfigEnum.DEFAULT_LAST_N, StringMaskingConfigEnum.INSTANCE.getInstance().getLastN());
-
-            int minStringLength = 11;
-            int firstN = 4;
-            int lastN = 5;
-            StringMaskingConfigEnum.INSTANCE.reset();
-            assertEquals(minStringLength,
-                    StringMaskingConfigEnum.INSTANCE.createInstance(minStringLength, firstN,lastN).getMinStringLength());
-            assertEquals(firstN, StringMaskingConfigEnum.INSTANCE.getInstance().getFirstN());
-            assertEquals(lastN, StringMaskingConfigEnum.INSTANCE.getInstance().getLastN());
-
         } finally
         {
             config.getRootLogger().setLevel(Level.INFO);
         }
+    }
+
+    @Test
+    void testInstance()
+    {
+        StringMaskingConfigEnum.INSTANCE.reset();
+
+        assertEquals(StringMaskingConfigEnum.DEFAULT_MIN_STRING_LENGTH,
+                StringMaskingConfigEnum.INSTANCE.getInstance().getMinStringLength());
+        assertEquals(StringMaskingConfigEnum.DEFAULT_FIRST_N, StringMaskingConfigEnum.INSTANCE.getInstance().getFirstN());
+        assertEquals(StringMaskingConfigEnum.DEFAULT_LAST_N, StringMaskingConfigEnum.INSTANCE.getInstance().getLastN());
+
+        int minStringLength = 11;
+        int firstN = 4;
+        int lastN = 5;
+        StringMaskingConfigEnum.INSTANCE.reset();
+        assertEquals(minStringLength,
+                StringMaskingConfigEnum.INSTANCE.createInstance(minStringLength, firstN,lastN).getMinStringLength());
+        assertEquals(firstN, StringMaskingConfigEnum.INSTANCE.getInstance().getFirstN());
+        assertEquals(lastN, StringMaskingConfigEnum.INSTANCE.getInstance().getLastN());
     }
 
     @Test
