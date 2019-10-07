@@ -21,14 +21,14 @@ import java.util.stream.Stream;
  * https://github.com/eugenp/tutorials/blob/master/patterns/design-patterns-creational/src/main/java/com/baeldung/singleton/EnumSingleton.java
  * </p>
  */
-public enum StringMaskingEnum
+public enum StringMasking
 {
     INSTANCE;
 
     private StringMaskingHelper stringMaskingHelper;
     private volatile Map<String, String> maskedValuesMap;
 
-    StringMaskingEnum()
+    StringMasking()
     {
         this.stringMaskingHelper = new StringMaskingHelper();
     }
@@ -37,13 +37,13 @@ public enum StringMaskingEnum
      * Create the singleton instance of this class.
      * @return the singleton instance of this class
      */
-    public StringMaskingEnum createInstance()
+    public StringMasking createInstance()
     {
         synchronized (stringMaskingHelper)
         {
             if (!stringMaskingHelper.isInitialized)
             {
-                stringMaskingHelper.stringMaskingConfig = StringMaskingConfigEnum.INSTANCE.getInstance();
+                stringMaskingHelper.stringMaskingConfig = StringMaskingConfig.INSTANCE.getInstance();
                 stringMaskingHelper.literalMaskingExemptions = Stream.of("true", "TRUE", "false", "FALSE").collect(Collectors.toSet());
                 stringMaskingHelper.regexMaskingExemptions = new HashSet<>();
                 stringMaskingHelper.isInitialized = true;
@@ -57,7 +57,7 @@ public enum StringMaskingEnum
      * Get the singleton instance of this class. Create one if it does not exist.
      * @return the singleton instance of this class
      */
-    public StringMaskingEnum getInstance()
+    public StringMasking getInstance()
     {
         synchronized (stringMaskingHelper)
         {
@@ -94,7 +94,7 @@ public enum StringMaskingEnum
      * @param regexStrings the set of regular expressions to filter for strings that will not be masked
      * @return the singleton instance of this class
      */
-    public StringMaskingEnum addRegexExemptions(String... regexStrings)
+    public StringMasking addRegexExemptions(String... regexStrings)
     {
         synchronized (stringMaskingHelper)
         {
@@ -111,7 +111,7 @@ public enum StringMaskingEnum
      * @param regex the regular expression to remove from filtering
      * @return the singleton instance of this class
      */
-    public StringMaskingEnum removeRegexExemption(String regex)
+    public StringMasking removeRegexExemption(String regex)
     {
         synchronized (stringMaskingHelper)
         {
@@ -134,7 +134,7 @@ public enum StringMaskingEnum
      * @param literals strings that should not be masked
      * @return the singleton instance of this class
      */
-    public StringMaskingEnum addLiteralExemptions(String... literals)
+    public StringMasking addLiteralExemptions(String... literals)
     {
         synchronized (stringMaskingHelper)
         {
@@ -157,7 +157,7 @@ public enum StringMaskingEnum
      * @param plainValue a string that will be masked
      * @return the singleton instance of this class
      */
-    public StringMaskingEnum add(String plainValue)
+    public StringMasking add(String plainValue)
     {
         // If the original string is long enough display the starting and/or ending characters,
         // otherwise add a randomized string fitting the pattern.
@@ -181,7 +181,7 @@ public enum StringMaskingEnum
     {
         String firstChars = plainValue.substring(0, stringMaskingHelper.stringMaskingConfig.getFirstN());
         String lastChars = plainValue.substring(plainValue.length() - stringMaskingHelper.stringMaskingConfig.getLastN());
-        return String.format(StringMaskingConfigEnum.MASKING_PATTERN, firstChars, lastChars);
+        return String.format(StringMaskingConfig.MASKING_PATTERN, firstChars, lastChars);
     }
 
     /**
@@ -190,7 +190,7 @@ public enum StringMaskingEnum
      */
     public String getMaskedString()
     {
-        return String.format(StringMaskingConfigEnum.MASKING_PATTERN,
+        return String.format(StringMaskingConfig.MASKING_PATTERN,
                 RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getFirstN()),
                 RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN()));
     }
@@ -200,7 +200,7 @@ public enum StringMaskingEnum
      * @param plainValues a string that may be asked depending on exemptions
      * @return the singleton instance of this class
      */
-    public StringMaskingEnum addBulk(String... plainValues)
+    public StringMasking addBulk(String... plainValues)
     {
         for (String plainValue : plainValues)
         {
@@ -237,7 +237,7 @@ public enum StringMaskingEnum
      * Reset this enum to uninitialized. Only for unit testing purposes of this enum.
      * @return the singleton instance of this class
      */
-    public StringMaskingEnum reset()
+    public StringMasking reset()
     {
         stringMaskingHelper.isInitialized = false;
         return this;
@@ -246,7 +246,7 @@ public enum StringMaskingEnum
     private static class StringMaskingHelper {
         private volatile Set<String> literalMaskingExemptions;
         private volatile Set<String> regexMaskingExemptions;
-        private volatile StringMaskingConfigEnum stringMaskingConfig;
+        private volatile StringMaskingConfig stringMaskingConfig;
         private volatile boolean isInitialized = false;
     }
 }

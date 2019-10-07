@@ -17,7 +17,7 @@ import javax.naming.ConfigurationException;
  * https://github.com/eugenp/tutorials/blob/master/patterns/design-patterns-creational/src/main/java/com/baeldung/singleton/EnumSingleton.java
  * </p>
  */
-public enum StringMaskingConfigEnum
+public enum StringMaskingConfig
 {
     INSTANCE;
 
@@ -33,7 +33,7 @@ public enum StringMaskingConfigEnum
 
     private ConfigOptions configOptions;
 
-    StringMaskingConfigEnum()
+    StringMaskingConfig()
     {
         this.configOptions = new ConfigOptions();
     }
@@ -48,7 +48,7 @@ public enum StringMaskingConfigEnum
      * @param lastN number of characters at the end of String that are shown in plain text
      * @return (singleton) instance of masking configuration
      */
-    public StringMaskingConfigEnum createInstance(int minStringLength, int firstN, int lastN)
+    public StringMaskingConfig createInstance(int minStringLength, int firstN, int lastN)
     {
         synchronized (configOptions)
         {
@@ -70,7 +70,7 @@ public enum StringMaskingConfigEnum
      * When using debug level, the stack trace of where the call was made before explicitly creating an instance is printed.
      * @return (singleton) instance of masking configuration
      */
-    public StringMaskingConfigEnum getInstance()
+    public StringMaskingConfig getInstance()
     {
         synchronized (configOptions)
         {
@@ -137,7 +137,7 @@ public enum StringMaskingConfigEnum
      * Reset this enum to uninitialized. Only for unit testing purposes of this enum.
      * @return the singleton instance of this class
      */
-    public StringMaskingConfigEnum reset()
+    public StringMaskingConfig reset()
     {
         configOptions.isInitialized = false;
         return this;

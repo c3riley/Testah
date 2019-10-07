@@ -12,7 +12,7 @@ import org.testah.framework.dto.StepHelper;
 import org.testah.framework.report.TestPlanReporter;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.util.Log;
-import org.testah.util.StringMaskingEnum;
+import org.testah.util.StringMasking;
 import org.testah.util.TestahUtil;
 
 import java.util.HashMap;
@@ -285,14 +285,14 @@ public class TS {
      * @return the mask values
      */
     public static Map<String, String> getMaskValues() {
-        return StringMaskingEnum.INSTANCE.getInstance().getMap();
+        return StringMasking.INSTANCE.getInstance().getMap();
     }
 
     /**
      * Empty out the masking map. For testing purposes only.
      */
     public static void resetMaskValueMap() {
-        StringMaskingEnum.INSTANCE.getInstance().reset();
+        StringMasking.INSTANCE.getInstance().reset();
     }
 
     /**
@@ -303,7 +303,7 @@ public class TS {
      * @return the masked string
      */
     public static String getMaskedValue(String plainString) {
-        return StringMaskingEnum.INSTANCE.getInstance().getValue(plainString);
+        return StringMasking.INSTANCE.getInstance().getValue(plainString);
     }
 
     /**
@@ -314,7 +314,7 @@ public class TS {
      */
     public static void addMask(final String valueToMask)
     {
-        StringMaskingEnum.INSTANCE.getInstance().add(valueToMask);
+        StringMasking.INSTANCE.getInstance().add(valueToMask);
     }
 
     /**
@@ -325,7 +325,7 @@ public class TS {
      */
     public static void addMaskBulk(final String... valuesToMask)
     {
-        StringMaskingEnum.INSTANCE.getInstance().addBulk(valuesToMask);
+        StringMasking.INSTANCE.getInstance().addBulk(valuesToMask);
     }
 
     /**
