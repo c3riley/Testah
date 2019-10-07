@@ -159,21 +159,19 @@ public enum StringMaskingEnum
      */
     public StringMaskingEnum add(String plainValue)
     {
-        boolean padMaskedValue = plainValue.length() <= stringMaskingHelper.stringMaskingConfig.getMinStringLength();
-        String start = getChars(padMaskedValue,
-                RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getFirstN()),
-                plainValue.substring(0, stringMaskingHelper.stringMaskingConfig.getFirstN()));
-        String end = getChars(padMaskedValue,
-                RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN()),
-                plainValue.substring(plainValue.length() - stringMaskingHelper.stringMaskingConfig.getLastN()));
-        String maskedValue = String.format(StringMaskingConfigEnum.MASKING_PATTERN, start, end);
-        maskedValuesMap.put(plainValue, maskedValue);
-        return INSTANCE;
-    }
+        int firstN = stringMaskingHelper.stringMaskingConfig.getFirstN();
+        int lastN = stringMaskingHelper.stringMaskingConfig.getLastN();
+        String start = RandomStringUtils.randomAscii(firstN);
+        String end = RandomStringUtils.randomAscii(lastN);
 
-    private String getChars(boolean padMaskedValue, String padding, String actual)
-    {
-        return padMaskedValue ? padding : actual;
+        if (plainValue.length() > stringMaskingHelper.stringMaskingConfig.getMinStringLength())
+        {
+            start = plainValue.substring(0, firstN);
+            end = plainValue.substring(plainValue.length() - lastN);
+        }
+        maskedValuesMap.put(plainValue, String.format(StringMaskingConfigEnum.MASKING_PATTERN, start, end));
+
+        return INSTANCE;
     }
 
     /**
