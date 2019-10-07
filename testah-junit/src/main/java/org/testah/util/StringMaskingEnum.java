@@ -161,19 +161,26 @@ public enum StringMaskingEnum
     {
         if (plainValue.length() > stringMaskingHelper.stringMaskingConfig.getMinStringLength())
         {
-            maskedValuesMap.put(plainValue,
-                    String.format(StringMaskingConfigEnum.MASKING_PATTERN,
-                            plainValue.substring(0, stringMaskingHelper.stringMaskingConfig.getFirstN()),
-                            plainValue.substring(plainValue.length() - stringMaskingHelper.stringMaskingConfig.getLastN())));
+            maskedValuesMap.put(plainValue, getMaskedString());
         } else
         {
-            maskedValuesMap.put(plainValue,
-                    RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getFirstN()) +
-                            StringMaskingConfigEnum.MASKING_PATTERN +
-                    RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN()));
+            maskedValuesMap.put(plainValue, getMaskedString(plainValue));
         }
-
         return INSTANCE;
+    }
+
+    public String getMaskedString(String plainValue)
+    {
+        String firstChars = plainValue.substring(0, stringMaskingHelper.stringMaskingConfig.getFirstN());
+        String lastChars = plainValue.substring(plainValue.length() - stringMaskingHelper.stringMaskingConfig.getLastN());
+        return String.format(StringMaskingConfigEnum.MASKING_PATTERN, firstChars, lastChars);
+    }
+
+    public String getMaskedString()
+    {
+        return String.format(StringMaskingConfigEnum.MASKING_PATTERN,
+                RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getFirstN()),
+                RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN())));
     }
 
     /**
