@@ -159,20 +159,17 @@ public enum StringMaskingEnum
      */
     public StringMaskingEnum add(String plainValue)
     {
-        int firstN = stringMaskingHelper.stringMaskingConfig.getFirstN();
-        int lastN = stringMaskingHelper.stringMaskingConfig.getLastN();
-        int minStringLength = stringMaskingHelper.stringMaskingConfig.getMinStringLength();
-
-        String start = RandomStringUtils.randomAscii(firstN);
-        String end = RandomStringUtils.randomAscii(lastN);
-
-        if (plainValue.length() > minStringLength)
+        String tmp = plainValue;
+        if (plainValue.length() <= stringMaskingHelper.stringMaskingConfig.getMinStringLength())
         {
-            start = plainValue.substring(0, firstN);
-            end = plainValue.substring(plainValue.length() - lastN);
+            tmp = RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getMinStringLength());;
         }
-        String maskedValue = String.format(StringMaskingConfigEnum.MASKING_PATTERN, start, end);
-        maskedValuesMap.put(plainValue, maskedValue);
+        String start = plainValue.substring(0, stringMaskingHelper.stringMaskingConfig.getFirstN());
+        String end = plainValue.substring(plainValue.length() - stringMaskingHelper.stringMaskingConfig.getLastN());
+        maskedValuesMap.put(plainValue,
+                String.format(StringMaskingConfigEnum.MASKING_PATTERN,
+                        start,
+                        end));
 
         return INSTANCE;
     }
