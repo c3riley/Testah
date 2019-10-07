@@ -161,10 +161,12 @@ public enum StringMaskingEnum
     {
         int firstN = stringMaskingHelper.stringMaskingConfig.getFirstN();
         int lastN = stringMaskingHelper.stringMaskingConfig.getLastN();
+        int minStringLength = stringMaskingHelper.stringMaskingConfig.getMinStringLength();
+
         String start = RandomStringUtils.randomAscii(firstN);
         String end = RandomStringUtils.randomAscii(lastN);
 
-        if (plainValue.length() > stringMaskingHelper.stringMaskingConfig.getMinStringLength())
+        if (plainValue.length() > minStringLength)
         {
             start = plainValue.substring(0, firstN);
             end = plainValue.substring(plainValue.length() - lastN);
