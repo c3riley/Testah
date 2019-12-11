@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class AbstractLoadTest {
-    private static final String RUN_LOG_MESSAGE = "Executing step %d of %d with : threads=%d, chunksize=%d, duration=%d minutes";
+    private static final String RUN_LOG_MESSAGE =
+            "Executing step %d of %d with : threads=%d, chunksize=%d, duration=%d minutes, publish=%b";
     private final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
     private TestDataGenerator loadTestDataGenerator;
     private TestRunProperties runProps;
@@ -39,13 +40,14 @@ public abstract class AbstractLoadTest {
                     loadTestSequence.length,
                     step.getThreads(),
                     step.getChunkSize(),
-                    step.getDurationMinutes()));
+                    step.getDurationMinutes(),
+                    step.getIsPublish()));
             try {
-                executeStep(step.getThreads(), step.getChunkSize(), step.getDurationMinutes());
+                executeStep(step.getThreads(), step.getChunkSize(), step.getDurationMinutes(), step.getIsPublish());
             } catch (Exception e) {
                 TS.log().info(e);
             } finally {
-                if (publishers != null && publishers.size() > 0) {
+                if (publishers != null && publishers.size() > 0 && step.getIsPublish()) {
                     for (ExecutionStatsPublisher publisher : publishers) {
                         publisher.afterLoadTestSequenceStep();
                     }
@@ -63,7 +65,7 @@ public abstract class AbstractLoadTest {
      * @param timeIntervalMinutes time to run requests
      * @throws Exception when HTTP request generation fails
      */
-    public void executeStep(int numThreads, int chunkSize, int timeIntervalMinutes) throws Exception {
+    public void executeStep(int numThreads, int chunkSize, int timeIntervalMinutes, boolean isPublish) throws Exception {
         long stopTime = DateTime.now().plusMinutes(timeIntervalMinutes).getMillis();
         loadTestDataGenerator.init(chunkSize, runProps.getNumberOfChunks());
         List<ResponseDto> responses;
@@ -75,7 +77,7 @@ public abstract class AbstractLoadTest {
                 try {
                     responses = akkaRunner.runAndReport(numThreads, concurrentLinkedQueue, runProps.isVerbose());
 
-                    if (publishers != null && publishers.size() > 0) {
+                    if (publishers != null && publishers.size() > 0 && isPublish) {
                         for (ExecutionStatsPublisher publisher : publishers) {
                             publisher.push(responses);
                         }
