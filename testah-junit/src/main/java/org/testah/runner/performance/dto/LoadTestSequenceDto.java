@@ -22,7 +22,7 @@ public class LoadTestSequenceDto {
     @JsonProperty(PARAM_DURATION_MINUTES)
     private Integer durationMinutes;
     @JsonProperty(IS_PUBLISH)
-    private Boolean isPublish;
+    private boolean isPublish = true;
 
     @JsonProperty(PARAM_STEP)
     public Integer getStep() {
@@ -80,18 +80,18 @@ public class LoadTestSequenceDto {
     }
 
     @JsonProperty(IS_PUBLISH)
-    public Boolean getIsPublish()
+    public boolean getIsPublish()
     {
-        return isPublish == null || isPublish;
+        return isPublish;
     }
 
     @JsonProperty(IS_PUBLISH)
-    public void setIsPublish(Boolean isPublish)
+    public void setIsPublish(boolean isPublish)
     {
         this.isPublish = isPublish;
     }
 
-    public LoadTestSequenceDto withIsPublish(Boolean isPublish)
+    public LoadTestSequenceDto withIsPublish(boolean isPublish)
     {
         this.isPublish = isPublish;
         return this;
