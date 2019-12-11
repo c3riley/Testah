@@ -1,0 +1,6 @@
+[
+  {"step": 1, "threads": 1, "chunkSize": 100, "durationMinutes": 10},
+  {"step": 2, "threads": 2, "chunkSize": 200, "durationMinutes": 20},
+  {"step": 3, "threads": 3, "chunkSize": 300, "durationMinutes": 30},
+  {"step": 4, "threads": 4, "chunkSize": 400, "durationMinutes": 40}
+]

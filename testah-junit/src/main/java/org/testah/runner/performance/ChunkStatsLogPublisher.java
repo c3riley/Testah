@@ -28,4 +28,9 @@ public class ChunkStatsLogPublisher implements ExecutionStatsPublisher {
     public void cleanup() {
         // no post processing required
     }
+
+    @Override
+    public void afterLoadTestSequenceStep() {
+        // no post processing required
+    }
 }

@@ -44,6 +44,12 @@ public abstract class AbstractLoadTest {
                 executeStep(step.getThreads(), step.getChunkSize(), step.getDurationMinutes());
             } catch (Exception e) {
                 TS.log().info(e);
+            } finally {
+                if (publishers != null && publishers.size() > 0) {
+                    for (ExecutionStatsPublisher publisher : publishers) {
+                        publisher.afterLoadTestSequenceStep();
+                    }
+                }
             }
         });
     }
@@ -58,18 +64,16 @@ public abstract class AbstractLoadTest {
      * @throws Exception when HTTP request generation fails
      */
     public void executeStep(int numThreads, int chunkSize, int timeIntervalMinutes) throws Exception {
-        runProps.setNumberOfAkkaThreads(numThreads);
-        runProps.setChunkSize(chunkSize);
-        runProps.setStopTime(DateTime.now().plusMinutes(timeIntervalMinutes).getMillis());
+        long stopTime = DateTime.now().plusMinutes(timeIntervalMinutes).getMillis();
         loadTestDataGenerator.init(chunkSize, runProps.getNumberOfChunks());
         List<ResponseDto> responses;
 
-        while (System.currentTimeMillis() < runProps.getStopTime()) {
+        while (System.currentTimeMillis() < stopTime) {
             List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues =
                     loadTestDataGenerator.generateRequests();
             for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues) {
                 try {
-                    responses = akkaRunner.runAndReport(runProps.getNumberOfAkkaThreads(), concurrentLinkedQueue, runProps.isVerbose());
+                    responses = akkaRunner.runAndReport(numThreads, concurrentLinkedQueue, runProps.isVerbose());
 
                     if (publishers != null && publishers.size() > 0) {
                         for (ExecutionStatsPublisher publisher : publishers) {
@@ -81,7 +85,7 @@ public abstract class AbstractLoadTest {
                     System.gc();
 
                     Thread.sleep(runProps.getMillisBetweenChunks());
-                    if (System.currentTimeMillis() >= runProps.getStopTime()) {
+                    if (System.currentTimeMillis() >= stopTime) {
                         return;
                     }
                 } catch (Throwable t) {
