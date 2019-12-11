@@ -147,6 +147,12 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
         // no post processing required
     }
 
+    @Override
+    public void afterLoadTestSequenceStep()
+    {
+        // no post processing required after load sequence steps
+    }
+
     private void setStartTime(final Long startTime) {
         if (0L == this.startTime || this.startTime > startTime) {
             this.startTime = startTime;

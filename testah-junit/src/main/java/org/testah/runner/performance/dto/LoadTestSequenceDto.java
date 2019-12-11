@@ -5,18 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-        LoadTestSequenceDto.PARAM_STEP,
-        LoadTestSequenceDto.PARAM_THREADS,
-        LoadTestSequenceDto.PARAM_CHUNK_SIZE,
-        LoadTestSequenceDto.PARAM_DURATION_MINUTES
-})
 public class LoadTestSequenceDto {
 
     static final String PARAM_DURATION_MINUTES = "durationMinutes";
     static final String PARAM_CHUNK_SIZE = "chunkSize";
     static final String PARAM_THREADS = "threads";
     static final String PARAM_STEP = "step";
+    static final String IS_PUBLISH = "isPublish";
+
     @JsonProperty(PARAM_STEP)
     private Integer step;
     @JsonProperty(PARAM_THREADS)
@@ -25,6 +21,8 @@ public class LoadTestSequenceDto {
     private Integer chunkSize;
     @JsonProperty(PARAM_DURATION_MINUTES)
     private Integer durationMinutes;
+    @JsonProperty(IS_PUBLISH)
+    private boolean isPublish = true;
 
     @JsonProperty(PARAM_STEP)
     public Integer getStep() {
@@ -79,6 +77,24 @@ public class LoadTestSequenceDto {
     @JsonProperty(PARAM_DURATION_MINUTES)
     public void setDurationMinutes(Integer durationMinutes) {
         this.durationMinutes = durationMinutes;
+    }
+
+    @JsonProperty(IS_PUBLISH)
+    public boolean getIsPublish()
+    {
+        return isPublish;
+    }
+
+    @JsonProperty(IS_PUBLISH)
+    public void setIsPublish(boolean isPublish)
+    {
+        this.isPublish = isPublish;
+    }
+
+    public LoadTestSequenceDto withIsPublish(boolean isPublish)
+    {
+        this.isPublish = isPublish;
+        return this;
     }
 
     public LoadTestSequenceDto withDurationMinutes(Integer durationMinutes) {
