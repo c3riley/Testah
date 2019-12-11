@@ -14,10 +14,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.testah.TS;
-import org.testah.driver.http.eventstream.ConsumeEventStream;
-import org.testah.framework.report.asserts.AssertStrings;
 import org.testah.util.unittest.dtotest.DtoTest;
-import org.testah.util.unittest.dtotest.SystemOutCapture;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -27,7 +24,6 @@ import java.util.List;
 
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.junit.Assert.*;
 
 public class PostRequestDtoTest {
 
@@ -206,7 +202,7 @@ public class PostRequestDtoTest {
 
     @Test
     public void addBasicAuthHeader1() {
-        TS.getMaskValues().clear();
+        TS.resetMaskValueMap();
         postWithData.addBasicAuthHeader("User1", "password", true);
         Assert.assertTrue(postWithData.getHeaders().stream().findFirst().filter(
             header -> header.getName().equals("Authorization") &&
@@ -218,12 +214,11 @@ public class PostRequestDtoTest {
         Assert.assertNotNull(TS.getMaskValues().get("User1"));
         Assert.assertNotNull(TS.getMaskValues().get("password"));
         Assert.assertNotNull(TS.getMaskValues().get("VXNlcjE6cGFzc3dvcmQ="));
-
     }
 
     @Test
     public void addBasicAuthHeaderWithMask() {
-        TS.getMaskValues().clear();
+        TS.resetMaskValueMap();
         postWithData.addBasicAuthHeaderWithMask("User1", "password");
         Assert.assertTrue(postWithData.getHeaders().stream().findFirst().filter(
             header -> header.getName().equals("Authorization") &&
