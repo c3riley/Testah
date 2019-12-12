@@ -27,6 +27,7 @@ public class TestRunProperties {
     private String domain;
     private String testClass;
     private String testMethod;
+    private String id;
 
     protected TestRunProperties(String serviceUnderTest, String testClass, String testMethod) {
         this.serviceUnderTest = serviceUnderTest;
@@ -231,6 +232,27 @@ public class TestRunProperties {
     public TestRunProperties setVerbose(boolean isVerbose) {
         TS.log().info("Setting isVerbose to " + isVerbose);
         this.isVerbose = isVerbose;
+        return this;
+    }
+
+    /**
+     * Get the identifier previously set for the test run.
+     * The framework itself does not use it.
+     * @return
+     */
+    public String getId()
+    {
+        return id;
+    }
+
+    /**
+     * Set an id for a test run. The framework does not use it.
+     * The framework itself does not use it.
+     * @param id
+     */
+    public TestRunProperties setId(String id)
+    {
+        this.id = id;
         return this;
     }
 

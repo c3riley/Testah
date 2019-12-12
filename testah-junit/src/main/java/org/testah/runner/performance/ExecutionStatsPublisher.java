@@ -1,6 +1,7 @@
 package org.testah.runner.performance;
 
 import org.testah.driver.http.response.ResponseDto;
+import org.testah.runner.performance.dto.LoadTestSequenceDto;
 
 import java.util.List;
 
@@ -19,7 +20,12 @@ public interface ExecutionStatsPublisher {
     public void cleanup();
 
     /**
-     * When running performance/stress tests, there may be tasks that need to be executed after a step.
+     * When running performance/stress tests, there may be tasks that need to be executed before each step.
      */
-    public void afterLoadTestSequenceStep();
+    public void beforeTestSequenceStep(LoadTestSequenceDto step);
+
+    /**
+     * When running performance/stress tests, there may be tasks that need to be executed after each step.
+     */
+    public void afterTestSequenceStep(LoadTestSequenceDto step);
 }

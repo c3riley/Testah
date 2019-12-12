@@ -12,11 +12,14 @@ public class LoadTestSequenceDtoTest
     public void testDto()
     {
         LoadTestSequenceDto loadTestSequenceDto = new LoadTestSequenceDto();
-        loadTestSequenceDto.withChunkSize(11).withDurationMinutes(12).withStep(13).withThreads(14).withIsPublish(false);
+        loadTestSequenceDto.setChunkSize(11).setDurationMinutes(12).setStep(13).setThreads(14)
+                .setIsPublish(false).setIsVerbose(true).setMillisBetweenChunks(111L);
         Assert.assertEquals(11, loadTestSequenceDto.getChunkSize().intValue());
         Assert.assertEquals(12, loadTestSequenceDto.getDurationMinutes().intValue());
         Assert.assertEquals(13, loadTestSequenceDto.getStep().intValue());
         Assert.assertEquals(14, loadTestSequenceDto.getThreads().intValue());
+        Assert.assertEquals(111, loadTestSequenceDto.getMillisBetweenChunks().intValue());
+        Assert.assertEquals(true, loadTestSequenceDto.getIsVerbose());
         Assert.assertEquals(false, loadTestSequenceDto.getIsPublish());
     }
 
@@ -48,12 +51,20 @@ public class LoadTestSequenceDtoTest
             Assert.assertEquals(istep, loadTestSequence[istep - 1].getThreads().intValue());
         }
         Assert.assertEquals(false, loadTestSequence[0].getIsPublish());
+        Assert.assertEquals(true, loadTestSequence[0].getIsVerbose());
         Assert.assertEquals(true, loadTestSequence[1].getIsPublish());
+        Assert.assertEquals(false, loadTestSequence[1].getIsVerbose());
         Assert.assertEquals(true, loadTestSequence[2].getIsPublish());
+        Assert.assertEquals(100, loadTestSequence[2].getMillisBetweenChunks().intValue());
+        Assert.assertEquals(false, loadTestSequence[2].getIsVerbose());
         Assert.assertEquals(true, loadTestSequence[3].getIsPublish());
+        Assert.assertEquals(false, loadTestSequence[3].getIsVerbose());
         Assert.assertEquals(false, loadTestSequence[4].getIsPublish());
+        Assert.assertEquals(true, loadTestSequence[4].getIsVerbose());
+        Assert.assertEquals(false, loadTestSequence[4].getIsPublish());
+        Assert.assertEquals(10, loadTestSequence[4].getMillisBetweenChunks().intValue());
         Assert.assertEquals(true, loadTestSequence[5].getIsPublish());
-
+        Assert.assertEquals(false, loadTestSequence[5].getIsVerbose());
     }
 }
 

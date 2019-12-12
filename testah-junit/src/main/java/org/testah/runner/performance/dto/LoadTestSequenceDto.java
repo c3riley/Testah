@@ -10,8 +10,10 @@ public class LoadTestSequenceDto {
     static final String PARAM_DURATION_MINUTES = "durationMinutes";
     static final String PARAM_CHUNK_SIZE = "chunkSize";
     static final String PARAM_THREADS = "threads";
-    static final String PARAM_STEP = "step";
     static final String IS_PUBLISH = "isPublish";
+    static final String PARAM_STEP = "step";
+    static final String IS_VERBOSE = "isVerbose";
+    static final String MILLIS_BETWEEN_CHUNKS = "millisBetweenChunks";
 
     @JsonProperty(PARAM_STEP)
     private Integer step;
@@ -23,6 +25,10 @@ public class LoadTestSequenceDto {
     private Integer durationMinutes;
     @JsonProperty(IS_PUBLISH)
     private boolean isPublish = true;
+    @JsonProperty(IS_VERBOSE)
+    private Boolean isVerbose = false;
+    @JsonProperty(MILLIS_BETWEEN_CHUNKS)
+    private Long millisBetweenChunks;
 
     @JsonProperty(PARAM_STEP)
     public Integer getStep() {
@@ -30,11 +36,7 @@ public class LoadTestSequenceDto {
     }
 
     @JsonProperty(PARAM_STEP)
-    public void setStep(Integer step) {
-        this.step = step;
-    }
-
-    public LoadTestSequenceDto withStep(Integer step) {
+    public LoadTestSequenceDto setStep(Integer step) {
         this.step = step;
         return this;
     }
@@ -45,11 +47,7 @@ public class LoadTestSequenceDto {
     }
 
     @JsonProperty(PARAM_THREADS)
-    public void setThreads(Integer threads) {
-        this.threads = threads;
-    }
-
-    public LoadTestSequenceDto withThreads(Integer threads) {
+    public LoadTestSequenceDto setThreads(Integer threads) {
         this.threads = threads;
         return this;
     }
@@ -60,11 +58,7 @@ public class LoadTestSequenceDto {
     }
 
     @JsonProperty(PARAM_CHUNK_SIZE)
-    public void setChunkSize(Integer chunkSize) {
-        this.chunkSize = chunkSize;
-    }
-
-    public LoadTestSequenceDto withChunkSize(Integer chunkSize) {
+    public LoadTestSequenceDto setChunkSize(Integer chunkSize) {
         this.chunkSize = chunkSize;
         return this;
     }
@@ -75,8 +69,9 @@ public class LoadTestSequenceDto {
     }
 
     @JsonProperty(PARAM_DURATION_MINUTES)
-    public void setDurationMinutes(Integer durationMinutes) {
+    public LoadTestSequenceDto setDurationMinutes(Integer durationMinutes) {
         this.durationMinutes = durationMinutes;
+        return this;
     }
 
     @JsonProperty(IS_PUBLISH)
@@ -86,19 +81,31 @@ public class LoadTestSequenceDto {
     }
 
     @JsonProperty(IS_PUBLISH)
-    public void setIsPublish(boolean isPublish)
-    {
-        this.isPublish = isPublish;
-    }
-
-    public LoadTestSequenceDto withIsPublish(boolean isPublish)
+    public LoadTestSequenceDto setIsPublish(boolean isPublish)
     {
         this.isPublish = isPublish;
         return this;
     }
 
-    public LoadTestSequenceDto withDurationMinutes(Integer durationMinutes) {
-        this.durationMinutes = durationMinutes;
+    public Boolean getIsVerbose()
+    {
+        return isVerbose;
+    }
+
+    public LoadTestSequenceDto setIsVerbose(boolean isVerbose)
+    {
+        this.isVerbose = isVerbose;
+        return this;
+    }
+
+    public Long getMillisBetweenChunks()
+    {
+        return millisBetweenChunks;
+    }
+
+    public LoadTestSequenceDto setMillisBetweenChunks(Long millisBetweenChunks)
+    {
+        this.millisBetweenChunks = millisBetweenChunks;
         return this;
     }
 }

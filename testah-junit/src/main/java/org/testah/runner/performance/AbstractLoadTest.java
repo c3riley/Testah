@@ -43,13 +43,18 @@ public abstract class AbstractLoadTest {
                     step.getDurationMinutes(),
                     step.getIsPublish()));
             try {
+                if (publishers != null && publishers.size() > 0) {
+                    for (ExecutionStatsPublisher publisher : publishers) {
+                        publisher.beforeTestSequenceStep(step);
+                    }
+                }
                 executeStep(step.getThreads(), step.getChunkSize(), step.getDurationMinutes(), step.getIsPublish());
             } catch (Exception e) {
                 TS.log().info(e);
             } finally {
                 if (publishers != null && publishers.size() > 0 && step.getIsPublish()) {
                     for (ExecutionStatsPublisher publisher : publishers) {
-                        publisher.afterLoadTestSequenceStep();
+                        publisher.afterTestSequenceStep(step);
                     }
                 }
             }
@@ -63,6 +68,7 @@ public abstract class AbstractLoadTest {
      * @param numThreads          number of Akka threads
      * @param chunkSize           number of bundled requests
      * @param timeIntervalMinutes time to run requests
+     * @param isPublish set to false to not publish
      * @throws Exception when HTTP request generation fails
      */
     public void executeStep(int numThreads, int chunkSize, int timeIntervalMinutes, boolean isPublish) throws Exception {
