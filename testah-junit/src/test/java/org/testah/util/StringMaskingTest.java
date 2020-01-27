@@ -149,8 +149,8 @@ public class StringMaskingTest
     void testSanitizeMessage()
     {
         StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
-        String message = TS.util().getResourceAsString("/message.txt");
-        String sanitizedMsgSanitized = TS.util().getResourceAsString("/message_sanitized.txt");
+        String message = TS.util().getResourceAsString("/util/message.txt");
+        String sanitizedMsgSanitized = TS.util().getResourceAsString("/util/message_sanitized.txt");
         TS.addMaskBulk("fairest", "creatures", "decease");
         TS.getMaskValues();
         TS.asserts().equalsTo(sanitizedMsgSanitized, TS.sanitizeString(message));
