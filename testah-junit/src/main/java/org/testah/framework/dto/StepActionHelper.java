@@ -104,8 +104,10 @@ public class StepActionHelper {
             step.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());
         }
         if (autoLog) {
-            TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message +
-                    " - expected[" + expected + "] actual[" + actual + "]");
+            String msg =
+                    TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message +
+                            " - expected [" + expected + "] actual [" + actual + "]";
+            TS.log().debug(TS.sanitizeString(msg));
             if (null != step.getExceptionString()) {
                 TS.log().trace("Exception Related to above Assert\n" + step.getExceptionString());
             }

@@ -95,12 +95,12 @@ public class AssertCollections<T> extends AbstractAssertBase<AssertCollections, 
      */
     public AssertCollections doesNotContain(final T expectedValueNotContained) {
         AssertFunctionReturnBooleanActual<Collection<T>> assertRun = (expected, actual, history) -> {
-            history.setExpectedForHistory("Expect to not contain[" + expectedValueNotContained + "]");
+            history.setExpectedForHistory("Expect to not contain [" + expectedValueNotContained + "]");
             Assert.assertFalse(getActual().contains(expectedValueNotContained));
             return true;
         };
-        return runAssert("Check that actual[" + getActual() + "] does not contain " + expectedValueNotContained, "doesNotContain",
-                assertRun, null, getActual());
+        return runAssert("Check that actual [" + getActual() + "] does not contain [" + expectedValueNotContained + "].",
+                "doesNotContain", assertRun, null, getActual());
     }
 
     /**

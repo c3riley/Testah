@@ -3,6 +3,7 @@ package org.testah.util;
 import com.google.common.collect.Sets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testah.TS;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -142,5 +143,16 @@ public class StringMaskingTest
         StringMasking.INSTANCE.getInstance().removeRegexExemption(regex3).addBulk(str8);
         assertEquals("in***01", StringMasking.INSTANCE.getInstance().getValue(str8));
         assertEquals(Sets.newHashSet(regex1, regex2), StringMasking.INSTANCE.getInstance().getRegexExemptions());
+    }
+
+    @Test
+    void testSanitizeMessage()
+    {
+        StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
+        String message = TS.util().getResourceAsString("/message.txt");
+        String sanitizedMsgSanitized = TS.util().getResourceAsString("/message_sanitized.txt");
+        TS.addMaskBulk("fairest", "creatures", "decease");
+        TS.getMaskValues();
+        TS.asserts().equalsTo(sanitizedMsgSanitized, TS.sanitizeString(message));
     }
 }

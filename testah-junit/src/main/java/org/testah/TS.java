@@ -306,6 +306,10 @@ public class TS {
         return StringMasking.INSTANCE.getInstance().getValue(plainString);
     }
 
+    public static String sanitizeString(String str) {
+        return StringMasking.INSTANCE.getInstance().sanitizeString(str);
+    }
+
     /**
      * Add mask irrespective of exemptions.
      * Used to help mask password and other sensitive strings from the logs/reports.
