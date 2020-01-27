@@ -213,7 +213,7 @@ public enum StringMasking
     }
 
     private String sanitizeString(String message, Iterator<Map.Entry<String, String>> entries) {
-        if (entries.hasNext()) {
+        if (message != null && entries.hasNext()) {
             Map.Entry<String, String> entry = entries.next();
             return sanitizeString(message.replaceAll(entry.getKey(), entry.getValue()), entries);
         }
