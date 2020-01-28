@@ -42,8 +42,7 @@ public class TestTS
                 log = systemOutCapture.getSystemOut();
             }
             validateMasking(log);
-        }
-        finally
+        } finally
         {
             TS.params().setLevel(Level.DEBUG);
             TS.resetMaskValueMap();

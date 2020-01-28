@@ -110,7 +110,7 @@ public class StepActionHelper {
                     TestStepActionType.ASSERT, assertMethod, status, publishableMessage, expected, publishableActual);
             TS.log().debug(msg);
             if (null != step.getExceptionString()) {
-                TS.log().trace(String.format("Exception Related to above Assert%n", TS.sanitizeString(step.getExceptionString())));
+                TS.log().trace(String.format("Exception Related to above Assert%n%s", TS.sanitizeString(step.getExceptionString())));
             }
         }
         return step;
