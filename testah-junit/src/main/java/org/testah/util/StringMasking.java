@@ -203,7 +203,7 @@ public enum StringMasking
      * @return the sanitized string
      */
     public String sanitizeString(String str) {
-        if (TS.params().isMaskOutput())
+        if (str != null && TS.params().isMaskOutput())
         {
             return sanitizeString(str, getMap().entrySet().iterator());
         } else
@@ -212,12 +212,12 @@ public enum StringMasking
         }
     }
 
-    private String sanitizeString(String message, Iterator<Map.Entry<String, String>> entries) {
-        if (message != null && entries.hasNext()) {
+    private String sanitizeString(String str, Iterator<Map.Entry<String, String>> entries) {
+        if (entries.hasNext()) {
             Map.Entry<String, String> entry = entries.next();
-            return sanitizeString(message.replaceAll(entry.getKey(), entry.getValue()), entries);
+            return sanitizeString(str.replace(entry.getKey(), entry.getValue()), entries);
         }
-        return message;
+        return str;
     }
 
     /**
