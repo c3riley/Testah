@@ -1,0 +1,8 @@
+[
+  {"step": 1, "threads": 1, "chunkSize": 100, "durationMinutes": 10, "isPublish":  false, "isVerbose": true},
+  {"step": 2, "threads": 2, "chunkSize": 200, "durationMinutes": 20, "isPublish":  true},
+  {"step": 3, "threads": 3, "chunkSize": 300, "durationMinutes": 30, "isVerbose": false, "millisBetweenChunks": 100},
+  {"step": 4, "threads": 4, "chunkSize": 400, "durationMinutes": 40, "isPublish":  true},
+  {"step": 5, "threads": 5, "chunkSize": 500, "durationMinutes": 50, "isPublish":  false, "isVerbose": true, "millisBetweenChunks": 10},
+  {"step": 6, "threads": 6, "chunkSize": 600, "durationMinutes": 60}
+]
