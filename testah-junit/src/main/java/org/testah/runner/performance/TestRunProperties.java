@@ -248,7 +248,8 @@ public class TestRunProperties {
     /**
      * Set an id for a test run. The framework does not use it.
      * The framework itself does not use it.
-     * @param this object
+     * @param id the test run id
+     * @return this object
      */
     public TestRunProperties setId(String id)
     {
