@@ -30,7 +30,6 @@ class TestTS
     @Test
     void testSanitizeMessageContainsPass()
     {
-        System.out.println(">>>>> " + TS.log().getLevel());
         try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
             TS.asserts().contains("Check logging.", message, "we desire increase");
             log = systemOutCapture.getSystemOut();
