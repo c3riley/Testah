@@ -2,6 +2,7 @@ package org.testah;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,15 @@ public class TestProjectDtos {
     public void setup() {
         test = new org.testah.util.unittest.dtotest.DtoTest();
         test.addToAnnotationsToIgnore(JsonIgnore.class);
+        TS.resetMaskValueMap();
+    }
+
+    /**
+     * Clear the masking map to obfuscate sensitive data.
+     */
+    @After
+    public void tearDown() {
+        TS.resetMaskValueMap();
     }
 
     /**

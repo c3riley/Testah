@@ -92,21 +92,24 @@ public class StepAction extends StepActionDto {
     public static StepAction createAssertResult(final String message, final Boolean status, final String assertMethod,
                                                 final Object expected, final Object actual, final Throwable exception) {
         final StepAction step = new StepAction();
+        String publishableMessage = TS.sanitizeString(message);
+        String publishableActual = TS.sanitizeString(String.valueOf(actual));
         step.setActionName(assertMethod);
-        step.setMessage1(message);
+        step.setMessage1(publishableMessage);
         step.setStatus(status);
         step.setMessage2(String.valueOf(expected));
-        step.setMessage3(String.valueOf(actual));
+        step.setMessage3(publishableActual);
         step.setException(exception);
         step.setTestStepActionType(TestStepActionType.ASSERT);
         if (TS.isBrowser() && !status) {
             step.setSnapShotPath(TS.browser().takeScreenShot());
             step.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());
         }
-        TS.log().debug(TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message +
-                " - expected[" + expected + "] actual[" + actual + "]");
+        String msg = String.format("%s [%s] - %s - %s%nexpected%n[%s]%nactual%n[%s]",
+                TestStepActionType.ASSERT, assertMethod, status, publishableMessage, expected, publishableActual);
+        TS.log().debug(msg);
         if (null != step.getExceptionString()) {
-            TS.log().trace("Exception Related to above Assert\n" + step.getExceptionString());
+            TS.log().trace(String.format("Exception Related to above Assert%n%s", step.getExceptionString()));
         }
         return step;
     }
@@ -125,16 +128,19 @@ public class StepAction extends StepActionDto {
     public static StepAction createVerifyResult(final String message, final Boolean status, final String assertMethod,
                                                 final Object expected, final Object actual, final Throwable exception) {
         final StepAction step = new StepAction();
+        String publishableMessage = TS.sanitizeString(message);
+        String publishableActual = TS.sanitizeString(String.valueOf(actual));
         step.setActionName(assertMethod);
-        step.setMessage1(message + " - " + status);
+        step.setMessage1(publishableMessage + " - " + status);
         step.setStatus(null);
         step.setMessage2(String.valueOf(expected));
-        step.setMessage3(String.valueOf(actual));
+        step.setMessage3(publishableActual);
         step.setException(null);
         step.setTestStepActionType(TestStepActionType.VERIFY);
 
-        TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " + status + " - " + message +
-                " - expected[" + expected + "] actual[" + actual + "]");
+        String msg = String.format("%s [%s] - %s - %s%nexpected%n[%s]%nactual%n[%s]",
+                TestStepActionType.VERIFY, assertMethod, status, publishableMessage, expected, publishableActual);
+        TS.log().debug(msg);
         return step;
     }
 
@@ -175,9 +181,9 @@ public class StepAction extends StepActionDto {
     public static StepAction createInfo(final String message1, final String message2, final String message3,
                                         final boolean autoLog, final boolean takeSnapShot) {
         final StepAction step = new StepAction();
-        step.setMessage1(message1);
-        step.setMessage2(message2);
-        step.setMessage3(message3);
+        step.setMessage1(TS.sanitizeString(message1));
+        step.setMessage2(TS.sanitizeString(message2));
+        step.setMessage3(TS.sanitizeString(message3));
         step.setTestStepActionType(TestStepActionType.INFO);
         if (autoLog) {
             TS.log().debug(TestStepActionType.INFO + " - " + step.getMessage1() + " - " + step.getMessage2());

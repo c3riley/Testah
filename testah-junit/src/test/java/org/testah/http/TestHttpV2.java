@@ -1,6 +1,8 @@
 package org.testah.http;
 
 import org.apache.http.client.ClientProtocolException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.testah.TS;
@@ -19,6 +21,16 @@ import java.io.IOException;
 @TestPlan(description = "test Http")
 public class TestHttpV2 extends HttpTestPlan {
 
+    @Before
+    public void setup() {
+        TS.resetMaskValueMap();
+    }
+
+    @After
+    public void tearDown() {
+        TS.resetMaskValueMap();
+    }
+
     @TestCase
     @Test
     public void testWith2Gets() throws ClientProtocolException, IOException {
@@ -27,7 +39,6 @@ public class TestHttpV2 extends HttpTestPlan {
         http.setHttpClient().doRequestWithAssert(new GetRequestDto("http://www.google.com"));
         step("go to google again");
         http.setHttpClient().doRequestWithAssert(new GetRequestDto("http://www.google.com"));
-
     }
 
     @Ignore

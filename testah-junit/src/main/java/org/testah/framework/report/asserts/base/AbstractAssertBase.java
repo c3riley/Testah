@@ -224,6 +224,4 @@ public abstract class AbstractAssertBase<H extends AbstractAssertBase, T> {
         getAsserts().that(getActual(), matcher);
         return (H) this;
     }
-
-
 }

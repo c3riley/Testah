@@ -166,7 +166,7 @@ public enum StringMasking
         if (plainValue.length() > stringMaskingHelper.stringMaskingConfig.getMinStringLength())
         {
             maskedValuesMap.put(plainValue, getMaskedString(plainValue));
-        } else
+        } else if (plainValue.length() > 0 )
         {
             maskedValuesMap.put(plainValue, getMaskedString());
         }

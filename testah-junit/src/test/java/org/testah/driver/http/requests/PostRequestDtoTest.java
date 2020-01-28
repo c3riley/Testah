@@ -31,7 +31,7 @@ public class PostRequestDtoTest {
     PostRequestDto postWithData;
 
     /**
-     * Sets .
+     * Setup test.
      */
     @Before
     public void setup() {
@@ -214,6 +214,7 @@ public class PostRequestDtoTest {
         Assert.assertNotNull(TS.getMaskValues().get("User1"));
         Assert.assertNotNull(TS.getMaskValues().get("password"));
         Assert.assertNotNull(TS.getMaskValues().get("VXNlcjE6cGFzc3dvcmQ="));
+        TS.resetMaskValueMap();
     }
 
     @Test
@@ -230,6 +231,7 @@ public class PostRequestDtoTest {
         Assert.assertNotNull(TS.getMaskValues().get("User1"));
         Assert.assertNotNull(TS.getMaskValues().get("password"));
         Assert.assertNotNull(TS.getMaskValues().get("VXNlcjE6cGFzc3dvcmQ="));
+        TS.resetMaskValueMap();
     }
 
     @Test

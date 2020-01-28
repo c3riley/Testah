@@ -1,8 +1,9 @@
 package org.testah.util;
 
 import com.google.common.collect.Sets;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.testah.TS;
 
 import java.util.HashMap;
@@ -28,8 +29,17 @@ public class StringMaskingTest
     /**
      * Set up for testing.
      */
-    @BeforeEach
+    @Before
     public void setup() {
+        StringMaskingConfig.INSTANCE.reset();
+        StringMasking.INSTANCE.reset();
+    }
+
+    /**
+     * Cleanup masking map.
+     */
+    @After
+    public void cleanup() {
         StringMaskingConfig.INSTANCE.reset();
         StringMasking.INSTANCE.reset();
     }
@@ -146,7 +156,7 @@ public class StringMaskingTest
     }
 
     @Test
-    void testSanitizeMessage()
+    public void testSanitizeMessage()
     {
         StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
         String message = TS.util().getResourceAsString("/util/message.txt");
@@ -156,7 +166,7 @@ public class StringMaskingTest
     }
 
     @Test
-    void testSanitizeMessageNoMasking()
+    public void testSanitizeMessageNoMasking()
     {
         try
         {
@@ -165,15 +175,14 @@ public class StringMaskingTest
             String message = TS.util().getResourceAsString("/util/message.txt");
             TS.addMaskBulk("fair", "fairest", "creatures", "decease");
             TS.asserts().equalsTo(message, TS.sanitizeString(message));
-        }
-        finally
+        } finally
         {
             TS.params().setMaskOutput(true);
         }
     }
 
     @Test
-    void testSanitizeNullMessage()
+    public void testSanitizeNullMessage()
     {
         StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
         String message = null;
@@ -182,7 +191,7 @@ public class StringMaskingTest
     }
 
     @Test
-    void testSanitizeEmptyMessage()
+    public void testSanitizeEmptyMessage()
     {
         StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
         String message = "";
@@ -191,7 +200,7 @@ public class StringMaskingTest
     }
 
     @Test
-    void testSanitizeNothingToMask()
+    public void testSanitizeNothingToMask()
     {
         StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
         TS.resetMaskValueMap();

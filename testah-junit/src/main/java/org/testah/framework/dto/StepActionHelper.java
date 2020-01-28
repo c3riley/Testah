@@ -92,11 +92,13 @@ public class StepActionHelper {
     public StepActionDto assertResult(final String message, final Boolean status, final String assertMethod,
                                       final Object expected, final Object actual, final Throwable exception,
                                       final StepActionDto step, final boolean autoLog) {
+        String publishableMessage = TS.sanitizeString(message);
+        String publishableActual = TS.sanitizeString(String.valueOf(actual));
         step.setActionName(assertMethod);
-        step.setMessage1(message);
+        step.setMessage1(publishableMessage);
         step.setStatus(status);
         step.setMessage2(String.valueOf(expected));
-        step.setMessage3(String.valueOf(actual));
+        step.setMessage3(publishableActual);
         step.setException(exception);
         step.setTestStepActionType(TestStepActionType.ASSERT);
         if (TS.isBrowser() && !status) {
@@ -104,12 +106,11 @@ public class StepActionHelper {
             step.setHtmlSnapShotPath(TS.browser().takeHtmlSnapshot());
         }
         if (autoLog) {
-            String msg =
-                    TestStepActionType.ASSERT + "[" + assertMethod + "] - " + status + " - " + message +
-                            " - expected [" + expected + "] actual [" + actual + "]";
-            TS.log().debug(TS.sanitizeString(msg));
+            String msg = String.format("%s [%s] - %s - %s%nexpected%n[%s]%nactual%n[%s]",
+                    TestStepActionType.ASSERT, assertMethod, status, publishableMessage, expected, publishableActual);
+            TS.log().debug(msg);
             if (null != step.getExceptionString()) {
-                TS.log().trace("Exception Related to above Assert\n" + step.getExceptionString());
+                TS.log().trace(String.format("Exception Related to above Assert%n", TS.sanitizeString(step.getExceptionString())));
             }
         }
         return step;
@@ -193,16 +194,19 @@ public class StepActionHelper {
     public StepActionDto verifyResult(final String message, final Boolean status, final String assertMethod,
                                       final Object expected, final Object actual, final Throwable exception,
                                       final StepActionDto step, boolean autoLog) {
+        String publishableMessage = TS.sanitizeString(message);
+        String publishableActual = TS.sanitizeString(String.valueOf(actual));
         step.setActionName(assertMethod);
-        step.setMessage1(message + " - " + status);
+        step.setMessage1(publishableMessage + " - " + status);
         step.setStatus(null);
         step.setMessage2(String.valueOf(expected));
-        step.setMessage3(String.valueOf(actual));
+        step.setMessage3(publishableActual);
         step.setException(null);
         step.setTestStepActionType(TestStepActionType.VERIFY);
         if (autoLog) {
-            TS.log().debug(TestStepActionType.VERIFY + "[" + assertMethod + "] - " +
-                    status + " - " + message + " - expected[" + expected + "] actual[" + actual + "]");
+            String msg = String.format("%s [%s] - %s - %s%nexpected%n[%s]%nactual%n[%s]",
+                    TestStepActionType.VERIFY, assertMethod, status, publishableMessage, expected, publishableActual);
+            TS.log().debug(msg);
         }
         return step;
     }
@@ -288,9 +292,9 @@ public class StepActionHelper {
      */
     public StepActionDto info(final String message1, final String message2, final String message3,
                               final boolean autoLog, final boolean takeSnapShot, final StepActionDto step) {
-        step.setMessage1(message1);
-        step.setMessage2(message2);
-        step.setMessage3(message3);
+        step.setMessage1(TS.sanitizeString(message1));
+        step.setMessage2(TS.sanitizeString(message2));
+        step.setMessage3(TS.sanitizeString(message3));
         step.setTestStepActionType(TestStepActionType.INFO);
         if (autoLog) {
             TS.log().debug(TestStepActionType.INFO + " - " + step.getMessage1() + " - " + step.getMessage2());
@@ -327,7 +331,7 @@ public class StepActionHelper {
      * @return the step action dto
      */
     public StepActionDto createBrowserAction(final String message1, final Object by) {
-        return createBrowserAction(message1, by.toString());
+        return createBrowserAction(TS.sanitizeString(message1), by.toString());
     }
 
     /**
@@ -338,7 +342,7 @@ public class StepActionHelper {
      * @return the step action dto
      */
     public StepActionDto createBrowserAction(final String message1, final String message2) {
-        return browserAction(message1, message2, create());
+        return browserAction(TS.sanitizeString(message1), TS.sanitizeString(message2), create());
     }
 
     /**
@@ -362,8 +366,8 @@ public class StepActionHelper {
      * @return the step action dto
      */
     public StepActionDto browserAction(final String message1, final String message2, final StepActionDto step) {
-        step.setMessage1(message1);
-        step.setMessage2(message2);
+        step.setMessage1(TS.sanitizeString(message1));
+        step.setMessage2(TS.sanitizeString(message2));
         step.setTestStepActionType(TestStepActionType.BROWSER_ACTION);
         step.log();
         return step;

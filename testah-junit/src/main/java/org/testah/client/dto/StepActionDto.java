@@ -297,7 +297,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
             }
         }
 
-        return exceptionString;
+        return TS.sanitizeString(exceptionString);
     }
 
     /**
@@ -424,7 +424,7 @@ public class StepActionDto extends AbstractDtoBase<StepActionDto> {
             if (null != this.getMessage3()) {
                 sb.append(" ").append(this.getMessage3());
             }
-            TS.log().info(sb.toString());
+            TS.log().info(TS.sanitizeString(sb.toString()));
         }
         return this;
     }

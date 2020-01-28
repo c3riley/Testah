@@ -78,7 +78,7 @@ public class AssertStrings extends AbstractAssertBase<AssertStrings, String> {
      */
     protected AssertStrings equalsTo(final String extraMessage, final String expected, final String actual, boolean ignoreCase) {
         if (actual == null || expected == null || !expected.contains(System.lineSeparator())) {
-            runAssert("Traditional equals" + extraMessage,
+            runAssert("Traditional equals " + extraMessage,
                 "equalsTo",
                 getAssertBlock(() -> {
                     if (ignoreCase) {
