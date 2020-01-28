@@ -151,8 +151,51 @@ public class StringMaskingTest
         StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
         String message = TS.util().getResourceAsString("/util/message.txt");
         String sanitizedMsgSanitized = TS.util().getResourceAsString("/util/message_sanitized.txt");
-        TS.addMaskBulk("fairest", "creatures", "decease");
-        TS.getMaskValues();
+        TS.addMaskBulk("fair", "fairest", "creatures", "reatur", "decease");
         TS.asserts().equalsTo(sanitizedMsgSanitized, TS.sanitizeString(message));
+    }
+
+    @Test
+    void testSanitizeMessageNoMasking()
+    {
+        try
+        {
+            TS.params().setMaskOutput(false);
+            StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
+            String message = TS.util().getResourceAsString("/util/message.txt");
+            TS.addMaskBulk("fair", "fairest", "creatures", "decease");
+            TS.asserts().equalsTo(message, TS.sanitizeString(message));
+        }
+        finally
+        {
+            TS.params().setMaskOutput(true);
+        }
+    }
+
+    @Test
+    void testSanitizeNullMessage()
+    {
+        StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
+        String message = null;
+        TS.addMaskBulk("fair", "fairest", "creatures", "decease");
+        TS.asserts().equalsTo(message, TS.sanitizeString(message));
+    }
+
+    @Test
+    void testSanitizeEmptyMessage()
+    {
+        StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
+        String message = "";
+        TS.addMaskBulk("fair", "fairest", "creatures", "decease");
+        TS.asserts().equalsTo(message, TS.sanitizeString(message));
+    }
+
+    @Test
+    void testSanitizeNothingToMask()
+    {
+        StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
+        TS.resetMaskValueMap();
+        String message = TS.util().getResourceAsString("/util/message.txt");
+        TS.asserts().equalsTo(message, TS.sanitizeString(message));
     }
 }
