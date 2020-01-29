@@ -10,8 +10,6 @@ import org.testah.util.unittest.dtotest.SystemOutCapture;
 
 public class TestTS
 {
-    String message;
-    String log;
 
     // avoid concurrent test execution issues by using only one test case
     @Test(expected = AssertionError.class)
@@ -20,11 +18,12 @@ public class TestTS
         try
         {
             StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
-            message = TS.util().getResourceAsString("/util/message.txt");
+            final String message = TS.util().getResourceAsString("/util/message.txt");
             TS.resetMaskValueMap();
             TS.addMaskBulk("fairest", "creatures", "decease");
             TS.params().setLevel(Level.INFO);
 
+            String log;
             try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
                 TS.asserts().contains("Check logging.", message, "we desire increase");
                 log = systemOutCapture.getSystemOut();
@@ -32,13 +31,37 @@ public class TestTS
             validateMasking(log);
 
             try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
-                TS.asserts().startsWith("message", message, "From");
+                TS.asserts().startsWith(message, message, "From");
                 log = systemOutCapture.getSystemOut();
             }
             validateMasking(log);
 
             try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
-                TS.asserts().contains("Check logging.", message, "string not there");
+                TS.asserts().equalsTo(message, message, "we desire increase");
+                log = systemOutCapture.getSystemOut();
+            }
+            validateMasking(log);
+
+            try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
+                TS.asserts().notNull(message, message);
+                log = systemOutCapture.getSystemOut();
+            }
+            validateMasking(log);
+
+            try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
+                TS.asserts().isTrue(message, true);
+                log = systemOutCapture.getSystemOut();
+            }
+            validateMasking(log);
+
+            try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
+                TS.asserts().isTrue(message, false);
+                log = systemOutCapture.getSystemOut();
+            }
+            validateMasking(log);
+
+            try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
+                TS.asserts().contains(message, message, "string not there");
                 log = systemOutCapture.getSystemOut();
             }
             validateMasking(log);
