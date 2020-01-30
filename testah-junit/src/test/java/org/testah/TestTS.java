@@ -2,7 +2,6 @@ package org.testah;
 
 import org.apache.logging.log4j.Level;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.testah.framework.report.VerboseAsserts;
 import org.testah.framework.report.asserts.AssertStrings;
