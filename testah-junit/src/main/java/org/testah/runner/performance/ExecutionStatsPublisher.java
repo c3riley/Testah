@@ -21,11 +21,13 @@ public interface ExecutionStatsPublisher {
 
     /**
      * When running performance/stress tests, there may be tasks that need to be executed before each step.
+     * @param step publishing task to be executed before step
      */
     public void beforeTestSequenceStep(LoadTestSequenceDto step);
 
     /**
      * When running performance/stress tests, there may be tasks that need to be executed after each step.
+     * @param step publishing task to be executed after step
      */
     public void afterTestSequenceStep(LoadTestSequenceDto step);
 }

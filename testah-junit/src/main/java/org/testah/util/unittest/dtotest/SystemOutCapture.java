@@ -62,6 +62,25 @@ public class SystemOutCapture implements Closeable {
     }
 
     /**
+     * Gets system stdout and stderr.
+     *
+     * @return stdout followed by stderr
+     */
+    public String getSystemOutErr() {
+        return getSystemOutErr(true);
+    }
+
+    /**
+     * Gets system stdout and stderr.
+     *
+     * @param clearAfterReturningContent whether to clear the buffer when returning the content
+     * @return stdout followed by stderr
+     */
+    public String getSystemOutErr(final boolean clearAfterReturningContent) {
+        return String.format("%n%s%n%s", getSystemOut(clearAfterReturningContent), getSystemErr(clearAfterReturningContent));
+    }
+
+    /**
      * Gets system err.
      *
      * @return the system err

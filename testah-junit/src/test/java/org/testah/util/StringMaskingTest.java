@@ -1,8 +1,10 @@
 package org.testah.util;
 
 import com.google.common.collect.Sets;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.testah.TS;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,8 +29,17 @@ public class StringMaskingTest
     /**
      * Set up for testing.
      */
-    @BeforeEach
+    @Before
     public void setup() {
+        StringMaskingConfig.INSTANCE.reset();
+        StringMasking.INSTANCE.reset();
+    }
+
+    /**
+     * Cleanup masking map.
+     */
+    @After
+    public void cleanup() {
         StringMaskingConfig.INSTANCE.reset();
         StringMasking.INSTANCE.reset();
     }
@@ -142,5 +153,58 @@ public class StringMaskingTest
         StringMasking.INSTANCE.getInstance().removeRegexExemption(regex3).addBulk(str8);
         assertEquals("in***01", StringMasking.INSTANCE.getInstance().getValue(str8));
         assertEquals(Sets.newHashSet(regex1, regex2), StringMasking.INSTANCE.getInstance().getRegexExemptions());
+    }
+
+    @Test
+    public void testSanitizeMessage()
+    {
+        StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
+        String message = TS.util().getResourceAsString("/util/message.txt");
+        String sanitizedMsgSanitized = TS.util().getResourceAsString("/util/message_sanitized.txt");
+        TS.addMaskBulk("fair", "fairest", "creatures", "reatur", "decease");
+        TS.asserts().equalsTo(sanitizedMsgSanitized, TS.sanitizeString(message));
+    }
+
+    @Test
+    public void testSanitizeMessageNoMasking()
+    {
+        try
+        {
+            TS.params().setMaskOutput(false);
+            StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
+            String message = TS.util().getResourceAsString("/util/message.txt");
+            TS.addMaskBulk("fair", "fairest", "creatures", "decease");
+            TS.asserts().equalsTo(message, TS.sanitizeString(message));
+        } finally
+        {
+            TS.params().setMaskOutput(true);
+        }
+    }
+
+    @Test
+    public void testSanitizeNullMessage()
+    {
+        StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
+        String message = null;
+        TS.addMaskBulk("fair", "fairest", "creatures", "decease");
+        TS.asserts().equalsTo(message, TS.sanitizeString(message));
+    }
+
+    @Test
+    public void testSanitizeEmptyMessage()
+    {
+        StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
+        String message = "";
+        TS.addMaskBulk("fair", "fairest", "creatures", "decease");
+        TS.asserts().equalsTo(message, TS.sanitizeString(message));
+    }
+
+    @Test
+    public void testSanitizeNothingToMask()
+    {
+        StringMaskingConfig.INSTANCE.createInstance(6, 2, 2);
+        TS.resetMaskValueMap();
+        String message = TS.util().getResourceAsString("/util/message.txt");
+        TS.asserts().equalsTo(message, TS.sanitizeString(message));
     }
 }

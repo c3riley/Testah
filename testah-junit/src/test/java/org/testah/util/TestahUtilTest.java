@@ -48,7 +48,9 @@ public class TestahUtilTest {
 
     @Test
     public void getResourceAsString() {
-        Assert.assertEquals("test1.json\n" +
+        Assert.assertEquals("message_sanitized.txt\n" +
+                "message.txt\n" +
+                "test1.json\n" +
                 "test2.txt\n" +
                 "test3.log\n", testahUtil.getResourceAsString("/util"));
         Assert.assertNull(testahUtil.getResourceAsString("util"));
@@ -78,10 +80,10 @@ public class TestahUtilTest {
     public void getResourceFolderFiles() {
         Assert.assertEquals("get base files only", 0, testahUtil.getResourceFolderFiles("").size());
         Assert.assertEquals("get base files/folders", 1, testahUtil.getResourceFolderFiles("", false).size());
-        Assert.assertEquals("get util", 3, testahUtil.getResourceFolderFiles("util").size());
-        Assert.assertEquals("get util", 3, testahUtil.getResourceFolderFiles("util", false).size());
-        Assert.assertEquals("get util remove leading slash", 3, testahUtil.getResourceFolderFiles("/util").size());
-        Assert.assertEquals("get util remove leading slash", 3, testahUtil.getResourceFolderFiles("/util", false).size());
+        Assert.assertEquals("get util", 5, testahUtil.getResourceFolderFiles("util").size());
+        Assert.assertEquals("get util", 5, testahUtil.getResourceFolderFiles("util", false).size());
+        Assert.assertEquals("get util remove leading slash", 5, testahUtil.getResourceFolderFiles("/util").size());
+        Assert.assertEquals("get util remove leading slash", 5, testahUtil.getResourceFolderFiles("/util", false).size());
     }
 
     @Test
@@ -129,14 +131,12 @@ public class TestahUtilTest {
     public void testToJsonPrint() throws JsonProcessingException {
         String content;
         try (SystemOutCapture systemOutCapture = new SystemOutCapture().start()) {
-
             TS.asserts().equalsTo("[ \"test\" ]", testahUtil.toJsonPrint(new String[]{"test"}));
             content = systemOutCapture.getSystemOut();
         }
-        TS.log().info("test");
+        TS.log().info(content);
         new AssertStrings(content)
                 .contains("JSON Output for class [Ljava.lang.String;\n[ \"test\" ]");
-        TS.log().info(content);
     }
 
     @Test
@@ -156,6 +156,4 @@ public class TestahUtilTest {
         assertThat(files.size(), equalTo(2));
         assertThat(files.stream().filter(fileInList -> fileInList.getName().equals("META-INF")).findFirst().isPresent(), is(true));
     }
-
-
 }

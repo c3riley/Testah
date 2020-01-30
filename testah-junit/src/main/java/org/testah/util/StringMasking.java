@@ -3,10 +3,12 @@ package org.testah.util;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.RandomStringUtils;
+import org.testah.TS;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -164,7 +166,7 @@ public enum StringMasking
         if (plainValue.length() > stringMaskingHelper.stringMaskingConfig.getMinStringLength())
         {
             maskedValuesMap.put(plainValue, getMaskedString(plainValue));
-        } else
+        } else if (plainValue.length() > 0 ) // do not mask the empty string
         {
             maskedValuesMap.put(plainValue, getMaskedString());
         }
@@ -193,6 +195,29 @@ public enum StringMasking
         return String.format(StringMaskingConfig.MASKING_PATTERN,
                 RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getFirstN()),
                 RandomStringUtils.randomAscii(stringMaskingHelper.stringMaskingConfig.getLastN()));
+    }
+
+    /**
+     * Replace all occurances of each masking map key by the corresponding map value.
+     * @param str string in which to replace the keys
+     * @return the sanitized string
+     */
+    public String sanitizeString(String str) {
+        if (str != null && TS.params().isMaskOutput())
+        {
+            return sanitizeString(str, getMap().entrySet().iterator());
+        } else
+        {
+            return str;
+        }
+    }
+
+    private String sanitizeString(String str, Iterator<Map.Entry<String, String>> entries) {
+        if (entries.hasNext()) {
+            Map.Entry<String, String> entry = entries.next();
+            return sanitizeString(str.replace(entry.getKey(), entry.getValue()), entries);
+        }
+        return str;
     }
 
     /**

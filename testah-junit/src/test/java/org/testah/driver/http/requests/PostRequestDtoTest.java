@@ -209,11 +209,12 @@ public class PostRequestDtoTest {
                 header.getValue().equals("Basic VXNlcjE6cGFzc3dvcmQ=")
         ).isPresent());
 
-        TS.asserts().assertSystemOutContains(() -> postWithData.printComplete(), "Basic VXNlcjE6cGFzc3dvcmQ=");
+        TS.asserts().assertSystemOutContains(() -> postWithData.printComplete(), "Basic VX***Q=");
         Assert.assertEquals(3, TS.getMaskValues().size());
         Assert.assertNotNull(TS.getMaskValues().get("User1"));
         Assert.assertNotNull(TS.getMaskValues().get("password"));
         Assert.assertNotNull(TS.getMaskValues().get("VXNlcjE6cGFzc3dvcmQ="));
+        TS.resetMaskValueMap();
     }
 
     @Test
@@ -225,11 +226,12 @@ public class PostRequestDtoTest {
                 header.getValue().equals("Basic VXNlcjE6cGFzc3dvcmQ=")
         ).isPresent());
 
-        TS.asserts().assertSystemOutContains(() -> postWithData.printComplete(), "Basic VXNlcjE6cGFzc3dvcmQ=");
+        TS.asserts().assertSystemOutContains(() -> postWithData.printComplete(), "Basic VX***Q=");
         Assert.assertEquals(3, TS.getMaskValues().size());
         Assert.assertNotNull(TS.getMaskValues().get("User1"));
         Assert.assertNotNull(TS.getMaskValues().get("password"));
         Assert.assertNotNull(TS.getMaskValues().get("VXNlcjE6cGFzc3dvcmQ="));
+        TS.resetMaskValueMap();
     }
 
     @Test
