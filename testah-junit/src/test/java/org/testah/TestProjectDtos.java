@@ -96,9 +96,7 @@ public class TestProjectDtos {
         test.addToIgnoredGetFields("getEndDate");
         test.addToIgnoredGetFields("getStartDate");
         test.testGettersAndSetters(new RunTimeDto());
-
     }
-
 
     /**
      * Test many dtos in the project.
