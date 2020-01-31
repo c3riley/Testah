@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="INFO">
+<Configuration status="INFO" packages="org.testah.util.log.converter">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level - %-25C{1} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level - %-25C{1} - %sdmsg%n"/>
         </Console>
-        <File name="LogFile" fileName="testah.log" immediateFlush="false"
-              append="false">
-            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} %-5level - %-25C{1} - %msg%n"/>
+        <File name="LogFile" fileName="testah.log" immediateFlush="true" append="true">
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} %-5level - %-25C{1} - %sdmsg%n"/>
         </File>
     </Appenders>
     <Loggers>
