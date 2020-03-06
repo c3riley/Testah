@@ -5,6 +5,7 @@ import org.testah.TS;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.report.performance.dto.ChunkStats;
 import org.testah.runner.http.load.HttpAkkaStats;
+import org.testah.runner.performance.dto.LoadTestSequenceDto;
 
 import java.util.List;
 
@@ -26,6 +27,16 @@ public class ChunkStatsLogPublisher implements ExecutionStatsPublisher {
 
     @Override
     public void cleanup() {
+        // no post processing required
+    }
+
+    @Override
+    public void beforeTestSequenceStep(LoadTestSequenceDto step) {
+        // no post processing required
+    }
+
+    @Override
+    public void afterTestSequenceStep(LoadTestSequenceDto step) {
         // no post processing required
     }
 }

@@ -198,6 +198,15 @@ public class Params {
             info = "[BAR1]Reporting Properties[BAR2]Folder to write output to, if empty will be {user dir}/testahOutput")
     @Arg(dest = "output")
     private String output = "";
+
+    /**
+     * Mask output using TS.sanitizeString(...).
+     */
+    @Comment(
+            info = "If set to true output from asserts will be sanitized using the masking map."
+    )
+    @Arg(dest = "isMaskOutput")
+    private boolean isMaskOutput = true;
     /**
      * The use xunit formatter.
      */
@@ -1666,6 +1675,17 @@ public class Params {
 
     public void setWriteResponseToFile(boolean writeResponseToFile) {
         this.writeResponseToFile = writeResponseToFile;
+    }
+
+    public boolean isMaskOutput()
+    {
+        return isMaskOutput;
+    }
+
+    public Params setMaskOutput(boolean maskOutput)
+    {
+        isMaskOutput = maskOutput;
+        return this;
     }
 
     public String getReportHtmlTemplate() {

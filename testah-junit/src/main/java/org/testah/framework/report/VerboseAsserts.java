@@ -2001,30 +2001,62 @@ public class VerboseAsserts
         return new AssertNumber<T>(actual, this);
     }
 
+    /**
+     * Look for an array of strings in standard error.
+     *
+     * @param code the executable code that will write to standard err.
+     * @param textToContain the array of strings to look for
+     * @return true if each string is found, false otherwise
+     */
     public boolean assertSystemErrContains(final Runnable code, final String... textToContain)
-    {
-        return assertSystemOutContains(code, textToContain, true);
-    }
-
-    public boolean assertSystemOutContains(final Runnable code, final String... textToContain)
-    {
-        return assertSystemOutContains(code, textToContain, false);
-    }
-
-    private boolean assertSystemOutContains(final Runnable code, final String[] textToContain, final boolean useErr)
     {
         String content = null;
         try (SystemOutCapture systemOutCapture = new SystemOutCapture().start())
         {
             code.run();
-            if (useErr)
-            {
-                content = systemOutCapture.getSystemErr();
-            } else
-            {
-                content = systemOutCapture.getSystemOut();
-            }
+            content = systemOutCapture.getSystemErr();
         }
+        return assertContains(content, textToContain);
+    }
+
+    /**
+     * Look for an array of strings in standard output.
+     *
+     * @param code the executable code that will write to standard out.
+     * @param textToContain the array of strings to look for
+     * @return true if each string is found, false otherwise
+     */
+    public boolean assertSystemOutContains(final Runnable code, final String... textToContain)
+    {
+        String content = null;
+        try (SystemOutCapture systemOutCapture = new SystemOutCapture().start())
+        {
+            code.run();
+            content = systemOutCapture.getSystemOut();
+        }
+        return assertContains(content, textToContain);
+    }
+
+    /**
+     * Look for an array of strings in both standard output and standard error.
+     *
+     * @param code the executable code that will write to standard out/err.
+     * @param textToContain the array of strings to look for
+     * @return true if each string is found, false otherwise
+     */
+    public boolean assertSystemOutErrContains(final Runnable code, final String... textToContain)
+    {
+        String content = null;
+        try (SystemOutCapture systemOutCapture = new SystemOutCapture().start())
+        {
+            code.run();
+            content = systemOutCapture.getSystemOutErr();
+        }
+        return assertContains(content, textToContain);
+    }
+
+    private boolean assertContains(final String content, final String[] textToContain)
+    {
         if (textToContain != null)
         {
             AssertStrings assertStrings = new AssertStrings(content);

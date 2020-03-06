@@ -6,6 +6,7 @@ import org.testah.TS;
 import org.testah.driver.http.requests.PostRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.framework.report.performance.dto.RequestExecutionDuration;
+import org.testah.runner.performance.dto.LoadTestSequenceDto;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -145,6 +146,18 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
     @Override
     public void cleanup() {
         // no post processing required
+    }
+
+    @Override
+    public void beforeTestSequenceStep(LoadTestSequenceDto step)
+    {
+        // no post processing required
+    }
+
+    @Override
+    public void afterTestSequenceStep(LoadTestSequenceDto step)
+    {
+        // no post processing required after load sequence steps
     }
 
     private void setStartTime(final Long startTime) {
