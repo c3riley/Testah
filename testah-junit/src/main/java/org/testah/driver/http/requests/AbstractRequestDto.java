@@ -1,7 +1,6 @@
 package org.testah.driver.http.requests;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.auth.AuthScope;
@@ -304,12 +303,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      * @return the abstract request dto
      */
     public T addBasicAuth(final String userName, final String password) {
-        if (StringUtils.isNotEmpty(userName) && StringUtils.isNotEmpty(password)) {
-            return addHeader(new HttpAuthUtil().setUserName(userName).setPassword(password).useEncodingUtf8().createBasicAuthHeader());
-        } else {
-            TS.log().info("Not setting authentication: userName and/or password are not defined.");
-            return getSelf();
-        }
+        return addHeader(new HttpAuthUtil().setUserName(userName).setPassword(password).useEncodingUtf8().createBasicAuthHeader());
     }
 
     /**
