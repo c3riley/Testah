@@ -20,6 +20,7 @@ public class JiraReporter {
 
     private static final String apiUrl = "rest/api/latest";
     private final String baseUrl;
+    public static final String JIRA_STATUS_CLOSED = "closed";
 
     /**
      * Constructor.
@@ -168,10 +169,11 @@ public class JiraReporter {
      */
     public boolean isIssueClosed(final String issue) {
         boolean status = false;
-        IssueStatus issueStatus = getStatus(issue);
-        if (issueStatus != null)
-        {
-            status = issueStatus.getFields().getStatus().getName().toLowerCase().equals("closed");
+        try {
+            status = getStatus(issue).getFields().getStatus().getName().toLowerCase().equals(JIRA_STATUS_CLOSED);
+        }
+        catch (Exception x) {
+            TS.log().info(String.format("Failed get status for Jira issue %s, returning false.", issue), x);
         }
         return status;
     }
