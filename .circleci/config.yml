@@ -61,7 +61,9 @@ jobs:
 
       - store_artifacts:
         path: /home/circleci/repo/testah-junit/testah.log
+      - store_artifacts:
         path: /home/circleci/repo/testah-junit/build/test-results/**/*
+      - store_artifacts:
         path: /home/circleci/repo/testah-junit/build/reports/tests/**/*
       # Save artifacts
       - store_test_results:
