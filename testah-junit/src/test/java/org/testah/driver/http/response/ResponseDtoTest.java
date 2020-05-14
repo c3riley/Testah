@@ -340,7 +340,7 @@ public class ResponseDtoTest {
         new AssertFile(getResponse.writeResponseInfoFile(true)).contentContains(
             "{\"args\":{},\"headers\":{",
             "\"host\":\"postman-echo.com\",",
-            "\"accept-encoding\":\"gzip,deflate\",",
+            "\"accept-encoding\":\"gzip,deflate\"",
             "\"user-agent\":\"Apache-HttpClient/",
             "\"url\":\"https://postman-echo.com/get\"");
     }
