@@ -118,33 +118,31 @@ public class StringMaskingTest
         final String str2 = "aaabbbccc2";
         final String str3 = "aaabbbccc3";
         final String str4 = "aaabbccc";
-        final String str5 = "eastusma";
-        final String str6 = "az.eastus.region";
-        final String str7 = "eagleinvsys.org";
+        final String str6 = "az.abc.region";
+        final String str7 = "abc.org";
         final String str8 = "in 2019-01-01";
         final String str9 = "2018-01-01";
-        final String str10 = "eagleinvsys.com";
-        final String regex1 = ".*eastus.*";
-        final String regex2 = ".*eagle.*";
+        final String str10 = "abcdef.com";
+        final String regex1 = ".*abc.*";
+        final String regex2 = ".*abc.*";
         final String regex3 = ".*[0-9]{4}-[0-9]{2}-[0-9]{2}.*";
 
         StringMaskingConfig.INSTANCE.createInstance(7, 2, 2);
         StringMasking.INSTANCE.createInstance()
                 .addLiteralExemptions(str0, str1, str2)
                 .addRegexExemptions(regex1, regex2, regex3)
-                .addBulk(str0, str1, str2, str3, str4, str5, str6, str7, str8, str9)
+                .addBulk(str0, str1, str2, str3, str4, str6, str7, str8, str9)
                 .add(str10);
         assertEquals(str0, StringMasking.INSTANCE.getInstance().getValue(str0));
         assertEquals(str1, StringMasking.INSTANCE.getInstance().getValue(str1));
         assertEquals(str2, StringMasking.INSTANCE.getInstance().getValue(str2));
         assertEquals("aa***c3", StringMasking.INSTANCE.getInstance().getValue(str3));
         assertEquals("aa***cc", StringMasking.INSTANCE.getInstance().getValue(str4));
-        assertEquals(str5, StringMasking.INSTANCE.getInstance().getValue(str5));
         assertEquals(str6, StringMasking.INSTANCE.getInstance().getValue(str6));
         assertEquals(str7, StringMasking.INSTANCE.getInstance().getValue(str7));
         assertEquals(str8, StringMasking.INSTANCE.getInstance().getValue(str8));
         assertEquals(str9, StringMasking.INSTANCE.getInstance().getValue(str9));
-        assertEquals("ea***om", StringMasking.INSTANCE.getInstance().getValue(str10));
+        assertEquals("ab***om", StringMasking.INSTANCE.getInstance().getValue(str10));
 
         assertEquals(Sets.newHashSet(str0, str1, str2, "true", "TRUE", "false", "FALSE"),
                 StringMasking.INSTANCE.getInstance().getLiteralExemptions());
