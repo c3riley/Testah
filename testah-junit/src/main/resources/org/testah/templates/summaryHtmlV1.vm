@@ -3,11 +3,30 @@
     <tr>
         <td>
         <td class='chart'><img src='$GoogleChart' alt='Test Results'/>
+            <table class='tc_table_1' border="1">
+                <thead>
+                <th>TestPlans</th>
+                <th>TestCases</th>
+                <th>Passed</th>
+                <th>Failed</th>
+                <th>Ignored</th>
+                <th>Duration</th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>$totalTestPlans</td>
+                    <td>$totalTestCases</td>
+                    <td>$totalTestCasesPassed</td>
+                    <td>$totalTestCasesFailed</td>
+                    <td>$totalTestCasesIgnored</td>
+                    <td>$util.getDurationPretty($totalDuration)</td>
+                </tr>
+                </tbody>
+            </table>
             <table class='tc_table' border="1">
                 <thead>
                 <th>TestPlan</th>
                 <th>TestType</th>
-                </th>
                 <th>Status</th>
                 <th>Total</th>
                 <th>Pass</th>
@@ -17,20 +36,22 @@
                 <th>xml</th>
                 <th>txt</th>
                 <th>json</th>
+                <th>Duration</th>
                 </thead>
                 <tbody>
                     #foreach( $result in $results )
                         #if( "$!result.getTestPlan()" != "" )
-                    <tr>
+                        <tr>
                             <td class='label'>$result.getTestPlan().getName()</td>
                             <td class='label'>testah</td>
-                            <td class='label' bgcolor='#if($result.getTestPlan().getStatusEnum()=="PASSED")MediumSeaGreen#{else}red#end' >$result.getTestPlan().getStatusEnum()</td>
+                            <td class='label' bgcolor='#if($result.getTestPlan().getStatusEnum()==
+                                "PASSED")MediumSeaGreen#{else}red#end'>$result.getTestPlan().getStatusEnum()</td>
                             <td class='value'>$result.getTestPlan().getRunInfo().getTotal()</td>
                             <td class='value'>$result.getTestPlan().getRunInfo().getPass()</td>
                             <td class='value'>$result.getTestPlan().getRunInfo().getFail()</td>
                             <td class='value'>$result.getTestPlan().getRunInfo().getIgnore()</td>
                         #else
-                    <tr>                        
+                        <tr>
                             <td class='label'>$result.getClassName()</td>
                             <td class='label'>junit</td>
                             #if( "$result.getJunitResult().wasSuccessful()" == "true" )
@@ -45,20 +66,24 @@
                             <td class='value'>$result.getJunitResult().getIgnoreCount()</td>
                         #end
                         <td class='value'><a target='_blank'
-                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get("html")">html</a>
+                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get(
+                                                 "html")">html</a>
                         </td>
                         <td class='value'><a target='_blank'
-                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get('xml')">xml</a></td>
+                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get(
+                                                 'xml')">xml</a></td>
                         <td class='value'><a target='_blank'
-                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get('txt')">txt</a></td>
+                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get(
+                                                 'txt')">txt</a></td>
                         <td class='value'><a target='_blank'
-                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get('json')">json</a>
+                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get(
+                                                 'json')">json</a>
                         </td>
+                        <td class='value'>$util.getDurationPretty($result.getTestPlan().getRunTime().getDuration())</td>
                     </tr>
                     #end
                 </tbody>
             </table>
-
         </td>
     </tr>
 

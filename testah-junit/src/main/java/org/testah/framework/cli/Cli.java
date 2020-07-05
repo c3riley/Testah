@@ -261,6 +261,7 @@ public class Cli {
         int totalTestCasesPassed = 0;
         int totalTestCasesIgnored = 0;
         int totalTestPlans = 0;
+        long totalDuration = 0L;
 
         if (null != results) {
             totalTestPlans = results.size();
@@ -276,6 +277,7 @@ public class Cli {
                     totalTestCasesFailed += result.getTestPlan().getRunInfo().getFail();
                     totalTestCasesPassed += result.getTestPlan().getRunInfo().getPass();
                     totalTestCasesIgnored += result.getTestPlan().getRunInfo().getIgnore();
+                    totalDuration += result.getTestPlan().getRunTime().getDuration();
                 } else {
                     TS.log().error("Testplan is null, looking at junit result for " + result.getJunitResult().getFailures());
 
@@ -319,7 +321,7 @@ public class Cli {
         TS.log().info(Cli.BAR_WALL + "Total TestCases Ignored: " + totalTestCasesIgnored);
         TS.log().info(Cli.BAR_LONG);
 
-        File summaryHtml = new SummaryHtmlFormatter(results).createReport().getReportFile();
+        File summaryHtml = new SummaryHtmlFormatter(results, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, totalDuration).createReport().getReportFile();
         if (TS.params().isAutoOpenHtmlReport()) {
             new TestPlanReporter().openReport(summaryHtml.getAbsolutePath());
         }
