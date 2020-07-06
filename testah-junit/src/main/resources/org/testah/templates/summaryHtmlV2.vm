@@ -3,6 +3,9 @@
     <tr>
         <td>
         <td class='chart'><img src='$GoogleChart' alt='Test Results'/>
+
+        <h3>Summary Report:</h3>
+
             <table class='tc_table_1' border="1">
                 <thead>
                 <th>TestPlans</th>
@@ -23,6 +26,9 @@
                 </tr>
                 </tbody>
             </table>
+
+        <h3>Detailed Report:</h3>
+
             <table class='tc_table_2' border="1">
                 <thead>
                 <th>TestPlan</th>
