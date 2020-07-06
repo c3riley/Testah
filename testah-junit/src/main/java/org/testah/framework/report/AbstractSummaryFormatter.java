@@ -10,31 +10,45 @@ import java.util.List;
 /**
  * The Class AbstractFormatter.
  */
-public abstract class AbstractSummaryFormatter extends AbstractFormatter {
+public abstract class AbstractSummaryFormatter extends AbstractFormatter
+{
 
     /**
      * The test plan.
      */
     protected final List<ResultDto> results;
-    protected final int totalTestCases;
-    protected final int totalTestCasesFailed;
-    protected final int totalTestCasesPassed;
-    protected final int totalTestPlans;
-    protected final int totalTestCasesIgnored;
-    protected final long totalDuration;
+    protected int totalTestCases;
+    protected int totalTestCasesFailed;
+    protected int totalTestCasesPassed;
+    protected int totalTestPlans = -1;
+    protected int totalTestCasesIgnored;
+    protected long totalDuration;
+
 
     /**
      * Instantiates a new abstract formatter.
-     * @param results the test plan result list
-     * @param totalTestPlans total test plans
-     * @param totalTestCases total test cases
-     * @param totalTestCasesPassed total test cases passed
-     * @param totalTestCasesFailed total test cases failed
-     * @param totalTestCasesIgnored total test cases ignored
-     * @param totalDuration total duration
+     * @param results        the test plan result list
      * @param pathToTemplate the path to template
      */
-    public AbstractSummaryFormatter(final List<ResultDto> results,int totalTestPlans, int totalTestCases,int totalTestCasesPassed, int totalTestCasesFailed, int totalTestCasesIgnored, long totalDuration, final String pathToTemplate) {
+    public AbstractSummaryFormatter(final List<ResultDto> results, final String pathToTemplate)
+    {
+        super(pathToTemplate);
+        this.results = results;
+    }
+
+    /**
+     * Instantiates a new abstract formatter.
+     * @param results               the test plan result list
+     * @param totalTestPlans        total test plans
+     * @param totalTestCases        total test cases
+     * @param totalTestCasesPassed  total test cases passed
+     * @param totalTestCasesFailed  total test cases failed
+     * @param totalTestCasesIgnored total test cases ignored
+     * @param totalDuration         total duration
+     * @param pathToTemplate        the path to template
+     */
+    public AbstractSummaryFormatter(final List<ResultDto> results, int totalTestPlans, int totalTestCases, int totalTestCasesPassed, int totalTestCasesFailed, int totalTestCasesIgnored, long totalDuration, final String pathToTemplate)
+    {
         super(pathToTemplate);
         this.results = results;
         this.totalTestPlans = totalTestPlans;
@@ -50,7 +64,8 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter {
      *
      * @return the test plan
      */
-    public List<ResultDto> getResults() {
+    public List<ResultDto> getResults()
+    {
         return results;
     }
 
@@ -67,7 +82,8 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter {
      *
      * @return the report
      */
-    public String getReport() {
+    public String getReport()
+    {
         return getReport(getContextBase());
     }
 
@@ -77,25 +93,31 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter {
      * @return the context base
      */
     @Override
-    public VelocityContext getContextBase() {
+    public VelocityContext getContextBase()
+    {
         VelocityContext context = new VelocityContext();
 
-        if (null != results) {
+        if (null != results)
+        {
             context.put("results", results);
             context.put("util", TS.util());
-            context.put("totalTestPlans", totalTestPlans);
-            context.put("totalTestCases", totalTestCases);
-            context.put("totalTestCasesPassed", totalTestCasesPassed);
-            context.put("totalTestCasesFailed", totalTestCasesFailed);
-            context.put("totalTestCasesIgnored", totalTestCasesIgnored);
-            context.put("totalDuration", totalDuration);
+            if (totalTestPlans != -1)
+            {
+                context.put("totalTestPlans", totalTestPlans);
+                context.put("totalTestCases", totalTestCases);
+                context.put("totalTestCasesPassed", totalTestCasesPassed);
+                context.put("totalTestCasesFailed", totalTestCasesFailed);
+                context.put("totalTestCasesIgnored", totalTestCasesIgnored);
+                context.put("totalDuration", totalDuration);
+            }
             context = getContext(context);
         }
 
         return context;
     }
 
-    public String getBaseReportObject() {
+    public String getBaseReportObject()
+    {
         return TS.util().toJson(this.results);
     }
 
@@ -105,7 +127,8 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter {
      *
      * @param reportFile the new report file
      */
-    public void setReportFile(final File reportFile) {
+    public void setReportFile(final File reportFile)
+    {
         this.reportFile = reportFile;
     }
 

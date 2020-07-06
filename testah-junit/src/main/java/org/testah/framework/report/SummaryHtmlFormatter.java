@@ -14,6 +14,16 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
 
     /**
      * Instantiates a new html formatter.
+     *
+     * @param testPlan the test plan
+     */
+    public SummaryHtmlFormatter(final List<ResultDto> testPlan) {
+        super(testPlan, AbstractFormatter.DEFAULT_PACKAGE + "summaryHtmlV1.vm");
+
+    }
+
+    /**
+     * Instantiates a new html formatter.
      * @param testPlan the test plan
      * @param totalTestPlans total test plans
      * @param totalTestCases total test cases
@@ -23,8 +33,7 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
      * @param totalDuration total duration
      */
     public SummaryHtmlFormatter(final List<ResultDto> testPlan, int totalTestPlans, int totalTestCases,int totalTestCasesPassed, int totalTestCasesFailed, int totalTestCasesIgnored, long totalDuration) {
-        super(testPlan, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, totalDuration,  AbstractFormatter.DEFAULT_PACKAGE + "summaryHtmlV1.vm");
-
+        super(testPlan, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, totalDuration,  AbstractFormatter.DEFAULT_PACKAGE + "summaryHtmlV2.vm");
     }
 
     /**
