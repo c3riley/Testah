@@ -319,6 +319,7 @@ public class Cli {
         TS.log().info(Cli.BAR_WALL + "Total TestCases Failed: " + totalTestCasesFailed);
         TS.log().info(Cli.BAR_WALL + "Total TestCases Passed: " + totalTestCasesPassed);
         TS.log().info(Cli.BAR_WALL + "Total TestCases Ignored: " + totalTestCasesIgnored);
+        TS.log().info(Cli.BAR_WALL + "Total Duration: " + TS.util().getDurationPretty(totalDuration));
         TS.log().info(Cli.BAR_LONG);
 
         File summaryHtml = new SummaryHtmlFormatter(results, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, totalDuration).createReport().getReportFile();
