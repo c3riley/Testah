@@ -1,0 +1,367 @@
+#set( $blockNumber = 1 )
+#set( $H = '#' )
+
+<html>
+    <head>
+        <title>Automation Results for testPlan: $testPlan.getName()</title>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+            <script>
+            function DisplayLayer(LayerName) {
+                var obj = document.getElementById(LayerName);
+                if (obj.style.display == '') {
+                    obj.style.display = 'none';
+                } else {
+                    obj.style.display = '';
+                }
+
+            }
+            google.charts.load("current", {packages:["corechart"]});
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart() {
+                const pass = parseInt(document.getElementById('sc').innerText);
+                const fail = parseInt(document.getElementById('fl').innerText);
+                const ignore = parseInt(document.getElementById('na').innerText);
+                document.getElementById('tl').innerText = pass + fail + ignore;
+                var data = google.visualization.arrayToDataTable([
+                  ['Status', 'Value'],
+                  ['PASSED',     pass],
+                  ['FAILED',     fail],
+                  ['IGNORED',    ignore]
+                ]);
+                var options = {
+                    pieHole: 0.5,
+                    colors: ['green', 'red', '#D5DBDB'],
+                    pieSliceText: 'value',
+                    height: 250,
+                    legend: {position: 'bottom'},
+                    pieSliceTextStyle: {
+                        color: 'black'
+                    }
+                };
+                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                chart.draw(data, options);
+
+                if (pass > 0) {
+                    addClass('sc', 'PASSED');
+                }
+                if (fail > 0) {
+                    addClass('fl', 'FAILED');
+                }
+                if (ignore > 0) {
+                    addClass('na', 'NA');
+                }
+            }
+
+            function addClass(id, className)  {
+              let element = document.getElementById(id);
+              let arr = element.className.split(" ");
+              if (arr.indexOf(className) == -1) {
+                element.className += " " + className;
+              }
+            }
+
+        </script>
+            <style>
+
+            .label {
+                white-space: nowrap;
+                font-weight: bold;
+            }
+
+            .col-sm-3, .col-sm-6 {
+                padding: 5px !important;
+            }
+
+            .table {
+                border-collapse: separate;
+                border-spacing: 0 0.3 .2;
+
+            }
+
+            .step_status_FAILED, .FAILED {
+                background-color: red;
+            }
+
+            .step_status_PASSED, .PASSED {
+                background-color: green;
+            }
+
+            .step_status_NA, .NA {
+                background-color: #D5DBDB;
+            }
+
+            .FAILED {
+                width: 100%;
+                color: white
+            }
+
+            .PASSED {
+                width: 100%;
+                color: white
+            }
+
+            .NA {
+                width: 100%;
+                color: white
+            }
+
+            .content{
+                width: 95%;
+                margin: 0 auto;
+            }
+
+            .table .thead-light th {
+                width: 5px;
+            }
+            hr {
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+                border: 0;
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
+            }
+            .center{
+                text-align: center;
+            }
+            textarea {
+                word-wrap: break-word;
+                width: 100%;
+            }
+            .card-fixed-height{
+                max-height: 100px;
+                height: 90px
+            }
+            .card-body{
+                padding: 0px;
+            }
+            .card-text-sm{
+                font-size: 0.9em;
+            }
+            .plan-status-PASSED{
+            text-decoration: underline;
+              -webkit-text-decoration-color: green; /* Safari */
+              text-decoration-color: green;
+          }
+          .plan-status-FAILED{
+            text-decoration: underline;
+              -webkit-text-decoration-color: red; /* Safari */
+              text-decoration-color: red;
+          }
+
+        </style>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            </head>
+            <body class='content'>
+                <div class="col-12 center">
+                    <h4 class="plan-status-$testPlan.getStatusEnum()">Automation Results</h4>
+                    <p>$testPlan.getName() [ $testPlan.getSource() ]</p>
+                </div>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+                                            <div class="card-body center">
+                                                <p class="card-title">Total Tests</p>
+                                                <h5 id='tl' class="card-text"></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
+                                            <div class="card-body center">
+                                                <p class="card-title">Passed</p>
+                                                <h5 id='sc' class="card-text">$testPlan.getRunInfo().getPass()</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+                                            <div class="card-body center">
+                                                <p class="card-title">Failed</p>
+                                                <h5 id='fl' class="card-text">$testPlan.getRunInfo().getFail()</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
+                                            <div class="card-body center">
+                                                <p class="card-title">Ignored</p>
+                                                <h5 id='na' class="card-text">$testPlan.getRunInfo().getIgnore()</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+                                            <div class="card-body center">
+                                                <p class="card-title">Time</p>
+                                                <h5 class="card-text-sm">$util.toDateString($testPlan.getRunTime().getStartTime())
+                                            to $util.toDateString($testPlan.getRunTime().getEndTime())</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
+                                            <div class="card-body center">
+                                                <p class="card-title">Duration</p>
+                                                <h5 class="card-text-sm">$util.getDurationPretty( $testPlan.getRunTime().getDuration())</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+                                            <div class="card-body center">
+                                                <p class="card-title">User</p>
+                                                <h5 id='tl' class="card-text-sm">$!testPlan.getUser()</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+                                            <div class="card-body center">
+                                                <p class="card-title">Build</p>
+                                                <h5 id='sc' class="card-text-sm">#if("$!testPlan.getCiUrl()" != "")
+
+                                                    <a href='testPlan.getCiUrl()' target='_blank'>View CI</a>
+                                            #end
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+                                            <div class="card-body center">
+                                                <p class="card-title">Built On</p>
+                                                <h5 id='fl' class="card-text-sm">$!testPlan.getRunInfo().getRunTimeProperties().get("builtOn")</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+                                            <div class="card-body center">
+                                                <p class="card-title">Environment</p>
+                                                <h5 id='na' class="card-text-sm">$!testPlan.getEnvironment()</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 center">
+                    Run Result
+
+                            <div class="" id='donutchart'></div>
+                        </div>
+                    </div>
+            #if($testPlan.getRunInfo().getFail() > 0)
+
+                    <hr>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <span class="$testPlan.getStatusEnum()"> $testPlan.getStatusEnum() </span>
+                    #foreach( $tc in $testPlan.getTestCases() )
+                                    #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
+                                    |
+                                <a href='$H$tc.getName()'
+                                    title='See TestCase Results'>$tc.getName()</a>
+                                    #end
+                                #end
+
+                            </div>
+                        </div>
+                #end
+
+            #foreach( $testcase in $testPlan.getTestCases() )
+
+                        <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    <table class='table table-sm table-borderless table-striped'>
+                                        <tr>
+                                            <td class='label'>Test Case:</td>
+                                            <td class='value'>
+                                                <a name='$testcase.getName()'>$testcase.getName() [ $testcase.getSource() ]</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class='label'>Description:</td>
+                                            <td class='value'>$testcase.getDescription()</td>
+                                        </tr>
+                                        <tr>
+                                            <td class='label'>Status:</td>
+                                            <td class='value'>
+                                                <div class='$testcase.getStatusEnum()'>$testcase.getStatusEnum()</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class='label'>Time:</td>
+                                            <td class='value'>$util.toDateString($testcase.getRunTime().getStartTime())
+                                to $util.toDateString($testcase.getRunTime().getEndTime())
+                                [Duration: $util.getDurationPretty( $testcase.getRunTime().getDuration() )]
+                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+
+                    #foreach ($step in $testcase.getTestSteps())
+
+                                    <table class='table table-sm table-borderless'>
+                                        <thead class='thead-light'>
+                                            <tr>
+                                                <th class='step_id' style="width: 5px;">ID</th>
+                                                <th class='step_desc'>Description</th>
+                                                <th class='step_expected'>Expected</th>
+                                                <th class='step_actual'>Actual</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class='step_id'>$step.getId()</td>
+                                                <td class='step_desc'>$step.getName()</td>
+                                                <td class='step_expected'>$step.getDescription()</td>
+                                                <td class='step_actual'></td>
+                                            </tr>
+                            #foreach ($stepAction in $step.getStepActions())
+
+                                            <tr>
+                                                <td class='step_status_$stepAction.getStatusEnum()' onclick="DisplayLayer('Step_$step.getId()_$blockNumber');" title='Click here to see Exception'></td>
+                                                <td class='step_desc'>
+                                                    <textarea textAreaBox disabled rows='4'>$stepAction.getDescription()</textarea>
+                                                </td>
+                                                <td class='step_expected'>
+                                                    <textarea textAreaBox disabled rows='4'>$!stepAction.getExpected()</textarea>
+                                                </td>
+                                                <td class='step_actual'>
+                                                    <textarea textAreaBox disabled rows='4'>$!stepAction.getActual()</textarea>
+                                                </td>
+                                            </tr>
+                                            <tr id='Step_$step.getId()_$blockNumber' style='display: none;'>
+                                                <td colspan='5'>
+                                                    <pre>
+                                    $!stepAction.getExceptionString(false)
+                                </pre>
+                                                </td>
+                                            </tr>
+                        #set( $blockNumber = $blockNumber + 1 )
+                        #end
+                                        </tbody>
+                                    </table>
+                    #end
+
+                                </div>
+                            </div>
+            #end
+                            <hr>
+                            </div>
+                        </body>
+                    </html>
