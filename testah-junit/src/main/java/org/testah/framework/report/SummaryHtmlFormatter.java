@@ -23,6 +23,20 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
     }
 
     /**
+     * Instantiates a new html formatter.
+     * @param testPlan the test plan
+     * @param totalTestPlans total test plans
+     * @param totalTestCases total test cases
+     * @param totalTestCasesPassed total test cases passed
+     * @param totalTestCasesFailed total test cases failed
+     * @param totalTestCasesIgnored total test cases ignored
+     * @param totalDuration total duration
+     */
+    public SummaryHtmlFormatter(final List<ResultDto> testPlan, int totalTestPlans, int totalTestCases,int totalTestCasesPassed, int totalTestCasesFailed, int totalTestCasesIgnored, long totalDuration) {
+        super(testPlan, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, totalDuration,  AbstractFormatter.DEFAULT_PACKAGE + "summaryHtmlV2.vm");
+    }
+
+    /**
      * Override getContext(...) in AbstractSummaryFormatter.
      *
      * @see org.testah.framework.report.AbstractFormatter#getContext(org.apache.velocity.VelocityContext)
@@ -41,7 +55,7 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
                 counts.put(TestStatus.IGNORE, counts.get(TestStatus.IGNORE) + result.getTestPlan().getRunInfo().getIgnore());
             } else {
                 int pass = result.getJunitResult().getRunCount() -
-                        (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
+                    (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
                 counts.put(TestStatus.PASSED, counts.get(TestStatus.PASSED) + pass);
                 counts.put(TestStatus.FAILED, counts.get(TestStatus.FAILED) + result.getJunitResult().getFailureCount());
                 counts.put(TestStatus.IGNORE, counts.get(TestStatus.IGNORE) + result.getJunitResult().getIgnoreCount());
@@ -49,7 +63,7 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
         });
 
         context.put("GoogleChart",
-                getGoogleChart(counts.get(TestStatus.FAILED), counts.get(TestStatus.PASSED), counts.get(TestStatus.IGNORE)));
+            getGoogleChart(counts.get(TestStatus.FAILED), counts.get(TestStatus.PASSED), counts.get(TestStatus.IGNORE)));
 
         context.put("htmlPath", "");
 
@@ -66,8 +80,8 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
      */
     private String getGoogleChart(final int numFail, final int numPass, final int numIgnore) {
         return "http://chart.apis.google.com/chart?chs=400x100&chco=ff2233,00aa33,C0C0C0&chd=t:" + numFail +
-                "," + numPass + "," + numIgnore + "&cht=p3&chl=Failed [" + numFail + "]|Passed [" + numPass + "]" +
-                "|Ignore [" + numIgnore + "]&chtt=Run Results";
+            "," + numPass + "," + numIgnore + "&cht=p3&chl=Failed [" + numFail + "]|Passed [" + numPass + "]" +
+            "|Ignore [" + numIgnore + "]&chtt=Run Results";
     }
 
     /* (non-Javadoc)
