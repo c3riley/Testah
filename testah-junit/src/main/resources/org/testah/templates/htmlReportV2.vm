@@ -74,6 +74,13 @@ background: radial-gradient(circle at 5px 10px, red, #010F00);
 .label {
   white-space: nowrap;
   font-weight: bold;
+  background-color: #e9ecef;
+}
+.value {
+  background-color: #F7F7F8;
+}
+.step_status_FAILED, .step_status_PASSED {
+border-radius: 20px;
 }
 
 .step_status_FAILED, .FAILED {
@@ -130,8 +137,9 @@ hr {
 textarea {
   word-wrap: break-word !important;
   width: 100%;
-    overflow: auto;
-    resize: vertical;
+  overflow: auto;
+  resize: vertical;
+  cursor: text;
 }
 
 .card-fixed-height {
@@ -176,14 +184,6 @@ p {
   margin-top: 0;
   margin-bottom: 1rem;
 }
-.card-text-sm{
-font-size: 0.9rem;
-font-weight: bold;
-}
-.card-text{
-font-size: 1.20rem;
-padding: 1px;
-}
 .container {
   width: 100%;
   padding-right: 15px;
@@ -191,7 +191,6 @@ padding: 1px;
   margin-right: auto;
   margin-left: auto;
 }
-
 .container-fluid {
   width: 100%;
   padding-right: 15px;
@@ -199,7 +198,6 @@ padding: 1px;
   margin-right: auto;
   margin-left: auto;
 }
-
 .row {
   display: -ms-flexbox;
   display: flex;
@@ -294,23 +292,28 @@ padding: 1px;
   border: 1px solid rgba(0,0,0,.125);
   border-radius: .25rem;
 }
-
 .card-body {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-height: 1px;
   padding: 1.25rem;
 }
-
 .card-title {
   margin-bottom: .75rem;
 }
-
 .card-subtitle {
   margin-top: -.375rem;
   margin-bottom: 0;
 }
-
+.card-text-sm{
+font-size: 0.9rem;
+font-weight: bold;
+}
+.card-text{
+font-size: 1.20rem;
+padding: 1px;
+border-radius: 20px;
+}
 .card-text:last-child {
   margin-bottom: 0;
 }
@@ -336,6 +339,7 @@ background-size: 18.87px 11.79px;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body class='content' onload="loadUI()">
+    <hr>
       <div class="col-12 center">
         <h4 class="plan-status-$testPlan.getStatusEnum()">Automation Results</h4>
         <p>$testPlan.getName() [ $testPlan.getSource() ]</p>
@@ -448,7 +452,7 @@ background-size: 18.87px 11.79px;
               <span class="ball middle ball-status-$testPlan.getStatusEnum()"> </span>
                     #foreach( $tc in $testPlan.getTestCases() )
                                     #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
-                                    - <a class='plan-status-$testPlan.getStatusEnum()'' href='$H$tc.getName()'
+                                    | <a class='plan-status-$testPlan.getStatusEnum()'' href='$H$tc.getName()'
                                     title='See TestCase Results'>$tc.getName()</a>
                                     #end
                                 #end
@@ -459,7 +463,7 @@ background-size: 18.87px 11.79px;
           <hr>
             <div class="row">
               <div class="col-12">
-                <table class='table table-sm table-borderless table-striped'>
+                <table class='table table-sm table-borderless'>
                     <tr><th colspan="2" class="test-status-$testcase.getStatusEnum()"></th></tr>
                   <tr>
                     <td class='label'>Test Case: <span class='middle'></span></td>
