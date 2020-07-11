@@ -1,7 +1,6 @@
 #set( $blockNumber = 1 )
 #set( $H = '#' )
 
-
 <html>
   <head>
     <title>Automation Results for testPlan: $testPlan.getName()</title>
@@ -16,22 +15,28 @@
                 }
 
             }
-            google.charts.load("current", {packages:["corechart"]});
-            google.charts.setOnLoadCallback(drawChart);
+            function loadUI() {
+                google.charts.load("current", {packages:["corechart"]});
+                google.charts.setOnLoadCallback(drawChart);
+            }
+
             function drawChart() {
-                const pass = parseInt(document.getElementById('sc').innerText);
-                const fail = parseInt(document.getElementById('fl').innerText);
-                const ignore = parseInt(document.getElementById('na').innerText);
-                document.getElementById('tl').innerText = pass + fail + ignore;
+                const pCount = parseInt(document.getElementById('sc').innerText);
+                const fCount = parseInt(document.getElementById('fl').innerText);
+                const iCount = parseInt(document.getElementById('na').innerText);
+                if (pCount > 0) {addClass('sc', 'PASSED');}
+                if (fCount > 0) {addClass('fl', 'FAILED');}
+                if (iCount > 0) {addClass('na', 'NA');}
+                document.getElementById('tl').innerText = pCount + fCount + iCount;
                 var data = google.visualization.arrayToDataTable([
                   ['Status', 'Value'],
-                  ['PASSED',     pass],
-                  ['FAILED',     fail],
-                  ['IGNORED',    ignore]
+                  ['PASSED',     pCount],
+                  ['FAILED',     fCount],
+                  ['IGNORED',    iCount]
                 ]);
                 var options = {
                     pieHole: 0.5,
-                    colors: ['green', 'red', '#D5DBDB'],
+                    colors: ['green', 'red', '#989898'],
                     pieSliceText: 'value',
                     height: 250,
                     legend: {position: 'bottom'},
@@ -41,16 +46,6 @@
                 };
                 var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
                 chart.draw(data, options);
-
-                if (pass > 0) {
-                    addClass('sc', 'PASSED');
-                }
-                if (fail > 0) {
-                    addClass('fl', 'FAILED');
-                }
-                if (ignore > 0) {
-                    addClass('na', 'NA');
-                }
             }
 
             function addClass(id, className)  {
@@ -63,19 +58,19 @@
 
         </script>
 <style>
- .ball {
-              display: inline-block;
-              margin: auto;
-              border-radius: 50%;
-              height: 30px;
-              width: 30px;
-            }
-            .ball-status-PASSED{
-                background: radial-gradient(circle at 5px 10px, green, #010F00);
-            }
-            .ball-status-FAILED{
-                background: radial-gradient(circle at 5px 10px, red, #010F00);
-            }
+.ball {
+ display: inline-block;
+ margin: auto;
+ border-radius: 50%;
+ height: 30px;
+ width: 30px;
+ }
+ .ball-status-PASSED{
+background: radial-gradient(circle at 5px 10px, green, #010F00);
+}
+.ball-status-FAILED{
+background: radial-gradient(circle at 5px 10px, red, #010F00);
+}
 .label {
   white-space: nowrap;
   font-weight: bold;
@@ -90,7 +85,7 @@
 }
 
 .step_status_NA, .NA {
-  background-color: #D5DBDB;
+  background-color: #989898;
 }
 
 .FAILED {
@@ -148,10 +143,6 @@ textarea {
   padding: 0px;
 }
 
-.card-text-sm {
-  font-size: 0.9em;
-}
-
 .plan-status-PASSED {
   text-decoration: underline;
   text-decoration-color: green;
@@ -173,26 +164,26 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
-h4,h5 {
+h4 {
   margin-top: 0;
   margin-bottom: .5rem;
   font-weight: 500;
   line-height: 1.2;
-}
-
-h4 {
   font-size: 1.5rem;
-}
-
-h5 {
-  font-size: 1.25rem;
 }
 
 p {
   margin-top: 0;
   margin-bottom: 1rem;
 }
-
+.card-text-sm{
+font-size: 0.9rem;
+font-weight: bold;
+}
+.card-text{
+font-size: 1.20rem;
+padding: 1px;
+}
 .container {
   width: 100%;
   padding-right: 15px;
@@ -344,7 +335,7 @@ background-size: 18.87px 11.79px;
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body class='content'>
+    <body class='content' onload="loadUI()">
       <div class="col-12 center">
         <h4 class="plan-status-$testPlan.getStatusEnum()">Automation Results</h4>
         <p>$testPlan.getName() [ $testPlan.getSource() ]</p>
@@ -358,7 +349,7 @@ background-size: 18.87px 11.79px;
                   <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
                     <div class="card-body center">
                       <p class="card-title">Total Tests</p>
-                      <h5 id='tl' class="card-text"></h5>
+                      <p id='tl' class="card-text"></p>
                     </div>
                   </div>
                 </div>
@@ -366,7 +357,7 @@ background-size: 18.87px 11.79px;
                   <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
                     <div class="card-body center">
                       <p class="card-title">Passed</p>
-                      <h5 id='sc' class="card-text">$testPlan.getRunInfo().getPass()</h5>
+                      <p id='sc' class="card-text">$testPlan.getRunInfo().getPass()</p>
                     </div>
                   </div>
                 </div>
@@ -374,7 +365,7 @@ background-size: 18.87px 11.79px;
                   <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
                     <div class="card-body center">
                       <p class="card-title">Failed</p>
-                      <h5 id='fl' class="card-text">$testPlan.getRunInfo().getFail()</h5>
+                      <p id='fl' class="card-text">$testPlan.getRunInfo().getFail()</p>
                     </div>
                   </div>
                 </div>
@@ -382,7 +373,7 @@ background-size: 18.87px 11.79px;
                   <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
                     <div class="card-body center">
                       <p class="card-title">Ignored</p>
-                      <h5 id='na' class="card-text">$testPlan.getRunInfo().getIgnore()</h5>
+                      <p id='na' class="card-text">$testPlan.getRunInfo().getIgnore()</p>
                     </div>
                   </div>
                 </div>
@@ -392,8 +383,8 @@ background-size: 18.87px 11.79px;
                   <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
                     <div class="card-body center">
                       <p class="card-title">Time</p>
-                      <h5 class="card-text-sm">$util.toDateString($testPlan.getRunTime().getStartTime())
-                                            to $util.toDateString($testPlan.getRunTime().getEndTime())</h5>
+                      <p class="card-text-sm">$util.toDateString($testPlan.getRunTime().getStartTime())
+                                            to $util.toDateString($testPlan.getRunTime().getEndTime())</p>
                     </div>
                   </div>
                 </div>
@@ -401,7 +392,7 @@ background-size: 18.87px 11.79px;
                   <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
                     <div class="card-body center">
                       <p class="card-title">Duration</p>
-                      <h5 class="card-text-sm">$util.getDurationPretty( $testPlan.getRunTime().getDuration())</h5>
+                      <p class="card-text-sm">$util.getDurationPretty( $testPlan.getRunTime().getDuration())</p>
                     </div>
                   </div>
                 </div>
@@ -411,7 +402,7 @@ background-size: 18.87px 11.79px;
                   <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
                     <div class="card-body center">
                       <p class="card-title">User</p>
-                      <h5 id='tl' class="card-text-sm">$!testPlan.getUser()</h5>
+                      <p id='tl' class="card-text-sm">$!testPlan.getUser()</p>
                     </div>
                   </div>
                 </div>
@@ -419,13 +410,10 @@ background-size: 18.87px 11.79px;
                   <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
                     <div class="card-body center">
                       <p class="card-title">Build</p>
-                      <h5 id='sc' class="card-text-sm">#if("$!testPlan.getCiUrl()" != "")
-
-
+                      <p id='sc' class="card-text-sm">#if("$!testPlan.getCiUrl()" != "")
                         <a href='testPlan.getCiUrl()' target='_blank'>View CI</a>
-                                            #end
-
-                      </h5>
+                          #end
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -433,7 +421,7 @@ background-size: 18.87px 11.79px;
                   <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
                     <div class="card-body center">
                       <p class="card-title">Built On</p>
-                      <h5 id='fl' class="card-text-sm">$!testPlan.getRunInfo().getRunTimeProperties().get("builtOn")</h5>
+                      <p id='fl' class="card-text-sm">$!testPlan.getRunInfo().getRunTimeProperties().get("builtOn")</p>
                     </div>
                   </div>
                 </div>
@@ -441,7 +429,7 @@ background-size: 18.87px 11.79px;
                   <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
                     <div class="card-body center">
                       <p class="card-title">Environment</p>
-                      <h5 id='na' class="card-text-sm">$!testPlan.getEnvironment()</h5>
+                      <p id='na' class="card-text-sm">$!testPlan.getEnvironment()</p>
                     </div>
                   </div>
                 </div>
@@ -450,23 +438,17 @@ background-size: 18.87px 11.79px;
           </div>
           <div class="col-4 center">
                     Run Result
-
-
             <div class="" id='donutchart'></div>
           </div>
         </div>
             #if($testPlan.getRunInfo().getFail() > 0)
-
-
         <hr>
           <div class="row">
             <div class="col-sm-12 middle">
               <span class="ball middle ball-status-$testPlan.getStatusEnum()"> </span>
                     #foreach( $tc in $testPlan.getTestCases() )
                                     #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
-                                    -
-
-              <a class='plan-status-$testPlan.getStatusEnum()'' href='$H$tc.getName()'
+                                    - <a class='plan-status-$testPlan.getStatusEnum()'' href='$H$tc.getName()'
                                     title='See TestCase Results'>$tc.getName()</a>
                                     #end
                                 #end
@@ -492,9 +474,9 @@ background-size: 18.87px 11.79px;
                   <tr>
                     <td class='label'>Time:</td>
                     <td class='value'>$util.toDateString($testcase.getRunTime().getStartTime())
-                                to $util.toDateString($testcase.getRunTime().getEndTime())
-                                [Duration: $util.getDurationPretty( $testcase.getRunTime().getDuration() )]
-                            </td>
+                        to $util.toDateString($testcase.getRunTime().getEndTime())
+                        [Duration: $util.getDurationPretty( $testcase.getRunTime().getDuration() )]
+                    </td>
                   </tr>
                 </table>
               </div>
@@ -518,7 +500,7 @@ background-size: 18.87px 11.79px;
                       <td class='step_expected'>$step.getDescription()</td>
                       <td class='step_actual'></td>
                     </tr>
-                            #foreach ($stepAction in $step.getStepActions())
+                        #foreach ($stepAction in $step.getStepActions())
                     <tr>
                       <td class='step_status_$stepAction.getStatusEnum()' onclick="DisplayLayer('Step_$step.getId()_$blockNumber');" title='Click here to see Exception'></td>
                       <td class='step_desc'>
@@ -534,22 +516,18 @@ background-size: 18.87px 11.79px;
                     <tr id='Step_$step.getId()_$blockNumber' style='display: none;'>
                       <td colspan='5'>
                         <pre>
-                                    $!stepAction.getExceptionString(false)
-                                </pre>
+                            $!stepAction.getExceptionString(false)
+                        </pre>
                       </td>
                     </tr>
                         #set( $blockNumber = $blockNumber + 1 )
                         #end
-
                   </tbody>
                 </table>
                     #end
-
-
               </div>
             </div>
             #end
-
             <hr>
             </div>
           </body>
