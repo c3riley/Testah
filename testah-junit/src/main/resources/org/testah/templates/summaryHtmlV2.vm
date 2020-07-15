@@ -85,7 +85,7 @@
                                              href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get(
                                                  'json')">json</a>
                         </td>
-                        <td class='value'>$util.getDurationPretty($result.getTestPlan().getRunTime().getDuration())</td>
+                        <td class='value'>$util.getDurationShort($result.getTestPlan().getRunTime().getDuration())</td>
                     </tr>
                     #end
                 </tbody>
