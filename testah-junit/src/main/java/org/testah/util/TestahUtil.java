@@ -478,4 +478,22 @@ public class TestahUtil {
         return new ArrayList<>();
     }
 
+    /**
+     * get time format in HH:MM:SS:MMM.
+     * @param duration - duration in milliseconds
+     * @return duration in HH:MM:SS:MMM format
+     */
+    public String getDurationShort(final Long duration)
+    {
+        if (duration != null)
+        {
+            java.time.Duration d = java.time.Duration.ofMillis(duration);
+            int hrs = d.toHoursPart();
+            int mins = d.toMinutesPart();
+            int secs = d.toSecondsPart();
+            int milli = d.toMillisPart();
+            return String.format("%02d:%02d:%02d:%03d", hrs, mins, secs, milli);
+        }
+        return "";
+    }
 }

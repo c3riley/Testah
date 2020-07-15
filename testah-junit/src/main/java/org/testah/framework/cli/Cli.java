@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -253,15 +255,18 @@ public class Cli {
             return ;
         }
 
+        Instant startTest = Instant.now();
         results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
                 getTestPlanFilter().getTestClassesMetFilters());
+        Instant endTest = Instant.now();
+        long duration = Duration.between(startTest, endTest).toMillis();
 
         int totalTestCases = 0;
         int totalTestCasesFailed = 0;
         int totalTestCasesPassed = 0;
         int totalTestCasesIgnored = 0;
         int totalTestPlans = 0;
-        long totalDuration = 0L;
+        long totalDuration = duration;
 
         if (null != results) {
             totalTestPlans = results.size();
@@ -277,7 +282,6 @@ public class Cli {
                     totalTestCasesFailed += result.getTestPlan().getRunInfo().getFail();
                     totalTestCasesPassed += result.getTestPlan().getRunInfo().getPass();
                     totalTestCasesIgnored += result.getTestPlan().getRunInfo().getIgnore();
-                    totalDuration += result.getTestPlan().getRunTime().getDuration();
                 } else {
                     TS.log().error("Testplan is null, looking at junit result for " + result.getJunitResult().getFailures());
 
