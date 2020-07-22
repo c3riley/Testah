@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -487,12 +488,7 @@ public class TestahUtil {
     {
         if (duration != null)
         {
-            java.time.Duration d = java.time.Duration.ofMillis(duration);
-            int hrs = d.toHoursPart();
-            int mins = d.toMinutesPart();
-            int secs = d.toSecondsPart();
-            int milli = d.toMillisPart();
-            return String.format("%02d:%02d:%02d:%03d", hrs, mins, secs, milli);
+            return DurationFormatUtils.formatDuration(duration, "HH:mm:ss:S");
         }
         return "";
     }
