@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.testah.TS;
+import org.testah.framework.cli.Params;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -20,11 +21,12 @@ import static org.junit.Assert.*;
 
 public class WebElementWrapperV1Test {
 
-    private static final String formPage = "http://htmlpreview.github.io/?https://raw.githubusercontent.com/" +
+    private static String formPage = "http://htmlpreview.github.io/?https://raw.githubusercontent.com/" +
         "SeleniumHQ/selenium/master/common/src/web/formPage.html";
 
     @BeforeClass
     public static void setupForClass() {
+        formPage = "file://" + Params.getUserDir() + "/src/test/resources/formPage.html";
         TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
     }
 

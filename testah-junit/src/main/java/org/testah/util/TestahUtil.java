@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
@@ -478,4 +479,17 @@ public class TestahUtil {
         return new ArrayList<>();
     }
 
+    /**
+     * get time format in HH:MM:SS:MMM.
+     * @param duration - duration in milliseconds
+     * @return duration in HH:MM:SS:MMM format
+     */
+    public String getDurationShort(final Long duration)
+    {
+        if (duration != null)
+        {
+            return DurationFormatUtils.formatDuration(duration, "HH:mm:ss:S");
+        }
+        return "";
+    }
 }

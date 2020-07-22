@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -155,5 +156,12 @@ public class TestahUtilTest {
         assertThat(files, notNullValue());
         assertThat(files.size(), equalTo(2));
         assertThat(files.stream().filter(fileInList -> fileInList.getName().equals("META-INF")).findFirst().isPresent(), is(true));
+    }
+
+    @Test
+    public void testGetDurationShort() {
+        TS.asserts().equalsTo("00:00:32:345",testahUtil.getDurationShort(32345L));
+        TS.asserts().equalsTo("",testahUtil.getDurationShort(null));
+        TS.asserts().equalsTo("443172:27:55:379",testahUtil.getDurationShort(1595420875379L));
     }
 }
