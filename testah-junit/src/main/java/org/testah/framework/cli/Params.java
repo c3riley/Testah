@@ -228,7 +228,7 @@ public class Params {
 
     @Comment(info = "Html Template the Runner should use")
     @Arg(dest = "reportHtmlTemplate")
-    private String reportHtmlTemplate = AbstractFormatter.DEFAULT_PACKAGE + "htmlReportV1.vm";
+    private String reportHtmlTemplate = AbstractFormatter.DEFAULT_PACKAGE + "htmlReportV2.vm";
 
     /**
      * The use meta formatter.
