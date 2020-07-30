@@ -2,537 +2,540 @@
 #set( $H = '#' )
 
 <html>
-  <head>
-    <title>Automation Results for testPlan: $testPlan.getName()</title>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script>
-            function DisplayLayer(LayerName) {
-                var obj = document.getElementById(LayerName);
-                if (obj.style.display == '') {
-                    obj.style.display = 'none';
-                } else {
-                    obj.style.display = '';
-                }
+<head>
+  <title>Automation Results for testPlan: $testPlan.getName()</title>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script>
+    function DisplayLayer(LayerName) {
+      var obj = document.getElementById(LayerName);
+      if (obj.style.display == '') {
+        obj.style.display = 'none';
+      } else {
+        obj.style.display = '';
+      }
 
-            }
-            function loadUI() {
-                google.charts.load("current", {packages:["corechart"]});
-                google.charts.setOnLoadCallback(drawChart);
-            }
-
-            function drawChart() {
-                const pCount = parseInt(document.getElementById('sc').innerText);
-                const fCount = parseInt(document.getElementById('fl').innerText);
-                const iCount = parseInt(document.getElementById('na').innerText);
-                if (pCount > 0) {addClass('sc', 'PASSED');}
-                if (fCount > 0) {addClass('fl', 'FAILED');}
-                if (iCount > 0) {addClass('na', 'NA');}
-                document.getElementById('tl').innerText = pCount + fCount + iCount;
-                var data = google.visualization.arrayToDataTable([
-                  ['Status', 'Value'],
-                  ['PASSED',     pCount],
-                  ['FAILED',     fCount],
-                  ['IGNORED',    iCount]
-                ]);
-                var options = {
-                    pieHole: 0.5,
-                    colors: ['green', 'red', '#989898'],
-                    pieSliceText: 'value',
-                    height: 250,
-                    legend: {position: 'bottom'},
-                    pieSliceTextStyle: {
-                        color: 'black'
-                    }
-                };
-                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-                chart.draw(data, options);
-            }
-
-            function addClass(id, className)  {
-              let element = document.getElementById(id);
-              let arr = element.className.split(" ");
-              if (arr.indexOf(className) == -1) {
-                element.className += " " + className;
-              }
-            }
-
-        </script>
-<style>
-.ball {
- display: inline-block;
- margin: auto;
- border-radius: 50%;
- height: 30px;
- width: 30px;
- }
- .ball-status-PASSED{
-background: radial-gradient(circle at 5px 10px, green, #010F00);
-}
-.ball-status-FAILED{
-background: radial-gradient(circle at 5px 10px, red, #010F00);
-}
-.label {
-  white-space: nowrap;
-  font-weight: bold;
-  background-color: #e9ecef;
-}
-.value {
-  background-color: #F7F7F8;
-}
-.step_status_FAILED, .step_status_PASSED {
-border-radius: 20px;
-}
-
-.step_status_FAILED, .FAILED {
-  background-color: red;
-}
-
-.step_status_PASSED, .PASSED {
-  background-color: green;
-}
-
-.step_status_NA, .NA {
-  background-color: #989898;
-}
-
-.FAILED {
-  width: 100%;
-  color: white;
-}
-
-.PASSED {
-  width: 100%;
-  color: white;
-}
-
-.NA {
-  width: 100%;
-  color: white;
-}
-
-.content {
-  width: 95%;
-  margin: 0 auto;
-}
-
-.table .thead-light th {
-  width: 5px !important;
-}
-
-hr {
-  margin-top: .5rem;
-  margin-bottom: .5rem;
-  border: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.center {
-  text-align: center;
-}
-
-.middle {
-    vertical-align: middle;
-}
-
-textarea {
-  word-wrap: break-word !important;
-  width: 100%;
-  overflow: auto;
-  resize: vertical;
-  cursor: text;
-}
-
-.card-fixed-height {
-  max-height: 100px;
-  height: 90px;
-}
-
-.card-body {
-  padding: 0px;
-}
-
-.plan-status-PASSED {
-  text-decoration: underline;
-  text-decoration-color: green;
-}
-
-.plan-status-FAILED {
-  text-decoration: underline;
-  text-decoration-color: red;
-}
-
-*,::after,::before {
-  box-sizing: border-box;
-}
-
-html {
-  font-family: sans-serif;
-  line-height: 1.15;
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
-}
-
-h4 {
-  margin-top: 0;
-  margin-bottom: .5rem;
-  font-weight: 500;
-  line-height: 1.2;
-  font-size: 1.5rem;
-}
-
-p {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-.container {
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-}
-.container-fluid {
-  width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
-}
-.row {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin-right: -15px;
-  margin-left: -15px;
-}
-
-.col-3 {
-  padding: 5px !important;
-  -ms-flex: 0 0 25%;
-  flex: 0 0 25%;
-  max-width: 25%;
-}
-
-.col-4 {
-  -ms-flex: 0 0 33.333333%;
-  flex: 0 0 33.333333%;
-  max-width: 33.333333%;
-}
-
-.col-6 {
-  padding: 5px !important;
-  -ms-flex: 0 0 50%;
-  flex: 0 0 50%;
-  max-width: 50%;
-}
-
-.col-8 {
-  -ms-flex: 0 0 66.666667%;
-  flex: 0 0 66.666667%;
-  max-width: 66.666667%;
-}
-
-.col-12 {
-  -ms-flex: 0 0 100%;
-  flex: 0 0 100%;
-  max-width: 100%;
-}
-
-.table {
-  width: 100%;
-  margin-bottom: 1rem;
-  color: #212529;
-  border-collapse: separate;
-  border-spacing: 0 0.3 .2;
-}
-
-.table td,.table th {
-  padding: .75rem;
-  vertical-align: middle;
-  border-top: 1px solid #dee2e6;
-}
-
-.table thead th {
-  vertical-align: bottom;
-  border-bottom: 2px solid #dee2e6;
-}
-
-.table tbody+tbody {
-  border-top: 2px solid #dee2e6;
-}
-
-.table-borderless tbody+tbody,.table-borderless td,.table-borderless th,.table-borderless thead th {
-  border: 0;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(0,0,0,.05);
-}
-
-.table .thead-light th {
-  color: #495057;
-  background-color: #e9ecef;
-  border-color: #dee2e6;
-}
-.table-sm th, .table-sm td {
-    padding: .3rem;
+    }
+    function loadUI() {
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
     }
 
-.card {
-  position: relative;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  min-width: 0;
-  word-wrap: break-word;
-  background-color: #fff;
-  background-clip: border-box;
-  border: 1px solid rgba(0,0,0,.125);
-  border-radius: .25rem;
-}
-.card-body {
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto;
-  min-height: 1px;
-  padding: 1.25rem;
-}
-.card-title {
-  margin-bottom: .75rem;
-}
-.card-subtitle {
-  margin-top: -.375rem;
-  margin-bottom: 0;
-}
-.card-text-sm{
-font-size: 0.9rem;
-font-weight: bold;
-}
-.card-text{
-font-size: 1.20rem;
-padding: 1px;
-border-radius: 20px;
-}
-.card-text:last-child {
-  margin-bottom: 0;
-}
+    function drawChart() {
+      const pCount = parseInt(document.getElementById('sc').innerText);
+      const fCount = parseInt(document.getElementById('fl').innerText);
+      const iCount = parseInt(document.getElementById('na').innerText);
+      if (pCount > 0) {addClass('sc', 'PASSED');}
+      if (fCount > 0) {addClass('fl', 'FAILED');}
+      if (iCount > 0) {addClass('na', 'NA');}
+      document.getElementById('tl').innerText = pCount + fCount + iCount;
+      var data = google.visualization.arrayToDataTable([
+        ['Status', 'Value'],
+        ['PASSED',     pCount],
+        ['FAILED',     fCount],
+        ['IGNORED',    iCount]
+      ]);
+      var options = {
+        pieHole: 0.5,
+        colors: ['green', 'red', '#989898'],
+        pieSliceText: 'value',
+        height: 250,
+        legend: {position: 'bottom'},
+        pieSliceTextStyle: {
+          color: 'black'
+        }
+      };
+      var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+      chart.draw(data, options);
+    }
 
-.shadow {
-  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
-}
-.striped:nth-of-type(odd) {
-  background-color: rgba(212,205,215,.05);
-}
-.test-status-PASSED{
-  background-image: linear-gradient(4deg, green 30%, white 30%, white 50%, green 50%, green 80%, white 80%, white 100%);
-background-size: 18.87px 11.79px;
-}
+    function addClass(id, className)  {
+      let element = document.getElementById(id);
+      let arr = element.className.split(" ");
+      if (arr.indexOf(className) == -1) {
+        element.className += " " + className;
+      }
+    }
 
-.test-status-FAILED{
-  background-image: linear-gradient(4deg, red 30%, white 30%, white 50%, red 50%, red 80%, white 80%, white 100%);
-background-size: 18.87px 11.79px;
-}
+  </script>
+  <style>
+    .ball {
+      display: inline-block;
+      margin: auto;
+      border-radius: 50%;
+      height: 30px;
+      width: 30px;
+    }
+    .ball-status-PASSED{
+      background: radial-gradient(circle at 5px 10px, green, #010F00);
+    }
+    .ball-status-FAILED{
+      background: radial-gradient(circle at 5px 10px, red, #010F00);
+    }
+    .label {
+      white-space: nowrap;
+      font-weight: bold;
+      background-color: #e9ecef;
+    }
+    .value {
+      background-color: #F7F7F8;
+    }
+    .step_status_FAILED, .step_status_PASSED, .step_status_NA {
+      border-radius: 20px;
+      width: 1em;
+    }
 
-</style>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body class='content' onload="loadUI()">
-    <hr>
-      <div class="col-12 center">
-        <h4 class="plan-status-$testPlan.getStatusEnum()">Automation Results</h4>
-        <p>$testPlan.getName() [ $testPlan.getSource() ]</p>
-      </div>
-      <div class="container-fluid">
+    .step_status_FAILED, .FAILED {
+      background-color: red;
+    }
+
+    .step_status_PASSED, .PASSED {
+      background-color: green;
+    }
+
+    .step_status_NA, .NA {
+      background-color: #989898;
+    }
+
+    .FAILED {
+      width: 100%;
+      color: white;
+    }
+
+    .PASSED {
+      width: 100%;
+      color: white;
+    }
+
+    .NA {
+      width: 100%;
+      color: white;
+    }
+
+    .content {
+      width: 95%;
+      margin: 0 auto;
+    }
+
+    /*.table .thead-light th {*/
+    /*  width: 5px !important;*/
+    /*}*/
+
+    hr {
+      margin-top: .5rem;
+      margin-bottom: .5rem;
+      border: 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .middle {
+      vertical-align: middle;
+    }
+
+    textarea {
+      word-wrap: break-word !important;
+      width: 100%;
+      overflow: auto;
+      resize: vertical;
+      cursor: text;
+    }
+
+    .card-fixed-height {
+      max-height: 100px;
+      height: 90px;
+    }
+
+    .card-body {
+      padding: 0px;
+    }
+
+    .plan-status-PASSED {
+      text-decoration: underline;
+      text-decoration-color: green;
+    }
+
+    .plan-status-FAILED {
+      text-decoration: underline;
+      text-decoration-color: red;
+    }
+
+    *,::after,::before {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-family: sans-serif;
+      line-height: 1.15;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    h4 {
+      margin-top: 0;
+      margin-bottom: .5rem;
+      font-weight: 500;
+      line-height: 1.2;
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    .container {
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    .container-fluid {
+      width: 100%;
+      padding-right: 15px;
+      padding-left: 15px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    .row {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-right: -15px;
+      margin-left: -15px;
+    }
+
+    .col-3 {
+      padding: 5px !important;
+      -ms-flex: 0 0 25%;
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+
+    .col-4 {
+      -ms-flex: 0 0 33.333333%;
+      flex: 0 0 33.333333%;
+      max-width: 33.333333%;
+    }
+
+    .col-6 {
+      padding: 5px !important;
+      -ms-flex: 0 0 50%;
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+
+    .col-8 {
+      -ms-flex: 0 0 66.666667%;
+      flex: 0 0 66.666667%;
+      max-width: 66.666667%;
+    }
+
+    .col-12 {
+      -ms-flex: 0 0 100%;
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+
+    .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      color: #212529;
+      border-collapse: separate;
+      border-spacing: 0.3rem 0.3rem;
+    }
+
+    .table td,.table th {
+      padding: .75rem;
+      vertical-align: middle;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .table thead th {
+      vertical-align: bottom;
+      border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody+tbody {
+      border-top: 2px solid #dee2e6;
+    }
+
+    .table-borderless tbody+tbody,.table-borderless td,.table-borderless th,.table-borderless thead th {
+      border: 0;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: rgba(0,0,0,.05);
+    }
+
+    .table .thead-light th {
+      color: #495057;
+      background-color: #e9ecef;
+      border-color: #dee2e6;
+    }
+    .table-sm th, .table-sm td {
+      padding: .2rem;
+    }
+
+    .card {
+      position: relative;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      min-width: 0;
+      word-wrap: break-word;
+      background-color: #fff;
+      background-clip: border-box;
+      border: 1px solid rgba(0,0,0,.125);
+      border-radius: .25rem;
+    }
+    .card-body {
+      -ms-flex: 1 1 auto;
+      flex: 1 1 auto;
+      min-height: 1px;
+      padding: 1.25rem;
+    }
+    .card-title {
+      margin-bottom: .75rem;
+    }
+    .card-subtitle {
+      margin-top: -.375rem;
+      margin-bottom: 0;
+    }
+    .card-text-sm{
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    .card-text{
+      font-size: 1.20rem;
+      padding: 1px;
+      border-radius: 20px;
+    }
+    .card-text:last-child {
+      margin-bottom: 0;
+    }
+
+    .shadow {
+      box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+    .striped:nth-of-type(odd) {
+      background-color: rgba(212,205,215,.05);
+    }
+    .test-status-PASSED{
+      background-image: linear-gradient(4deg, green 30%, white 30%, white 50%, green 50%, green 80%, white 80%, white 100%);
+      background-size: 18.87px 11.79px;
+    }
+
+    .test-status-FAILED{
+      background-image: linear-gradient(4deg, red 30%, white 30%, white 50%, red 50%, red 80%, white 80%, white 100%);
+      background-size: 18.87px 11.79px;
+    }
+
+  </style>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class='content' onload="loadUI()">
+<hr>
+<div class="col-12 center">
+  <h4 class="plan-status-$testPlan.getStatusEnum()">Automation Results</h4>
+  <p>$testPlan.getName() [ $testPlan.getSource() ]</p>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-8">
+      <div class="container">
         <div class="row">
-          <div class="col-8">
-            <div class="container">
-              <div class="row">
-                <div class="col-3">
-                  <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
-                    <div class="card-body center">
-                      <p class="card-title">Total Tests</p>
-                      <p id='tl' class="card-text"></p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-3">
-                  <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
-                    <div class="card-body center">
-                      <p class="card-title">Passed</p>
-                      <p id='sc' class="card-text">$testPlan.getRunInfo().getPass()</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-3">
-                  <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
-                    <div class="card-body center">
-                      <p class="card-title">Failed</p>
-                      <p id='fl' class="card-text">$testPlan.getRunInfo().getFail()</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-3">
-                  <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
-                    <div class="card-body center">
-                      <p class="card-title">Ignored</p>
-                      <p id='na' class="card-text">$testPlan.getRunInfo().getIgnore()</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-6">
-                  <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
-                    <div class="card-body center">
-                      <p class="card-title">Time</p>
-                      <p class="card-text-sm">$util.toDateString($testPlan.getRunTime().getStartTime())
-                                            to $util.toDateString($testPlan.getRunTime().getEndTime())</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
-                    <div class="card-body center">
-                      <p class="card-title">Duration</p>
-                      <p class="card-text-sm">$util.getDurationPretty( $testPlan.getRunTime().getDuration())</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-3">
-                  <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
-                    <div class="card-body center">
-                      <p class="card-title">User</p>
-                      <p id='tl' class="card-text-sm">$!testPlan.getUser()</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-3">
-                  <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
-                    <div class="card-body center">
-                      <p class="card-title">Build</p>
-                      <p id='sc' class="card-text-sm">#if("$!testPlan.getCiUrl()" != "")
-                        <a href='testPlan.getCiUrl()' target='_blank'>View CI</a>
-                          #end
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-3">
-                  <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
-                    <div class="card-body center">
-                      <p class="card-title">Built On</p>
-                      <p id='fl' class="card-text-sm">$!testPlan.getRunInfo().getRunTimeProperties().get("builtOn")</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-3">
-                  <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
-                    <div class="card-body center">
-                      <p class="card-title">Environment</p>
-                      <p id='na' class="card-text-sm">$!testPlan.getEnvironment()</p>
-                    </div>
-                  </div>
-                </div>
+          <div class="col-3">
+            <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+              <div class="card-body center">
+                <p class="card-title">Total Tests</p>
+                <p id='tl' class="card-text"></p>
               </div>
             </div>
           </div>
-          <div class="col-4 center">
-                    Run Result
-            <div class="" id='donutchart'></div>
+          <div class="col-3">
+            <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
+              <div class="card-body center">
+                <p class="card-title">Passed</p>
+                <p id='sc' class="card-text">$testPlan.getRunInfo().getPass()</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+              <div class="card-body center">
+                <p class="card-title">Failed</p>
+                <p id='fl' class="card-text">$testPlan.getRunInfo().getFail()</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
+              <div class="card-body center">
+                <p class="card-title">Ignored</p>
+                <p id='na' class="card-text">$testPlan.getRunInfo().getIgnore()</p>
+              </div>
+            </div>
           </div>
         </div>
-            #if($testPlan.getRunInfo().getFail() > 0)
-        <hr>
-          <div class="row">
-            <div class="col-sm-12 middle">
-              <span class="ball middle ball-status-$testPlan.getStatusEnum()"> </span>
-                    #foreach( $tc in $testPlan.getTestCases() )
-                                    #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
-                                    | <a class='plan-status-$testPlan.getStatusEnum()'' href='$H$tc.getName()'
-                                    title='See TestCase Results'>$tc.getName()</a>
-                                    #end
-                                #end
+        <div class="row">
+          <div class="col-6">
+            <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+              <div class="card-body center">
+                <p class="card-title">Time</p>
+                <p class="card-text-sm">$util.toDateString($testPlan.getRunTime().getStartTime())
+                  to $util.toDateString($testPlan.getRunTime().getEndTime())</p>
+              </div>
             </div>
           </div>
+          <div class="col-6">
+            <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
+              <div class="card-body center">
+                <p class="card-title">Duration</p>
+                <p class="card-text-sm">$util.getDurationPretty( $testPlan.getRunTime().getDuration())</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">
+            <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+              <div class="card-body center">
+                <p class="card-title">User</p>
+                <p id='tl' class="card-text-sm">$!testPlan.getUser()</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+              <div class="card-body center">
+                <p class="card-title">Build</p>
+                <p id='sc' class="card-text-sm">#if("$!testPlan.getCiUrl()" != "")
+                  <a href='testPlan.getCiUrl()' target='_blank'>View CI</a>
                 #end
-            #foreach( $testcase in $testPlan.getTestCases() )
-          <hr>
-            <div class="row">
-              <div class="col-12">
-                <table class='table table-sm table-borderless'>
-                    <tr><th colspan="2" class="test-status-$testcase.getStatusEnum()"></th></tr>
-                  <tr>
-                    <td class='label'>Test Case: <span class='middle'></span></td>
-                    <td class='value'>
-                      <a name='$testcase.getName()'>$testcase.getName() [ $testcase.getSource() ]</a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class='label'>Description:</td>
-                    <td class='value'>$testcase.getDescription()</td>
-                  </tr>
-                  <tr>
-                    <td class='label'>Time:</td>
-                    <td class='value'>$util.toDateString($testcase.getRunTime().getStartTime())
-                        to $util.toDateString($testcase.getRunTime().getEndTime())
-                        [Duration: $util.getDurationPretty( $testcase.getRunTime().getDuration() )]
-                    </td>
-                  </tr>
-                </table>
+                </p>
               </div>
             </div>
-            <div class="row">
-              <div class="col-12">
-                    #foreach ($step in $testcase.getTestSteps())
-                <table class='table table-sm table-borderless'>
-                  <thead class='thead-light'>
-                    <tr>
-                      <th class='step_id' style="width: 5px;">ID</th>
-                      <th class='step_desc'>Description</th>
-                      <th class='step_expected'>Expected</th>
-                      <th class='step_actual'>Actual</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class='step_id'>$step.getId()</td>
-                      <td class='step_desc'>$step.getName()</td>
-                      <td class='step_expected'>$step.getDescription()</td>
-                      <td class='step_actual'></td>
-                    </tr>
-                        #foreach ($stepAction in $step.getStepActions())
-                    <tr>
-                      <td class='step_status_$stepAction.getStatusEnum()' onclick="DisplayLayer('Step_$step.getId()_$blockNumber');" title='Click here to see Exception'></td>
-                      <td class='step_desc'>
-                        <textarea disabled rows='4'>$stepAction.getDescription()</textarea>
-                      </td>
-                      <td class='step_expected'>
-                        <textarea disabled rows='4'>$!stepAction.getExpected()</textarea>
-                      </td>
-                      <td class='step_actual'>
-                        <textarea disabled rows='4'>$!stepAction.getActual()</textarea>
-                      </td>
-                    </tr>
-                    <tr id='Step_$step.getId()_$blockNumber' style='display: none;'>
-                      <td colspan='5'>
+          </div>
+          <div class="col-3">
+            <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+              <div class="card-body center">
+                <p class="card-title">Built On</p>
+                <p id='fl' class="card-text-sm">$!testPlan.getRunInfo().getRunTimeProperties().get("builtOn")</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
+              <div class="card-body center">
+                <p class="card-title">Environment</p>
+                <p id='na' class="card-text-sm">$!testPlan.getEnvironment()</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-4 center">
+      Run Result
+      <div class="" id='donutchart'></div>
+    </div>
+  </div>
+  #if($testPlan.getRunInfo().getFail() > 0)
+    <hr>
+    <div class="row">
+      <div class="col-sm-12 middle">
+        <span class="ball middle ball-status-$testPlan.getStatusEnum()"> </span>
+        #foreach( $tc in $testPlan.getTestCases() )
+          #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
+            | <a class='plan-status-$testPlan.getStatusEnum()' href='$H$tc.getName()'
+            title='See TestCase Results'>$tc.getName()</a>
+          #end
+        #end
+      </div>
+    </div>
+  #end
+  #foreach( $testcase in $testPlan.getTestCases() )
+    <hr>
+    <div class="row">
+      <div class="col-12">
+        <table class='table table-sm table-borderless'>
+          <tr><th id="$testcase.getName()" colspan="2" class="test-status-$testcase.getStatusEnum()">
+          </th></tr>
+          <tr>
+            <td class='label'>Test Case: <span class='middle'></span></td>
+            <td class='value'>
+             $testcase.getName() [ $testcase.getSource() ]
+            </td>
+          </tr>
+          <tr>
+            <td class='label'>Description:</td>
+            <td class='value'>$testcase.getDescription()</td>
+          </tr>
+          <tr>
+            <td class='label'>Time:</td>
+            <td class='value'>$util.toDateString($testcase.getRunTime().getStartTime())
+              to $util.toDateString($testcase.getRunTime().getEndTime())
+              [Duration: $util.getDurationPretty( $testcase.getRunTime().getDuration() )]
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        #foreach ($step in $testcase.getTestSteps())
+          <table class='table table-sm table-borderless'>
+            <thead class='thead-light'>
+            <tr>
+              <th style='width: 22px;' class='step_id'>ID</th>
+              <th class='step_desc'>Description</th>
+              <th class='step_expected'>Expected</th>
+              <th class='step_actual'>Actual</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td style='width: 22px;' class='step_id'>$step.getId()</td>
+              <td class='step_desc'>$step.getName()</td>
+              <td class='step_expected'>$step.getDescription()</td>
+              <td class='step_actual'></td>
+            </tr>
+              #foreach ($stepAction in $step.getStepActions())
+              <tr>
+                <td class='step_status_$stepAction.getStatusEnum()' onclick="DisplayLayer('Step_$step.getId()_$blockNumber');" title='Click here to see Exception'>
+                </td>
+                <td class='step_desc'>
+                  <textarea readonly rows='4'>$stepAction.getDescription()</textarea>
+                </td>
+                <td class='step_expected'>
+                  <textarea readonly rows='4'>$!stepAction.getExpected()</textarea>
+                </td>
+                <td class='step_actual'>
+                  <textarea readonly rows='4'>$!stepAction.getActual()</textarea>
+                </td>
+              </tr>
+              <tr id='Step_$step.getId()_$blockNumber' style='display: none;'>
+                <td colspan='5'>
                         <pre>
-                            $!stepAction.getExceptionString(false)
+                          $!stepAction.getExceptionString(false)
                         </pre>
-                      </td>
-                    </tr>
-                        #set( $blockNumber = $blockNumber + 1 )
-                        #end
-                  </tbody>
-                </table>
-                    #end
-              </div>
-            </div>
-            #end
-            <hr>
-            </div>
-          </body>
-        </html>
+                </td>
+              </tr>
+                #set( $blockNumber = $blockNumber + 1 )
+              #end
+            </tbody>
+          </table>
+        #end
+      </div>
+    </div>
+  #end
+  <hr>
+</div>
+</body>
+</html>
