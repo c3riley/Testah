@@ -6,6 +6,7 @@
   <title>Automation Results for testPlan: $testPlan.getName()</title>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script>
+    var pCount, fCount, iCount;
     function DisplayLayer(LayerName) {
       var obj = document.getElementById(LayerName);
       if (obj.style.display == '') {
@@ -17,17 +18,17 @@
     }
     function loadUI() {
       google.charts.load("current", {packages:["corechart"]});
+      pCount = parseInt(document.getElementById('sc').innerText);
+      fCount = parseInt(document.getElementById('fl').innerText);
+      iCount = parseInt(document.getElementById('na').innerText);
+      document.getElementById('tl').innerText = pCount + fCount + iCount;
+      if (pCount === 0) {removeClass('sc', 'PASSED');}
+      if (fCount === 0) {removeClass('fl', 'FAILED');}
+      if (iCount === 0) {removeClass('na', 'NA');}
       google.charts.setOnLoadCallback(drawChart);
     }
 
     function drawChart() {
-      const pCount = parseInt(document.getElementById('sc').innerText);
-      const fCount = parseInt(document.getElementById('fl').innerText);
-      const iCount = parseInt(document.getElementById('na').innerText);
-      if (pCount > 0) {addClass('sc', 'PASSED');}
-      if (fCount > 0) {addClass('fl', 'FAILED');}
-      if (iCount > 0) {addClass('na', 'NA');}
-      document.getElementById('tl').innerText = pCount + fCount + iCount;
       var data = google.visualization.arrayToDataTable([
         ['Status', 'Value'],
         ['PASSED',     pCount],
@@ -48,12 +49,9 @@
       chart.draw(data, options);
     }
 
-    function addClass(id, className)  {
+    function removeClass(id, className)  {
       let element = document.getElementById(id);
-      let arr = element.className.split(" ");
-      if (arr.indexOf(className) == -1) {
-        element.className += " " + className;
-      }
+        element.classList.remove(className);
     }
 
   </script>
@@ -116,10 +114,6 @@
       margin: 0 auto;
     }
 
-    /*.table .thead-light th {*/
-    /*  width: 5px !important;*/
-    /*}*/
-
     hr {
       margin-top: .5rem;
       margin-bottom: .5rem;
@@ -149,7 +143,7 @@
     }
 
     .card-body {
-      padding: 0px;
+      padding: 0;
     }
 
     .plan-status-PASSED {
@@ -334,6 +328,14 @@
       background-image: linear-gradient(4deg, red 30%, white 30%, white 50%, red 50%, red 80%, white 80%, white 100%);
       background-size: 18.87px 11.79px;
     }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background-color: black;
+      color: white;
+      border-radius: 5px;
+      padding: 5px 10px 0 10px;
+    }
 
   </style>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -362,7 +364,7 @@
             <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
               <div class="card-body center">
                 <p class="card-title">Passed</p>
-                <p id='sc' class="card-text">$testPlan.getRunInfo().getPass()</p>
+                <p id='sc' class="card-text PASSED">$testPlan.getRunInfo().getPass()</p>
               </div>
             </div>
           </div>
@@ -370,7 +372,7 @@
             <div class="card card-fixed-height shadow p-3 mb-2 bg-white rounded">
               <div class="card-body center">
                 <p class="card-title">Failed</p>
-                <p id='fl' class="card-text">$testPlan.getRunInfo().getFail()</p>
+                <p id='fl' class="card-text FAILED">$testPlan.getRunInfo().getFail()</p>
               </div>
             </div>
           </div>
@@ -378,7 +380,7 @@
             <div class="card card-fixed-height card-fixed-height shadow p-3 mb-2 bg-white rounded">
               <div class="card-body center">
                 <p class="card-title">Ignored</p>
-                <p id='na' class="card-text">$testPlan.getRunInfo().getIgnore()</p>
+                <p id='na' class="card-text NA">$testPlan.getRunInfo().getIgnore()</p>
               </div>
             </div>
           </div>
@@ -501,10 +503,10 @@
             </thead>
             <tbody>
             <tr>
-              <td style='width: 22px;' class='step_id'>$step.getId()</td>
-              <td class='step_desc'>$step.getName()</td>
-              <td class='step_expected'>$step.getDescription()</td>
-              <td class='step_actual'></td>
+              <td style='width: 1%;' class='step_id'>$step.getId()</td>
+              <td style='width: 33%;' class='step_desc'>$step.getName()</td>
+              <td style='width: 33%;' class='step_expected'>$step.getDescription()</td>
+              <td style='width: 33%;' class='step_actual'></td>
             </tr>
               #foreach ($stepAction in $step.getStepActions())
               <tr>
@@ -521,10 +523,10 @@
                 </td>
               </tr>
               <tr id='Step_$step.getId()_$blockNumber' style='display: none;'>
-                <td colspan='5'>
-                        <pre>
-                          $!stepAction.getExceptionString(false)
-                        </pre>
+                <td colspan='4'>
+                  <pre>
+                    $!stepAction.getExceptionString(false)
+                   </pre>
                 </td>
               </tr>
                 #set( $blockNumber = $blockNumber + 1 )
