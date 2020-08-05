@@ -40,12 +40,12 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "2.3.0";
+    public static final String version = "2.3.1";
 
     /**
      * The Constant BAR_LONG.
      */
-    public static final String BAR_LONG = "=============================================================================================";
+    public static final String BAR_LONG = "=================================================================================================";
     /**
      * The Constant BAR_SHORT.
      */
@@ -106,28 +106,25 @@ public class Cli {
     }
 
     /**
-     * Write out testah.
+     * Write out testah banner.
      */
     public static void writeOutTestah() {
-        System.out.println("\n" + Cli.BAR_LONG);
-        System.out.println(
-                "      _____________                    _                                         ============");
-        System.out.println(
-                "     /_____  _____/      ________     | |                                       =======/\\==||");
-        System.out.println(
-                "          | |           /___ ___/     | |                                      =======/  \\=||");
-        System.out.println(
-                "          | |   ___    __  | |        | |                                     =======/    \\||");
-        System.out.println(
-                "          | |  / __|  (    | |  ___   | |___                                  =======\\    /||");
-        System.out.println(
-                "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
-        System.out.println(
-                "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
-        System.out.println("=======================================================[Version: " + Cli.version +
-                "]======================");
-
-        System.out.println(Cli.BAR_LONG);
+        String vValue = "[Version: " + Cli.version +"]";
+        final int startIndex = (Cli.BAR_LONG.length() / 2) - (vValue.length() / 2);
+        String vPrint = Cli.BAR_LONG.substring(0, startIndex) + vValue + Cli.BAR_LONG.substring(startIndex+vValue.length());
+        System.out.println("\n" + Cli.BAR_LONG + "\n");
+        System.out.println("TTTTTTTTTTTTTTTTTTTT                          TTTTTTTTTTTTTTTTTTTT              hhhhhh");
+        System.out.println("T:::::TT::::TT:::::T                          T:::::TT::::TT:::::T              h::::h");
+        System.out.println("TTTTT  T::::T  TTTTTTeeeeeeeeee       ssssssssTTTTT  T::::T  TTTTTaaaaaaaaaaa   h::::h hhhh");
+        System.out.println("       T::::T     e:::::eeee::::e    s::::::::::s    T::::T       aaaaaaa:::::a h:::::::::::hh");
+        System.out.println("       T::::T    e:::::e    e:::::  s:::::sss:::::s  T::::T              a::::a h:::::hh::::::h");
+        System.out.println("       T::::T   e::::::eeee::::::e s::::s     sssss  T::::T        aaaaaa:::::a h:::::h   h:::::h");
+        System.out.println("       T::::T  e::::::::::::::::e    s:::::s         T::::T      aa:::::::::::a h::::h     h::::h");
+        System.out.println("       T::::T   e::::::eeeeeeeee        s:::::s      T::::T     a::::aaa::::::a h::::h     h::::h");
+        System.out.println("       T::::T    e:::::e          sssss     s::::s   T::::T    a::::a    a::::a h::::h     h::::h");
+        System.out.println("     T::::::::T   e:::::::eeeeeee  ss::::::::::::ssT::::::::T  a:::::aaa::::::a h::::h     h::::h");
+        System.out.println("     TTTTTTTTTT      eeeeeeeeeeee    ssssssssss    TTTTTTTTTT    aaaaaaaaa  aaaahhhhhh     hhhhhh");
+        System.out.println("\n" + vPrint +"\n");
     }
 
     /**
