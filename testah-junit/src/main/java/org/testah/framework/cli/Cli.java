@@ -45,7 +45,8 @@ public class Cli {
     /**
      * The Constant BAR_LONG.
      */
-    public static final String BAR_LONG = "=================================================================================================";
+    public static final String BAR_LONG =
+        "=================================================================================================";
     /**
      * The Constant BAR_SHORT.
      */
@@ -109,22 +110,23 @@ public class Cli {
      * Write out testah banner.
      */
     public static void writeOutTestah() {
-        String vValue = "[Version: " + Cli.version +"]";
-        final int startIndex = (Cli.BAR_LONG.length() / 2) - (vValue.length() / 2);
-        String vPrint = Cli.BAR_LONG.substring(0, startIndex) + vValue + Cli.BAR_LONG.substring(startIndex+vValue.length());
+        final String versionString = "[Version: " + Cli.version + "]";
+        final int startIndex = (Cli.BAR_LONG.length() / 2) - (versionString.length() / 2);
+        final String printVersionLine = Cli.BAR_LONG.substring(0, startIndex) + versionString +
+            Cli.BAR_LONG.substring(startIndex + versionString.length());
         System.out.println("\n" + Cli.BAR_LONG + "\n");
         System.out.println("TTTTTTTTTTTTTTTTTTTT                          TTTTTTTTTTTTTTTTTTTT              hhhhhh");
         System.out.println("T:::::TT::::TT:::::T                          T:::::TT::::TT:::::T              h::::h");
         System.out.println("TTTTT  T::::T  TTTTTTeeeeeeeeee       ssssssssTTTTT  T::::T  TTTTTaaaaaaaaaaa   h::::h hhhh");
-        System.out.println("       T::::T     e:::::eeee::::e    s::::::::::s    T::::T       aaaaaaa:::::a h:::::::::::hh");
-        System.out.println("       T::::T    e:::::e    e:::::  s:::::sss:::::s  T::::T              a::::a h:::::hh::::::h");
-        System.out.println("       T::::T   e::::::eeee::::::e s::::s     sssss  T::::T        aaaaaa:::::a h:::::h   h:::::h");
+        System.out.println("       T::::T     e:::::eeee::::e    s:::::::::s     T::::T       aaaaaaa:::::a h:::::::::::hh");
+        System.out.println("       T::::T    e:::::e    e:::::  s:::::sss:::::s  T::::T              a::::a h::::::hh:::::h");
+        System.out.println("       T::::T   e::::::eeee::::::e s::::s    sssss   T::::T        aaaaaa:::::a h:::::h   h:::::h");
         System.out.println("       T::::T  e::::::::::::::::e    s:::::s         T::::T      aa:::::::::::a h::::h     h::::h");
         System.out.println("       T::::T   e::::::eeeeeeeee        s:::::s      T::::T     a::::aaa::::::a h::::h     h::::h");
         System.out.println("       T::::T    e:::::e          sssss     s::::s   T::::T    a::::a    a::::a h::::h     h::::h");
-        System.out.println("     T::::::::T   e:::::::eeeeeee  ss::::::::::::ssT::::::::T  a:::::aaa::::::a h::::h     h::::h");
-        System.out.println("     TTTTTTTTTT      eeeeeeeeeeee    ssssssssss    TTTTTTTTTT    aaaaaaaaa  aaaahhhhhh     hhhhhh");
-        System.out.println("\n" + vPrint +"\n");
+        System.out.println("     T::::::::T   e:::::::eeeeeee   s:::::sss:::::sT::::::::T  a:::::aaa::::::a h::::h     h::::h");
+        System.out.println("     TTTTTTTTTT      eeeeeeeeeeee     sssssssss    TTTTTTTTTT    aaaaaaaaa  aaaahhhhhh     hhhhhh");
+        System.out.println("\n" + printVersionLine + "\n");
     }
 
     /**
@@ -263,7 +265,6 @@ public class Cli {
         int totalTestCasesPassed = 0;
         int totalTestCasesIgnored = 0;
         int totalTestPlans = 0;
-        long totalDuration = duration;
 
         if (null != results) {
             totalTestPlans = results.size();
@@ -320,10 +321,10 @@ public class Cli {
         TS.log().info(Cli.BAR_WALL + "Total TestCases Failed: " + totalTestCasesFailed);
         TS.log().info(Cli.BAR_WALL + "Total TestCases Passed: " + totalTestCasesPassed);
         TS.log().info(Cli.BAR_WALL + "Total TestCases Ignored: " + totalTestCasesIgnored);
-        TS.log().info(Cli.BAR_WALL + "Total Duration: " + TS.util().getDurationPretty(totalDuration));
+        TS.log().info(Cli.BAR_WALL + "Total Duration: " + TS.util().getDurationPretty(duration));
         TS.log().info(Cli.BAR_LONG);
 
-        File summaryHtml = new SummaryHtmlFormatter(results, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, totalDuration).createReport().getReportFile();
+        File summaryHtml = new SummaryHtmlFormatter(results, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, duration).createReport().getReportFile();
         if (TS.params().isAutoOpenHtmlReport()) {
             new TestPlanReporter().openReport(summaryHtml.getAbsolutePath());
         }
