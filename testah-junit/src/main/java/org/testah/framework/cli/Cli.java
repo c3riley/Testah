@@ -258,7 +258,7 @@ public class Cli {
         results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
                 getTestPlanFilter().getTestClassesMetFilters());
         Instant endTest = Instant.now();
-        long duration = Duration.between(startTest, endTest).toMillis();
+        long totalDuration = Duration.between(startTest, endTest).toMillis();
 
         int totalTestCases = 0;
         int totalTestCasesFailed = 0;
@@ -321,10 +321,10 @@ public class Cli {
         TS.log().info(Cli.BAR_WALL + "Total TestCases Failed: " + totalTestCasesFailed);
         TS.log().info(Cli.BAR_WALL + "Total TestCases Passed: " + totalTestCasesPassed);
         TS.log().info(Cli.BAR_WALL + "Total TestCases Ignored: " + totalTestCasesIgnored);
-        TS.log().info(Cli.BAR_WALL + "Total Duration: " + TS.util().getDurationPretty(duration));
+        TS.log().info(Cli.BAR_WALL + "Total Duration: " + TS.util().getDurationPretty(totalDuration));
         TS.log().info(Cli.BAR_LONG);
 
-        File summaryHtml = new SummaryHtmlFormatter(results, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, duration).createReport().getReportFile();
+        File summaryHtml = new SummaryHtmlFormatter(results, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, totalDuration).createReport().getReportFile();
         if (TS.params().isAutoOpenHtmlReport()) {
             new TestPlanReporter().openReport(summaryHtml.getAbsolutePath());
         }
