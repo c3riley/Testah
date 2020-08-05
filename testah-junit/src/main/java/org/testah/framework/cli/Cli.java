@@ -117,11 +117,11 @@ public class Cli {
         System.out.println("\n" + Cli.BAR_LONG + "\n");
         System.out.println("TTTTTTTTTTTTTTTTTTTT                          TTTTTTTTTTTTTTTTTTTT              hhhhhh");
         System.out.println("T:::::TT::::TT:::::T                          T:::::TT::::TT:::::T              h::::h");
-        System.out.println("TTTTT  T::::T  TTTTTTeeeeeeeeee       ssssssssTTTTT  T::::T  TTTTTaaaaaaaaaaa   h::::h hhhh");
-        System.out.println("       T::::T     e:::::eeee::::e    s:::::::::s     T::::T       aaaaaaa:::::a h:::::::::::hh");
+        System.out.println("TTTTT  T::::T  TTTTTeeeeeeeeee        ssssssssTTTTT  T::::T  TTTTTaaaaaaaaaaa   h::::h");
+        System.out.println("       T::::T     e:::::eeee::::e    s:::::::::s     T::::T       aaaaaaa:::::a h::::::::::hh");
         System.out.println("       T::::T    e:::::e    e:::::  s:::::sss:::::s  T::::T              a::::a h::::::hh:::::h");
-        System.out.println("       T::::T   e::::::eeee::::::e s::::s    sssss   T::::T        aaaaaa:::::a h:::::h   h:::::h");
-        System.out.println("       T::::T  e::::::::::::::::e    s:::::s         T::::T      aa:::::::::::a h::::h     h::::h");
+        System.out.println("       T::::T   e::::::eeee::::::e s::::s    sssss   T::::T        aaaaaa:::::a h:::::hhhh:::::h");
+        System.out.println("       T::::T  e::::::::::::::::e    s:::::s         T::::T      aa:::::::::::a h:::::h   h:::::h");
         System.out.println("       T::::T   e::::::eeeeeeeee        s:::::s      T::::T     a::::aaa::::::a h::::h     h::::h");
         System.out.println("       T::::T    e:::::e          sssss     s::::s   T::::T    a::::a    a::::a h::::h     h::::h");
         System.out.println("     T::::::::T   e:::::::eeeeeee   s:::::sss:::::sT::::::::T  a:::::aaa::::::a h::::h     h::::h");
@@ -258,7 +258,7 @@ public class Cli {
         results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
                 getTestPlanFilter().getTestClassesMetFilters());
         Instant endTest = Instant.now();
-        long totalDuration = Duration.between(startTest, endTest).toMillis();
+        final long totalDuration = Duration.between(startTest, endTest).toMillis();
 
         int totalTestCases = 0;
         int totalTestCasesFailed = 0;
