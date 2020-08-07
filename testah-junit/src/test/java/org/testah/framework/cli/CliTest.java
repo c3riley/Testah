@@ -1,8 +1,10 @@
 package org.testah.framework.cli;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.testah.TS;
 
 import java.io.File;
 
@@ -100,4 +102,31 @@ public class CliTest {
         Assert.assertTrue(new File("testah.properties").exists());
     }
 
+    @Test
+    public void testCliLongBarWithCenterText() {
+        final String version = "[Version 22.1.0]";
+         String longBarToPrint = Cli.getLongBarWithTextInCenter(version);
+        Assert.assertEquals((longBarToPrint.length() + version.length()) / 2 - version.length(), longBarToPrint.indexOf("[") );
+    }
+
+    @Test
+    public void testCliLongBarWithCenterTextLong() {
+        final String version = RandomStringUtils.randomAlphanumeric(Cli.BAR_LONG.length() + 1);
+        String longBarToPrint = Cli.getLongBarWithTextInCenter(version);
+        Assert.assertEquals(version + "\n" + Cli.BAR_LONG, longBarToPrint);
+    }
+
+    @Test
+    public void testCliLongBarWithCenterTextShort() {
+        final String version = RandomStringUtils.randomAlphanumeric(Cli.BAR_LONG.length() - 1);
+        String longBarToPrint = Cli.getLongBarWithTextInCenter(version);
+        Assert.assertEquals(version + "\n" + Cli.BAR_LONG, longBarToPrint);
+    }
+
+    @Test
+    public void testCliLongBarWithCenterTextEmpty() {
+        final String version = "";
+        String longBarToPrint = Cli.getLongBarWithTextInCenter(version);
+        Assert.assertEquals(version + "\n" + Cli.BAR_LONG, longBarToPrint);
+    }
 }
