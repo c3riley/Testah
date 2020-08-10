@@ -110,10 +110,6 @@ public class Cli {
      * Write out testah banner.
      */
     public static void writeOutTestah() {
-        final String versionString = "[Version: " + Cli.version + "]";
-        final int startIndex = (Cli.BAR_LONG.length() / 2) - (versionString.length() / 2);
-        final String printVersionLine = Cli.BAR_LONG.substring(0, startIndex) + versionString +
-            Cli.BAR_LONG.substring(startIndex + versionString.length());
         System.out.println("\n" + Cli.BAR_LONG + "\n");
         System.out.println("TTTTTTTTTTTTTTTTTTTT                          TTTTTTTTTTTTTTTTTTTT              hhhhhh");
         System.out.println("T:::::TT::::TT:::::T                          T:::::TT::::TT:::::T              h::::h");
@@ -126,7 +122,24 @@ public class Cli {
         System.out.println("       T::::T    e:::::e          sssss     s::::s   T::::T    a::::a    a::::a h::::h     h::::h");
         System.out.println("     T::::::::T   e:::::::eeeeeee   s:::::sss:::::sT::::::::T  a:::::aaa::::::a h::::h     h::::h");
         System.out.println("     TTTTTTTTTT      eeeeeeeeeeee     sssssssss    TTTTTTTTTT    aaaaaaaaa  aaaahhhhhh     hhhhhh");
-        System.out.println("\n" + printVersionLine + "\n");
+        System.out.println("\n" + getLongBarWithTextInCenter("[Version: " + Cli.version + "]") + "\n");
+    }
+
+    public static String getLongBarWithTextInCenter(final String anyText){
+        final int textLength = anyText.length();
+        final int barLength = Cli.BAR_LONG.length();
+        StringBuilder str = new StringBuilder();
+        if (textLength >= barLength || textLength <= 0 || textLength == Cli.BAR_LONG.length()-1){
+            str.append(anyText)
+                .append("\n")
+                .append(Cli.BAR_LONG);
+        }else {
+        final int midIndex = (barLength + textLength) / 2 - textLength;
+        str.append(Cli.BAR_LONG, 0, midIndex)
+            .append(anyText)
+            .append(Cli.BAR_LONG.substring(midIndex + textLength));
+        }
+        return String.valueOf(str);
     }
 
     /**
