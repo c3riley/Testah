@@ -237,6 +237,12 @@ public class Params {
     @Arg(dest = "useMetaFormatter")
     private boolean useMetaFormatter = true;
     /**
+     * The use meta formatter.
+     */
+    @Comment(info = "Should the Runner create a summary json file")
+    @Arg(dest = "useSummaryJsonReport")
+    private boolean useSummaryJsonReport = true;
+    /**
      * The auto open html report.
      */
     @Comment(info = "Should the Runner automatically open the Html Report in a browser")
@@ -1269,6 +1275,15 @@ public class Params {
      */
     public boolean isUseMetaFormatter() {
         return useMetaFormatter;
+    }
+
+    /**
+     * Checks if is use summary json report.
+     *
+     * @return true, if is use summary json report
+     */
+    public boolean isUseSummaryJsonReport() {
+        return useSummaryJsonReport;
     }
 
     /**
