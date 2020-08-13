@@ -40,12 +40,13 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "2.3.0";
+    public static final String version = "2.3.1";
 
     /**
      * The Constant BAR_LONG.
      */
-    public static final String BAR_LONG = "=============================================================================================";
+    public static final String BAR_LONG =
+        "=================================================================================================";
     /**
      * The Constant BAR_SHORT.
      */
@@ -106,28 +107,39 @@ public class Cli {
     }
 
     /**
-     * Write out testah.
+     * Write out testah banner.
      */
     public static void writeOutTestah() {
-        System.out.println("\n" + Cli.BAR_LONG);
-        System.out.println(
-                "      _____________                    _                                         ============");
-        System.out.println(
-                "     /_____  _____/      ________     | |                                       =======/\\==||");
-        System.out.println(
-                "          | |           /___ ___/     | |                                      =======/  \\=||");
-        System.out.println(
-                "          | |   ___    __  | |        | |                                     =======/    \\||");
-        System.out.println(
-                "          | |  / __|  (    | |  ___   | |___                                  =======\\    /||");
-        System.out.println(
-                "          | |  |       \\   | | / \\ \\  |  __ \\                                  =======\\  /=||");
-        System.out.println(
-                "          |_|  \\____  __)  |_| \\__\\_\\ |_|  |_|                                  =======\\/==||");
-        System.out.println("=======================================================[Version: " + Cli.version +
-                "]======================");
+        System.out.println("\n" + Cli.BAR_LONG + "\n");
+        System.out.println("TTTTTTTTTTTTTTTTTTTT                          TTTTTTTTTTTTTTTTTTTT              hhhhhh");
+        System.out.println("T:::::TT::::TT:::::T                          T:::::TT::::TT:::::T              h::::h");
+        System.out.println("TTTTT  T::::T  TTTTTeeeeeeeeee        ssssssssTTTTT  T::::T  TTTTTaaaaaaaaaaa   h::::h");
+        System.out.println("       T::::T     e:::::eeee::::e    s:::::::::s     T::::T       aaaaaaa:::::a h::::::::::hh");
+        System.out.println("       T::::T    e:::::e    e:::::  s:::::sss:::::s  T::::T              a::::a h::::::hh:::::h");
+        System.out.println("       T::::T   e::::::eeee::::::e s::::s    sssss   T::::T        aaaaaa:::::a h:::::hhhh:::::h");
+        System.out.println("       T::::T  e::::::::::::::::e    s:::::s         T::::T      aa:::::::::::a h:::::h   h:::::h");
+        System.out.println("       T::::T   e::::::eeeeeeeee        s:::::s      T::::T     a::::aaa::::::a h::::h     h::::h");
+        System.out.println("       T::::T    e:::::e          sssss     s::::s   T::::T    a::::a    a::::a h::::h     h::::h");
+        System.out.println("     T::::::::T   e:::::::eeeeeee   s:::::sss:::::sT::::::::T  a:::::aaa::::::a h::::h     h::::h");
+        System.out.println("     TTTTTTTTTT      eeeeeeeeeeee     sssssssss    TTTTTTTTTT    aaaaaaaaa  aaaahhhhhh     hhhhhh");
+        System.out.println("\n" + getLongBarWithTextInCenter("[Version: " + Cli.version + "]") + "\n");
+    }
 
-        System.out.println(Cli.BAR_LONG);
+    public static String getLongBarWithTextInCenter(final String anyText){
+        final int textLength = anyText.length();
+        final int barLength = Cli.BAR_LONG.length();
+        StringBuilder str = new StringBuilder();
+        if (textLength >= barLength || textLength <= 0 || textLength == Cli.BAR_LONG.length()-1){
+            str.append(anyText)
+                .append("\n")
+                .append(Cli.BAR_LONG);
+        }else {
+        final int midIndex = (barLength + textLength) / 2 - textLength;
+        str.append(Cli.BAR_LONG, 0, midIndex)
+            .append(anyText)
+            .append(Cli.BAR_LONG.substring(midIndex + textLength));
+        }
+        return String.valueOf(str);
     }
 
     /**
@@ -259,14 +271,13 @@ public class Cli {
         results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
                 getTestPlanFilter().getTestClassesMetFilters());
         Instant endTest = Instant.now();
-        long duration = Duration.between(startTest, endTest).toMillis();
+        final long totalDuration = Duration.between(startTest, endTest).toMillis();
 
         int totalTestCases = 0;
         int totalTestCasesFailed = 0;
         int totalTestCasesPassed = 0;
         int totalTestCasesIgnored = 0;
         int totalTestPlans = 0;
-        long totalDuration = duration;
 
         if (null != results) {
             totalTestPlans = results.size();
