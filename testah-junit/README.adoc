@@ -1,12 +1,13 @@
 :toc: macro
 :toc-title:
-:toclevels: 4
+:toclevels: 3
 
 # Testah Junit
+:toc:
 
 Automation Testing Framework written in java for testing ui applications and services.
 
-:toc:
+
 
 ## Using Project
 
