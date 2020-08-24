@@ -43,25 +43,6 @@ dependencies {
 
 #### Examples
 
-##### Service Test JUnit 4
-For services testing, browser only launched if called upon to do so, will not launch by default
-
-[source,groovy]
-----
-
-@TestPlan
-public class DemoTest extends HttpTestPlan {
-
-    @TestCase
-    @Test
-    public void test() {
-
-    }
-
-}
-
-----
-
 ##### Service Test JUnit 5
 For services testing, browser only launched if called upon to do so, will not launch by default
 
@@ -80,14 +61,14 @@ public class DemoTest {
 
 ----
 
-##### Browser Test JUnit 4
-Will automatically launch a browser by default
+##### Service Test JUnit 4 (Legacy)
+For services testing, browser only launched if called upon to do so, will not launch by default
 
 [source,groovy]
 ----
 
 @TestPlan
-public class DemoTest extends BrowserTestPlan {
+public class DemoTest extends HttpTestPlan {
 
     @TestCase
     @Test
@@ -117,12 +98,31 @@ public class DemoTest {
 
 ----
 
+##### Browser Test JUnit 4 (Legacy)
+Will automatically launch a browser by default
+
+[source,groovy]
+----
+
+@TestPlan
+public class DemoTest extends BrowserTestPlan {
+
+    @TestCase
+    @Test
+    public void test() {
+
+    }
+
+}
+
+----
+
 #### Test Metadata
 
-##### @TestPlan (JUnit 4) / @TestPlanJUnit5
+##### @TestPlanJUnit5 / @TestPlan (JUnit 4 Legacy)
 Annotation used per class, the top level testing object.  Adds metadata for what the test will do, what jira items its aligned to, and ways to allow the test to be filtered and reported.
 
-##### @TestCase (JUnit 4)/ @TestCaseJUnit5
+##### @TestCaseJUnit5 / @TestCase (JUnit 4 Legacy )
 
 Annotation used per @Test Method.  Adds metadata for what the test will do, what jira items its aligned to, and ways to allow the test to be filtered and reported.  A TestCase will inherit from the TestPlan unless overridden.
 
