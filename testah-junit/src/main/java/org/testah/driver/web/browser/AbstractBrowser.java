@@ -551,6 +551,9 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractBrowser<T> goTo(final String uri) {
         TS.step().action().createInfo("goTo", uri);
+        if (null == driver) {
+            start();
+        }
         driver.get(uri);
         return getSelf();
     }

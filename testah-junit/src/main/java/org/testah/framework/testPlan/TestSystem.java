@@ -1,5 +1,6 @@
 package org.testah.framework.testPlan;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,6 +27,11 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 public class TestSystem {
+
+    public static final int DEFAULT_TESTPLAN_JUNIT_VERSION = 4;
+    public static final int MIN_JUNIT_VERSION_WITHOUT_TESTPLAN_ANNOTATION = DEFAULT_TESTPLAN_JUNIT_VERSION;
+    public static final String MSG_ERROR_MISSING_TESTPLAN_ANNOTATION = "The TestPlan Annotation like @TestPlanJUnit5 " +
+        "is missing from the test class,\" +\n this is required for testah!";
 
     /**
      * The test plan.
@@ -69,18 +75,19 @@ public class TestSystem {
      */
     public void starting(final Description description) {
         starting(description,
-            TestPlanAnnotationDto.create(description.getTestClass().getAnnotation(TestPlan.class)),
-            TestCaseAnnotationDto.create(description.getAnnotation(TestCase.class)));
+            TestPlanAnnotationDto.create(DEFAULT_TESTPLAN_JUNIT_VERSION, description.getTestClass().getAnnotation(TestPlan.class)),
+            TestCaseAnnotationDto.create(description.getAnnotation(TestCase.class)), DEFAULT_TESTPLAN_JUNIT_VERSION);
     }
 
     /**
      * Starting of a testCase.
      *
-     * @param desc testCase description sent by junit.
+     * @param desc     testCase description sent by junit.
      * @param testPlan testPlan annotation info.
      * @param testCase testCase annotation info.
+     * @param junitVersion junit version being used.
      */
-    public void starting(final Description desc, TestPlanAnnotationDto testPlan, TestCaseAnnotationDto testCase) {
+    public void starting(final Description desc, TestPlanAnnotationDto testPlan, TestCaseAnnotationDto testCase, int junitVersion) {
         setDescription(desc);
         if (!didTestPlanStart()) {
 
@@ -88,7 +95,11 @@ public class TestSystem {
 
             TS.log().info("TESTPLAN started:" + desc.getTestClass().getName() + " - thread[" + Thread.currentThread().getId() + "]");
             if (null == testPlan) {
-                TS.log().warn("Missing @TestPlan annotation!");
+                if (junitVersion > 4) {
+                    throw new NotImplementedException(MSG_ERROR_MISSING_TESTPLAN_ANNOTATION);
+                } else {
+                    TS.log().warn("Missing @TestPlan annotation!");
+                }
             }
             startTestPlan(desc, testPlan, desc.getTestClass().getAnnotation(KnownProblem.class));
             getTestPlan().setRunInfo(TestDtoHelper.createRunInfo());
@@ -112,7 +123,7 @@ public class TestSystem {
     /**
      * Failed called if a testCase Fails.
      *
-     * @param e exception given by junit.
+     * @param e           exception given by junit.
      * @param description testCase description sent by junit.
      */
     public void failed(final Throwable e, final Description description) {
@@ -368,7 +379,7 @@ public class TestSystem {
      * Add Ignore Test.
      *
      * @param description testCase description sent by junit.
-     * @param reason reason why the test was ignored.
+     * @param reason      reason why the test was ignored.
      */
     public void addIgnoredTest(final Description description, final String reason) {
         addIgnoredTest(description.getDisplayName(), reason);
@@ -437,11 +448,12 @@ public class TestSystem {
 
     /**
      * filterTest to see what should run.
+     *
      * @param description junit 4 style Description.
      */
     public void filterTest(final Description description) {
         filterTest(description,
-            TestPlanAnnotationDto.create(description.getTestClass().getAnnotation(TestPlan.class)),
+            TestPlanAnnotationDto.create(DEFAULT_TESTPLAN_JUNIT_VERSION, description.getTestClass().getAnnotation(TestPlan.class)),
             TestCaseAnnotationDto.create(description.getAnnotation(TestCase.class)));
     }
 

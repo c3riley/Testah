@@ -26,6 +26,8 @@ import java.util.Optional;
 public class Junit5TestPlanSupport implements BeforeTestExecutionCallback, AfterTestExecutionCallback,
     AfterAllCallback, BeforeAllCallback, BeforeEachCallback, AfterEachCallback, TestWatcher {
 
+    public static final int JUNIT_VERSION = 5;
+
     @Override
     public void afterTestExecution(ExtensionContext context) throws Exception {
         TS.testSystem().finished(getDescription(context));
@@ -35,8 +37,8 @@ public class Junit5TestPlanSupport implements BeforeTestExecutionCallback, After
     public void beforeTestExecution(ExtensionContext context) throws Exception {
         Description description = getDescription(context);
         TS.testSystem().starting(description,
-            TestPlanAnnotationDto.create(description.getTestClass().getAnnotation(TestPlanJUnit5.class)),
-            TestCaseAnnotationDto.create(description.getAnnotation(TestCaseJUnit5.class)));
+            TestPlanAnnotationDto.create(JUNIT_VERSION, description.getTestClass().getAnnotation(TestPlanJUnit5.class)),
+            TestCaseAnnotationDto.create(description.getAnnotation(TestCaseJUnit5.class)), JUNIT_VERSION);
     }
 
     @Override
@@ -58,12 +60,13 @@ public class Junit5TestPlanSupport implements BeforeTestExecutionCallback, After
     public void beforeEach(ExtensionContext context) throws Exception {
         Description description = getDescription(context);
         TS.testSystem().filterTest(description,
-            TestPlanAnnotationDto.create(description.getTestClass().getAnnotation(TestPlanJUnit5.class)),
+            TestPlanAnnotationDto.create(JUNIT_VERSION, description.getTestClass().getAnnotation(TestPlanJUnit5.class)),
             TestCaseAnnotationDto.create(description.getAnnotation(TestCaseJUnit5.class)));
     }
 
     /**
      * getDescription from a junit 5 ExtensionContext.
+     *
      * @param context ExtensionContext sent in by junit 5.
      * @return junit 4 style Description.
      */

@@ -131,6 +131,7 @@ public class Cli {
 
     /**
      * Get Long Bar Test.
+     *
      * @param anyText anyText to write into the formatted block of text returned.
      * @return String of the long bar text.
      */

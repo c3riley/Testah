@@ -1,5 +1,6 @@
 package org.testah.web;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,6 +28,11 @@ public class TestBrowser extends BrowserTestPlan {
     @Before
     public void setup() {
         TS.browser().goTo(baseUrl);
+    }
+
+    @After
+    public void tearDown() {
+        TS.browser().close();
     }
 
     @TestCase
@@ -89,7 +95,7 @@ public class TestBrowser extends BrowserTestPlan {
     public void testGetCapabilities() {
         TS.asserts().notNull(TS.browser().getCapabilities());
         TS.asserts().equalsTo(BrowserType.getBrowserType(TS.browser().getCapabilities().getBrowserName()),
-                TS.params().getBrowser());
+            TS.params().getBrowser());
     }
 
     @TestCase

@@ -1,8 +1,10 @@
 package org.testah.framework.dto;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.annotations.TestPlanJUnit5;
+import org.testah.framework.testPlan.TestSystem;
 
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
@@ -58,22 +60,52 @@ public class TestPlanAnnotationDto {
 
     /**
      * Create TestPlanAnnotationDto from a testClass.
+     * Uses TestSystem.DEFAULT_TESTPLAN_JUNIT_VERSION as default for JUnit version.
+     *
      * @param testClass testPlan Class.
      * @return return new TestPlanAnnotationDto.
      */
     public static TestPlanAnnotationDto create(final Class testClass) {
         if (testClass != null) {
-            return create(testClass.getAnnotations());
+            return create(TestSystem.DEFAULT_TESTPLAN_JUNIT_VERSION, testClass.getAnnotations());
         }
         return null;
     }
 
     /**
+     * Create TestPlanAnnotationDto from a testClass.
+     *
+     * @param junitVersion junit version being used.
+     * @param testClass    testPlan Class.
+     * @return return new TestPlanAnnotationDto.
+     */
+    public static TestPlanAnnotationDto create(final int junitVersion, final Class testClass) {
+        if (testClass != null) {
+            return create(junitVersion, testClass.getAnnotations());
+        }
+        return null;
+    }
+
+
+    /**
      * Create TestPlanAnnotationDto from a testPlan annotation.
+     * Uses TestSystem.DEFAULT_TESTPLAN_JUNIT_VERSION as default for JUnit version.
+     *
      * @param testPlans testPlan annotation.
      * @return return new TestPlanAnnotationDto.
      */
     public static TestPlanAnnotationDto create(Annotation... testPlans) {
+        return create(TestSystem.DEFAULT_TESTPLAN_JUNIT_VERSION, testPlans);
+    }
+
+    /**
+     * Create TestPlanAnnotationDto from a testPlan annotation.
+     *
+     * @param junitVersion junit version being used.
+     * @param testPlans    testPlan annotation.
+     * @return return new TestPlanAnnotationDto.
+     */
+    public static TestPlanAnnotationDto create(int junitVersion, Annotation... testPlans) {
         if (testPlans != null) {
             for (Annotation testPlan : testPlans) {
                 if (testPlan instanceof TestPlan) {
@@ -82,6 +114,9 @@ public class TestPlanAnnotationDto {
                     return new TestPlanAnnotationDto((TestPlanJUnit5) testPlan);
                 }
             }
+        }
+        if (junitVersion > TestSystem.MIN_JUNIT_VERSION_WITHOUT_TESTPLAN_ANNOTATION) {
+            throw new NotImplementedException(TestSystem.MSG_ERROR_MISSING_TESTPLAN_ANNOTATION);
         }
         return null;
     }

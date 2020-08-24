@@ -1,5 +1,6 @@
 package org.testah.web;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -28,6 +29,11 @@ public class TestWebElementWrapper extends BrowserTestPlan {
         TS.browser().goTo(baseUrl);
         TS.util().pause(2000L, "Since using git redirect need to wait a little while");
 
+    }
+
+    @After
+    public void tearDown() {
+        TS.browser().close();
     }
 
     @TestCase
