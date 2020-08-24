@@ -2,7 +2,6 @@ package org.testah.driver.http.requests;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 
 public class HeadRequestDto extends AbstractRequestDto<HeadRequestDto> {

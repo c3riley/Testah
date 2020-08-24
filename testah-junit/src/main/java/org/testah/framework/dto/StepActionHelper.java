@@ -4,7 +4,6 @@ import com.google.common.collect.Iterables;
 import org.testah.TS;
 import org.testah.client.dto.StepActionDto;
 import org.testah.client.enums.TestStepActionType;
-import org.testah.framework.testPlan.AbstractTestPlan;
 
 /**
  * The type Step action helper.
@@ -18,7 +17,7 @@ public class StepActionHelper {
      */
     public StepActionDto current() {
         try {
-            return Iterables.getLast(AbstractTestPlan.getTestStep().getStepActions());
+            return Iterables.getLast(TS.testSystem().getTestStep().getStepActions());
         } catch (Exception exception) {
             TS.log().error("Unable to get current stepAction", exception);
             throw new RuntimeException(exception);
@@ -131,13 +130,13 @@ public class StepActionHelper {
      * @return the step action dto
      */
     public StepActionDto add(final StepActionDto stepAction) {
-        if (null == AbstractTestPlan.getTestStep()) {
+        if (null == TS.testSystem().getTestStep()) {
             throw new RuntimeException("Unable to add stepAction as current Test Step is null");
         }
         if (null == stepAction) {
             throw new RuntimeException("Unable to add stepAction as it is null");
         }
-        AbstractTestPlan.getTestStep().addStepAction(stepAction);
+        TS.testSystem().getTestStep().addStepAction(stepAction);
         return stepAction;
     }
 

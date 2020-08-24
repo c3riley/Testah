@@ -8,8 +8,6 @@ import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
 import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.KnownProblem;
-import org.testah.framework.annotations.TestCase;
-import org.testah.framework.annotations.TestPlan;
 
 import java.util.Arrays;
 
@@ -26,7 +24,7 @@ public class TestDtoHelper {
      * @param knownProblemFillFrom the known problem fill from
      * @return the test plan dto
      */
-    public static TestPlanDto createTestPlanDto(final Description desc, final TestPlan meta,
+    public static TestPlanDto createTestPlanDto(final Description desc, final TestPlanAnnotationDto meta,
                                                 final KnownProblem knownProblemFillFrom) {
         TestPlanDto testPlanToFill = new TestPlanDto();
         if (null == meta || null == meta.name() || meta.name().length() == 0) {
@@ -50,7 +48,7 @@ public class TestDtoHelper {
      * @param knownProblemFillFrom the known problem fill from
      * @return the test plan dto
      */
-    public static TestPlanDto createTestPlanDto(final Class<?> testPlanClass, final TestPlan meta,
+    public static TestPlanDto createTestPlanDto(final Class<?> testPlanClass, final TestPlanAnnotationDto meta,
                                                 final KnownProblem knownProblemFillFrom) {
         TestPlanDto testPlanToFill = new TestPlanDto();
         if (null == meta || null == meta.name() || meta.name().length() == 0) {
@@ -73,7 +71,7 @@ public class TestDtoHelper {
      * @param knownProblemFillFrom the known problem fill from
      * @return the test plan dto
      */
-    public static TestPlanDto fill(TestPlanDto testPlanToFill, final TestPlan fillFromTestPlan,
+    public static TestPlanDto fill(TestPlanDto testPlanToFill, final TestPlanAnnotationDto fillFromTestPlan,
                                    final KnownProblem knownProblemFillFrom) {
         if (null == testPlanToFill) {
             testPlanToFill = new TestPlanDto();
@@ -106,8 +104,8 @@ public class TestDtoHelper {
      * @param tpMeta               the tp meta
      * @return the test case dto
      */
-    public static TestCaseDto fill(TestCaseDto testCaseToFill, final TestCase fillFromTestCase,
-                                   final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
+    public static TestCaseDto fill(TestCaseDto testCaseToFill, final TestCaseAnnotationDto fillFromTestCase,
+                                   final KnownProblem knownProblemFillFrom, final TestPlanAnnotationDto tpMeta) {
         if (null == testCaseToFill) {
             testCaseToFill = new TestCaseDto();
         }
@@ -213,8 +211,8 @@ public class TestDtoHelper {
      * @param tpMeta               the tp meta
      * @return the test case dto
      */
-    public static TestCaseDto createTestCaseDto(final Description desc, final TestCase meta,
-                                                final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
+    public static TestCaseDto createTestCaseDto(final Description desc, final TestCaseAnnotationDto meta,
+                                                final KnownProblem knownProblemFillFrom, final TestPlanAnnotationDto tpMeta) {
         TestCaseDto testCaseToFill = new TestCaseDto();
         if (null == meta || null == meta.name() || meta.name().length() == 0) {
             testCaseToFill.setName(desc.getMethodName());
@@ -239,7 +237,9 @@ public class TestDtoHelper {
      * @return the test case dto
      */
     public static TestCaseDto createTestCaseDto(final String testPlanClass, final String testCaseMethod,
-                                                final TestCase meta, final KnownProblem knownProblemFillFrom, final TestPlan tpMeta) {
+                                                final TestCaseAnnotationDto meta,
+                                                final KnownProblem knownProblemFillFrom,
+                                                final TestPlanAnnotationDto tpMeta) {
         TestCaseDto testCaseToFill = new TestCaseDto();
         if (null == meta || null == meta.name() || meta.name().length() == 0) {
             testCaseToFill.setName(testCaseMethod);

@@ -10,35 +10,44 @@ import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
 import org.testah.framework.cli.Cli;
-import org.testah.framework.report.asserts.*;
+import org.testah.framework.report.asserts.AssertCollections;
+import org.testah.framework.report.asserts.AssertFile;
+import org.testah.framework.report.asserts.AssertMaps;
+import org.testah.framework.report.asserts.AssertNumber;
+import org.testah.framework.report.asserts.AssertStrings;
 import org.testah.util.unittest.dtotest.SystemOutCapture;
 import org.unitils.reflectionassert.ReflectionAssert;
 import org.unitils.reflectionassert.ReflectionComparatorMode;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Class VerboseAsserts.
  */
 public class VerboseAsserts {
-    
+
     /**
      * The record steps.
      */
     private boolean recordSteps = true;
-    
+
     /**
      * The throw exception on fail.
      */
     private boolean throwExceptionOnFail;
-    
+
     /**
      * The is verify only.
      */
     private boolean isVerifyOnly = false;
-    
+
     /**
      * Instantiates a new verbose asserts.
      */
@@ -46,7 +55,7 @@ public class VerboseAsserts {
         setRecordSteps(TS.params().isRecordSteps());
         throwExceptionOnFail = TS.params().isThrowExceptionOnFail();
     }
-    
+
     /**
      * Instantiates a new verbose asserts.
      *
@@ -55,7 +64,7 @@ public class VerboseAsserts {
     public VerboseAsserts(final boolean throwExceptionOnFail) {
         this.throwExceptionOnFail = throwExceptionOnFail;
     }
-    
+
     /**
      * Custom assert boolean.
      *
@@ -65,7 +74,7 @@ public class VerboseAsserts {
     public boolean customAssert(final Runnable runnableAssertBlock) {
         return customAssert("Custom Assert Block", runnableAssertBlock);
     }
-    
+
     /**
      * Custom assert boolean.
      *
@@ -85,7 +94,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Size equals.
      *
@@ -98,7 +107,7 @@ public class VerboseAsserts {
         return this.equalsTo(message + " - expected Object[" + objectToCheckSizeOrLengthOf +
             "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLengthOf), expectedSize);
     }
-    
+
     /**
      * Not size equals.
      *
@@ -112,7 +121,7 @@ public class VerboseAsserts {
         return this.notEquals(message + " - expected Object[" + objectToCheckSizeOrLengthOf +
             "] to have a size/length of " + expectedSize, getSize(objectToCheckSizeOrLengthOf), expectedSize);
     }
-    
+
     /**
      * Gets the size.
      *
@@ -140,7 +149,7 @@ public class VerboseAsserts {
                 "ArrayList, Set, List or HashMap");
         }
     }
-    
+
     /**
      * Same json uses JSONAssert.
      *
@@ -151,7 +160,7 @@ public class VerboseAsserts {
     public boolean sameJson(final Object expected, final Object actual) {
         return sameJson("", expected, actual, true);
     }
-    
+
     /**
      * Same json uses JSONAssert.
      *
@@ -162,9 +171,9 @@ public class VerboseAsserts {
      */
     public boolean sameJson(final String message, final Object expected, final Object actual) {
         return sameJson(message, expected, actual, true);
-        
+
     }
-    
+
     /**
      * Same json boolean.
      *
@@ -176,7 +185,7 @@ public class VerboseAsserts {
     public boolean sameJson(final Object expected, final Object actual, final boolean strict) {
         return sameJson("", expected, actual, strict);
     }
-    
+
     /**
      * Same json.
      *
@@ -195,7 +204,7 @@ public class VerboseAsserts {
         //final JSONObject actualJsonNode = new JSONObject(actual);
         return sameJson(message, expectedJsonNode, actualJsonNode, strict);
     }
-    
+
     /**
      * Same json boolean.
      *
@@ -207,7 +216,7 @@ public class VerboseAsserts {
     public boolean sameJson(final JSONObject expected, final JSONObject actual, final boolean strict) {
         return sameJson("", expected, actual, strict);
     }
-    
+
     /**
      * Same json.
      *
@@ -229,7 +238,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Same.
      *
@@ -240,7 +249,7 @@ public class VerboseAsserts {
     public boolean same(final Object expected, final Object actual) {
         return same("", expected, actual);
     }
-    
+
     /**
      * Same.
      *
@@ -261,7 +270,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Fail.
      *
@@ -270,7 +279,7 @@ public class VerboseAsserts {
     public boolean fail() {
         return fail("");
     }
-    
+
     /**
      * Fail.
      *
@@ -280,7 +289,7 @@ public class VerboseAsserts {
     public boolean fail(final String message) {
         return fail(message, null);
     }
-    
+
     /**
      * Fail boolean.
      *
@@ -300,7 +309,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Critical.
      *
@@ -309,7 +318,7 @@ public class VerboseAsserts {
     public void critical(final String message) {
         critical(message, null);
     }
-    
+
     /**
      * Critical failure.
      *
@@ -322,7 +331,7 @@ public class VerboseAsserts {
         TS.log().fatal(Cli.BAR_LONG);
         addAssertHistory(message, false, "critical", null, null, throwable);
     }
-    
+
     /**
      * Checks if is verify only.
      *
@@ -331,7 +340,7 @@ public class VerboseAsserts {
     public boolean isVerifyOnly() {
         return isVerifyOnly;
     }
-    
+
     /**
      * Sets the verify only.
      *
@@ -343,7 +352,7 @@ public class VerboseAsserts {
         setThrowExceptionOnFail(false);
         return this;
     }
-    
+
     /**
      * Not null.
      *
@@ -363,7 +372,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Not null.
      *
@@ -373,7 +382,7 @@ public class VerboseAsserts {
     public boolean notNull(final Object actual) {
         return notNull("", actual);
     }
-    
+
     /**
      * Checks if is null.
      *
@@ -393,7 +402,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Checks if is null.
      *
@@ -403,7 +412,7 @@ public class VerboseAsserts {
     public boolean isNull(final Object actual) {
         return isNull("", actual);
     }
-    
+
     /**
      * Not same.
      *
@@ -414,7 +423,7 @@ public class VerboseAsserts {
     public boolean notSame(final Object expected, final Object actual) {
         return notSame("", expected, actual);
     }
-    
+
     /**
      * Not same.
      *
@@ -435,7 +444,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Equals to ignore case.
      *
@@ -446,7 +455,7 @@ public class VerboseAsserts {
     public boolean equalsToIgnoreCase(final String expected, final String actual) {
         return equalsToIgnoreCase("", expected, actual);
     }
-    
+
     /**
      * Equals to ignore case.
      * Converts to lowercase both using StringUtils, then does assertEquals.
@@ -470,7 +479,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Equals to multiline string boolean.
      *
@@ -487,7 +496,7 @@ public class VerboseAsserts {
         return new AssertCollections<String>(StringUtils.split(actual, System.lineSeparator()), this)
             .equalsTo(StringUtils.split(expected, System.lineSeparator())).isPassed();
     }
-    
+
     /**
      * Assert file exists.
      *
@@ -497,7 +506,7 @@ public class VerboseAsserts {
     public boolean assertFileExists(final File actual) {
         return assertFileExists("", actual);
     }
-    
+
     /**
      * Assert file exists.
      *
@@ -508,7 +517,7 @@ public class VerboseAsserts {
     public boolean assertFileExists(final String message, final File actual) {
         return new AssertFile(actual, this).setMessage(message).exists().isPassed();
     }
-    
+
     /**
      * Equals to boolean.
      *
@@ -520,7 +529,7 @@ public class VerboseAsserts {
     public boolean equalsTo(final String message, final String expected, final String actual) {
         return new AssertStrings(actual, this).setMessage(message).equalsTo(expected).isPassed();
     }
-    
+
     /**
      * Equals.
      *
@@ -531,7 +540,7 @@ public class VerboseAsserts {
     public boolean equalsTo(final long expected, final long actual) {
         return equalsTo("", expected, actual);
     }
-    
+
     /**
      * Equals.
      *
@@ -544,7 +553,7 @@ public class VerboseAsserts {
         return new AssertNumber<Long>(actual, this).setMessage(message)
             .equalsTo(expected).isPassed();
     }
-    
+
     /**
      * Equals.
      *
@@ -556,7 +565,7 @@ public class VerboseAsserts {
     public boolean equalsTo(final String message, final Object[] expected, final Object[] actual) {
         return new AssertCollections<Object>(actual).setMessage(message).equalsTo(expected).isPassed();
     }
-    
+
     /**
      * Equals.
      *
@@ -576,7 +585,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Equals.
      *
@@ -598,7 +607,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Equals.
      *
@@ -619,7 +628,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Equals.
      *
@@ -639,7 +648,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Equals.
      *
@@ -660,7 +669,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Equals.
      *
@@ -681,7 +690,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Equals.
      *
@@ -703,7 +712,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Equals.
      *
@@ -714,7 +723,7 @@ public class VerboseAsserts {
     public boolean equalsTo(final double expected, final double actual) {
         return equalsTo("", expected, actual);
     }
-    
+
     /**
      * Equals.
      *
@@ -727,7 +736,7 @@ public class VerboseAsserts {
         return new AssertNumber<Double>(actual, this).setMessage(message)
             .equalsTo(expected).isPassed();
     }
-    
+
     /**
      * Equals to with reflection boolean.
      *
@@ -738,7 +747,7 @@ public class VerboseAsserts {
     public boolean equalsToWithReflection(final Object expected, final Object actual) {
         return equalsToWithReflection("", expected, actual);
     }
-    
+
     /**
      * Equals to with reflection boolean.
      *
@@ -762,7 +771,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Unexpected exception.
      *
@@ -772,7 +781,7 @@ public class VerboseAsserts {
     public void unExpectedException(final String msg, final Throwable error) {
         addAssertHistory(msg, false, "unExpectedException", "", msg, error);
     }
-    
+
     /**
      * Use Hamcrest matcher for assert.
      * Deprecated as the param order is wrong, use the assertThat with the right order expected, actual.
@@ -785,7 +794,7 @@ public class VerboseAsserts {
     public <T> void assertThat(final T actual, final Matcher<? super T> matcher) {
         assertThat("", matcher, actual);
     }
-    
+
     /**
      * Use Hamcrest matcher for assert.
      * Deprecated as the param order is wrong, use the assertThat with the right order expected, actual.
@@ -799,18 +808,18 @@ public class VerboseAsserts {
     public <T> void assertThat(final String message, final T actual, final Matcher<? super T> matcher) {
         assertThat(message, matcher, actual);
     }
-    
+
     /**
      * Use Hamcrest matcher for assert.
-     *
-     * @param <T>             generic type
-     * @param expectedMatcher expected Hamcrest matcher to use
-     * @param actual          actual value to compare
+     * @param expectedMatcher expected Hamcrest matcher.
+     * @param actual actual value found.
+     * @param <T> generic type.
+     * @return if assert passes return true
      */
     public <T> boolean assertThat(final Matcher<? super T> expectedMatcher, final T actual) {
         return assertThat("", expectedMatcher, actual);
     }
-    
+
     /**
      * Use Hamcrest matcher for assert.
      *
@@ -818,6 +827,7 @@ public class VerboseAsserts {
      * @param message         assert message
      * @param expectedMatcher expected Hamcrest matcher to use
      * @param actual          actual value to compare
+     * @return if assert passes return true
      */
     public <T> boolean assertThat(final String message, final Matcher<? super T> expectedMatcher, final T actual) {
         try {
@@ -831,7 +841,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Gets the throw exception on fail.
      *
@@ -840,7 +850,7 @@ public class VerboseAsserts {
     public boolean getThrowExceptionOnFail() {
         return throwExceptionOnFail;
     }
-    
+
     /**
      * Checks if is false.
      *
@@ -860,7 +870,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Checks if is false.
      *
@@ -870,7 +880,7 @@ public class VerboseAsserts {
     public boolean isFalse(final boolean actual) {
         return isFalse("", actual);
     }
-    
+
     /**
      * Checks if is true.
      *
@@ -890,7 +900,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Checks if is true.
      *
@@ -900,7 +910,7 @@ public class VerboseAsserts {
     public boolean isTrue(final boolean actual) {
         return isTrue("", actual);
     }
-    
+
     /**
      * Not equals.
      *
@@ -911,7 +921,7 @@ public class VerboseAsserts {
     public boolean notEquals(final Object expected, final Object actual) {
         return notEquals("", expected, actual);
     }
-    
+
     /**
      * Not equals.
      *
@@ -932,7 +942,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Not equals.
      *
@@ -944,7 +954,7 @@ public class VerboseAsserts {
     public boolean notEquals(final float unexpected, final float actual, final float delta) {
         return notEquals("", unexpected, actual, delta);
     }
-    
+
     /**
      * Not equals.
      *
@@ -966,7 +976,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Not equals.
      *
@@ -988,7 +998,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Not equals.
      *
@@ -999,7 +1009,7 @@ public class VerboseAsserts {
     public boolean notEquals(final long expected, final long actual) {
         return notEquals("", expected, actual);
     }
-    
+
     /**
      * Not equals.
      *
@@ -1011,7 +1021,7 @@ public class VerboseAsserts {
     public boolean notEquals(final double unexpected, final double actual, final double delta) {
         return notEquals("", unexpected, actual, delta);
     }
-    
+
     /**
      * Not equals.
      *
@@ -1032,7 +1042,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * That.
      *
@@ -1044,7 +1054,7 @@ public class VerboseAsserts {
     public <T> boolean that(final T actual, final Matcher<? super T> matcher) {
         return that("", actual, matcher);
     }
-    
+
     /**
      * That.
      *
@@ -1066,7 +1076,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Array equals.
      *
@@ -1087,7 +1097,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Array equals.
      *
@@ -1098,7 +1108,7 @@ public class VerboseAsserts {
     public boolean arrayEquals(final byte[] expected, final byte[] actual) {
         return arrayEquals("", expected, actual);
     }
-    
+
     /**
      * Array equals.
      *
@@ -1119,7 +1129,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Array equals.
      *
@@ -1142,7 +1152,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Array equals.
      *
@@ -1163,7 +1173,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Array equals.
      *
@@ -1174,7 +1184,7 @@ public class VerboseAsserts {
     public boolean arrayEquals(final Object[] expected, final Object[] actual) {
         return arrayEquals("", expected, actual);
     }
-    
+
     /**
      * Array equals.
      *
@@ -1205,7 +1215,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Array equals.
      *
@@ -1216,7 +1226,7 @@ public class VerboseAsserts {
     public boolean arrayEquals(final boolean[] expected, final boolean[] actual) {
         return arrayEquals("", expected, actual);
     }
-    
+
     /**
      * Array equals.
      *
@@ -1227,7 +1237,7 @@ public class VerboseAsserts {
     public boolean arrayEquals(final long[] expected, final long[] actual) {
         return arrayEquals("", expected, actual);
     }
-    
+
     /**
      * Array equals.
      *
@@ -1248,7 +1258,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Array equals.
      *
@@ -1271,7 +1281,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Array equals.
      *
@@ -1283,7 +1293,7 @@ public class VerboseAsserts {
     public boolean arrayEquals(final float[] expecteds, final float[] actuals, final float delta) {
         return arrayEquals("", expecteds, actuals, delta);
     }
-    
+
     /**
      * Array equals.
      *
@@ -1294,7 +1304,7 @@ public class VerboseAsserts {
     public boolean arrayEquals(final char[] expected, final char[] actual) {
         return arrayEquals("", expected, actual);
     }
-    
+
     /**
      * Array equals.
      *
@@ -1315,7 +1325,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Array equals.
      *
@@ -1326,7 +1336,7 @@ public class VerboseAsserts {
     public boolean arrayEquals(final short[] expected, final short[] actual) {
         return arrayEquals("", expected, actual);
     }
-    
+
     /**
      * Array equals.
      *
@@ -1347,7 +1357,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Array equals.
      *
@@ -1358,7 +1368,7 @@ public class VerboseAsserts {
     public boolean arrayEquals(final int[] expected, final int[] actual) {
         return arrayEquals("", expected, actual);
     }
-    
+
     /**
      * Array equals.
      *
@@ -1379,7 +1389,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Checks if is empty.
      *
@@ -1394,7 +1404,7 @@ public class VerboseAsserts {
         }
         return false;
     }
-    
+
     /**
      * Checks if is empty.
      *
@@ -1423,7 +1433,7 @@ public class VerboseAsserts {
                 "ArrayList, Set, List or HashMap");
         }
     }
-    
+
     /**
      * Checks if is not empty.
      *
@@ -1438,7 +1448,7 @@ public class VerboseAsserts {
         }
         return false;
     }
-    
+
     /**
      * Is greater than or equal to boolean.
      *
@@ -1450,7 +1460,7 @@ public class VerboseAsserts {
     public boolean isGreaterThanOrEqualTo(String message, final Number valueToBeGreaterThan, final Number actual) {
         return isGreaterThan(message, valueToBeGreaterThan, actual, true);
     }
-    
+
     /**
      * Is greater than or equal to boolean.
      *
@@ -1461,9 +1471,9 @@ public class VerboseAsserts {
      */
     public boolean isGreaterThanOrEqualTo(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual) {
         return isGreaterThan("", valueToBeGreaterThan, actual, true);
-        
+
     }
-    
+
     /**
      * Is greater than boolean.
      *
@@ -1476,7 +1486,7 @@ public class VerboseAsserts {
     public boolean isGreaterThan(String message, final Number valueToBeGreaterThan, final Number actual, final boolean allowEqualTo) {
         return isGreaterThan(message, new BigDecimal(valueToBeGreaterThan.toString()), new BigDecimal(actual.toString()), allowEqualTo);
     }
-    
+
     /**
      * Is greater than boolean.
      *
@@ -1488,7 +1498,7 @@ public class VerboseAsserts {
     public boolean isGreaterThan(String message, final Number valueToBeGreaterThan, final Number actual) {
         return isGreaterThan(message, valueToBeGreaterThan, actual, false);
     }
-    
+
     /**
      * Is greater than boolean.
      *
@@ -1500,15 +1510,15 @@ public class VerboseAsserts {
     public boolean isGreaterThan(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual) {
         return isGreaterThan("", valueToBeGreaterThan, actual, false);
     }
-    
+
     private boolean isGreaterThan(String message, final BigDecimal valueToBeGreaterThan, final BigDecimal actual,
                                   final boolean allowEqualTo) {
         String assertMethod = (allowEqualTo ? "isGreaterThanOrEqualTo" : "isGreaterThan");
         try {
-            
+
             notNull("Check valueToBeGreaterThan is not null", valueToBeGreaterThan);
             notNull("Check actual is not null", actual);
-            
+
             message = message + " - actual[" + actual.toPlainString() + "] " + assertMethod + " " + valueToBeGreaterThan.toPlainString();
             if (allowEqualTo) {
                 Assert.assertTrue(message, actual.compareTo(valueToBeGreaterThan) >= 0);
@@ -1524,7 +1534,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * Is less than or equal to boolean.
      *
@@ -1536,7 +1546,7 @@ public class VerboseAsserts {
     public boolean isLessThanOrEqualTo(String message, final Number valueToBeLessThan, final Number actual) {
         return isLessThan(message, valueToBeLessThan, actual, true);
     }
-    
+
     /**
      * Is less than or equal to boolean.
      *
@@ -1548,7 +1558,7 @@ public class VerboseAsserts {
     public boolean isLessThanOrEqualTo(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual) {
         return isLessThan(message, valueToBeLessThan, actual, true);
     }
-    
+
     /**
      * Is less than boolean.
      *
@@ -1560,7 +1570,7 @@ public class VerboseAsserts {
     public boolean isLessThan(String message, final Number valueToBeLessThan, final Number actual) {
         return isLessThan(message, valueToBeLessThan, actual, false);
     }
-    
+
     /**
      * Is less than boolean.
      *
@@ -1573,7 +1583,7 @@ public class VerboseAsserts {
     public boolean isLessThan(String message, final Number valueToBeLessThan, final Number actual, final boolean allowEqualTo) {
         return isLessThan(message, new BigDecimal(valueToBeLessThan.toString()), new BigDecimal(actual.toString()), allowEqualTo);
     }
-    
+
     /**
      * Is less than boolean.
      *
@@ -1585,7 +1595,7 @@ public class VerboseAsserts {
     public boolean isLessThan(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual) {
         return isLessThan(message, valueToBeLessThan, actual, false);
     }
-    
+
     /**
      * Is less than boolean.
      *
@@ -1597,10 +1607,10 @@ public class VerboseAsserts {
      */
     public boolean isLessThan(String message, final BigDecimal valueToBeLessThan, final BigDecimal actual, final boolean allowEqualTo) {
         String assertMethod = (allowEqualTo ? "isLessThanOrEqualTo" : "isLessThan");
-        
+
         notNull("Check valueToBeLessThan is not null", valueToBeLessThan);
         notNull("Check actual is not null", actual);
-        
+
         try {
             message = message + " - actual[" + actual.toPlainString() + "] " + assertMethod + " " + valueToBeLessThan.toPlainString();
             if (allowEqualTo) {
@@ -1617,7 +1627,7 @@ public class VerboseAsserts {
             return rtn;
         }
     }
-    
+
     /**
      * ************************************************************************* ***********.
      *
@@ -1626,7 +1636,7 @@ public class VerboseAsserts {
     public boolean pass() {
         return pass("");
     }
-    
+
     /**
      * Pass.
      *
@@ -1636,7 +1646,7 @@ public class VerboseAsserts {
     public boolean pass(final String message) {
         return addAssertHistory(message, true, "pass", true, true, null);
     }
-    
+
     /**
      * Adds the assert history.
      *
@@ -1651,7 +1661,7 @@ public class VerboseAsserts {
                                     final Object expected, final Object actual) {
         return addAssertHistory(message, status, assertMethod, expected, actual, null);
     }
-    
+
     /**
      * Adds the assert history.
      *
@@ -1670,10 +1680,10 @@ public class VerboseAsserts {
         } else {
             TS.step().action().createAssertResult(message, status, assertMethod, expected, actual, exception, true);
         }
-        
+
         return status;
     }
-    
+
     /**
      * Checks if is throw exception on fail.
      *
@@ -1682,7 +1692,7 @@ public class VerboseAsserts {
     public boolean isThrowExceptionOnFail() {
         return getThrowExceptionOnFail();
     }
-    
+
     /**
      * Sets the throw exception on fail.
      *
@@ -1693,7 +1703,7 @@ public class VerboseAsserts {
         this.throwExceptionOnFail = throwExceptionOnFail;
         return this;
     }
-    
+
     /**
      * Only verify.
      *
@@ -1705,7 +1715,7 @@ public class VerboseAsserts {
         this.setVerifyOnly(true);
         return this;
     }
-    
+
     /**
      * Checks if is record steps.
      *
@@ -1714,7 +1724,7 @@ public class VerboseAsserts {
     public boolean isRecordSteps() {
         return recordSteps;
     }
-    
+
     /**
      * Sets the record steps.
      *
@@ -1725,7 +1735,7 @@ public class VerboseAsserts {
         this.recordSteps = recordSteps;
         return this;
     }
-    
+
     /**
      * Given assert collections.
      *
@@ -1736,7 +1746,7 @@ public class VerboseAsserts {
     public <H> AssertCollections given(final H[] actual) {
         return new AssertCollections<>(actual, this);
     }
-    
+
     /**
      * Given assert collections.
      *
@@ -1747,7 +1757,7 @@ public class VerboseAsserts {
     public <H> AssertCollections given(final Collection<H> actual) {
         return new AssertCollections<>(actual, this);
     }
-    
+
     /**
      * Given assert maps.
      *
@@ -1759,7 +1769,7 @@ public class VerboseAsserts {
     public <T, H> AssertMaps given(final AbstractMap<T, H> actual) {
         return new AssertMaps<>(actual, this);
     }
-    
+
     /**
      * Given assert strings.
      *
@@ -1769,7 +1779,7 @@ public class VerboseAsserts {
     public AssertStrings given(final String actual) {
         return new AssertStrings(actual, this);
     }
-    
+
     /**
      * Given assert number.
      *
@@ -1780,7 +1790,7 @@ public class VerboseAsserts {
     public <T extends Number & Comparable<T>> AssertNumber<T> given(final T actual) {
         return new AssertNumber<T>(actual, this);
     }
-    
+
     /**
      * Look for an array of strings in standard error.
      *
@@ -1796,7 +1806,7 @@ public class VerboseAsserts {
         }
         return assertContains(content, textToContain);
     }
-    
+
     /**
      * Look for an array of strings in standard output.
      *
@@ -1812,7 +1822,7 @@ public class VerboseAsserts {
         }
         return assertContains(content, textToContain);
     }
-    
+
     /**
      * Look for an array of strings in both standard output and standard error.
      *
@@ -1828,7 +1838,7 @@ public class VerboseAsserts {
         }
         return assertContains(content, textToContain);
     }
-    
+
     private boolean assertContains(final String content, final String[] textToContain) {
         if (textToContain != null) {
             AssertStrings assertStrings = new AssertStrings(content);
@@ -1839,15 +1849,15 @@ public class VerboseAsserts {
         }
         return false;
     }
-    
+
     public boolean contains(final String message, final String stringToCheck, final String expectedStringToContain) {
         return new AssertStrings(stringToCheck, this).setMessage(message)
             .contains(expectedStringToContain).isPassed();
     }
-    
+
     public boolean startsWith(final String message, final String stringToCheck, final String expectedStringToContain) {
         return new AssertStrings(stringToCheck, this).setMessage(message)
             .startsWith(expectedStringToContain).isPassed();
     }
-    
+
 }

@@ -28,7 +28,6 @@ public class TestVerboseAssert extends HttpTestPlan {
     public void testDontStopOnFirstFail() throws JsonGenerationException, JsonMappingException, IOException {
         TS.verify().same("", "cool", "cool");
         TS.verify().same("", "cool", "cll");
-        getTestPlan();
     }
 
     @Ignore

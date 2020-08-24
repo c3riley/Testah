@@ -13,12 +13,23 @@ import org.joda.time.format.PeriodFormat;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -365,7 +376,7 @@ public class TestahUtil {
      */
     public String splitCamelCase(final String stringToUse) {
         return stringToUse.replaceAll(String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z])(?=[A-Z])",
-                "(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
+            "(?<=[A-Za-z])(?=[^A-Za-z])"), " ");
     }
 
     /**
@@ -472,7 +483,7 @@ public class TestahUtil {
                 final File[] arrayOfFiles = new File(path).listFiles();
                 if (arrayOfFiles != null) {
                     return Arrays.asList(arrayOfFiles).stream().filter(file -> !excludeDirectories ||
-                            !file.isDirectory()).collect(Collectors.toList());
+                        !file.isDirectory()).collect(Collectors.toList());
                 }
             }
         }
@@ -481,13 +492,12 @@ public class TestahUtil {
 
     /**
      * get time format in HH:MM:SS:MMM.
+     *
      * @param duration - duration in milliseconds
      * @return duration in HH:MM:SS:MMM format
      */
-    public String getDurationShort(final Long duration)
-    {
-        if (duration != null)
-        {
+    public String getDurationShort(final Long duration) {
+        if (duration != null) {
             return DurationFormatUtils.formatDuration(duration, "HH:mm:ss:S");
         }
         return "";

@@ -15,6 +15,8 @@ import java.util.Map;
  */
 public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
 
+    private static final long serialVersionUID = 4734772475048784881L;
+
     /**
      * Instantiates a new html formatter.
      *
@@ -36,8 +38,11 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
      * @param totalTestCasesIgnored total test cases ignored
      * @param totalDuration         total duration
      */
-    public SummaryHtmlFormatter(final List<ResultDto> testPlan, int totalTestPlans, int totalTestCases, int totalTestCasesPassed, int totalTestCasesFailed, int totalTestCasesIgnored, long totalDuration) {
-        super(testPlan, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, totalDuration, AbstractFormatter.DEFAULT_PACKAGE + "summaryHtmlV2.vm");
+    public SummaryHtmlFormatter(final List<ResultDto> testPlan, int totalTestPlans, int totalTestCases,
+                                int totalTestCasesPassed, int totalTestCasesFailed, int totalTestCasesIgnored,
+                                long totalDuration) {
+        super(testPlan, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed,
+            totalTestCasesIgnored, totalDuration, AbstractFormatter.DEFAULT_PACKAGE + "summaryHtmlV2.vm");
     }
 
     /**
@@ -59,7 +64,7 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
                 counts.put(TestStatus.IGNORE, counts.get(TestStatus.IGNORE) + result.getTestPlan().getRunInfo().getIgnore());
             } else {
                 int pass = result.getJunitResult().getRunCount() -
-                        (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
+                    (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
                 counts.put(TestStatus.PASSED, counts.get(TestStatus.PASSED) + pass);
                 counts.put(TestStatus.FAILED, counts.get(TestStatus.FAILED) + result.getJunitResult().getFailureCount());
                 counts.put(TestStatus.IGNORE, counts.get(TestStatus.IGNORE) + result.getJunitResult().getIgnoreCount());
@@ -67,7 +72,7 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
         });
 
         context.put("GoogleChart",
-                getGoogleChart(counts.get(TestStatus.FAILED), counts.get(TestStatus.PASSED), counts.get(TestStatus.IGNORE)));
+            getGoogleChart(counts.get(TestStatus.FAILED), counts.get(TestStatus.PASSED), counts.get(TestStatus.IGNORE)));
 
         context.put("htmlPath", "");
 
@@ -84,20 +89,26 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
      */
     private String getGoogleChart(final int numFail, final int numPass, final int numIgnore) {
         return "http://chart.apis.google.com/chart?chs=400x100&chco=ff2233,00aa33,C0C0C0&chd=t:" + numFail +
-                "," + numPass + "," + numIgnore + "&cht=p3&chl=Failed [" + numFail + "]|Passed [" + numPass + "]" +
-                "|Ignore [" + numIgnore + "]&chtt=Run Results";
+            "," + numPass + "," + numIgnore + "&cht=p3&chl=Failed [" + numFail + "]|Passed [" + numPass + "]" +
+            "|Ignore [" + numIgnore + "]&chtt=Run Results";
     }
 
-    /* (non-Javadoc)
-     * @see org.testah.framework.report.AbstractFormatter#createReport()
+    /**
+     * createReport.
+     * @return return self.
      */
     public AbstractFormatter createReport() {
-        if(TS.params().isUseSummaryJsonReport()) {
+        if (TS.params().isUseSummaryJsonReport()) {
             createJsonReport();
         }
         return createReport("summaryResults.html");
     }
 
+    /**
+     * Create Json Report of the summary.
+     *
+     * @return return self
+     */
     public SummaryHtmlFormatter createJsonReport() {
         Map<String, Object> summaryResults = new HashMap<>();
         summaryResults.put("totalTestPlans", totalTestPlans);

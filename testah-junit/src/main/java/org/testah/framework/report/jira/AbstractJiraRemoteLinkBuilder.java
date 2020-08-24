@@ -4,8 +4,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
-import org.testah.framework.report.jira.dto.*;
-import org.testah.framework.testPlan.AbstractTestPlan;
+import org.testah.framework.report.jira.dto.Application;
+import org.testah.framework.report.jira.dto.Icon;
+import org.testah.framework.report.jira.dto.Icon2;
+import org.testah.framework.report.jira.dto.RemoteIssueLinkDto;
+import org.testah.framework.report.jira.dto.RemoteIssueLinkObject;
+import org.testah.framework.report.jira.dto.Status;
 
 /**
  * The Interface JiraRemoteLinkBuilder. This class is a helper to do some of the common task with implementing JiraRemoteLinkBuilder.
@@ -221,8 +225,8 @@ public abstract class AbstractJiraRemoteLinkBuilder implements JiraRemoteLinkBui
      */
     protected TestPlanDto getLastTestPlanDtoUsed() {
         if (null == lastTestPlanDtoUsed) {
-            TS.log().warn("lastTestPlanDtoUsed is null, having to use AbstractTestPlan.getTestPlan()");
-            lastTestPlanDtoUsed = AbstractTestPlan.getTestPlan();
+            TS.log().warn("lastTestPlanDtoUsed is null, having to use TS.testSystem().getTestPlan()");
+            lastTestPlanDtoUsed = TS.testSystem().getTestPlan();
             /*
             throw new RuntimeException("Unable to use getLastTestPlanDtoUsed() unless you "
                     + " call either getRemoteLinkForTestPlanResult or getRemoteLinkForTestPlanResultKnownProblem or "

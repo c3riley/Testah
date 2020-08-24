@@ -1,7 +1,14 @@
 package org.testah.framework.report.mgmt;
 
 import org.apache.poi.hssf.util.HSSFColor;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -10,10 +17,11 @@ import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
 import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
-import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.cli.Params;
 import org.testah.framework.cli.TestFilter;
+import org.testah.framework.dto.TestCaseAnnotationDto;
 import org.testah.framework.dto.TestDtoHelper;
+import org.testah.framework.dto.TestPlanAnnotationDto;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -125,12 +133,12 @@ public class AuditReport {
         Row tpRow = testPlanSheet.createRow(tpRowNum++);
 
         addHeader(tcRow, "TestPlan", "TestCase", "RunTypes", "ACCEPTANCE", "SMOKE", "REG", "RelatedIds", "TestType",
-                "HasKnownProblem", "Platforms",
-                "Components", "Comments", "Description", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
+            "HasKnownProblem", "Platforms",
+            "Components", "Comments", "Description", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
 
         addHeader(tpRow, "TestPlan", "Description", "RunTypes", "ACCEPTANCE", "SMOKE", "REG", "RelatedIds", "TestType",
-                "HasKnownProblem", "Platforms",
-                "Components", "Comments", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
+            "HasKnownProblem", "Platforms",
+            "Components", "Comments", "KnownProblem Ids", "KnownProblem Desc", "KnownProblem Type");
 
 
         for (final Entry<String, TestPlanDto> testPlan : testPlans.entrySet()) {
@@ -155,16 +163,16 @@ public class AuditReport {
             if (null != testPlan.getValue().getKnownProblem()) {
                 if (null != testPlan.getValue().getKnownProblem().getLinkedIds()) {
                     addToCell(tcRow.createCell(tpColNum++), String.join(", ", testPlan.getValue()
-                            .getKnownProblem()
-                            .getLinkedIds()));
+                        .getKnownProblem()
+                        .getLinkedIds()));
                 } else {
                     addToCell(tcRow.createCell(tpColNum++), "");
                 }
                 addToCell(tcRow.createCell(tpColNum++), testPlan.getValue().getKnownProblem()
-                        .getDescription());
+                    .getDescription());
                 addToCell(tcRow.createCell(tpColNum++), testPlan.getValue().getKnownProblem()
-                        .getTypeOfKnown()
-                        .name());
+                    .getTypeOfKnown()
+                    .name());
             }
 
             for (final TestCaseDto testCase : testPlan.getValue().getTestCases()) {
@@ -190,13 +198,13 @@ public class AuditReport {
                 if (null != testCase.getKnownProblem()) {
                     if (null != testCase.getKnownProblem().getLinkedIds()) {
                         addToCell(tcRow.createCell(tcColNum++), String.join(", ", testCase.getKnownProblem()
-                                .getLinkedIds()));
+                            .getLinkedIds()));
                     } else {
                         addToCell(tcRow.createCell(tcColNum++), "");
                     }
                     addToCell(tcRow.createCell(tcColNum++), testCase.getKnownProblem().getDescription());
                     addToCell(tcRow.createCell(tcColNum++), testCase.getKnownProblem().getTypeOfKnown()
-                            .name());
+                        .name());
                 }
                 tcRow.setHeightInPoints(-1);
                 // cell.setCellValue((Integer) field);
@@ -227,19 +235,20 @@ public class AuditReport {
         testPlanFilter.filterTestPlansToRun();
         final HashMap<String, TestPlanDto> testPlans = new HashMap<>();
         for (final Class<?> test : testPlanFilter.getTestClassesMetFilters()) {
+            TestPlanAnnotationDto testPlanAnnotationDto = TestPlanAnnotationDto.create(test);
             testPlans
-                    .put(test.getCanonicalName(),
-                            TestDtoHelper
-                                    .createTestPlanDto(test, test.getAnnotation(TestPlan.class),
-                                            test.getAnnotation(KnownProblem.class))
-                                    .setRunTime(null).setRunInfo(null));
+                .put(test.getCanonicalName(),
+                    TestDtoHelper
+                        .createTestPlanDto(test, testPlanAnnotationDto,
+                            test.getAnnotation(KnownProblem.class))
+                        .setRunTime(null).setRunInfo(null));
 
             for (final Method method : test.getDeclaredMethods()) {
                 if (null != method.getAnnotation(TestCase.class)) {
                     testPlans.get(test.getCanonicalName())
-                            .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
-                                    method.getAnnotation(TestCase.class), method.getAnnotation(KnownProblem.class),
-                                    test.getAnnotation(TestPlan.class)).setRunTime(null));
+                        .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
+                            TestCaseAnnotationDto.create(method), method.getAnnotation(KnownProblem.class),
+                            testPlanAnnotationDto).setRunTime(null));
                 }
             }
         }

@@ -241,7 +241,8 @@ public abstract class AbstractEmailUtil<T extends AbstractEmailUtil, M, A, F, H>
      * @return the messages with poll
      */
     public List<M> getMessagesWithPoll() {
-        return getMessagesWithPoll(null);
+        final EmailMessageFilter<M>[] obj = null;
+        return getMessagesWithPoll(obj);
     }
 
     /**

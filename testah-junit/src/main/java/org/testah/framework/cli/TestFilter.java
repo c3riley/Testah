@@ -10,12 +10,18 @@ import org.testah.client.dto.TestCaseDto;
 import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestPlan;
+import org.testah.framework.annotations.TestPlanJUnit5;
+import org.testah.framework.dto.TestPlanAnnotationDto;
 
 import java.io.File;
 import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
@@ -62,6 +68,7 @@ public class TestFilter {
         if (null != internalClass && internalClass.length() > 0) {
             final Reflections reflections = new Reflections(internalClass);
             Set<Class<?>> lst = reflections.getTypesAnnotatedWith(TestPlan.class);
+            lst.addAll(reflections.getTypesAnnotatedWith(TestPlanJUnit5.class));
             testClasses.addAll(lst);
             return lst.size();
         }
@@ -98,13 +105,13 @@ public class TestFilter {
      * @return the list
      */
     private List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter, final List<Class<
-            ?>> testClassesMetFiltersToUse) {
+        ?>> testClassesMetFiltersToUse) {
 
         final Params filterParams = TS.params();
 
         if (null != testClassesToFilter) {
 
-            TestPlan meta;
+            TestPlanAnnotationDto meta;
 
             boolean filterByUuid = isFilterOn(TS.params().getFilterById());
 
@@ -130,7 +137,7 @@ public class TestFilter {
 
             for (final Class<?> test : testClassesToFilter) {
                 String filter;
-                meta = test.getAnnotation(TestPlan.class);
+                meta = TestPlanAnnotationDto.create(test);
 
                 if (null == meta) {
                     TS.log().trace("test[" + test.getName() + "] filtered out by no TestMeta Annotation");
@@ -161,8 +168,8 @@ public class TestFilter {
                 if (filterByTestType) {
                     if (!isFilterByTestType(meta.testType())) {
                         TS.log().trace(
-                                "test[" + test.getName() + "] filtered out by isFilterByTestType[" +
-                                        TS.params().getFilterByTestType() + "]");
+                            "test[" + test.getName() + "] filtered out by isFilterByTestType[" +
+                                TS.params().getFilterByTestType() + "]");
                         continue;
                     }
                 }
@@ -207,7 +214,7 @@ public class TestFilter {
             }
             TS.log().info(Cli.BAR_LONG);
             TS.log().info(String.format("%s TestPlan Classes To Run: ( %d of %d )", Cli.BAR_WALL,
-                    testClassesMetFiltersToUse.size(), testClassesToFilter.size()));
+                testClassesMetFiltersToUse.size(), testClassesToFilter.size()));
             TS.log().info(Cli.BAR_WALL);
             for (final Class<?> test : testClassesMetFiltersToUse) {
                 TS.log().info(Cli.BAR_WALL + " " + test.getName());
@@ -277,8 +284,8 @@ public class TestFilter {
                         if (!externalTests.exists()) {
                             if (loadCompiledTestClass(path) == 0) {
                                 TS.log().error(
-                                        "Param LookAtExternalTests is set to a class/file/directory not found: " +
-                                                externalTests.getAbsolutePath());
+                                    "Param LookAtExternalTests is set to a class/file/directory not found: " +
+                                        externalTests.getAbsolutePath());
                             }
                         } else if (externalTests.isDirectory()) {
                             files.addAll(FileUtils.getFilesRecurse(externalTests, "(.?)*\\.groovy"));
@@ -310,8 +317,8 @@ public class TestFilter {
         return this;
     }
 
-    private boolean isFilterOn(final String filterValue) {
-        return (null != filterValue && filterValue.length() > 0);
+    public boolean isFilterOn(final String filterValue) {
+        return (null != filterValue && filterValue.trim().length() > 0);
     }
 
     /**
@@ -366,11 +373,11 @@ public class TestFilter {
             return true;
         }
         return Arrays.stream(StringUtils.split(startsWith, ","))
-                .filter(prefix ->
-                        StringUtils.startsWithIgnoreCase(
-                                (StringUtils.contains(prefix, ".") ? test.getCanonicalName() : test.getSimpleName()),
-                                prefix.trim())
-                ).findFirst().isPresent();
+            .filter(prefix ->
+                StringUtils.startsWithIgnoreCase(
+                    (StringUtils.contains(prefix, ".") ? test.getCanonicalName() : test.getSimpleName()),
+                    prefix.trim())
+            ).findFirst().isPresent();
     }
 
     /**
@@ -400,24 +407,34 @@ public class TestFilter {
      * @param values the values
      * @return true, if is filter check ok
      */
-    private boolean isFilterCheckOk(final List<String> lst, final String values) {
+    public boolean isFilterCheckOk(final List<String> lst, final String values) {
+        boolean postiveMatch = false;
+        boolean postitiveMatchUsed = false;
         if (null != values && values.length() > 0) {
-            boolean rtn = false;
             for (final String value : values.split(",")) {
                 final String valueToCompare = trimToEmpty(value);
                 if (value.startsWith("~")) {
                     final String valueToCompareMatch = valueToCompare.replace("~", "");
                     if (lst.stream().anyMatch(str -> equalsIgnoreCase(str, valueToCompareMatch))) {
                         return false; // Fail Not, failed filter
-                    } else {
-                        rtn = true; // Passed initially, still a Not could be
-                        // used
                     }
-                } else if (lst.stream().anyMatch(anyMatch -> equalsIgnoreCase(valueToCompare, anyMatch))) {
-                    rtn = true; // Passed initially, still a Not could be used
+                } else {
+                    postitiveMatchUsed = true;
+                    if (value.startsWith("!")) {
+                        final String valueToCompareMatch = value.substring(1);
+                        if (!lst.stream().anyMatch(str -> equalsIgnoreCase(str, valueToCompareMatch))) {
+                            return false; // Does not include required value, failed filter
+                        } else {
+                            postiveMatch = true; // Passed initially, still a Not could be used
+                        }
+                    } else if (lst.stream().anyMatch(anyMatch -> equalsIgnoreCase(valueToCompare, anyMatch))) {
+                        postiveMatch = true; // Passed initially, still a Not could be used
+                    }
                 }
             }
-            return rtn;
+            if (postitiveMatchUsed) {
+                return postiveMatch;
+            }
         }
         return true; // Filter is Off
     }

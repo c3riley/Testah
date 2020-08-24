@@ -7,7 +7,11 @@ import org.apache.velocity.app.VelocityEngine;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 
 /**

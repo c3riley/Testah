@@ -1,10 +1,6 @@
 package org.testah.driver.http;
 
-import org.apache.http.client.config.AuthSchemes;
-import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-
-import java.util.Arrays;
 
 /**
  * The type Http wrapper v 2.

@@ -1,12 +1,19 @@
+:toc: macro
+:toc-title:
+:toclevels: 4
+
 # Testah Junit
 
 Automation Testing Framework written in java for testing ui applications and services.
+
+:toc:
 
 ## Using Project
 
 ### build.groovy example
 
-```groovy
+[source,groovy]
+----
 group 'org.example'
 version '1.0-SNAPSHOT'
 
@@ -25,9 +32,9 @@ repositories {
 
 dependencies {
     compile localGroovy()
-    compile 'org.testah:testah-junit:2.3.0'
+    compile 'org.testah:testah-junit:2.4.0'
 }
-```
+----
 
 ## Project Elements
 
@@ -35,10 +42,11 @@ dependencies {
 
 #### Examples
 
-##### Service Test
+##### Service Test JUnit 4
 For services testing, browser only launched if called upon to do so, will not launch by default
 
-```java
+[source,groovy]
+----
 
 @TestPlan
 public class DemoTest extends HttpTestPlan {
@@ -51,12 +59,31 @@ public class DemoTest extends HttpTestPlan {
 
 }
 
-```
+----
 
-##### Browser Test
+##### Service Test JUnit 5
+For services testing, browser only launched if called upon to do so, will not launch by default
+
+[source,groovy]
+----
+
+@TestPlanJUnit5
+public class DemoTest {
+
+    @TestCaseJUnit5
+    public void test() {
+
+    }
+
+}
+
+----
+
+##### Browser Test JUnit 4
 Will automatically launch a browser by default
 
-```java
+[source,groovy]
+----
 
 @TestPlan
 public class DemoTest extends BrowserTestPlan {
@@ -69,14 +96,32 @@ public class DemoTest extends BrowserTestPlan {
 
 }
 
-```
+----
+
+##### Browser Test JUnit 5
+Will automatically launch a browser by default
+
+[source,groovy]
+----
+
+@TestPlanJUnit5
+public class DemoTest {
+
+    @TestCaseJUnit5
+    public void test() {
+
+    }
+
+}
+
+----
 
 #### Test Metadata
 
-##### @TestPlan
+##### @TestPlan (JUnit 4) / @TestPlanJUnit5
 Annotation used per class, the top level testing object.  Adds metadata for what the test will do, what jira items its aligned to, and ways to allow the test to be filtered and reported.
 
-##### @TestCase
+##### @TestCase (JUnit 4)/ @TestCaseJUnit5
 
 Annotation used per @Test Method.  Adds metadata for what the test will do, what jira items its aligned to, and ways to allow the test to be filtered and reported.  A TestCase will inherit from the TestPlan unless overridden.
 

@@ -62,7 +62,7 @@ public class JiraReporter {
                             createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
                         } else {
                             updateRemoteLink(relatedId, remoteLink.getId(),
-                                    remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
+                                remoteLinkBuilder.getRemoteLinkForTestPlanResultKnownProblem(testPlan));
                         }
                     }
                 }
@@ -77,7 +77,7 @@ public class JiraReporter {
                                     createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
                                 } else {
                                     updateRemoteLink(relatedId, remoteLink.getId(),
-                                            remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
+                                        remoteLinkBuilder.getRemoteLinkForTestCaseResultKnownProblem(testCase));
                                 }
                             }
                         }
@@ -90,7 +90,7 @@ public class JiraReporter {
                                     createRemoteLink(relatedId, remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
                                 } else {
                                     updateRemoteLink(relatedId, remoteLink.getId(),
-                                            remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
+                                        remoteLinkBuilder.getRemoteLinkForTestCaseResult(testCase));
                                 }
                             }
                         }
@@ -171,8 +171,7 @@ public class JiraReporter {
         boolean status = false;
         try {
             status = getStatus(issue).getFields().getStatus().getName().toLowerCase().equals(JIRA_STATUS_CLOSED);
-        }
-        catch (Exception x) {
+        } catch (Exception x) {
             TS.log().info(String.format("Failed get status for Jira issue %s, returning false.", issue), x);
         }
         return status;
@@ -185,7 +184,7 @@ public class JiraReporter {
     /**
      * Get the status for a jira issue.
      *
-     * @param issue      the issue
+     * @param issue the issue
      * @return the IssueStatus dto
      */
     public IssueStatus getStatus(final String issue) {
