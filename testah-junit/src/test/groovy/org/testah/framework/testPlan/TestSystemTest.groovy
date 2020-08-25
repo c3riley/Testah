@@ -2,6 +2,7 @@ package org.testah.framework.testPlan
 
 import org.junit.runner.Description
 import org.testah.Junit5TestPlan
+import org.testah.client.dto.TestCaseDto
 import org.testah.util.unittest.dtotest.SystemOutCapture
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -29,7 +30,7 @@ class TestSystemTest extends Specification {
         given:
         TestSystem ts = Spy(new TestSystem())
         ts.starting(Description.createTestDescription(Junit5TestPlan.class,
-            "test", Junit5TestPlan.class.getAnnotations()))
+                "test", Junit5TestPlan.class.getAnnotations()))
 
         when:
         ts.resetTestCase('because')
@@ -44,7 +45,7 @@ class TestSystemTest extends Specification {
 
         when:
         ts.starting(Description.createTestDescription(Junit5TestPlan.class,
-            "test", Junit5TestPlan.class.getAnnotations()))
+                "test", Junit5TestPlan.class.getAnnotations()))
 
         then:
         ts.getTestPlanThreadLocal().get() != null
@@ -61,7 +62,7 @@ class TestSystemTest extends Specification {
         given:
         TestSystem ts = Spy(new TestSystem())
         ts.starting(Description.createTestDescription(Junit5TestPlan.class,
-            "test", Junit5TestPlan.class.getAnnotations()))
+                "test", Junit5TestPlan.class.getAnnotations()))
 
         when:
         ts.dataValue(data)
@@ -70,17 +71,47 @@ class TestSystemTest extends Specification {
         ts.getTestCase().getDataValue() == expected
 
         where:
-        data                                   | expected
-        null                                   | ''
-        ''                                     | ''
-        'test'                                 | 'test'
+        data                                       | expected
+        null                                       | ''
+        ''                                         | ''
+        'test'                                     | 'test'
         'this is very long zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
-            'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
-            'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
-            'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
-            'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' | 'this is very long zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
-            'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
-            'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'
+                'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
+                'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
+                'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
+                'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' | 'this is very long zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
+                'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz' +
+                'zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz'
+    }
+
+    @Unroll
+    def "test finished"(final Boolean status, Object _) {
+        given:
+        TestSystem testSystem = Spy(new TestSystem())
+        TestCaseDto testCaseDto = Spy(new TestCaseDto())
+        testCaseDto.getStatus() >> { return status }
+        testSystem.getTestCase() >> testCaseDto
+        Object var = null
+        Object expected = status == null ? null :
+                status == true ? testSystem.doOnPassClosure : testSystem.doOnFailClosure
+        if (status == null) {
+            testSystem.runDoOnMethod(*_) >> { throw new AssertionError("Method should not get called") }
+        } else {
+            testSystem.runDoOnMethod(*_) >> { args -> var = args[1] }
+        }
+
+        when:
+        testSystem.finished(Description.createTestDescription(Junit5TestPlan.class,
+                "test", Junit5TestPlan.class.getAnnotations()))
+
+        then:
+        expected == var
+
+        where:
+        status | _
+        null   | null
+        true   | null
+        false  | null
     }
 
 }
