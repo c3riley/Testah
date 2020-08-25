@@ -286,7 +286,7 @@ public class TestSystem {
      *
      * @return the test plan thread local
      */
-    protected ThreadLocal<TestPlanDto> getTestPlanThreadLocal() {
+    public ThreadLocal<TestPlanDto> getTestPlanThreadLocal() {
         if (null == testPlan) {
             testPlan = new ThreadLocal<>();
         }
@@ -305,7 +305,7 @@ public class TestSystem {
      *
      * @param status the status
      */
-    protected void stopTestCase(final Boolean status) {
+    public void stopTestCase(final Boolean status) {
         if (null != getTestCase()) {
             stopTestStep();
             getTestPlan().addTestCase(getTestCase().stop(status));
@@ -315,7 +315,7 @@ public class TestSystem {
     /**
      * Stop test step.
      */
-    protected void stopTestStep() {
+    public void stopTestStep() {
         if (null != getTestStep()) {
             getTestCase().addTestStep(getTestStep().stop());
             testStep.set(null);
@@ -428,7 +428,7 @@ public class TestSystem {
      *
      * @param testPlanStart the new test plan start
      */
-    protected void setTestPlanStart(final boolean testPlanStart) {
+    public void setTestPlanStart(final boolean testPlanStart) {
         this.testPlanStart.set(testPlanStart);
     }
 
@@ -437,7 +437,7 @@ public class TestSystem {
      *
      * @return true, if successful
      */
-    protected boolean didTestPlanStart() {
+    public boolean didTestPlanStart() {
         if (null == testPlanStart.get()) {
             testPlanStart.set(false);
         }
@@ -449,7 +449,7 @@ public class TestSystem {
      *
      * @return the test case thread local
      */
-    protected ThreadLocal<TestCaseDto> getTestCaseThreadLocal() {
+    public ThreadLocal<TestCaseDto> getTestCaseThreadLocal() {
         if (null == testCase) {
             testCase = new ThreadLocal<>();
         }
