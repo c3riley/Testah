@@ -13,7 +13,6 @@ import org.testah.framework.annotations.TestPlanJUnit5;
 public class Junit5TestPlan {
 
     static boolean didDoOnPassOccur = false;
-    static boolean didDoOnFailOccur = false;
 
     /**
      * Setup Method.
@@ -23,15 +22,11 @@ public class Junit5TestPlan {
         TS.testSystem().setDoOnPassClosure((description) -> {
             didDoOnPassOccur = true;
         });
-        TS.testSystem().setDoOnPassClosure((description) -> {
-            didDoOnPassOccur = true;
-        });
     }
 
     @AfterAll
     public static void tearDown() {
         TS.asserts().isTrue(didDoOnPassOccur);
-        TS.asserts().isTrue(didDoOnFailOccur);
     }
 
     @TestCaseJUnit5(name = "test for junit5 example", components = {"c1"}, platforms = {"p1"},

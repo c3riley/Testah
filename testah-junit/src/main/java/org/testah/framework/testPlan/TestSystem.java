@@ -222,8 +222,6 @@ public class TestSystem {
             testStep = new ThreadLocal<>();
             testPlanStart = new ThreadLocal<>();
             ignoredTests = new ThreadLocal<>();
-            doOnFailThreadLocal1 = new ThreadLocal<>();
-            doOnPassThreadLocal = new ThreadLocal<>();
         }
     }
 
