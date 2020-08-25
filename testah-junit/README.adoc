@@ -8,7 +8,6 @@
 Automation Testing Framework written in java for testing ui applications and services.
 
 
-
 ## Using Project
 
 ### build.groovy example
