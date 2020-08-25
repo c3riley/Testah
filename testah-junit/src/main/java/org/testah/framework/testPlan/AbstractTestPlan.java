@@ -29,7 +29,10 @@ public abstract class AbstractTestPlan {
      * The global timeout.
      */
     private TestRule globalTimeout = new Timeout(100000);
-
+    /**
+     * The description.
+     */
+    private Description description;
     /**
      * The filter.
      */
@@ -46,7 +49,7 @@ public abstract class AbstractTestPlan {
     private ExternalResource initialize = new ExternalResource() {
 
         protected void before() throws Throwable {
-            TS.testSystem().filterTest(getDescription());
+            TS.testSystem().filterTest(description);
             initializeTest();
         }
 
@@ -211,7 +214,7 @@ public abstract class AbstractTestPlan {
      * @return the description
      */
     public Description getDescription() {
-        return TS.testSystem().getDescription();
+        return description;
     }
 
     /**
@@ -221,7 +224,7 @@ public abstract class AbstractTestPlan {
      * @return the abstract test plan
      */
     public AbstractTestPlan setDescription(final Description description) {
-        TS.testSystem().setDescription(description);
+        this.description = description;
         return this;
     }
 

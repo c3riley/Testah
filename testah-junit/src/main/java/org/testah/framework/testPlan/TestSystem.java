@@ -31,7 +31,7 @@ public class TestSystem {
     public static final int DEFAULT_TESTPLAN_JUNIT_VERSION = 4;
     public static final int MIN_JUNIT_VERSION_WITHOUT_TESTPLAN_ANNOTATION = DEFAULT_TESTPLAN_JUNIT_VERSION;
     public static final String MSG_ERROR_MISSING_TESTPLAN_ANNOTATION = "The TestPlan Annotation like @TestPlanJUnit5 " +
-            "is missing from the test class,\" +\n this is required for testah!";
+        "is missing from the test class,\" +\n this is required for testah!";
 
     public TestSystem() {
         setUpThreadLocals(true);
@@ -70,17 +70,12 @@ public class TestSystem {
     /**
      * Allow a way for JUnit 5 tests to define a closure to run on pass only from the test class like JUnit 4.
      */
-    protected ThreadLocal<DoOnMethod> _doOnPassClosure = new ThreadLocal<>();
+    protected ThreadLocal<DoOnMethod> doOnPassThreadLocal = new ThreadLocal<>();
 
     /**
      * Allow a way for JUnit 5 tests to define a closure to run on fail only from the test class like JUnit 4.
      */
-    protected ThreadLocal<DoOnMethod> _doOnFailClosure = new ThreadLocal<>();
-
-    /**
-     * The description.
-     */
-    private Description description;
+    protected ThreadLocal<DoOnMethod> doOnFailThreadLocal1 = new ThreadLocal<>();
 
     /**
      * Starting of a testCase.
@@ -89,8 +84,8 @@ public class TestSystem {
      */
     public void starting(final Description description) {
         starting(description,
-                TestPlanAnnotationDto.create(DEFAULT_TESTPLAN_JUNIT_VERSION, description.getTestClass().getAnnotation(TestPlan.class)),
-                TestCaseAnnotationDto.create(description.getAnnotation(TestCase.class)), DEFAULT_TESTPLAN_JUNIT_VERSION);
+            TestPlanAnnotationDto.create(DEFAULT_TESTPLAN_JUNIT_VERSION, description.getTestClass().getAnnotation(TestPlan.class)),
+            TestCaseAnnotationDto.create(description.getAnnotation(TestCase.class)), DEFAULT_TESTPLAN_JUNIT_VERSION);
     }
 
     /**
@@ -102,7 +97,7 @@ public class TestSystem {
      * @param junitVersion junit version being used.
      */
     public void starting(final Description desc, TestPlanAnnotationDto testPlan, TestCaseAnnotationDto testCase, int junitVersion) {
-        setDescription(desc);
+
         if (!didTestPlanStart()) {
 
             setUpThreadLocals();
@@ -128,9 +123,9 @@ public class TestSystem {
         TS.log().info(Cli.BAR_LONG);
 
         TS.log().info(
-                "TESTCASE started:" + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
+            "TESTCASE started:" + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
         startTestCase(desc, testCase, testPlan,
-                desc.getAnnotation(KnownProblem.class));
+            desc.getAnnotation(KnownProblem.class));
         getTestStep();
     }
 
@@ -141,11 +136,12 @@ public class TestSystem {
      * @param description testCase description sent by junit.
      */
     public void failed(final Throwable e, final Description description) {
-        setDescription(description);
+
         TS.step().action().createAssertResult("Unexpected Error occurred", false, "UnhandledExceptionFoundByJUnit", "",
-                e.getMessage(), e).log();
+            e.getMessage(), e).log();
 
         TS.log().error("TESTCASE Status: failed", e);
+        this.runDoOnMethod(description, doOnFailThreadLocal1);
         stopTestCase(false);
     }
 
@@ -155,7 +151,8 @@ public class TestSystem {
      * @param description testCase description sent by junit.
      */
     public void succeeded(final Description description) {
-        setDescription(description);
+
+        this.runDoOnMethod(description, doOnPassThreadLocal);
         stopTestCase((TS.params().isResultIgnoredIfNoAssertsFound() ? null : true));
         TS.log().info("TESTCASE Status: " + getTestCase().getStatusEnum());
         try {
@@ -165,11 +162,12 @@ public class TestSystem {
                     getTestCase().getAssertionError();
                     if (null == getTestCase().getStatus()) {
                         addIgnoredTest(description.getDisplayName(),
-                                "NA_STATUS_NO_ASSERTS");
+                            "NA_STATUS_NO_ASSERTS");
                         return;
                     }
                 }
             }
+
         } catch (final AssertionError ae) {
             TS.log().error("Exception Thrown Looking at TestCase Assert History\n" + ae.getMessage());
             throw ae;
@@ -182,15 +180,7 @@ public class TestSystem {
      * @param desc testCase description sent by junit.
      */
     public void finished(final Description desc) {
-        setDescription(desc);
         TS.log().info("TESTCASE Complete: " + desc.getDisplayName() + " - thread[" + Thread.currentThread().getId() + "]");
-        if (null == getTestCase().getStatus()) {
-            return;
-        } else if (getTestCase().getStatus()) {
-            this.runDoOnMethod(desc, _doOnPassClosure);
-        } else {
-            this.runDoOnMethod(desc, _doOnFailClosure);
-        }
     }
 
     protected void runDoOnMethod(final Description desc, final ThreadLocal<DoOnMethod> threadLocal) {
@@ -232,8 +222,8 @@ public class TestSystem {
             testStep = new ThreadLocal<>();
             testPlanStart = new ThreadLocal<>();
             ignoredTests = new ThreadLocal<>();
-            _doOnFailClosure = new ThreadLocal<>();
-            _doOnPassClosure = new ThreadLocal<>();
+            doOnFailThreadLocal1 = new ThreadLocal<>();
+            doOnPassThreadLocal = new ThreadLocal<>();
         }
     }
 
@@ -278,8 +268,8 @@ public class TestSystem {
         TS.cleanUpThreadLocal(testStep);
         TS.cleanUpThreadLocal(testPlanStart);
         TS.cleanUpThreadLocal(ignoredTests);
-        TS.cleanUpThreadLocal(_doOnPassClosure);
-        TS.cleanUpThreadLocal(_doOnFailClosure);
+        TS.cleanUpThreadLocal(doOnPassThreadLocal);
+        TS.cleanUpThreadLocal(doOnFailThreadLocal1);
     }
 
     /**
@@ -484,8 +474,8 @@ public class TestSystem {
      */
     public void filterTest(final Description description) {
         filterTest(description,
-                TestPlanAnnotationDto.create(DEFAULT_TESTPLAN_JUNIT_VERSION, description.getTestClass().getAnnotation(TestPlan.class)),
-                TestCaseAnnotationDto.create(description.getAnnotation(TestCase.class)));
+            TestPlanAnnotationDto.create(DEFAULT_TESTPLAN_JUNIT_VERSION, description.getTestClass().getAnnotation(TestPlan.class)),
+            TestCaseAnnotationDto.create(description.getAnnotation(TestCase.class)));
     }
 
     /**
@@ -503,8 +493,8 @@ public class TestSystem {
         if (!getTestFilter().filterTestCase(test, name)) {
             addIgnoredTest(name, "METADATA_FILTER");
             Assume.assumeTrue("Filtered out, For details use Trace level logging" +
-                    "\nCheck your filter settings in Testah.properties for " +
-                    "filter_DEFAULT_filterIgnoreKnownProblem", false);
+                "\nCheck your filter settings in Testah.properties for " +
+                "filter_DEFAULT_filterIgnoreKnownProblem", false);
         }
 
         if (null != TS.params().getFilterIgnoreKnownProblem()) {
@@ -512,15 +502,15 @@ public class TestSystem {
                 if ("true".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                     addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
                     Assume.assumeTrue("Filtered out, KnownProblem found: " + kp.description() +
-                            "\nCheck your filter settings in Testah.properties for " +
-                            "filter_DEFAULT_filterIgnoreKnownProblem", false);
+                        "\nCheck your filter settings in Testah.properties for " +
+                        "filter_DEFAULT_filterIgnoreKnownProblem", false);
                 }
             } else if ("false".equalsIgnoreCase(TS.params().getFilterIgnoreKnownProblem())) {
                 addIgnoredTest(name, "KNOWN_PROBLEM_FILTER");
                 Assume.assumeTrue(
-                        "Filtered out, KnownProblem Not found and is required\nCheck your filter" +
-                                " settings in Testah.properties for filter_DEFAULT_filterIgnoreKnownProblem",
-                        false);
+                    "Filtered out, KnownProblem Not found and is required\nCheck your filter" +
+                        " settings in Testah.properties for filter_DEFAULT_filterIgnoreKnownProblem",
+                    false);
             }
         }
     }
@@ -552,7 +542,7 @@ public class TestSystem {
                                      final KnownProblem knowProblem) {
         if (didTestPlanStart()) {
             getTestCaseThreadLocal()
-                    .set(TestDtoHelper.createTestCaseDto(desc, testCase, knowProblem, testPlan).start());
+                .set(TestDtoHelper.createTestCaseDto(desc, testCase, knowProblem, testPlan).start());
         }
         return getTestCase();
     }
@@ -641,14 +631,6 @@ public class TestSystem {
         return this;
     }
 
-    public Description getDescription() {
-        return description;
-    }
-
-    public void setDescription(Description description) {
-        this.description = description;
-    }
-
     /**
      * Get Closure that takes a Description and will run only if the test passes.
      * This can be set in the Before Block for tests.  Alternative is to use JUnit 5 extension.
@@ -657,7 +639,7 @@ public class TestSystem {
      * @return return self.
      */
     public DoOnMethod getDoOnPassClosure() {
-        return _doOnPassClosure.get();
+        return doOnPassThreadLocal.get();
     }
 
     /**
@@ -665,10 +647,11 @@ public class TestSystem {
      * This can be set in the Before Block for tests.  Alternative is to use JUnit 5 extension.
      * This is to support for JUnit 5 functionality already supported in the JUnit 4 implementation.
      *
+     * @param doOnPassClosure DoOnMethod closure to run if test passes.
      * @return return self.
      */
-    public TestSystem getDoOnPassClosure(DoOnMethod doOnPassClosure) {
-        this._doOnPassClosure.set(doOnPassClosure);
+    public TestSystem setDoOnPassClosure(DoOnMethod doOnPassClosure) {
+        this.doOnPassThreadLocal.set(doOnPassClosure);
         return this;
     }
 
@@ -680,7 +663,7 @@ public class TestSystem {
      * @return return self.
      */
     public DoOnMethod getDoOnFailClosure() {
-        return _doOnFailClosure.get();
+        return doOnFailThreadLocal1.get();
     }
 
     /**
@@ -688,10 +671,11 @@ public class TestSystem {
      * This can be set in the Before Block for tests.  Alternative is to use JUnit 5 extension.
      * This is to support for JUnit 5 functionality already supported in the JUnit 4 implementation.
      *
+     * @param doOnFailClosure DoOnMethod closure to run if test fails.
      * @return return self.
      */
-    public TestSystem getDoOnFailClosure(DoOnMethod doOnFailClosure) {
-        this._doOnFailClosure.set(doOnFailClosure);
+    public TestSystem setDoOnFailClosure(DoOnMethod doOnFailClosure) {
+        this.doOnFailThreadLocal1.set(doOnFailClosure);
         return this;
     }
 }
