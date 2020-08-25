@@ -4,7 +4,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.testah.TS;
 
 import java.io.File;
 
@@ -105,8 +104,8 @@ public class CliTest {
     @Test
     public void testCliLongBarWithCenterText() {
         final String version = "[Version 22.1.0]";
-         String longBarToPrint = Cli.getLongBarWithTextInCenter(version);
-        Assert.assertEquals((longBarToPrint.length() + version.length()) / 2 - version.length(), longBarToPrint.indexOf("[") );
+        String longBarToPrint = Cli.getLongBarWithTextInCenter(version);
+        Assert.assertEquals((longBarToPrint.length() + version.length()) / 2 - version.length(), longBarToPrint.indexOf("["));
     }
 
     @Test

@@ -1,7 +1,14 @@
 package org.testah.driver.web.browser;
 
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.MutableCapabilities;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -544,6 +551,9 @@ public abstract class AbstractBrowser<T> {
      */
     public AbstractBrowser<T> goTo(final String uri) {
         TS.step().action().createInfo("goTo", uri);
+        if (null == driver) {
+            start();
+        }
         driver.get(uri);
         return getSelf();
     }

@@ -47,7 +47,9 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter
      * @param totalDuration         total duration
      * @param pathToTemplate        the path to template
      */
-    public AbstractSummaryFormatter(final List<ResultDto> results, int totalTestPlans, int totalTestCases, int totalTestCasesPassed, int totalTestCasesFailed, int totalTestCasesIgnored, long totalDuration, final String pathToTemplate)
+    public AbstractSummaryFormatter(final List<ResultDto> results, int totalTestPlans, int totalTestCases,
+                                    int totalTestCasesPassed, int totalTestCasesFailed, int totalTestCasesIgnored,
+                                    long totalDuration, final String pathToTemplate)
     {
         super(pathToTemplate);
         this.results = results;

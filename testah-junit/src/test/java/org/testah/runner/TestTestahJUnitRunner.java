@@ -1,8 +1,9 @@
 package org.testah.runner;
 
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.testah.TS;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.dto.ResultDto;
 import org.testah.http.TestHttp;
@@ -15,6 +16,10 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 public class TestTestahJUnitRunner {
 
+    @After
+    public void tearDown() {
+        TS.browser().close();
+    }
 
     @Test
     public void testWithOneTest() {

@@ -11,6 +11,7 @@ import org.testah.framework.dto.StepActionHelper;
 import org.testah.framework.dto.StepHelper;
 import org.testah.framework.report.TestPlanReporter;
 import org.testah.framework.report.VerboseAsserts;
+import org.testah.framework.testPlan.TestSystem;
 import org.testah.util.Log;
 import org.testah.util.StringMasking;
 import org.testah.util.TestahUtil;
@@ -32,6 +33,7 @@ import java.util.Map;
  */
 public class TS {
 
+    private static TestSystem testSystem = new TestSystem();
     private static final StepHelper stepHelper = new StepHelper();
     private static final StepActionHelper stepActionHelper = new StepActionHelper();
 
@@ -220,7 +222,7 @@ public class TS {
      */
     public static AbstractBrowser<?> setBrowser(final AbstractBrowser<?> browser) {
         if (_browser == null) {
-            _browser =  new ThreadLocal<>();
+            _browser = new ThreadLocal<>();
         }
         _browser.set(browser);
         return _browser.get();
@@ -318,8 +320,7 @@ public class TS {
      *
      * @param valueToMask the value to mask
      */
-    public static void addMask(final String valueToMask)
-    {
+    public static void addMask(final String valueToMask) {
         StringMasking.INSTANCE.getInstance().add(valueToMask);
     }
 
@@ -329,8 +330,7 @@ public class TS {
      *
      * @param valuesToMask the value to mask
      */
-    public static void addMaskBulk(final String... valuesToMask)
-    {
+    public static void addMaskBulk(final String... valuesToMask) {
         StringMasking.INSTANCE.getInstance().addBulk(valuesToMask);
     }
 
@@ -393,4 +393,12 @@ public class TS {
         return Log.getLog();
     }
 
+    public static TestSystem testSystem() {
+        return testSystem;
+    }
+
+    public static TestSystem resetTestSystem() {
+        testSystem = new TestSystem();
+        return testSystem;
+    }
 }

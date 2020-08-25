@@ -7,7 +7,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.testah.TS;
 import org.testah.framework.dto.ResultDto;
-import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.runner.testPlan.TestPlanActor;
 
 import java.util.List;
@@ -90,7 +89,7 @@ public class TestahJUnitRunner {
 
             TestPlanActor.resetResults();
             //Setup thread locals to be used
-            AbstractTestPlan.setUpThreadLocals(true);
+            TS.testSystem().setUpThreadLocals(true);
 
             master.tell(junitTestPlanClasses, master);
 
@@ -101,7 +100,7 @@ public class TestahJUnitRunner {
 
             system.terminate();
 
-            AbstractTestPlan.cleanUpTestplanThreadLocal();
+            TS.testSystem().cleanUpTestplanThreadLocal();
             return TestPlanActor.getResults();
         } catch (final Exception e) {
             throw new RuntimeException(e);

@@ -1,7 +1,7 @@
 package org.testah.framework.dto;
 
+import org.testah.TS;
 import org.testah.client.dto.TestStepDto;
-import org.testah.framework.testPlan.AbstractTestPlan;
 
 public class StepHelper {
 
@@ -10,7 +10,7 @@ public class StepHelper {
     }
 
     public TestStepDto current() {
-        return AbstractTestPlan.getTestStep();
+        return TS.testSystem().getTestStep();
     }
 
     public TestStepDto create() {
@@ -18,7 +18,7 @@ public class StepHelper {
     }
 
     public TestStepDto create(final String name, final String desc) {
-        return AbstractTestPlan.startTestStep(
+        return TS.testSystem().startTestStep(
                 new TestStepDto().setName(name).setDescription(desc));
     }
 

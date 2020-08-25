@@ -2,7 +2,11 @@ package org.testah.framework.cli;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
-import net.sourceforge.argparse4j.inf.*;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
+import net.sourceforge.argparse4j.inf.Subparser;
+import net.sourceforge.argparse4j.inf.Subparsers;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.testah.TS;
@@ -11,12 +15,12 @@ import org.testah.client.dto.TestPlanDto;
 import org.testah.client.enums.BrowserType;
 import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
-import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.dto.ResultDto;
+import org.testah.framework.dto.TestCaseAnnotationDto;
 import org.testah.framework.dto.TestDtoHelper;
+import org.testah.framework.dto.TestPlanAnnotationDto;
 import org.testah.framework.report.SummaryHtmlFormatter;
 import org.testah.framework.report.TestPlanReporter;
-import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.runner.TestahJUnitRunner;
 
 import java.io.File;
@@ -40,7 +44,7 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "2.3.1";
+    public static final String version = "2.4.0";
 
     /**
      * The Constant BAR_LONG.
@@ -125,19 +129,25 @@ public class Cli {
         System.out.println("\n" + getLongBarWithTextInCenter("[Version: " + Cli.version + "]") + "\n");
     }
 
-    public static String getLongBarWithTextInCenter(final String anyText){
+    /**
+     * Get Long Bar Test.
+     *
+     * @param anyText anyText to write into the formatted block of text returned.
+     * @return String of the long bar text.
+     */
+    public static String getLongBarWithTextInCenter(final String anyText) {
         final int textLength = anyText.length();
         final int barLength = Cli.BAR_LONG.length();
         StringBuilder str = new StringBuilder();
-        if (textLength >= barLength || textLength <= 0 || textLength == Cli.BAR_LONG.length()-1){
+        if (textLength >= barLength || textLength <= 0 || textLength == Cli.BAR_LONG.length() - 1) {
             str.append(anyText)
                 .append("\n")
                 .append(Cli.BAR_LONG);
-        }else {
-        final int midIndex = (barLength + textLength) / 2 - textLength;
-        str.append(Cli.BAR_LONG, 0, midIndex)
-            .append(anyText)
-            .append(Cli.BAR_LONG.substring(midIndex + textLength));
+        } else {
+            final int midIndex = (barLength + textLength) / 2 - textLength;
+            str.append(Cli.BAR_LONG, 0, midIndex)
+                .append(anyText)
+                .append(Cli.BAR_LONG.substring(midIndex + textLength));
         }
         return String.valueOf(str);
     }
@@ -162,7 +172,7 @@ public class Cli {
     public Cli getArgumentParser(final String[] args) {
 
         final ArgumentParser parser = ArgumentParsers.newArgumentParser("Testah").defaultHelp(true)
-                .description("Testah CLI running Automated Tests for Browser and Http").epilog("").version(version);
+            .description("Testah CLI running Automated Tests for Browser and Http").epilog("").version(version);
 
         parser.addArgument("-v", "--version").action(Arguments.version()).setDefault(version);
 
@@ -170,24 +180,24 @@ public class Cli {
 
         final Subparser run = subparsers.addParser("run").help("run help");
         run.addArgument("-b", "--browser").setDefault(opt.getBrowser()).type(enumStringType(BrowserType.class))
-                .help("foo help");
+            .help("foo help");
         run.addArgument("-t", "--test").setDefault("").type(String.class)
-                .help("Deprecated - Same as --lookAtExternalTests");
+            .help("Deprecated - Same as --lookAtExternalTests");
         run.addArgument("-i", "--lookAtInternalTests").setDefault(opt.getLookAtInternalTests()).type(String.class)
-                .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
+            .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
         run.addArgument("-e", "--lookAtExternalTests").setDefault(opt.getLookAtExternalTests()).type(String.class).help(
-                "lookAtExternalTests is a path to a test file, java or groovy, or a comma separated like, regex, for directory path");
+            "lookAtExternalTests is a path to a test file, java or groovy, or a comma separated like, regex, for directory path");
 
         final Subparser query = subparsers.addParser("query").help("query help");
         query.addArgument("--file").required(false).action(Arguments.store()).dest("queryResults")
-                .setDefault(Params.getUserDir());
+            .setDefault(Params.getUserDir());
         query.addArgument("--includeMeta").required(false).action(Arguments.storeTrue()).dest("includeMeta");
         query.addArgument("--requireRelatedIds").required(false).action(Arguments.storeTrue()).dest("requireRelatedIds");
         query.addArgument("--show").required(false).action(Arguments.storeTrue()).dest("showInConsole");
         query.addArgument("-i", "--lookAtInternalTests").setDefault(opt.getLookAtInternalTests()).type(String.class)
-                .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
+            .help("lookAtInternalTests, example org.testah, will look at all tests under this package");
         query.addArgument("-e", "--lookAtExternalTests").setDefault(opt.getLookAtExternalTests()).type(String.class)
-                .help("lookAtExternalTests is a path to a test file, java or groovy, or a comma separated like, regex, for directory path");
+            .help("lookAtExternalTests is a path to a test file, java or groovy, or a comma separated like, regex, for directory path");
 
         final Subparser create = subparsers.addParser("create").help("create help");
         create.addArgument("--prop", "--properties").required(false).action(Arguments.storeTrue()).dest("prop");
@@ -238,7 +248,7 @@ public class Cli {
             } else {
                 TS.log().debug(Cli.BAR_LONG);
                 TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ " +
-                        ParamLoader.getDefaultPropFilePath() + " ]");
+                    ParamLoader.getDefaultPropFilePath() + " ]");
                 TS.log().debug(Cli.BAR_LONG);
             }
 
@@ -264,12 +274,12 @@ public class Cli {
 
         final TestahJUnitRunner junitRunner = new TestahJUnitRunner();
         if (isUnderTest()) {
-            return ;
+            return;
         }
 
         Instant startTest = Instant.now();
         results = junitRunner.runTests(TS.params().getNumConcurrentThreads(),
-                getTestPlanFilter().getTestClassesMetFilters());
+            getTestPlanFilter().getTestClassesMetFilters());
         Instant endTest = Instant.now();
         final long totalDuration = Duration.between(startTest, endTest).toMillis();
 
@@ -307,7 +317,7 @@ public class Cli {
                             totalTestCases += result.getJunitResult().getRunCount();
                             totalTestCasesFailed += result.getJunitResult().getFailureCount();
                             totalTestCasesPassed += result.getJunitResult().getRunCount() -
-                                    (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
+                                (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
                             totalTestCasesIgnored += result.getJunitResult().getIgnoreCount();
                         }
                     }
@@ -337,11 +347,12 @@ public class Cli {
         TS.log().info(Cli.BAR_WALL + "Total Duration: " + TS.util().getDurationPretty(totalDuration));
         TS.log().info(Cli.BAR_LONG);
 
-        File summaryHtml = new SummaryHtmlFormatter(results, totalTestPlans, totalTestCases, totalTestCasesPassed, totalTestCasesFailed, totalTestCasesIgnored, totalDuration).createReport().getReportFile();
+        File summaryHtml = new SummaryHtmlFormatter(results, totalTestPlans, totalTestCases, totalTestCasesPassed,
+            totalTestCasesFailed, totalTestCasesIgnored, totalDuration).createReport().getReportFile();
         if (TS.params().isAutoOpenHtmlReport()) {
             new TestPlanReporter().openReport(summaryHtml.getAbsolutePath());
         }
-        AbstractTestPlan.tearDownTestah();
+        TS.testSystem().tearDownTestah();
 
         if (totalTestCasesFailed > 0) {
             throw new RuntimeException("There are test failures " + totalTestCasesFailed);
@@ -349,7 +360,7 @@ public class Cli {
 
         if (!initializationErrorFailures.isEmpty()) {
             throw new RuntimeException("There are test failures due to test classes not being able to load: " +
-                    initializationErrorFailures);
+                initializationErrorFailures);
         }
 
     }
@@ -374,20 +385,22 @@ public class Cli {
         Object resultObject = testPlanFilter.getTestClassesMetFilters();
         if (res.getBoolean("includeMeta")) {
             final HashMap<String, TestPlanDto> testPlans = new HashMap<>();
+
             for (final Class<?> test : getTestPlanFilter().getTestClassesMetFilters()) {
+                TestPlanAnnotationDto testPlanAnnotationDto = TestPlanAnnotationDto.create(test);
                 testPlans
-                        .put(test.getCanonicalName(),
-                                TestDtoHelper
-                                        .createTestPlanDto(test, test.getAnnotation(TestPlan.class),
-                                                test.getAnnotation(KnownProblem.class))
-                                        .setRunTime(null).setRunInfo(null));
+                    .put(test.getCanonicalName(),
+                        TestDtoHelper
+                            .createTestPlanDto(test, testPlanAnnotationDto,
+                                test.getAnnotation(KnownProblem.class))
+                            .setRunTime(null).setRunInfo(null));
 
                 for (final Method method : test.getDeclaredMethods()) {
                     if (null != method.getAnnotation(TestCase.class)) {
                         testPlans.get(test.getCanonicalName())
-                                .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
-                                        method.getAnnotation(TestCase.class), method.getAnnotation(KnownProblem.class),
-                                        test.getAnnotation(TestPlan.class)).setRunTime(null));
+                            .addTestCase(TestDtoHelper.createTestCaseDto(test.getCanonicalName(), method.getName(),
+                                TestCaseAnnotationDto.create(method), method.getAnnotation(KnownProblem.class),
+                                testPlanAnnotationDto).setRunTime(null));
                     }
                 }
             }
@@ -407,8 +420,8 @@ public class Cli {
                 });
                 if (!missingRelatedIds.isEmpty()) {
                     throw new RuntimeException("Metadata audit failure: At least 1 testcase is missing required " +
-                            "related field value! The value can be applied at the testplan level for all " +
-                            "testcases to get - " + TS.util().toJson(missingRelatedIds));
+                        "related field value! The value can be applied at the testplan level for all " +
+                        "testcases to get - " + TS.util().toJson(missingRelatedIds));
                 }
             }
 
@@ -418,7 +431,7 @@ public class Cli {
 
         FileUtils.writeStringToFile(results, TS.util().toJson(resultObject), Charset.forName("UTF-8"));
         TS.log().info("Query Results: Found[" + getTestPlanFilter().getTestClassesMetFilters().size() + "] " +
-                results.getAbsolutePath());
+            results.getAbsolutePath());
 
         if (res.getBoolean("showInConsole")) {
             TS.log().info(TS.util().toJson(resultObject));
@@ -524,8 +537,7 @@ public class Cli {
         return this;
     }
 
-    public List<ResultDto> getResults()
-    {
+    public List<ResultDto> getResults() {
         return results;
     }
 }

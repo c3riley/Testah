@@ -11,7 +11,6 @@ import org.testah.framework.cli.Cli;
 import org.testah.framework.cli.Params;
 import org.testah.framework.report.jira.JiraRemoteLinkBuilder;
 import org.testah.framework.report.jira.JiraReporter;
-import org.testah.framework.testPlan.AbstractTestPlan;
 import org.testah.runner.testPlan.TestPlanActor;
 
 import java.io.File;
@@ -45,7 +44,7 @@ public class TestPlanReporter {
     public TestPlanDto reportResults(final TestPlanDto testPlan, final boolean autoOpenReport, final String outputDir,
                                      final boolean uniqueFileNames) {
         String filename = "results";
-        final HashMap<String, String> ignored = AbstractTestPlan.getIgnoredTests();
+        final HashMap<String, String> ignored = TS.testSystem().getIgnoredTests();
         if (null == testPlan) {
             TS.log().info(Cli.BAR_LONG);
             TS.log().info(
@@ -58,7 +57,7 @@ public class TestPlanReporter {
             return testPlan;
         }
         try {
-            testPlan.getRunInfo().setIgnore(AbstractTestPlan.getIgnoredTests().size());
+            testPlan.getRunInfo().setIgnore(TS.testSystem().getIgnoredTests().size());
             testPlan.getRunInfo()
                     .setTotal(testPlan.getRunInfo().getFail() + testPlan.getRunInfo().getPass() + testPlan.getRunInfo().getIgnore());
             testPlan.getRunInfo().getRunTimeProperties().put("builtOn", TS.params().getComputerName());
@@ -123,7 +122,7 @@ public class TestPlanReporter {
                 map.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
                 TS.log().info(Cli.BAR_WALL + "Posting Data: ");
                 final ResponseDto response = TS.http().doRequest(
-                        new PostRequestDto(TS.params().getSendJsonTestDataToService(), AbstractTestPlan.getTestPlan())
+                        new PostRequestDto(TS.params().getSendJsonTestDataToService(), TS.testSystem().getTestPlan())
                                 .withJsonUTF8(),
                         false).print(true);
                 TS.log().trace("Request Payload:\n" + response.getRequestUsed().getPayloadString());

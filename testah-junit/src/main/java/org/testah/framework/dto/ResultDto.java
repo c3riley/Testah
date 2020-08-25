@@ -1,8 +1,8 @@
 package org.testah.framework.dto;
 
 import org.junit.runner.Result;
+import org.testah.TS;
 import org.testah.client.dto.TestPlanDto;
-import org.testah.framework.testPlan.AbstractTestPlan;
 
 /**
  * The Class ResultDto.
@@ -49,11 +49,11 @@ public class ResultDto {
      */
     public ResultDto(final Result junitResult) {
         this.junitResult = junitResult;
-        if (null != AbstractTestPlan.getTestPlan()) {
-            this.testPlan = AbstractTestPlan.getTestPlan().clone();
-            AbstractTestPlan.cleanUpTestplanThreadLocal();
+        if (null != TS.testSystem().getTestPlan()) {
+            this.testPlan = TS.testSystem().getTestPlan().clone();
+            TS.testSystem().cleanUpTestplanThreadLocal();
         } else {
-            this.testPlan = AbstractTestPlan.getTestPlan();
+            this.testPlan = TS.testSystem().getTestPlan();
         }
     }
 

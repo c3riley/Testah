@@ -12,7 +12,11 @@ import microsoft.exchange.webservices.data.core.service.folder.Folder;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
-import microsoft.exchange.webservices.data.property.complex.*;
+import microsoft.exchange.webservices.data.property.complex.EmailAddress;
+import microsoft.exchange.webservices.data.property.complex.EmailAddressCollection;
+import microsoft.exchange.webservices.data.property.complex.FileAttachment;
+import microsoft.exchange.webservices.data.property.complex.InternetMessageHeader;
+import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.ItemView;
 import org.apache.commons.lang3.NotImplementedException;
@@ -29,7 +33,7 @@ import java.util.List;
  * The type Exchange email util.
  */
 public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
-        EmailMessage, WebCredentials, WellKnownFolderName, InternetMessageHeader> {
+    EmailMessage, WebCredentials, WellKnownFolderName, InternetMessageHeader> {
 
     /**
      * The constant MAX_NUMBER_OF_MESSAGES.
@@ -181,16 +185,14 @@ public class ExchangeEmailUtil extends AbstractEmailUtil<ExchangeEmailUtil,
                 message.getAttachments().forEach(attachment -> {
                     if (attachment instanceof FileAttachment) {
                         final FileAttachment fileAttachment = (FileAttachment) attachment;
-                        if (fileAttachment != null) {
-                            final File file = new File(attachment.getName());
-                            System.out.println(file.getAbsolutePath());
-                            try {
-                                deleteOnExit(file, shouldDeleteOnExit);
-                                fileAttachment.load(file.getAbsolutePath());
-                                attachmentFiles.add(file);
-                            } catch (Exception e) {
-                                TS.log().debug("Issue with attachment[" + fileAttachment.getName() + "]");
-                            }
+                        final File file = new File(attachment.getName());
+                        System.out.println(file.getAbsolutePath());
+                        try {
+                            deleteOnExit(file, shouldDeleteOnExit);
+                            fileAttachment.load(file.getAbsolutePath());
+                            attachmentFiles.add(file);
+                        } catch (Exception e) {
+                            TS.log().debug("Issue with attachment[" + fileAttachment.getName() + "]");
                         }
                     }
                 });

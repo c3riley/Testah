@@ -7,7 +7,11 @@ import org.apache.velocity.app.VelocityEngine;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 
 /**
@@ -71,6 +75,7 @@ public abstract class AbstractFormatter {
         return createReport(reportName, Params.getUserDir());
     }
 
+
     /**
      * Creates the report.
      *
@@ -79,9 +84,21 @@ public abstract class AbstractFormatter {
      * @return the abstract formatter
      */
     public AbstractFormatter createReport(final String reportName, final String directory) {
+        return createReport(reportName, directory, getReport());
+    }
+
+    /**
+     * Creates the report.
+     *
+     * @param reportName the report name
+     * @param directory  directory to write the report to
+     * @param report  report string to write to file
+     * @return the abstract formatter
+     */
+    public AbstractFormatter createReport(final String reportName, final String directory, final String report) {
         try {
             reportFile = new File(directory, reportName);
-            FileUtils.writeStringToFile(reportFile, getReport(), Charset.forName("UTF-8"));
+            FileUtils.writeStringToFile(reportFile, report, Charset.forName("UTF-8"));
         } catch (final IOException e) {
             TS.log().error("issue creating report: " + reportName, e);
         }
@@ -174,8 +191,7 @@ public abstract class AbstractFormatter {
         this.reportFile = reportFile;
     }
 
-    public AbstractFormatter setPathToTemplate(final String pathToTemplate)
-    {
+    public AbstractFormatter setPathToTemplate(final String pathToTemplate) {
         this.pathToTemplate = pathToTemplate;
         return this;
     }

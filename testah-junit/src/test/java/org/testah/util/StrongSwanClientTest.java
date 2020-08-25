@@ -27,7 +27,8 @@ public class StrongSwanClientTest {
     public void sendMessageWithNull() throws Exception {
         thrown.expect(Exception.class);
         thrown.expectMessage("Messages param is null");
-        new StrongSwanClient("testPath").sendMessage(null);
+        String[] ary = null;
+        new StrongSwanClient("testPath").sendMessage(ary);
     }
 
     @Test

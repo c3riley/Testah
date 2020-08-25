@@ -30,6 +30,10 @@ public class WebElementWrapperV1Test {
         TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
     }
 
+    @AfterClass
+    public static void tearDownClass() {
+        TS.browser().close();
+    }
 
     /**
      * Before method setup .

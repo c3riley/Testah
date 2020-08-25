@@ -1,12 +1,19 @@
+:toc: macro
+:toc-title:
+:toclevels: 3
+
 # Testah Junit
+:toc:
 
 Automation Testing Framework written in java for testing ui applications and services.
+
 
 ## Using Project
 
 ### build.groovy example
 
-```groovy
+[source,groovy]
+----
 group 'org.example'
 version '1.0-SNAPSHOT'
 
@@ -25,9 +32,9 @@ repositories {
 
 dependencies {
     compile localGroovy()
-    compile 'org.testah:testah-junit:2.3.0'
+    compile 'org.testah:testah-junit:2.4.0'
 }
-```
+----
 
 ## Project Elements
 
@@ -35,10 +42,29 @@ dependencies {
 
 #### Examples
 
-##### Service Test
+##### Service Test JUnit 5
 For services testing, browser only launched if called upon to do so, will not launch by default
 
-```java
+[source,groovy]
+----
+
+@TestPlanJUnit5
+public class DemoTest {
+
+    @TestCaseJUnit5
+    public void test() {
+
+    }
+
+}
+
+----
+
+##### Service Test JUnit 4 (Legacy)
+For services testing, browser only launched if called upon to do so, will not launch by default
+
+[source,groovy]
+----
 
 @TestPlan
 public class DemoTest extends HttpTestPlan {
@@ -51,12 +77,31 @@ public class DemoTest extends HttpTestPlan {
 
 }
 
-```
+----
 
-##### Browser Test
+##### Browser Test JUnit 5
 Will automatically launch a browser by default
 
-```java
+[source,groovy]
+----
+
+@TestPlanJUnit5
+public class DemoTest {
+
+    @TestCaseJUnit5
+    public void test() {
+
+    }
+
+}
+
+----
+
+##### Browser Test JUnit 4 (Legacy)
+Will automatically launch a browser by default
+
+[source,groovy]
+----
 
 @TestPlan
 public class DemoTest extends BrowserTestPlan {
@@ -69,14 +114,14 @@ public class DemoTest extends BrowserTestPlan {
 
 }
 
-```
+----
 
 #### Test Metadata
 
-##### @TestPlan
+##### @TestPlanJUnit5 / @TestPlan (JUnit 4 Legacy)
 Annotation used per class, the top level testing object.  Adds metadata for what the test will do, what jira items its aligned to, and ways to allow the test to be filtered and reported.
 
-##### @TestCase
+##### @TestCaseJUnit5 / @TestCase (JUnit 4 Legacy )
 
 Annotation used per @Test Method.  Adds metadata for what the test will do, what jira items its aligned to, and ways to allow the test to be filtered and reported.  A TestCase will inherit from the TestPlan unless overridden.
 
@@ -103,3 +148,4 @@ This object encapsulated http client and can use asynchronous http client as wel
 #### TS.asserts
 
 This object is wrapped JUNit asserts as well as expanded asserts to include hammerCrest, Json Asserts and others.  It is designed to record not only failures but to write into the results passed asserts to allow for greater readability of the results.  Often if a failure occurs its good to know what passed right before it.
+

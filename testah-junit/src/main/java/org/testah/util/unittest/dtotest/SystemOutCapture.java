@@ -1,12 +1,12 @@
 package org.testah.util.unittest.dtotest;
 
-import org.junit.After;
-import org.junit.Before;
 import org.testah.TS;
 import org.testah.util.Log;
-import org.testah.util.SshLogger;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * The type System out capture.

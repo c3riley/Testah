@@ -1,13 +1,12 @@
 package org.testah.runner.http.load;
 
-import com.google.common.primitives.Doubles;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.testah.driver.http.response.ResponseDto;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class HttpAkkaStats {
 
@@ -137,7 +136,12 @@ public class HttpAkkaStats {
      * @return the list of all durations
      */
     public List<Long> getDurations() {
-        return Doubles.asList(statsDuration.getValues()).stream().map(val -> new Double(val).longValue()).collect(Collectors.toList());
+        List<Long> longs = new ArrayList<>();
+        for (double duration : statsDuration.getValues()) {
+            // the other way caused double boxing error.
+            longs.add(Long.valueOf(String.valueOf(duration)));
+        }
+        return longs;
     }
 
     /**

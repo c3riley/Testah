@@ -2,7 +2,6 @@ package org.testah.framework.dto;
 
 import org.testah.TS;
 import org.testah.client.dto.TestStepDto;
-import org.testah.framework.testPlan.AbstractTestPlan;
 
 /**
  * The Class Step.
@@ -53,7 +52,7 @@ public class Step extends TestStepDto {
      */
     public static TestStepDto add(final TestStepDto step) {
         if (null != TS.params() && TS.params().isRecordSteps()) {
-            AbstractTestPlan.startTestStep(step);
+            TS.testSystem().startTestStep(step);
         }
         return step;
     }
@@ -66,7 +65,7 @@ public class Step extends TestStepDto {
      */
     public static TestStepDto add(final Step step) {
         if (null != TS.params() && TS.params().isRecordSteps()) {
-            AbstractTestPlan.startTestStep(step);
+            TS.testSystem().startTestStep(step);
         }
         return step;
     }
@@ -78,7 +77,7 @@ public class Step extends TestStepDto {
      */
     public Step add() {
         if (null != TS.params() && TS.params().isRecordSteps()) {
-            AbstractTestPlan.startTestStep(this);
+            TS.testSystem().startTestStep(this);
         }
         return this;
     }
