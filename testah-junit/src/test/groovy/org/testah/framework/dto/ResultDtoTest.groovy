@@ -36,6 +36,7 @@ class ResultDtoTest extends Specification {
         result.getTestsFailedCount() >> 3
         result.getTestsSkippedCount() >> 2
         result.getTestsAbortedCount() >> 1
+        result.getTestsSucceededCount() >> 4
         result.printFailuresTo(*_) >> { PrintWriter pw -> pw.print("Here is Failure info") }
 
         when:
