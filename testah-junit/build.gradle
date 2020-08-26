@@ -153,17 +153,31 @@ dependencies {
 task testJUnitJupiter(type: Test) {
     description = 'Runs JUnit Jupiter tests'
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
 }
 
 task testJUnit4(type: Test) {
     description = 'Runs JUnit 4 tests'
     useJUnit()
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
 }
 
 test {
     dependsOn testJUnitJupiter
     dependsOn testJUnit4
-    testLogging.showStandardStreams = true
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
