@@ -127,10 +127,15 @@ public class TestProjectDtos {
         test.testGettersAndSetters(new ShellInfoDto());
         test.testGettersAndSetters(new AssertHistoryItem());
 
-        test.testGettersAndSetters(new ResultDto());
         test.testGettersAndSetters(new Result());
         test.testGettersAndSetters(new Step());
 
+    }
+
+    @Test
+    public void testResultDto() throws Exception {
+        test.addToAnnotationsToIgnore(JsonIgnore.class);
+        test.testGettersAndSetters(new ResultDto());
     }
 
     @Test
@@ -141,7 +146,7 @@ public class TestProjectDtos {
         Date start = new Date(1541732632483L);
         Date end = new Date(1541732643277L);
         assertThat(sql.start(start).end(end).getDurationPretty(),
-            equalTo("10 seconds and 794 milliseconds"));
+                equalTo("10 seconds and 794 milliseconds"));
     }
 
 }

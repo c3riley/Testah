@@ -1,5 +1,6 @@
 package org.testah.framework.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.runner.Result;
 import org.testah.TS;
@@ -25,6 +26,7 @@ public class ResultDto {
     private long junitCount = 0;
     private long junitFailure = 0;
     private long junitIgnore = 0;
+    private long junitPass = 0;
 
     private String junitFailureMessage = "";
 
@@ -67,6 +69,7 @@ public class ResultDto {
         this.junitFailure = junitResult.getFailureCount();
         this.junitIgnore = junitResult.getIgnoreCount();
         this.junitFailureMessage = junitResult.getFailures().toString();
+        this.junitPass = this.junitCount - (this.junitFailure + this.junitIgnore);
     }
 
     /**
@@ -81,6 +84,7 @@ public class ResultDto {
         this.junitFailure = testExecutionSummary.getTestsFailedCount();
         this.junitIgnore = testExecutionSummary.getTestsAbortedCount() + testExecutionSummary.getTestsSkippedCount();
         this.junitFailureMessage = getFailuresFromTestExecutionSummary(testExecutionSummary);
+        this.junitPass = testExecutionSummary.getTestsSucceededCount();
     }
 
     protected static String getFailuresFromTestExecutionSummary(final TestExecutionSummary testExecutionSummary) {
@@ -146,6 +150,7 @@ public class ResultDto {
         return this;
     }
 
+    @JsonIgnore
     public TestExecutionSummary getTestExecutionSummary() {
         return testExecutionSummary;
     }
@@ -163,7 +168,7 @@ public class ResultDto {
     }
 
     public long getJunitPass() {
-        return junitCount - (junitFailure + junitIgnore);
+        return junitPass;
     }
 
     public String getJunitFailureMessage() {
