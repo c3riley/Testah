@@ -69,6 +69,11 @@ public class ResultDto {
         this.junitFailureMessage = junitResult.getFailures().toString();
     }
 
+    /**
+     * Results Dto for JUnit 5 with a TestExecutionSummary.
+     *
+     * @param testExecutionSummary JUnit 5 test execution summary.
+     */
     public ResultDto(final TestExecutionSummary testExecutionSummary) {
         this.testExecutionSummary = testExecutionSummary;
         this.testPlan = getTestPlanDto();

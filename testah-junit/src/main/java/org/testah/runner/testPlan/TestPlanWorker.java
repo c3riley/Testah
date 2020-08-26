@@ -28,6 +28,12 @@ public class TestPlanWorker extends UntypedAbstractActor {
                 testClass.toString().replace("class ", "")), getSelf());
     }
 
+    /**
+     * Run a JUnit Class supports JUnit 4 or 5.
+     *
+     * @param junitClass test class.
+     * @return resultDto for use with the cli.
+     */
     public static ResultDto launch(Class junitClass) {
         if (junitClass.getAnnotation(TestPlanJUnit5.class) != null) {
             return new ResultDto(launchJUnit5(junitClass));
@@ -36,11 +42,23 @@ public class TestPlanWorker extends UntypedAbstractActor {
         }
     }
 
+    /**
+     * Run JUnit 4 Test Class.
+     *
+     * @param junitClass junit 4 test class
+     * @return return junit 4 result object
+     */
     public static Result launchJUnit4(Class junitClass) {
         final Request request = Request.classes(junitClass);
         return new JUnitCore().run(request);
     }
 
+    /**
+     * Run JUnit 5 Test Class.
+     *
+     * @param junitClass junit 5 test class
+     * @return return junit 5 test execution summary
+     */
     public static TestExecutionSummary launchJUnit5(Class junitClass) {
         final LauncherDiscoveryRequest request =
                 LauncherDiscoveryRequestBuilder.request()
