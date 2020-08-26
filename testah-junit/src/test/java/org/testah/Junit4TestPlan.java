@@ -5,7 +5,7 @@ import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.testPlan.HttpTestPlan;
 
-@TestPlan
+@TestPlan(tags = "JUNIT_4")
 public class Junit4TestPlan extends HttpTestPlan {
 
     @Test
