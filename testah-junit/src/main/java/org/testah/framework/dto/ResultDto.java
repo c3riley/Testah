@@ -95,12 +95,10 @@ public class ResultDto {
     }
 
     protected static TestPlanDto getTestPlanDto() {
-        TestPlanDto testPlanDto = null;
-        if (null != TS.testSystem().getTestPlan()) {
-            testPlanDto = TS.testSystem().getTestPlan().clone();
+        TestPlanDto testPlanDto = TS.testSystem().getTestPlan();
+        if (null != testPlanDto) {
+            testPlanDto = testPlanDto.clone();
             TS.testSystem().cleanUpTestplanThreadLocal();
-        } else {
-            testPlanDto = TS.testSystem().getTestPlan();
         }
         return testPlanDto;
     }
