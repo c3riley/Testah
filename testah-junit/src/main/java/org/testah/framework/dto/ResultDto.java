@@ -95,12 +95,17 @@ public class ResultDto {
     }
 
     protected static TestPlanDto getTestPlanDto() {
-        TestPlanDto testPlanDto = TS.testSystem().getTestPlan();
-        if (null != testPlanDto) {
-            testPlanDto = testPlanDto.clone();
-            TS.testSystem().cleanUpTestplanThreadLocal();
+        try {
+            TestPlanDto testPlanDto = TS.testSystem().getTestPlan();
+            if (null != testPlanDto) {
+                testPlanDto = testPlanDto.clone();
+                TS.testSystem().cleanUpTestplanThreadLocal();
+            }
+            return testPlanDto;
+        } catch (Throwable throwable) {
+            TS.log().warn("Issue getting testPlanDto - " + throwable.getMessage());
+            return null;
         }
-        return testPlanDto;
     }
 
     /**
