@@ -21,14 +21,7 @@ import static org.junit.Assert.*;
 
 public class WebElementWrapperV1Test {
 
-    private static String formPage = "http://htmlpreview.github.io/?https://raw.githubusercontent.com/" +
-        "SeleniumHQ/selenium/master/common/src/web/formPage.html";
-
-    @BeforeClass
-    public static void setupForClass() {
-        formPage = "file://" + Params.getUserDir() + "/src/test/resources/formPage.html";
-        TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
-    }
+    private static String formPage = "file://" + Params.getUserDir() + "/src/test/resources/formPage.html";;
 
     @AfterClass
     public static void tearDownClass() {
