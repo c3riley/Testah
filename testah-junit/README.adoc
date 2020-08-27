@@ -148,5 +148,3 @@ This object encapsulated http client and can use asynchronous http client as wel
 #### TS.asserts
 
 This object is wrapped JUNit asserts as well as expanded asserts to include hammerCrest, Json Asserts and others.  It is designed to record not only failures but to write into the results passed asserts to allow for greater readability of the results.  Often if a failure occurs its good to know what passed right before it.
-
-
