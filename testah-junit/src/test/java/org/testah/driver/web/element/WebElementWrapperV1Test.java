@@ -3,25 +3,20 @@ package org.testah.driver.web.element;
 import org.junit.*;
 import org.openqa.selenium.By;
 import org.testah.TS;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.openqa.selenium.By;
-import org.testah.TS;
 import org.testah.framework.cli.Params;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-
-
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class WebElementWrapperV1Test {
 
-    private static String formPage = "file://" + Params.getUserDir() + "/src/test/resources/formPage.html";;
+    private static String formPage = "file://" + Params.getUserDir() + "/src/test/resources/formPage.html";
+
+    @BeforeClass
+    public static void setupForClass() {
+        TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
+    }
+
 
     @AfterClass
     public static void tearDownClass() {
@@ -54,7 +49,7 @@ public class WebElementWrapperV1Test {
         AbstractWebElementWrapper ele = testForTextTypeElements("withText");
         TS.asserts().equalsTo("5", ele.assertAttributeExists("rows").getAttribute("rows"));
         TS.asserts().equalsTo("<textarea id=\"withText\" rows=\"5\" cols=\"5\">Example text</textarea>",
-            ele.getOuterHtml());
+                ele.getOuterHtml());
     }
 
     /**
@@ -132,7 +127,7 @@ public class WebElementWrapperV1Test {
     public void assertAttributeExists() {
 
         assertThat(TS.browser().getWebElement(By.cssSelector("input[value='Click!']"))
-            .assertAttributeExists("value").getAttribute("value"), equalTo("Click!"));
+                .assertAttributeExists("value").getAttribute("value"), equalTo("Click!"));
 
         try {
             TS.browser().getWebElement(By.cssSelector("input[value='Click!']")).assertAttributeExists("value2");
@@ -143,7 +138,7 @@ public class WebElementWrapperV1Test {
 
         try {
             assertThat(TS.browser().getWebElement(By.cssSelector("input[value='Click!']"))
-                .assertAttributeExists("value").getAttribute("value"), equalTo("NOT_FOUND"));
+                    .assertAttributeExists("value").getAttribute("value"), equalTo("NOT_FOUND"));
             Assert.fail("Expected error to be thrown");
         } catch (AssertionError expectedError) {
 
@@ -369,13 +364,13 @@ public class WebElementWrapperV1Test {
 
         }
         try {
-            loginElement.getElementWithIn(By.id("not_found"),true,true);
+            loginElement.getElementWithIn(By.id("not_found"), true, true);
             Assert.fail("Expected to throw error");
         } catch (AssertionError expectedError) {
 
         }
         try {
-            assertThat(loginElement.getElementWithIn(By.id("not_found"),true,false),is(nullValue()));
+            assertThat(loginElement.getElementWithIn(By.id("not_found"), true, false), is(nullValue()));
         } catch (AssertionError unExpectedError) {
             Assert.fail("Expected to throw error");
         }
@@ -409,7 +404,7 @@ public class WebElementWrapperV1Test {
     public void waitTillNotDisplayed() {
         formPage();
         TS.browser().getWebElement(By.cssSelector("input[value='Click!']"))
-            .waitTillIsDisplayed().click().waitTillGone().assertNotFound();
+                .waitTillIsDisplayed().click().waitTillGone().assertNotFound();
     }
 
     @Test
