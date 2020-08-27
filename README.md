@@ -12,6 +12,7 @@ repositories {
     }
 } 
  
+ 
 dependencies {
     compile 'org.testah:testah-junit:x.x.x'
 }
@@ -25,4 +26,3 @@ To build Testah projects, execute the following command within the testah-junit 
 cd testah-junit
 ./gradlew clean build
 ```
-
