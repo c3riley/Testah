@@ -97,6 +97,7 @@ dependencies {
     compile 'commons-cli:commons-cli:1.3.1'
     compile "org.junit.jupiter:junit-jupiter-api:${junitPlatformVersion}"
     compile "org.junit.jupiter:junit-jupiter-engine:${junitPlatformVersion}"
+    compile "org.junit.platform:junit-platform-launcher:1.6.2"
 
     compile 'com.typesafe.akka:akka-actor_2.11:2.5.25'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
@@ -152,17 +153,31 @@ dependencies {
 task testJUnitJupiter(type: Test) {
     description = 'Runs JUnit Jupiter tests'
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
 }
 
 task testJUnit4(type: Test) {
     description = 'Runs JUnit 4 tests'
     useJUnit()
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
 }
 
 test {
     dependsOn testJUnitJupiter
     dependsOn testJUnit4
-    testLogging.showStandardStreams = true
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

@@ -1,8 +1,13 @@
 package org.testah.framework.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.runner.Result;
 import org.testah.TS;
 import org.testah.client.dto.TestPlanDto;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * The Class ResultDto.
@@ -10,9 +15,20 @@ import org.testah.client.dto.TestPlanDto;
 public class ResultDto {
 
     /**
-     * The junit result.
+     * The junit 4 result.
      */
     private Result junitResult = null;
+    /**
+     * the junit 5 result.
+     */
+    private TestExecutionSummary testExecutionSummary = null;
+
+    private long junitCount = 0;
+    private long junitFailure = 0;
+    private long junitIgnore = 0;
+    private long junitPass = 0;
+
+    private String junitFailureMessage = "";
 
     /**
      * The test plan.
@@ -48,12 +64,47 @@ public class ResultDto {
      * @param junitResult the junit result
      */
     public ResultDto(final Result junitResult) {
-        this.junitResult = junitResult;
-        if (null != TS.testSystem().getTestPlan()) {
-            this.testPlan = TS.testSystem().getTestPlan().clone();
-            TS.testSystem().cleanUpTestplanThreadLocal();
-        } else {
-            this.testPlan = TS.testSystem().getTestPlan();
+        this(junitResult, getTestPlanDto());
+        this.junitCount = junitResult.getRunCount();
+        this.junitFailure = junitResult.getFailureCount();
+        this.junitIgnore = junitResult.getIgnoreCount();
+        this.junitFailureMessage = junitResult.getFailures().toString();
+        this.junitPass = this.junitCount - (this.junitFailure + this.junitIgnore);
+    }
+
+    /**
+     * Results Dto for JUnit 5 with a TestExecutionSummary.
+     *
+     * @param testExecutionSummary JUnit 5 test execution summary.
+     */
+    public ResultDto(final TestExecutionSummary testExecutionSummary) {
+        this.testExecutionSummary = testExecutionSummary;
+        this.testPlan = getTestPlanDto();
+        this.junitCount = testExecutionSummary.getTestsStartedCount();
+        this.junitFailure = testExecutionSummary.getTestsFailedCount();
+        this.junitIgnore = testExecutionSummary.getTestsAbortedCount() + testExecutionSummary.getTestsSkippedCount();
+        this.junitFailureMessage = getFailuresFromTestExecutionSummary(testExecutionSummary);
+        this.junitPass = testExecutionSummary.getTestsSucceededCount();
+    }
+
+    protected static String getFailuresFromTestExecutionSummary(final TestExecutionSummary testExecutionSummary) {
+        StringWriter out = new StringWriter();
+        PrintWriter writer = new PrintWriter(out);
+        testExecutionSummary.printFailuresTo(writer);
+        return out.toString();
+    }
+
+    protected static TestPlanDto getTestPlanDto() {
+        try {
+            TestPlanDto testPlanDto = TS.testSystem().getTestPlan();
+            if (null != testPlanDto) {
+                testPlanDto = testPlanDto.clone();
+                TS.testSystem().cleanUpTestplanThreadLocal();
+            }
+            return testPlanDto;
+        } catch (Throwable throwable) {
+            TS.log().warn("Issue getting testPlanDto - " + throwable.getMessage());
+            return null;
         }
     }
 
@@ -102,4 +153,28 @@ public class ResultDto {
         return this;
     }
 
+    @JsonIgnore
+    public TestExecutionSummary getTestExecutionSummary() {
+        return testExecutionSummary;
+    }
+
+    public long getJunitCount() {
+        return junitCount;
+    }
+
+    public long getJunitFailure() {
+        return junitFailure;
+    }
+
+    public long getJunitIgnore() {
+        return junitIgnore;
+    }
+
+    public long getJunitPass() {
+        return junitPass;
+    }
+
+    public String getJunitFailureMessage() {
+        return junitFailureMessage;
+    }
 }
