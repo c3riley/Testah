@@ -68,19 +68,19 @@ public class TestFilterPlatformTest {
         Set<Class<?>> classes = ImmutableSet.copyOf(Arrays.asList(classesToAdd));
 
         TS.params().setFilterByPlatform(null);
-        Assert.assertEquals(expectedTest1, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
+        Assert.assertEquals("Test 1", expectedTest1, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
                 .size());
 
         TS.params().setFilterByPlatform("");
-        Assert.assertEquals(expectedTest2, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
+        Assert.assertEquals("Test 2",expectedTest2, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
                 .size());
 
         TS.params().setFilterByPlatform("~TEST_Platform");
-        Assert.assertEquals(expectedTest3, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
+        Assert.assertEquals("Test 3",expectedTest3, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
                 .size());
 
         TS.params().setFilterByPlatform("TEST_Platform");
-        Assert.assertEquals(expectedTest4, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
+        Assert.assertEquals("Test 4",expectedTest4, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
                 .size());
     }
 
