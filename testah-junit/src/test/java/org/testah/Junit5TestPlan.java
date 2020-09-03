@@ -9,7 +9,7 @@ import org.testah.framework.annotations.TestPlanJUnit5;
 
 @TestPlanJUnit5(name = "test plan for junit5 example", components = {"c2"}, platforms = {"p2"},
     devices = {"d2"}, testType = TestType.AUTOMATED, runTypes = "r2", description = "desc",
-    relatedIds = "i2", relatedLinks = "http://www.testah.com")
+    relatedIds = "i2", relatedLinks = "http://www.testah.com", tags = "JUNIT_5")
 public class Junit5TestPlan {
 
     static boolean didDoOnPassOccur = false;
