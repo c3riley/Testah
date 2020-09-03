@@ -53,9 +53,7 @@ public class TestFilterPlatformTest {
     public void testFilterTestPlanPlatform() {
 
         testFilterMyPlatform(1, 1, 0, 1, TestPlanWithPlatform.class);
-
         testFilterMyPlatform(1, 1, 0, 1, TestPlanWithManyPlatforms.class);
-
         testFilterMyPlatform(5, 5, 3, 2, TestPlanWithPlatform.class, TestPlanWithManyPlatforms.class,
                 TestPlanWithPlatformDefault.class, TestPlanWithPlatformEmpty.class,
                 TestPlanWithPlatformEmptyString.class);
