@@ -8,7 +8,7 @@ import org.testah.framework.testPlan.HttpTestPlan;
 
 @TestPlan(name = "test plan for junit4 example", components = {"c2"}, platforms = {"p2"},
         devices = {"d2"}, testType = TestType.AUTOMATED, runTypes = "r2", description = "desc",
-        relatedIds = "i2", relatedLinks = "http://www.testah.com")
+        relatedIds = "i2", relatedLinks = "http://www.testah.com", tags = "JUNIT_4")
 public class Junit4TestPlan extends HttpTestPlan {
 
     @Test
@@ -23,6 +23,4 @@ public class Junit4TestPlan extends HttpTestPlan {
     public void test2() {
         TS.asserts().isTrue(true);
     }
-
-
 }

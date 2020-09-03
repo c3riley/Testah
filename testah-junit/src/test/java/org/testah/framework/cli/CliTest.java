@@ -17,6 +17,7 @@ public class CliTest {
     @Before
     public void setup() {
         System.getProperties().remove(PARAM_LOOK_AT_INTERNAL_TESTS);
+        System.getProperties().remove("filter_DEFAULT_filterByTag");
     }
 
     @Test
@@ -99,6 +100,22 @@ public class CliTest {
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
         Assert.assertTrue(new File("testah.properties").exists());
+    }
+
+    @Test
+    public void testCliunJUnit4() {
+        final String[] args = {"run"};
+        System.setProperty("filter_DEFAULT_filterByTag", "JUNIT_4");
+        final Cli cli = new Cli();
+        cli.getArgumentParser(args);
+    }
+
+    @Test
+    public void testCliunJUnit5() {
+        final String[] args = {"run"};
+        System.setProperty("filter_DEFAULT_filterByTag", "JUNIT_5");
+        final Cli cli = new Cli();
+        cli.getArgumentParser(args);
     }
 
     @Test
