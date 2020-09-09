@@ -185,29 +185,6 @@ public class TestPlanAnnotationDto {
     }
 
     /**
-     * Merge testcase meta data into the testplan for filtering. JUnit4.
-     *
-     * @return returns the merged testplan meta.
-     */
-    public TestPlanAnnotationDto mergeWithTestCases() {
-        if (testClass != null && testClass.getMethods().length > 0) {
-            for (Method test : testClass.getMethods()) {
-                TestCase testCase = test.getAnnotation(TestCase.class);
-                if (testCase != null) {
-                    this.components = appendAndDedupArray(this.components(), testCase.components());
-                    this.devices = appendAndDedupArray(this.devices(), testCase.devices());
-                    this.relatedIds = appendAndDedupArray(this.relatedIds(), testCase.relatedIds());
-                    this.relatedLinks = appendAndDedupArray(this.relatedLinks(), testCase.relatedLinks());
-                    this.runTypes = appendAndDedupArray(this.runTypes(), testCase.runTypes());
-                    this.platforms = appendAndDedupArray(this.platforms(), testCase.platforms());
-                    this.tags = appendAndDedupArray(this.tags(), testCase.tags());
-                }
-            }
-        }
-        return this;
-    }
-
-    /**
      * Get List of TestCaseAnnotationDto in the TestPlan.
      *
      * @return return list of testcases found.
