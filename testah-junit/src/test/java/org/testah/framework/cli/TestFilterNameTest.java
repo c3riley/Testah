@@ -31,19 +31,19 @@ public class TestFilterNameTest {
 
         TS.params().setFilterByTestPlanNameStartsWith("TestPlanWith, TestFilterTestTypeTest, TestResultIgnoredIfNoAssertsFound");
         MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
-                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(30)));
+                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(24)));
 
         TS.params().setFilterByTestPlanNameStartsWith("org.");
         MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
-                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(48)));
+                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(47)));
 
         TS.params().setFilterByTestPlanNameStartsWith("org.testah.framework.cli");
         MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
-                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(30)));
+                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(26)));
 
         TS.params().setFilterByTestPlanNameStartsWith("TestPlanWith");
         MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
-                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(28)));
+                .size(), Matchers.is(Matchers.greaterThanOrEqualTo(22)));
 
         TS.params().setFilterByTestPlanNameStartsWith("Test");
         MatcherAssert.assertThat(filter.resetTestClassesMetFilters().filterTestPlansToRun()
@@ -63,7 +63,7 @@ public class TestFilterNameTest {
 
         testFilterName(1, 1, 0, 1, TestPlanWithManyTags.class);
 
-        testFilterName(4, 4, 5, 5, TestPlanWithTag.class, TestPlanWithManyTags.class,
+        testFilterName(3, 3, 4, 4, TestPlanWithTag.class, TestPlanWithManyTags.class,
                 TestPlanWithTagDefault.class, TestPlanWithTagEmpty.class,
                 TestPlanWithTagEmptyString.class, CliTest.class);
 

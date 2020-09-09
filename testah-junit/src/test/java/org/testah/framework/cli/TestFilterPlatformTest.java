@@ -53,8 +53,8 @@ public class TestFilterPlatformTest {
     public void testFilterTestPlanPlatform() {
 
         testFilterMyPlatform(1, 1, 0, 1, TestPlanWithPlatform.class);
-        testFilterMyPlatform(1, 1, 0, 1, TestPlanWithManyPlatforms.class);
-        testFilterMyPlatform(5, 5, 3, 2, TestPlanWithPlatform.class, TestPlanWithManyPlatforms.class,
+        testFilterMyPlatform(1, 1, 1, 1, TestPlanWithManyPlatforms.class);
+        testFilterMyPlatform(4, 4, 3, 2, TestPlanWithPlatform.class, TestPlanWithManyPlatforms.class,
                 TestPlanWithPlatformDefault.class, TestPlanWithPlatformEmpty.class,
                 TestPlanWithPlatformEmptyString.class);
 
@@ -66,7 +66,8 @@ public class TestFilterPlatformTest {
         Set<Class<?>> classes = ImmutableSet.copyOf(Arrays.asList(classesToAdd));
 
         TS.params().setFilterByPlatform(null);
-        Assert.assertEquals("Test 1", expectedTest1, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
+        Assert.assertEquals("Test 1 setFilterByPlatform is null so turned off", expectedTest1,
+                filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)
                 .size());
         TS.params().setFilterByPlatform("");
         Assert.assertEquals("Test 2", expectedTest2, filter.resetTestClassesMetFilters().filterTestPlansToRun(classes)

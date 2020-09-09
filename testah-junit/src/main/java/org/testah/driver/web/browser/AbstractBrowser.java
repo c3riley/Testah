@@ -492,7 +492,7 @@ public abstract class AbstractBrowser<T> {
             TS.util().pause("getWebElementsNative", count);
         }
         TS.asserts().isTrue("Expected to find WebElements with By[" + by + "] found: " + lst.size() + " " + error,
-            lst.size() > 0);
+                lst.size() > 0);
         return lst;
     }
 
@@ -768,11 +768,26 @@ public abstract class AbstractBrowser<T> {
      * @return true, if successful
      */
     public boolean waitTillElementIsPresent(final By by, final int secondsToWait) {
+        return waitTillElementIsPresent(by, secondsToWait, true);
+    }
+
+    /**
+     * Wait till element is present.
+     *
+     * @param by                      the by
+     * @param secondsToWait           the seconds to wait
+     * @param throwExceptionOnTimeout throw an exception if not found in time.
+     * @return true, if successful
+     */
+    public boolean waitTillElementIsPresent(final By by, final int secondsToWait, final boolean throwExceptionOnTimeout) {
         for (int counter = 0; counter < secondsToWait; counter++) {
-            if (verifyElementIsPresent(by)) {
+            if (isElementPresent(by)) {
                 return true;
             }
-            TS.util().pause(1000L);
+            TS.util().pause(1000L, "waiting for element: " + by.toString(), counter);
+        }
+        if (throwExceptionOnTimeout == true) {
+            TS.asserts().fail("Timed out while Waiting for element: " + by.toString());
         }
         return false;
     }
@@ -995,7 +1010,7 @@ public abstract class AbstractBrowser<T> {
      */
     public boolean verifyTextIsNotPresent(final String textExpected) {
         return TS.verify().isFalse("Looking for Text[" + textExpected + "] To Not be on Page",
-            isTextPresent(textExpected));
+                isTextPresent(textExpected));
     }
 
     /**

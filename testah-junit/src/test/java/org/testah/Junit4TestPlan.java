@@ -20,6 +20,12 @@ public class Junit4TestPlan extends HttpTestPlan {
     }
 
     @Test
+    @TestCase(name = "test for junit4 example")
+    public void test3() {
+        TS.asserts().isTrue(true);
+    }
+
+    @Test
     public void test2() {
         TS.asserts().isTrue(true);
     }

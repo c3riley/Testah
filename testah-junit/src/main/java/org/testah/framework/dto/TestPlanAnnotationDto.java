@@ -2,7 +2,9 @@ package org.testah.framework.dto;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.NotImplementedException;
+import org.testah.client.dto.TestCaseDto;
 import org.testah.client.enums.TestType;
+import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestCaseJUnit5;
 import org.testah.framework.annotations.TestPlan;
@@ -11,8 +13,10 @@ import org.testah.framework.testPlan.TestSystem;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 public class TestPlanAnnotationDto {
 
@@ -120,9 +124,9 @@ public class TestPlanAnnotationDto {
         if (testPlans != null) {
             for (Annotation testPlan : testPlans) {
                 if (testPlan instanceof TestPlan) {
-                    return new TestPlanAnnotationDto((TestPlan) testPlan, testClass).mergeWithTestCases();
+                    return new TestPlanAnnotationDto((TestPlan) testPlan, testClass);
                 } else if (testPlan instanceof TestPlanJUnit5) {
-                    return new TestPlanAnnotationDto((TestPlanJUnit5) testPlan, testClass).mergeWithTestCasesJUnit5();
+                    return new TestPlanAnnotationDto((TestPlanJUnit5) testPlan, testClass);
                 }
             }
         }
@@ -182,6 +186,7 @@ public class TestPlanAnnotationDto {
 
     /**
      * Merge testcase meta data into the testplan for filtering. JUnit4.
+     *
      * @return returns the merged testplan meta.
      */
     public TestPlanAnnotationDto mergeWithTestCases() {
@@ -203,7 +208,27 @@ public class TestPlanAnnotationDto {
     }
 
     /**
+     * Get List of TestCaseAnnotationDto in the TestPlan.
+     *
+     * @return return list of testcases found.
+     */
+    public List<TestCaseDto> getTestCases() {
+        List<TestCaseDto> testCases = new ArrayList<>();
+        if (testClass != null && testClass.getMethods().length > 0) {
+            for (Method test : testClass.getMethods()) {
+                TestCaseAnnotationDto testCase = TestCaseAnnotationDto.create(test);
+                if (testCase != null) {
+                    testCases.add(TestDtoHelper.fill(new TestCaseDto(), testCase,
+                            (KnownProblem) test.getAnnotation(KnownProblem.class), this));
+                }
+            }
+        }
+        return testCases;
+    }
+
+    /**
      * Merge testcase meta data into the testplan for filtering. JUnit5.
+     *
      * @return returns the merged testplan meta.
      */
     public TestPlanAnnotationDto mergeWithTestCasesJUnit5() {
@@ -218,6 +243,7 @@ public class TestPlanAnnotationDto {
                     this.runTypes = appendAndDedupArray(this.runTypes(), testCaseJUnit5.runTypes());
                     this.platforms = appendAndDedupArray(this.components(), testCaseJUnit5.components());
                     this.tags = appendAndDedupArray(this.tags(), testCaseJUnit5.tags());
+                    this.testType = testCaseJUnit5.testType() != null ? testCaseJUnit5.testType() : this.testType();
                 }
             }
         }

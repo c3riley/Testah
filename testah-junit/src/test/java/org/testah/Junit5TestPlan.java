@@ -36,6 +36,11 @@ public class Junit5TestPlan {
         TS.asserts().isTrue(true);
     }
 
+    @TestCaseJUnit5(name = "test for junit5 example")
+    public void test3() {
+        TS.asserts().isTrue(true);
+    }
+
     @Test
     public void test2() {
         TS.asserts().isTrue(true);
