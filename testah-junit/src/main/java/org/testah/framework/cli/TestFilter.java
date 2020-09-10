@@ -167,9 +167,11 @@ public class TestFilter {
                 if (atleastOneTestMeetsCriteria) {
                     testClassesMetFiltersToUse.add(test);
                 } else {
-                    TS.log().trace(String.format("No TestCases would run for testPlan[%s], if attributes are applied at the " +
-                            "testplan level, they will not be applied at the " +
-                            "testcase level if they too supply values for thoses attributes.", meta.name()));
+                    TS.log().trace(String.format("No test cases would run for test plan[%s], if attributes are applied at the " +
+                            "test plan level, they will not be applied at the " +
+                            "test case level if they too supply values for those attributes. For example if test plan has only 1 " +
+                            "test case, and that test case defines a runType, then the test plan runType if defined will not be "
+                            "used for filtering, as the testcase has defined its own runType", meta.name()));
                 }
 
             }
