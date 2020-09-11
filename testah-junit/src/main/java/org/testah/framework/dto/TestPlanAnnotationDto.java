@@ -203,30 +203,6 @@ public class TestPlanAnnotationDto {
         return testCases;
     }
 
-    /**
-     * Merge testcase meta data into the testplan for filtering. JUnit5.
-     *
-     * @return returns the merged testplan meta.
-     */
-    public TestPlanAnnotationDto mergeWithTestCasesJUnit5() {
-        if (testClass != null && testClass.getMethods().length > 0) {
-            for (Method test : testClass.getMethods()) {
-                TestCaseJUnit5 testCaseJUnit5 = test.getAnnotation(TestCaseJUnit5.class);
-                if (testCaseJUnit5 != null) {
-                    this.components = appendAndDedupArray(this.components(), testCaseJUnit5.components());
-                    this.devices = appendAndDedupArray(this.devices(), testCaseJUnit5.devices());
-                    this.relatedIds = appendAndDedupArray(this.relatedIds(), testCaseJUnit5.relatedIds());
-                    this.relatedLinks = appendAndDedupArray(this.relatedLinks(), testCaseJUnit5.relatedLinks());
-                    this.runTypes = appendAndDedupArray(this.runTypes(), testCaseJUnit5.runTypes());
-                    this.platforms = appendAndDedupArray(this.components(), testCaseJUnit5.components());
-                    this.tags = appendAndDedupArray(this.tags(), testCaseJUnit5.tags());
-                    this.testType = testCaseJUnit5.testType() != null ? testCaseJUnit5.testType() : this.testType();
-                }
-            }
-        }
-        return this;
-    }
-
     public static String[] appendAndDedupArray(final String[] array1, final String[] array2) {
         return new HashSet<String>(Arrays.asList(ArrayUtils.addAll(array1, array2))).toArray(new String[0]);
     }
