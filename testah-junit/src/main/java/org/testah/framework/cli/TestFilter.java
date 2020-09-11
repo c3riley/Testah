@@ -167,13 +167,8 @@ public class TestFilter {
                 if (atleastOneTestMeetsCriteria) {
                     testClassesMetFiltersToUse.add(test);
                 } else {
-                    TS.log().trace(String.format("No test cases would run for test plan[%s], if attributes are applied at the " +
-                            "test plan level, they will not be applied at the " +
-                            "test case level if they too supply values for those attributes. For example if test plan has only 1 " +
-                            "test case, and that test case defines a runType, then the test plan runType if defined will not be " +
-                            "used for filtering, as the testcase has defined its own runType", meta.name()));
+                    TS.log().trace(getMessageIfNoTestCasesMatch(meta.name()));
                 }
-
             }
             TS.log().info(Cli.BAR_LONG);
             TS.log().info(String.format("%s TestPlan Classes To Run: ( %d of %d )", Cli.BAR_WALL,
@@ -185,13 +180,19 @@ public class TestFilter {
             TS.log().info("#");
             TS.log().info(Cli.BAR_LONG);
             if (testClassesMetFiltersToUse.size() == 0) {
-                TS.log().info("No TestCases would run for the testPlan(s), if attributes are applied at the " +
-                        "testplan level, they will not be applied at the " +
-                        "testcase level if they to supply values for thoses attributes.");
+                TS.log().info(getMessageIfNoTestCasesMatch(null));
             }
         }
         return testClassesMetFiltersToUse;
 
+    }
+
+    protected String getMessageIfNoTestCasesMatch(final String testPlanName) {
+        String.format("No test cases would run for " + (testPlanName == null ? "for the selected testplan(s)" : "testplan[%s]") + ", if attributes are applied at the " +
+                "test plan level, they will not be applied at the " +
+                "test case level if they too supply values for those attributes. For example if test plan has only 1 " +
+                "test case, and that test case defines a runType, then the test plan runType if defined will not be " +
+                "used for filtering, as the testcase has defined its own runType", testPlanName);
     }
 
     /**
