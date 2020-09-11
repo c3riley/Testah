@@ -54,9 +54,9 @@ public class TestFilterComponentTest {
 
         testFilterMyComponent(1, 1, 0, 1, TestPlanWithComponent.class);
 
-        testFilterMyComponent(1, 1, 0, 1, TestPlanWithManyComponents.class);
+        testFilterMyComponent(1, 1, 1, 1, TestPlanWithManyComponents.class);
 
-        testFilterMyComponent(5, 5, 3, 2, TestPlanWithComponent.class, TestPlanWithManyComponents.class,
+        testFilterMyComponent(4, 4, 3, 2, TestPlanWithComponent.class, TestPlanWithManyComponents.class,
                 TestPlanWithComponentDefault.class, TestPlanWithComponentEmpty.class,
                 TestPlanWithComponentEmptyString.class);
 

@@ -84,7 +84,8 @@ public class TestSystem {
      */
     public void starting(final Description description) {
         starting(description,
-            TestPlanAnnotationDto.create(DEFAULT_TESTPLAN_JUNIT_VERSION, description.getTestClass().getAnnotation(TestPlan.class)),
+            TestPlanAnnotationDto.create(DEFAULT_TESTPLAN_JUNIT_VERSION, description.getTestClass(),
+                    description.getTestClass().getAnnotation(TestPlan.class)),
             TestCaseAnnotationDto.create(description.getAnnotation(TestCase.class)), DEFAULT_TESTPLAN_JUNIT_VERSION);
     }
 
@@ -472,7 +473,8 @@ public class TestSystem {
      */
     public void filterTest(final Description description) {
         filterTest(description,
-            TestPlanAnnotationDto.create(DEFAULT_TESTPLAN_JUNIT_VERSION, description.getTestClass().getAnnotation(TestPlan.class)),
+            TestPlanAnnotationDto.create(DEFAULT_TESTPLAN_JUNIT_VERSION, description.getTestClass(),
+                    description.getTestClass().getAnnotation(TestPlan.class)),
             TestCaseAnnotationDto.create(description.getAnnotation(TestCase.class)));
     }
 

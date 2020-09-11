@@ -105,7 +105,7 @@ public class TestFilter {
      * @return the list
      */
     private List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter, final List<Class<
-        ?>> testClassesMetFiltersToUse) {
+            ?>> testClassesMetFiltersToUse) {
 
         final Params filterParams = TS.params();
 
@@ -119,20 +119,7 @@ public class TestFilter {
             if (isFilterOn(TS.params().getFilterIgnoreKnownProblem())) {
                 filterByIgnoreKnownProblem = equalsIgnoreCase("true", TS.params().getFilterIgnoreKnownProblem());
             }
-            boolean filterByComponent = isFilterOn(TS.params().getFilterByComponent());
 
-            boolean filterByDevice = isFilterOn(TS.params().getFilterByDevice());
-
-            boolean filterByPlatform = isFilterOn(TS.params().getFilterByPlatform());
-
-            boolean filterByTag = isFilterOn(TS.params().getFilterByTag());
-
-            boolean filterByRunType = isFilterOn(TS.params().getFilterByRunType());
-
-            boolean filterByTestType = true;
-            if (null == TS.params().getFilterByTestType()) {
-                filterByTestType = false;
-            }
             boolean filterByTestPlanNameStartsWith = isFilterOn(TS.params().getFilterByTestPlanNameStartsWith());
 
             for (final Class<?> test : testClassesToFilter) {
@@ -165,65 +152,47 @@ public class TestFilter {
                         continue;
                     }
                 }
-                if (filterByTestType) {
-                    if (!isFilterByTestType(meta.testType())) {
-                        TS.log().trace(
-                            "test[" + test.getName() + "] filtered out by isFilterByTestType[" +
-                                TS.params().getFilterByTestType() + "]");
-                        continue;
-                    }
-                }
-                if (filterByTag) {
-                    filter = filterParams.getFilterByTag();
-                    if (!isFilterCheckOk(meta.tags(), filter)) {
-                        TS.log().trace("test[" + test.getName() + "] filtered out by getFilterByTag");
-                        continue;
-                    }
-                }
-                if (filterByComponent) {
-                    filter = filterParams.getFilterByComponent();
-                    if (!isFilterCheckOk(meta.components(), filter)) {
-                        TS.log().trace("test[" + test.getName() + "] filtered out by getFilterByComponent");
-                        continue;
-                    }
-                }
-                if (filterByDevice) {
-                    filter = filterParams.getFilterByDevice();
-                    if (!isFilterCheckOk(meta.devices(), filter)) {
-                        TS.log().trace("test[" + test.getName() + "] filtered out by getFilterByDevice");
-                        continue;
-                    }
-                }
-                if (filterByPlatform) {
-                    filter = filterParams.getFilterByPlatform();
-                    if (!isFilterCheckOk(meta.platforms(), filter)) {
-                        TS.log().trace("test[" + test.getName() + "] filtered out by getFilterByPlatform");
-                        continue;
-                    }
-                }
-                if (filterByRunType) {
-                    filter = filterParams.getFilterByRunType();
-                    if (!isFilterCheckOk(meta.runTypes(), filter)) {
-                        TS.log().trace("test[" + test.getName() + "] filtered out by getFilterByRunType");
-                        continue;
+
+                List<TestCaseDto> testCases = meta.getTestCases();
+                boolean atleastOneTestMeetsCriteria = false;
+                if (testCases.size() > 0) {
+                    for (TestCaseDto testCase : testCases) {
+                        if (filterTestCase(testCase, testCase.getName())) {
+                            atleastOneTestMeetsCriteria = true;
+                            break;
+                        }
                     }
                 }
 
-                testClassesMetFiltersToUse.add(test);
-
+                if (atleastOneTestMeetsCriteria) {
+                    testClassesMetFiltersToUse.add(test);
+                } else {
+                    TS.log().trace(getMessageIfNoTestCasesMatch(meta.name()));
+                }
             }
             TS.log().info(Cli.BAR_LONG);
             TS.log().info(String.format("%s TestPlan Classes To Run: ( %d of %d )", Cli.BAR_WALL,
-                testClassesMetFiltersToUse.size(), testClassesToFilter.size()));
+                    testClassesMetFiltersToUse.size(), testClassesToFilter.size()));
             TS.log().info(Cli.BAR_WALL);
             for (final Class<?> test : testClassesMetFiltersToUse) {
                 TS.log().info(Cli.BAR_WALL + " " + test.getName());
             }
             TS.log().info("#");
             TS.log().info(Cli.BAR_LONG);
+            if (testClassesMetFiltersToUse.size() == 0) {
+                TS.log().info(getMessageIfNoTestCasesMatch(null));
+            }
         }
         return testClassesMetFiltersToUse;
 
+    }
+
+    protected String getMessageIfNoTestCasesMatch(final String testPlanName) {
+        return String.format("No test cases would run for " + (testPlanName == null ? "for the selected testplan(s)" : "testplan[%s]") + ", if attributes are applied at the " +
+                "test plan level, they will not be applied at the " +
+                "test case level if they too supply values for those attributes. For example if test plan has only 1 " +
+                "test case, and that test case defines a runType, then the test plan runType if defined will not be " +
+                "used for filtering, as the testcase has defined its own runType", testPlanName);
     }
 
     /**
@@ -284,8 +253,8 @@ public class TestFilter {
                         if (!externalTests.exists()) {
                             if (loadCompiledTestClass(path) == 0) {
                                 TS.log().error(
-                                    "Param LookAtExternalTests is set to a class/file/directory not found: " +
-                                        externalTests.getAbsolutePath());
+                                        "Param LookAtExternalTests is set to a class/file/directory not found: " +
+                                                externalTests.getAbsolutePath());
                             }
                         } else if (externalTests.isDirectory()) {
                             files.addAll(FileUtils.getFilesRecurse(externalTests, "(.?)*\\.groovy"));
@@ -373,31 +342,11 @@ public class TestFilter {
             return true;
         }
         return Arrays.stream(StringUtils.split(startsWith, ","))
-            .filter(prefix ->
-                StringUtils.startsWithIgnoreCase(
-                    (StringUtils.contains(prefix, ".") ? test.getCanonicalName() : test.getSimpleName()),
-                    prefix.trim())
-            ).findFirst().isPresent();
-    }
-
-    /**
-     * Checks if is filter check ok.
-     *
-     * @param ary    the ary
-     * @param values the values
-     * @return true, if is filter check ok
-     */
-    private boolean isFilterCheckOk(final String[] ary, final String values) {
-        if (null != values && values.length() > 0) {
-            final List<String> lst;
-            if (null != ary) {
-                lst = Arrays.asList(ary);
-            } else {
-                lst = new ArrayList<>();
-            }
-            return isFilterCheckOk(lst, values);
-        }
-        return true; // Filter is Off
+                .filter(prefix ->
+                        StringUtils.startsWithIgnoreCase(
+                                (StringUtils.contains(prefix, ".") ? test.getCanonicalName() : test.getSimpleName()),
+                                prefix.trim())
+                ).findFirst().isPresent();
     }
 
     /**

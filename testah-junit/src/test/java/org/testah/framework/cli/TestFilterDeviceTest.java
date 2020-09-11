@@ -54,9 +54,9 @@ public class TestFilterDeviceTest {
 
         testFilterMyDevice(1, 1, 0, 1, TestPlanWithDevice.class);
 
-        testFilterMyDevice(1, 1, 0, 1, TestPlanWithManyDevices.class);
+        testFilterMyDevice(1, 1, 1, 1, TestPlanWithManyDevices.class);
 
-        testFilterMyDevice(5, 5, 3, 2, TestPlanWithDevice.class, TestPlanWithManyDevices.class,
+        testFilterMyDevice(4, 4, 3, 2, TestPlanWithDevice.class, TestPlanWithManyDevices.class,
                 TestPlanWithDeviceDefault.class, TestPlanWithDeviceEmpty.class,
                 TestPlanWithDeviceEmptyString.class);
 

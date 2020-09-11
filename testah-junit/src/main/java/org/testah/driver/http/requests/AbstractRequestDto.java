@@ -325,7 +325,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
 
     public T addBasicAuthHeader(final String userName, final String password, final boolean useMask) {
         return addHeader(new HttpAuthUtil().setUserName(userName).setPassword(password).useEncodingIso()
-            .setUseMask(useMask).createBasicAuthHeader());
+                .setUseMask(useMask).createBasicAuthHeader());
     }
 
     /**
@@ -531,8 +531,7 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
         TS.log().debug(Cli.BAR_WALL + "Headers: " + (null == headers ? "" : Arrays.toString(headers.toArray())));
         TS.log().debug(Cli.BAR_SHORT);
         if (null != getPayloadString()) {
-            TS.log().debug(Cli.BAR_WALL + "payload: (see below)");
-            System.out.println(getPayloadString());
+            TS.log().debug(String.format("%spayload: (see below)%n%s", Cli.BAR_WALL, getPayloadString()));
             TS.log().debug(Cli.BAR_SHORT);
         }
         return getSelf();
@@ -545,9 +544,9 @@ public abstract class AbstractRequestDto<T> extends AbstractDtoBase<AbstractRequ
      */
     public StepActionDto createRequestInfoStep() {
         StepActionDto stepAction = TS.step().action().createInfo("REQUEST: " + this.getHttpMethod() + " - Uri: " + getUri(),
-            "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
-                : Arrays.toString(headers.toArray())),
-            getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+                "Expected Status: " + getExpectedStatus() + " - Headers: " + (null == headers ? ""
+                        : Arrays.toString(headers.toArray())),
+                getPayloadStringEscaped(), false).setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         printComplete();
         return stepAction;
     }

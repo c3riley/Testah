@@ -73,15 +73,19 @@ public class TestFilterTestTypeTest extends HttpTestPlan {
         expected.clear();
         expected.put(null, 1);
         expected.put(TestType.AUTOMATED, 1);
+        expected.put(TestType.PENDING, 1);
+        expected.put(TestType.DEFAULT, 0); // Will get overwritten by the parent value.
+        expected.put(TestType.MANUAL, 1);
+        expected.put(TestType.RETIRE, 1);
         testFilterMyTestType(expected, TestPlanWithManyTestTypes.class);
 
         expected.clear();
-        expected.put(TestType.AUTOMATED, 3);
-        expected.put(TestType.PENDING, 1);
+        expected.put(TestType.AUTOMATED, 2);
+        expected.put(TestType.PENDING, 2);
         expected.put(TestType.DEFAULT, 0);
-        expected.put(TestType.MANUAL, 2);
-        expected.put(TestType.RETIRE, 1);
-        expected.put(null, 7);
+        expected.put(TestType.MANUAL, 3);
+        expected.put(TestType.RETIRE, 2);
+        expected.put(null, 6);
         testFilterMyTestType(expected, TestPlanWithTestType.class, TestPlanWithManyTestTypes.class,
                 TestPlanWithTestTypeDefault.class, TestPlanWithTestTypeEmpty.class,
                 TestPlanWithTestTypeEmptyString.class, TestPlanWithTestTypeRetire.class, TestPlanWithTestTypeManual.class);
@@ -96,7 +100,7 @@ public class TestFilterTestTypeTest extends HttpTestPlan {
                 filter.resetTestClassesMetFilters().filterTestPlansToRun(classes).size());
         for (TestType testType : TestType.values()) {
             TS.params().setFilterByTestType(testType);
-            Assert.assertEquals(expected.getOrDefault(testType, 0).intValue(),
+            Assert.assertEquals("testType: " + testType, expected.getOrDefault(testType, 0).intValue(),
                     filter.resetTestClassesMetFilters().filterTestPlansToRun(classes).size());
         }
     }

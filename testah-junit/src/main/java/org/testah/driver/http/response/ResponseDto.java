@@ -155,7 +155,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
     public ResponseDto assertResponseBodyContains(final String expectedContents) {
         TS.asserts().notNull("assertResponseBodyContains", responseBody);
         TS.asserts().isTrue("assertResponseBodyContains responseBody[" + responseBody + "] expected to contain[" +
-            expectedContents + "]", responseBody.contains(expectedContents));
+                expectedContents + "]", responseBody.contains(expectedContents));
         return this;
     }
 
@@ -198,7 +198,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public File saveToFile(final File downloadFile) throws IOException {
         try (
-            FileOutputStream fileOutputStream = new FileOutputStream(downloadFile)) {
+                FileOutputStream fileOutputStream = new FileOutputStream(downloadFile)) {
             fileOutputStream.write(this.getResponseBytes());
             return downloadFile;
         }
@@ -331,16 +331,13 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         TS.log().debug(Cli.BAR_WALL + "Status: " + getStatusCode() + " [ " + getStatusText() + " ]");
         TS.log().debug(Cli.BAR_WALL + "Headers: " + Arrays.toString(getHeaders()));
         TS.log().debug(Cli.BAR_SHORT);
-        TS.log().debug(Cli.BAR_WALL + "Body: (see below)");
         if (shortResponseBody) {
-            // Need to add 3 for the ... that is added and counted into the body length to show
-            System.out.println(StringUtils.abbreviate(getResponseBody(), truncate + 3));
+            TS.log().debug(String.format("%sBody: (see below)%n%s", Cli.BAR_WALL, StringUtils.abbreviate(getResponseBody(), truncate + 3)));
         } else {
-            System.out.println(getResponseBody());
+            TS.log().debug(String.format("%sBody: (see below)%n%s", Cli.BAR_WALL, getResponseBody()));
         }
         TS.log().debug(Cli.BAR_SHORT);
         return this;
-
     }
 
     /**
@@ -482,15 +479,15 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
         StepActionDto stepAction = null;
         if (shortResponseBody) {
             stepAction = TS.step().action()
-                .info(this.getRequestType() + " - Uri: " + getUrl(),
-                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]",
-                    StringUtils.abbreviate(getResponseBody(escapeBody), truncate), false, step)
-                .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+                    .info(this.getRequestType() + " - Uri: " + getUrl(),
+                            "Status: " + getStatusCode() + " [ " + getStatusText() + " ]",
+                            StringUtils.abbreviate(getResponseBody(escapeBody), truncate), false, step)
+                    .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
         } else {
             stepAction = TS.step().action()
-                .info(this.getRequestType() + " - Uri: " + getUrl(),
-                    "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapeBody), false, step)
-                .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
+                    .info(this.getRequestType() + " - Uri: " + getUrl(),
+                            "Status: " + getStatusCode() + " [ " + getStatusText() + " ]", getResponseBody(escapeBody), false, step)
+                    .setTestStepActionType(TestStepActionType.HTTP_REQUEST);
 
         }
         print(shortResponseBody, truncate);
@@ -568,7 +565,7 @@ public class ResponseDto extends AbstractDtoBase<ResponseDto> {
      */
     public String toStringStatus() {
         return new StringBuilder("Uri:").append(getUrl()).append("\nStatus: ").append(statusCode).append(" [ ")
-            .append(statusText).append(" ]").toString();
+                .append(statusText).append(" ]").toString();
     }
 
     /**

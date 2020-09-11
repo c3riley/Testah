@@ -54,9 +54,9 @@ public class TestFilterTagTest {
 
         testFilterMyTag(1, 1, 0, 1, TestPlanWithTag.class);
 
-        testFilterMyTag(1, 1, 0, 1, TestPlanWithManyTags.class);
+        testFilterMyTag(1, 1, 1, 1, TestPlanWithManyTags.class);
 
-        testFilterMyTag(5, 5, 3, 2, TestPlanWithTag.class, TestPlanWithManyTags.class,
+        testFilterMyTag(4, 4, 3, 2, TestPlanWithTag.class, TestPlanWithManyTags.class,
                 TestPlanWithTagDefault.class, TestPlanWithTagEmpty.class,
                 TestPlanWithTagEmptyString.class);
 

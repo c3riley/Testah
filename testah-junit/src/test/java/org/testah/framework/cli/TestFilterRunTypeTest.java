@@ -55,9 +55,9 @@ public class TestFilterRunTypeTest {
 
         testFilterMyRunType(1, 1, 0, 1, TestPlanWithRunType.class);
 
-        testFilterMyRunType(1, 1, 0, 1, TestPlanWithManyRunTypes.class);
+        testFilterMyRunType(1, 1, 1, 1, TestPlanWithManyRunTypes.class);
 
-        testFilterMyRunType(5, 5, 3, 2, TestPlanWithRunType.class, TestPlanWithManyRunTypes.class,
+        testFilterMyRunType(4, 4, 3, 2, TestPlanWithRunType.class, TestPlanWithManyRunTypes.class,
                 TestPlanWithRunTypeDefault.class, TestPlanWithRunTypeEmpty.class,
                 TestPlanWithRunTypeEmptyString.class);
 
