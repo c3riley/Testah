@@ -16,7 +16,7 @@ class TestFilterTest extends Specification {
         TestFilter testFilter = new TestFilter()
 
         when:
-        boolean rtn = testFilter.isFilterCheckOk(tagsFound as String[], tagsFilter)
+        boolean rtn = testFilter.isFilterCheckOk(tagsFound, tagsFilter)
         println "tagsFound[${}] == tagsFilter[${tagsFilter}]"
         then:
         rtn == found
