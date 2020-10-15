@@ -15,7 +15,6 @@ import java.lang.annotation.Target;
  */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Test
 @TestCase
 @ParameterizedTest(name = "{index} => {0}")
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
