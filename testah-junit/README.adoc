@@ -121,7 +121,7 @@ public class DemoTest extends BrowserTestPlan {
 ##### @TestPlanJUnit5 / @TestPlan (JUnit 4 Legacy)
 Annotation used per class, the top level testing object.  Adds metadata for what the test will do, what jira items its aligned to, and ways to allow the test to be filtered and reported.
 
-##### @TestCaseJUnit5 / @TestCase (JUnit 4 Legacy )
+##### @TestCaseJUnit5 / @TestCaseWithParamsJUnit5 / @TestCase (JUnit 4 Legacy )
 
 Annotation used per @Test Method.  Adds metadata for what the test will do, what jira items its aligned to, and ways to allow the test to be filtered and reported.  A TestCase will inherit from the TestPlan unless overridden.
 

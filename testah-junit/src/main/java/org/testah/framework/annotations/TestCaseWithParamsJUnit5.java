@@ -1,6 +1,7 @@
 package org.testah.framework.annotations;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.testah.client.enums.TestType;
 
 import java.lang.annotation.ElementType;
@@ -14,10 +15,10 @@ import java.lang.annotation.Target;
  */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Test
 @TestCase
+@ParameterizedTest(name = "{index} => {0}")
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
-public @interface TestCaseJUnit5 {
+public @interface TestCaseWithParamsJUnit5 {
 
     /**
      * Id.
