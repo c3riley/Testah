@@ -98,6 +98,8 @@ dependencies {
     compile "org.junit.jupiter:junit-jupiter-api:${junitPlatformVersion}"
     compile "org.junit.jupiter:junit-jupiter-engine:${junitPlatformVersion}"
     compile "org.junit.platform:junit-platform-launcher:1.6.2"
+    compile "org.junit.jupiter:junit-jupiter-params:${junitPlatformVersion}"
+
 
     compile 'com.typesafe.akka:akka-actor_2.11:2.5.25'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'

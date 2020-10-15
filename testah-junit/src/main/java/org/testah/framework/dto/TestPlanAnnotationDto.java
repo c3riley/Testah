@@ -5,8 +5,6 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.KnownProblem;
-import org.testah.framework.annotations.TestCase;
-import org.testah.framework.annotations.TestCaseJUnit5;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.framework.annotations.TestPlanJUnit5;
 import org.testah.framework.testPlan.TestSystem;

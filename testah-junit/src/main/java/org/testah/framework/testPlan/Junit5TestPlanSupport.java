@@ -11,17 +11,19 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.runner.Description;
 import org.testah.TS;
 import org.testah.framework.annotations.TestCaseJUnit5;
+import org.testah.framework.annotations.TestCaseWithParamsJUnit5;
 import org.testah.framework.annotations.TestPlanJUnit5;
 import org.testah.framework.dto.TestCaseAnnotationDto;
 import org.testah.framework.dto.TestPlanAnnotationDto;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
 
 /**
  * Provide Support for using JUnit5.
  * To use, simply annotate a test class with @TestPlanJUnit5
- * and the test methods with @TestCaseJUnit5
+ * and the test methods with @TestCaseJUnit5 / @TestCaseWithParamsJUnit5
  */
 public class Junit5TestPlanSupport implements BeforeTestExecutionCallback, AfterTestExecutionCallback,
         AfterAllCallback, BeforeAllCallback, BeforeEachCallback, AfterEachCallback, TestWatcher {
@@ -36,10 +38,15 @@ public class Junit5TestPlanSupport implements BeforeTestExecutionCallback, After
     @Override
     public void beforeTestExecution(ExtensionContext context) throws Exception {
         Description description = getDescription(context);
+        Annotation testcase = description.getAnnotation(TestCaseJUnit5.class);
+        if (testcase == null) {
+            testcase = description.getAnnotation(TestCaseWithParamsJUnit5.class);
+        }
+
         TS.testSystem().starting(description,
                 TestPlanAnnotationDto.create(JUNIT_VERSION, description.getTestClass(),
                         description.getTestClass().getAnnotation(TestPlanJUnit5.class)),
-                TestCaseAnnotationDto.create(description.getAnnotation(TestCaseJUnit5.class)), JUNIT_VERSION);
+                TestCaseAnnotationDto.create(testcase), JUNIT_VERSION);
     }
 
     @Override
@@ -60,10 +67,14 @@ public class Junit5TestPlanSupport implements BeforeTestExecutionCallback, After
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
         Description description = getDescription(context);
+        Annotation testcase = description.getAnnotation(TestCaseJUnit5.class);
+        if (testcase == null) {
+            testcase = description.getAnnotation(TestCaseWithParamsJUnit5.class);
+        }
         TS.testSystem().filterTest(description,
                 TestPlanAnnotationDto.create(JUNIT_VERSION, description.getTestClass(),
                         description.getTestClass().getAnnotation(TestPlanJUnit5.class)),
-                TestCaseAnnotationDto.create(description.getAnnotation(TestCaseJUnit5.class)));
+                TestCaseAnnotationDto.create(testcase));
     }
 
     /**
@@ -87,7 +98,7 @@ public class Junit5TestPlanSupport implements BeforeTestExecutionCallback, After
     public void testDisabled(ExtensionContext context, Optional<String> reason) {
         TS.testSystem().addIgnoredTest(getDescription(context).getDisplayName(),
                 reason.orElseGet(
-                    () -> "Test Ignored with Ignore or Disabled Annotation"));
+                        () -> "Test Ignored with Ignore or Disabled Annotation"));
     }
 
     @Override

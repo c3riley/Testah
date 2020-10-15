@@ -3,6 +3,7 @@ package org.testah.framework.dto;
 import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestCaseJUnit5;
+import org.testah.framework.annotations.TestCaseWithParamsJUnit5;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -54,8 +55,23 @@ public class TestCaseAnnotationDto {
         this.runTypes = testCase.runTypes();
     }
 
+    private TestCaseAnnotationDto(TestCaseWithParamsJUnit5 testCase) {
+        this.id = testCase.id();
+        this.name = testCase.name();
+        this.description = testCase.description();
+        this.relatedLinks = testCase.relatedLinks();
+        this.relatedIds = testCase.relatedIds();
+        this.testType = testCase.testType();
+        this.tags = testCase.tags();
+        this.components = testCase.components();
+        this.platforms = testCase.platforms();
+        this.devices = testCase.devices();
+        this.runTypes = testCase.runTypes();
+    }
+
     /**
      * Create a TestCaseAnnotationDto from a test method.
+     *
      * @param testMethod testCase method.
      * @return return new TestCaseAnnotationDto or null if it can't.
      */
@@ -68,6 +84,7 @@ public class TestCaseAnnotationDto {
 
     /**
      * Create a TestCaseAnnotationDto from testCase annotation.
+     *
      * @param testCases testCase annotations.
      * @return return new TestCaseAnnotationDto or null if it can't.
      */
@@ -78,6 +95,8 @@ public class TestCaseAnnotationDto {
                     return new TestCaseAnnotationDto((TestCase) testCase);
                 } else if (testCase instanceof TestCaseJUnit5) {
                     return new TestCaseAnnotationDto((TestCaseJUnit5) testCase);
+                } else if (testCase instanceof TestCaseWithParamsJUnit5) {
+                    return new TestCaseAnnotationDto((TestCaseWithParamsJUnit5) testCase);
                 }
             }
         }
