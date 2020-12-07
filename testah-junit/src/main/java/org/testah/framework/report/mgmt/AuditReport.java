@@ -23,7 +23,6 @@ import org.testah.framework.dto.TestCaseAnnotationDto;
 import org.testah.framework.dto.TestDtoHelper;
 import org.testah.framework.dto.TestPlanAnnotationDto;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
