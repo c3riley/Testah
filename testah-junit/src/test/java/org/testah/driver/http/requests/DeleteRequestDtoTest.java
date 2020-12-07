@@ -1,6 +1,5 @@
 package org.testah.driver.http.requests;
 
-import org.apache.tools.ant.taskdefs.Delete;
 import org.junit.Assert;
 import org.junit.Test;
 import org.testah.TS;

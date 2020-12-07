@@ -2,7 +2,6 @@ package org.testah.util;
 
 import org.newsclub.net.unix.AFUNIXSocket;
 import org.newsclub.net.unix.AFUNIXSocketAddress;
-import org.newsclub.net.unix.AFUNIXSocketException;
 import org.testah.TS;
 
 import java.io.File;
@@ -58,7 +57,7 @@ public class StrongSwanClient {
         final AFUNIXSocket sock = AFUNIXSocket.newInstance();
         try {
             sock.connect(new AFUNIXSocketAddress(socketFile));
-        } catch (final AFUNIXSocketException e) {
+        } catch (final Throwable e) {
             TS.log().error("Cannot connect to server. Have you started it?", e);
             throw e;
         }

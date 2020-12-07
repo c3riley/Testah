@@ -1,7 +1,7 @@
 package org.testah.driver.web.browser;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.bonigarcia.wdm.DriverManagerType;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -160,7 +160,7 @@ public class GoogleChromeBrowser extends AbstractBrowser<GoogleChromeBrowser> {
             TS.log().warn(e);
         }
         // return binPath;
-        return ChromeDriverManager.getInstance(DriverManagerType.CHROME).getBinaryPath();
+        return ChromeDriverManager.getInstance(DriverManagerType.CHROME).getDownloadedDriverPath();
     }
 
     private File findWebdriverExecutable(final File driverParentDirectory) {
