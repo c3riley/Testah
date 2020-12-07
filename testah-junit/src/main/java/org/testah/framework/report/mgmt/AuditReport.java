@@ -65,8 +65,8 @@ public class AuditReport {
     private CellStyle createHeaderCellStyle() {
         final CellStyle cellStyle = workbook.createCellStyle();
         final XSSFFont cellFont = workbook.createFont();
-        cellStyle.setFillBackgroundColor(HSSFColor.GREY_25_PERCENT.index);
-        cellStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+        cellStyle.setFillBackgroundColor(IndexedColors.GREY_25_PERCENT.index);
+        cellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.index);
         cellStyle.setShrinkToFit(false);
         cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
         cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -86,7 +86,8 @@ public class AuditReport {
     private CellStyle createBodyCellStyle() {
         final CellStyle cellStyle = workbook.createCellStyle();
         final XSSFFont cellFont = workbook.createFont();
-        cellStyle.setFillBackgroundColor(HSSFColor.WHITE.index);
+
+        cellStyle.setFillBackgroundColor(IndexedColors.WHITE.index);
         cellStyle.setShrinkToFit(false);
         cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
         cellStyle.setFillPattern(FillPatternType.NO_FILL);
@@ -100,7 +101,7 @@ public class AuditReport {
     private CellStyle createXBodyCellStyle() {
         final CellStyle cellStyle = workbook.createCellStyle();
         final XSSFFont cellFont = workbook.createFont();
-        cellStyle.setFillBackgroundColor(HSSFColor.WHITE.index);
+        cellStyle.setFillBackgroundColor(IndexedColors.WHITE.index);
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setShrinkToFit(false);
         cellStyle.setVerticalAlignment(VerticalAlignment.TOP);

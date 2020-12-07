@@ -300,10 +300,9 @@ public class ResponseDtoTest {
     public void createResponseInfoStepTest() {
         StepActionDto stepActionDto = getResponse
             .createResponseInfoStep(true, true, 100);
-        assertThat(stepActionDto.toString(),
-            startsWith("{\"testStepActionType\":\"HTTP_REQUEST\",\"description\":null," +
-                "\"message1\":\"GET - Uri: https:\\/\\/postman-echo.com\\/get\",\"message2\":" +
-                "\"Status: 200 [ OK ]\",\"message3\":\"{&quot;args&quot;:{},&quot;headers&quot;:"));
+        assertThat(stepActionDto.getMessage1(), equalTo("GET - Uri: https://postman-echo.com/get"));
+        assertThat(stepActionDto.getMessage2(), equalTo("Status: 200 [ OK ]"));
+        assertThat(stepActionDto.getTestStepActionType().toString(), equalTo("HTTP_REQUEST"));
     }
 
     @Test
@@ -312,10 +311,9 @@ public class ResponseDtoTest {
         StepActionDto stepActionDto = getResponse
             .createResponseInfoStep(true, true, 100, original);
         assertThat(stepActionDto, is(original));
-        assertThat(stepActionDto.toString(),
-            startsWith("{\"testStepActionType\":\"HTTP_REQUEST\",\"description\":null," +
-                "\"message1\":\"GET - Uri: https:\\/\\/postman-echo.com\\/get\",\"message2\":" +
-                "\"Status: 200 [ OK ]\",\"message3\":\"{&quot;args&quot;:{},&quot;headers&quot;:"));
+        assertThat(stepActionDto.getMessage1(), equalTo("GET - Uri: https://postman-echo.com/get"));
+        assertThat(stepActionDto.getMessage2(), equalTo("Status: 200 [ OK ]"));
+        assertThat(stepActionDto.getTestStepActionType().toString(), equalTo("HTTP_REQUEST"));
 
     }
 

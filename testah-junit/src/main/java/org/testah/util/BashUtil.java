@@ -1,6 +1,6 @@
 package org.testah.util;
 
-import org.apache.maven.wagon.util.IoUtils;
+import org.apache.commons.io.IOUtils;
 import org.testah.TS;
 
 import java.io.File;
@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 /**
  * The Class BashUtil.
@@ -70,8 +71,8 @@ public class BashUtil {
             // pb.inheritIO();
             final Process process = pb.start();
             process.waitFor();
-            setOutput(IoUtils.toString(process.getInputStream()));
-            setError(IoUtils.toString(process.getErrorStream()));
+            setOutput(IOUtils.toString(process.getInputStream(), Charset.forName("UTF-8")));
+            setError(IOUtils.toString(process.getErrorStream(), Charset.forName("UTF-8")));
             if (verbose) {
                 TS.log().debug(getOutput());
                 TS.log().debug(getError());

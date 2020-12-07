@@ -1,7 +1,7 @@
 package org.testah.driver.web.browser;
 
-import io.github.bonigarcia.wdm.DriverManagerType;
-import io.github.bonigarcia.wdm.PhantomJsDriverManager;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.managers.PhantomJsDriverManager;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -99,7 +99,7 @@ public class PhantomJsBrowser extends AbstractBrowser<PhantomJsBrowser> {
      * @return the phantom js bin path
      */
     private String getPhantomJsBinPath() {
-        return PhantomJsDriverManager.phantomjs().getBinaryPath();
+        return PhantomJsDriverManager.phantomjs().getDownloadedDriverPath();
     }
 
 }
