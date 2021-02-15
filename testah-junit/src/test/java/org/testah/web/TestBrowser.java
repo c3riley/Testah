@@ -102,13 +102,13 @@ public class TestBrowser extends BrowserTestPlan {
     @TestCase
     @Test
     public void testWebElements() {
-        final List<AbstractWebElementWrapper> lst = TS.browser().getWebElements(By.cssSelector(cssSelectorPath));
-        TS.asserts().notNull(lst);
-        TS.asserts().equalsTo(1, lst.size());
-        TS.asserts().notNull(lst.get(0));
-        TS.asserts().equalsTo(By.cssSelector(cssSelectorPath), lst.get(0).getBy());
-        TS.asserts().notNull(lst.get(0).getDriverWebElement());
-        TS.asserts().notNull("type value is not null", lst.get(0).getAttribute("type"));
+        final List<AbstractWebElementWrapper> list = TS.browser().getWebElements(By.cssSelector(cssSelectorPath));
+        TS.asserts().notNull(list);
+        TS.asserts().isGreaterThan("At least one element.",1, list.size());
+        TS.asserts().notNull(list.get(0));
+        TS.asserts().equalsTo(By.cssSelector(cssSelectorPath), list.get(0).getBy());
+        TS.asserts().notNull(list.get(0).getDriverWebElement());
+        TS.asserts().notNull("type value is not null", list.get(0).getAttribute("type"));
     }
 
     @TestCase
