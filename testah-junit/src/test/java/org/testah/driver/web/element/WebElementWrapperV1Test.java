@@ -14,9 +14,9 @@ public class WebElementWrapperV1Test {
 
     @BeforeClass
     public static void setupForClass() {
-        TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
+        TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20);
+        TS.log().info(String.format("Expecting title 'We Leave From Here', actual title '%s'", TS.browser().getTitle()));
     }
-
 
     @AfterClass
     public static void tearDownClass() {
