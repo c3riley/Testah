@@ -14,7 +14,11 @@ import java.lang.annotation.Target;
  */
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Test
+// Looks like you cannot have annotations @Test and @ParameterizedTest
+// at the same time, see
+// https://stackoverflow.com/questions/51867650/junit-5-no-parameterresolver-registered-for-parameter
+// Therefore commenting out here
+// @Test
 @TestCase
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
 public @interface TestCaseJUnit5 {
