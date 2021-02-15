@@ -97,8 +97,8 @@ public class Junit5TestPlanSupport implements BeforeTestExecutionCallback, After
     @Override
     public void testDisabled(ExtensionContext context, Optional<String> reason) {
         TS.testSystem().addIgnoredTest(getDescription(context).getDisplayName(),
-                reason.orElseGet(
-                        () -> "Test Ignored with Ignore or Disabled Annotation"));
+            reason.orElseGet(
+                () -> "Test Ignored with Ignore or Disabled Annotation"));
     }
 
     @Override

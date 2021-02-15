@@ -188,7 +188,9 @@ public class TestFilter {
     }
 
     protected String getMessageIfNoTestCasesMatch(final String testPlanName) {
-        return String.format("No test cases would run for " + (testPlanName == null ? "for the selected testplan(s)" : "testplan[%s]") + ", if attributes are applied at the " +
+        return String.format("No test cases would run for " +
+                (testPlanName == null ? "for the selected testplan(s)" : "testplan[%s]") + ", " +
+                "if attributes are applied at the " +
                 "test plan level, they will not be applied at the " +
                 "test case level if they too supply values for those attributes. For example if test plan has only 1 " +
                 "test case, and that test case defines a runType, then the test plan runType if defined will not be " +
