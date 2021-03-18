@@ -1,15 +1,19 @@
 package org.testah.runner.http.load;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.testah.runner.HttpAkkaRunner;
 import org.testah.runner.performance.AbstractLongRunningTest;
 import org.testah.runner.performance.ChunkStatsLogPublisher;
 import org.testah.runner.performance.ElasticSearchResponseTimesPublisher;
 import org.testah.runner.performance.TestRunProperties;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 public class TestLongRunning extends AbstractLongRunningTest {
     private static final int numberOfChunks = 8;
@@ -38,6 +42,11 @@ public class TestLongRunning extends AbstractLongRunningTest {
 
     @Rule
     public WireMockRule wireMockRule = new WireMockRule(9200);
+
+    @Before
+    public void setup() {
+        HttpAkkaRunner.reset();
+    }
 
     //@Ignore("need to work on wire mock")
     @Test

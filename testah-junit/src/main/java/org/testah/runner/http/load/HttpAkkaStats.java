@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class HttpAkkaStats {
 
-    private final int totalResponses;
-    private final Long duration;
+    private int totalResponses;
+    private Long duration;
     private Long startTime = 0L;
     private Long endTime = 0L;
     private DescriptiveStatistics statsDuration = new DescriptiveStatistics();
@@ -20,12 +21,27 @@ public class HttpAkkaStats {
     /**
      * Constructor. Takes the provided responses to generate execution statistics.
      *
-     * @param responses list of service responses
+     * @param responseQueue blocking queue of service responses
      */
-    public HttpAkkaStats(final List<ResponseDto> responses) {
-        if (responses == null) {
+    public HttpAkkaStats(LinkedBlockingQueue<ResponseDto> responseQueue) {
+        List<ResponseDto> responseList = new ArrayList<>();
+        responseQueue.drainTo(responseList);
+        initHttpAkkaStats(responseList);
+    }
+
+    /**
+     * Constructor. Takes the provided responses to generate execution statistics.
+     *
+     * @param responseList list of service responses
+     */
+    public HttpAkkaStats(final List<ResponseDto> responseList) {
+        if (responseList == null) {
             throw new RuntimeException("responses is null and null is not allowed");
         }
+        initHttpAkkaStats(responseList);
+    }
+
+    public void initHttpAkkaStats(final List<ResponseDto> responses) {
         this.totalResponses = responses.size();
         statsDuration = new DescriptiveStatistics();
         statsDurationPerStatus = new HashMap<>();

@@ -8,18 +8,20 @@ import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class HttpActor extends UntypedAbstractActor {
     public static final int UNKNOWN_ERROR_STATUS = 700;
-    private static HashMap<Long, List<ResponseDto>> results = new HashMap<Long, List<ResponseDto>>();
+    private static Map<Long, LinkedBlockingQueue<ResponseDto>> results = new HashMap<>();
     private final ActorRef workerRouter;
     private final int nrOfWorkers;
     private final int numOfAttempts;
     private final Long hashId;
+    private static volatile Map<Long, Long> receivedCount = new HashMap<>();
 
     /**
      * Constructor.
@@ -30,7 +32,7 @@ public class HttpActor extends UntypedAbstractActor {
      */
     public HttpActor(final int nrOfWorkers, final int numOfAttempts, final Long hashId) {
         this.hashId = hashId;
-        results.put(hashId, new ArrayList<ResponseDto>());
+        results.put(hashId, new LinkedBlockingQueue<>());
         this.nrOfWorkers = nrOfWorkers;
         this.numOfAttempts = numOfAttempts;
         workerRouter = this.getContext()
@@ -43,10 +45,10 @@ public class HttpActor extends UntypedAbstractActor {
      * @param hashId of Akka actor
      * @return list of responses
      */
-    public static List<ResponseDto> getResults(final Long hashId) {
-        HashMap<Long, List<ResponseDto>> resultsLocalPointer = getResults();
+    public static LinkedBlockingQueue<ResponseDto> getResults(final Long hashId) {
+        Map<Long, LinkedBlockingQueue<ResponseDto>> resultsLocalPointer = getResults();
         if (!resultsLocalPointer.containsKey(hashId)) {
-            resultsLocalPointer.put(hashId, new ArrayList<ResponseDto>());
+            resultsLocalPointer.put(hashId, new LinkedBlockingQueue<ResponseDto>());
         }
         return resultsLocalPointer.get(hashId);
     }
@@ -56,15 +58,39 @@ public class HttpActor extends UntypedAbstractActor {
      *
      * @return map of hash id to list of responses.
      */
-    public static HashMap<Long, List<ResponseDto>> getResults() {
+    public static Map<Long, LinkedBlockingQueue<ResponseDto>> getResults() {
         if (null == results) {
             resetResults();
         }
         return results;
     }
 
+    public synchronized void incrementReceiveCount(long hashId) {
+        Long count = receivedCount.get(hashId);
+        if (count == null) {
+            receivedCount.put(hashId, 0L);
+        }
+        else {
+            receivedCount.put(hashId, count + 1);
+        }
+    }
+
+    public static long getReceivedCount(long hashId) {
+        Long count = receivedCount.get(hashId);
+        if (count == null) {
+            return 0;
+        }
+        else {
+            return count;
+        }
+    }
+
     public static void resetResults() {
-        results = new HashMap<Long, List<ResponseDto>>();
+        results = new HashMap<>();
+    }
+
+    public static void resetReceivedCount() {
+        receivedCount = new HashMap<>();
     }
 
     /**
@@ -76,7 +102,8 @@ public class HttpActor extends UntypedAbstractActor {
     public void onReceive(final Object message) throws Exception {
         try {
             if (message instanceof ResponseDto) {
-                results.get(hashId).add((ResponseDto) message);
+                incrementReceiveCount(hashId);
+                getResults(hashId).add((ResponseDto) message);
             } else if (message instanceof List) {
                 for (final Class<?> test : (List<Class<?>>) message) {
                     workerRouter.tell(test, getSelf());
@@ -117,5 +144,4 @@ public class HttpActor extends UntypedAbstractActor {
     public int getNrOfWorkers() {
         return nrOfWorkers;
     }
-
 }

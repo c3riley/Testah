@@ -9,13 +9,15 @@ import org.testah.runner.performance.dto.LoadTestSequenceDto;
 
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class AbstractLoadTest {
     private static final String RUN_LOG_MESSAGE =
-            "Executing step %d of %d with : threads=%d, chunksize=%d, duration=%d minutes, publish=%b";
+            "Executing step %d of %d with : threads=%d, chunksize=%d, duration=%d minutes, millisBetweenChunks=%d, publish=%b";
     private final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
     private TestDataGenerator loadTestDataGenerator;
     private TestRunProperties runProps;
@@ -35,20 +37,22 @@ public abstract class AbstractLoadTest {
                                 Charset.forName("UTF-8")),
                         LoadTestSequenceDto[].class);
         Arrays.stream(loadTestSequence).forEach(step -> {
-            TS.log().info(String.format(RUN_LOG_MESSAGE,
-                    step.getStep(),
-                    loadTestSequence.length,
-                    step.getThreads(),
-                    step.getChunkSize(),
-                    step.getDurationMinutes(),
-                    step.getIsPublish()));
+            TS.log().info(
+                String.format(RUN_LOG_MESSAGE,
+                step.getStep(),
+                loadTestSequence.length,
+                step.getThreads(),
+                step.getChunkSize(),
+                step.getDurationMinutes(),
+                step.getMillisBetweenChunks(),
+                step.getIsPublish()));
             try {
                 if (publishers != null && publishers.size() > 0) {
                     for (ExecutionStatsPublisher publisher : publishers) {
                         publisher.beforeTestSequenceStep(step);
                     }
                 }
-                executeStep(step.getThreads(), step.getChunkSize(), step.getDurationMinutes(), step.getIsPublish());
+                executeStep(step);
             } catch (Exception e) {
                 TS.log().info(e);
             } finally {
@@ -65,46 +69,62 @@ public abstract class AbstractLoadTest {
      * Execute the HTTP requests, gather and publish the statistics. A concrete test may have multiple
      * calls to ramp up, steady level and ramp down.
      *
-     * @param numThreads          number of Akka threads
-     * @param chunkSize           number of bundled requests
-     * @param timeIntervalMinutes time to run requests
-     * @param isPublish set to false to not publish
+     * @param step       LoadTestSequenceDto for this step
      * @throws Exception when HTTP request generation fails
      */
-    public void executeStep(int numThreads, int chunkSize, int timeIntervalMinutes, boolean isPublish) throws Exception {
-        long stopTime = DateTime.now().plusMinutes(timeIntervalMinutes).getMillis();
-        loadTestDataGenerator.init(chunkSize, runProps.getNumberOfChunks());
-        List<ResponseDto> responses;
+    public void executeStep(LoadTestSequenceDto step)
+        throws Exception
+    {
+        long stopTime = DateTime.now().plusMinutes(step.getDurationMinutes()).getMillis();
+        loadTestDataGenerator.init(step.getChunkSize(), runProps.getNumberOfChunks());
+        LinkedBlockingQueue<ResponseDto> responses = new LinkedBlockingQueue<>();
+        List<ResponseDto> responseDtoList = new ArrayList<>();
+        long sendRequests = 0;
 
-        while (System.currentTimeMillis() < stopTime) {
-            List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues =
+        try
+        {
+            while (System.currentTimeMillis() < stopTime)
+            {
+                List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues =
                     loadTestDataGenerator.generateRequests();
-            for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues) {
-                try {
-                    responses = akkaRunner.runAndReport(numThreads, concurrentLinkedQueue, runProps.isVerbose());
-
-                    if (publishers != null && publishers.size() > 0 && isPublish) {
-                        for (ExecutionStatsPublisher publisher : publishers) {
-                            publisher.push(responses);
+                for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues)
+                {
+                    sendRequests += concurrentLinkedQueue.size();
+                    responseDtoList.clear();
+                    try
+                    {
+                        akkaRunner.runAndReport(responses, step.getThreads(), concurrentLinkedQueue, step.getIsVerbose());
+                        responses.drainTo(responseDtoList);
+                        if (publishers != null && publishers.size() > 0 && step.getIsPublish())
+                        {
+                            for (ExecutionStatsPublisher publisher : publishers)
+                            {
+                                publisher.push(responseDtoList);
+                            }
                         }
-                    }
 
-                    // Take care of open sockets
-                    System.gc();
+                        // Take care of open sockets
+                        System.gc();
 
-                    Thread.sleep(runProps.getMillisBetweenChunks());
-                    if (System.currentTimeMillis() >= stopTime) {
-                        return;
+                        Thread.sleep(step.getMillisBetweenChunks());
+                        if (System.currentTimeMillis() >= stopTime)
+                        {
+                            break;
+                        }
+                    } catch (Throwable t)
+                    {
+                        TS.log().warn("Exception while running tests!", t);
                     }
-                } catch (Throwable t) {
-                    TS.log().warn("Exception while running tests!", t);
                 }
             }
+        } finally
+        {
+            TS.log().info(String.format("Requests send/received = %d/%d", sendRequests, akkaRunner.getReceiveCount()));
+            akkaRunner.terminateActorSystems();
         }
     }
 
     protected String getRunStepFile(Class<?> testClass) {
         return testClass.getCanonicalName().replaceAll("\\.", "/") + ".json";
     }
-
 }
