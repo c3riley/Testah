@@ -41,6 +41,11 @@ public class HttpAkkaStats {
         initHttpAkkaStats(responseList);
     }
 
+    /**
+     * Initialize this class instance.
+     *
+     * @param responses responses from HTTP calls
+     */
     public void initHttpAkkaStats(final List<ResponseDto> responses) {
         this.totalResponses = responses.size();
         statsDuration = new DescriptiveStatistics();

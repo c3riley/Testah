@@ -65,22 +65,29 @@ public class HttpActor extends UntypedAbstractActor {
         return results;
     }
 
+    /**
+     * Increment the count of received messages, file by thread hash.
+     * @param hashId thread id
+     */
     public synchronized void incrementReceiveCount(long hashId) {
         Long count = receivedCount.get(hashId);
         if (count == null) {
             receivedCount.put(hashId, 0L);
-        }
-        else {
+        } else {
             receivedCount.put(hashId, count + 1);
         }
     }
 
+    /**
+     * Get the count of received responses.
+     * @param hashId thread id
+     * @return count of received responses
+     */
     public static long getReceivedCount(long hashId) {
         Long count = receivedCount.get(hashId);
         if (count == null) {
             return 0;
-        }
-        else {
+        } else {
             return count;
         }
     }

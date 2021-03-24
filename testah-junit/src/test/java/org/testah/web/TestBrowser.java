@@ -101,11 +101,11 @@ public class TestBrowser extends BrowserTestPlan {
     @TestCase
     @Test
     public void testWebElements() {
-        final List<AbstractWebElementWrapper> lst = TS.browser().getWebElements(By.id("hplogo"));
+        final List<AbstractWebElementWrapper> lst = TS.browser().getWebElements(By.id("spch"));
         TS.asserts().notNull(lst);
         TS.asserts().equalsTo(1, lst.size());
         TS.asserts().notNull(lst.get(0));
-        TS.asserts().equalsTo(By.id("hplogo"), lst.get(0).getBy());
+        TS.asserts().equalsTo(By.id("spch"), lst.get(0).getBy());
         TS.asserts().notNull(lst.get(0).getDriverWebElement());
         TS.asserts().notNull("style value is not null", lst.get(0).getAttribute("style"));
     }
@@ -113,9 +113,9 @@ public class TestBrowser extends BrowserTestPlan {
     @TestCase
     @Test
     public void testWebElement() {
-        final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("hplogo"));
+        final AbstractWebElementWrapper e = TS.browser().getWebElement(By.id("spch"));
         TS.asserts().notNull(e);
-        TS.asserts().equalsTo(By.id("hplogo"), e.getBy());
+        TS.asserts().equalsTo(By.id("spch"), e.getBy());
         TS.asserts().notNull(e.getDriverWebElement());
         TS.asserts().notNull("style value is not null", e.getAttribute("style"));
     }

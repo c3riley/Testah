@@ -46,6 +46,10 @@ public class HttpAkkaRunner {
         return httpAkkaRunner;
     }
 
+    /**
+     * Reset the HttpActor results map and the received count map and
+     * instantiate a new HttpAkkaRunner.
+     */
     public static void reset()
     {
         HttpActor.resetResults();
@@ -223,11 +227,18 @@ public class HttpAkkaRunner {
         HttpAkkaRunner.getInstance().httpWrapper = httpWrapper;
     }
 
+    /**
+     * Wait for the expected number of responses, but no longer that the time specified
+     * @param responseQueue queue that holds the responses so far received
+     * @param expectedCount total count of expected responses
+     * @param millis maximal time to wait in milliseconds
+     * @return total number of received responses
+     */
     public long waitForResponses(LinkedBlockingQueue<ResponseDto> responseQueue, long expectedCount, long millis)
     {
         long stopTimestamp = currentTimeMillis() + millis;
-        while (currentTimeMillis() < stopTimestamp
-            && (HttpActor.getResults(hashId) == null || receivedCount < expectedCount))
+        while (currentTimeMillis() < stopTimestamp &&
+            (HttpActor.getResults(hashId) == null || receivedCount < expectedCount))
         {
             try
             {
@@ -241,6 +252,11 @@ public class HttpAkkaRunner {
         return receivedCount;
     }
 
+    /**
+     * Fill the response queue with received responses.
+     * @param responseQueue response queue to update
+     * @return the responses that were added to the queue
+     */
     public List<ResponseDto> updateResponseQueue(LinkedBlockingQueue<ResponseDto> responseQueue) {
         List<ResponseDto> responseDtoList = new ArrayList<>();
         getResults(hashId).drainTo(responseDtoList);
@@ -249,15 +265,20 @@ public class HttpAkkaRunner {
         return responseDtoList;
     }
 
+    /**
+     * Return the count of received responses.
+     * @return count of received responses
+     */
     public long getReceiveCount()
     {
         return receivedCount;
     }
 
-    public void terminateActorSystems()
-    {
-        for (ActorSystem actorSystem : getActorSystemList())
-        {
+    /**
+     * Terminate the actor systems.
+     */
+    public void terminateActorSystems() {
+        for (ActorSystem actorSystem : getActorSystemList()) {
             actorSystem.terminate();
         }
     }
