@@ -1,9 +1,16 @@
 package org.testah.driver.web.element;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.*;
 import org.openqa.selenium.By;
 import org.testah.TS;
 import org.testah.framework.cli.Params;
+import org.testah.runner.performance.dto.LoadTestSequenceDto;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -13,8 +20,13 @@ public class WebElementWrapperV1Test {
     private static String formPage = "file://" + Params.getUserDir() + "/src/test/resources/formPage.html";
 
     @BeforeClass
-    public static void setupForClass() {
-        TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
+    public static void setupForClass() throws IOException
+    {
+        String htmlPageContent = TS.util().getResourceAsString("/formPage.html");
+        File tmpFormFile = new File("tmpFormPage.html");
+        FileUtils.writeStringToFile(tmpFormFile, htmlPageContent, Charset.defaultCharset());
+        String browserPathToFilePage = "file://" + tmpFormFile.getAbsolutePath();
+        TS.browser().goTo(browserPathToFilePage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
     }
 
 
