@@ -17,18 +17,16 @@ import static org.junit.Assert.assertThat;
 
 public class WebElementWrapperV1Test {
 
-    private static String formPage = "file://" + Params.getUserDir() + "/src/test/resources/formPage.html";
+    static String browserPathToFilePage;
 
     @BeforeClass
-    public static void setupForClass() throws IOException
-    {
+    public static void setupForClass() throws IOException {
         String htmlPageContent = TS.util().getResourceAsString("/formPage.html");
         File tmpFormFile = new File("tmpFormPage.html");
         FileUtils.writeStringToFile(tmpFormFile, htmlPageContent, Charset.defaultCharset());
-        String browserPathToFilePage = "file://" + tmpFormFile.getAbsolutePath();
+        browserPathToFilePage = "file://" + tmpFormFile.getAbsolutePath();
         TS.browser().goTo(browserPathToFilePage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
     }
-
 
     @AfterClass
     public static void tearDownClass() {
@@ -36,17 +34,18 @@ public class WebElementWrapperV1Test {
     }
 
     /**
-     * Before method setup .
+     * Before method setup.
      */
     @Before
-    public void setup() {
+    public void setup()
+    {
         if (!TS.browser().getTitle().equals("We Leave From Here")) {
-            TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
+            formPage();
         }
     }
 
     public void formPage() {
-        TS.browser().goTo(formPage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
+        TS.browser().goTo(browserPathToFilePage).waitForTitle("We Leave From Here", 20).assertTitle("We Leave From Here");
     }
 
     @Test

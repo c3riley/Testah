@@ -15,6 +15,9 @@ public class LoadTestSequenceTest
     TestRunProperties runProps;
 
     @Before
+    /**
+     * Setup test.
+     */
     public void setup() {
         String testedSvc = "serviceUnderTest";
         String testClass = "testClass";

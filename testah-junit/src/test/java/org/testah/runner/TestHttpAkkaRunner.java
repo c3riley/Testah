@@ -90,7 +90,6 @@ public class TestHttpAkkaRunner {
 
         ConcurrentLinkedQueue<PostRequestDto> concurrentLinkedQueue =
             new ConcurrentLinkedQueue<>(postRequests);
-        List<HttpAkkaStats> statsList = new ArrayList<>();
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
         LinkedBlockingQueue<ResponseDto> responseQueue = new LinkedBlockingQueue<>();
@@ -99,6 +98,7 @@ public class TestHttpAkkaRunner {
 
         List<ResponseDto> responseList = new ArrayList<>();
         responseQueue.drainTo(responseList);
+        List<HttpAkkaStats> statsList = new ArrayList<>();
         statsList.add(new HttpAkkaStats(responseList));
 
         statsList.stream().forEach(stats -> {
@@ -137,7 +137,6 @@ public class TestHttpAkkaRunner {
 
         ConcurrentLinkedQueue<GetRequestDto> concurrentLinkedQueue =
             new ConcurrentLinkedQueue<>(getRequests);
-        List<HttpAkkaStats> statsList = new ArrayList<>();
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
         LinkedBlockingQueue<ResponseDto> responseQueue = new LinkedBlockingQueue<>();
@@ -146,6 +145,7 @@ public class TestHttpAkkaRunner {
 
         List<ResponseDto> responseList = new ArrayList<>();
         responseQueue.drainTo(responseList);
+        List<HttpAkkaStats> statsList = new ArrayList<>();
         statsList.add(new HttpAkkaStats(responseList));
 
         statsList.stream().forEach(stats -> {

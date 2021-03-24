@@ -228,7 +228,7 @@ public class HttpAkkaRunner {
     }
 
     /**
-     * Wait for the expected number of responses, but no longer that the time specified
+     * Wait for the expected number of responses, but no longer that the time specified.
      * @param responseQueue queue that holds the responses so far received
      * @param expectedCount total count of expected responses
      * @param millis maximal time to wait in milliseconds
