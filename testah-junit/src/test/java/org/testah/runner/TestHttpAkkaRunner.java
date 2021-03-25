@@ -1,6 +1,6 @@
 package org.testah.runner;
 
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.driver.http.HttpWrapperV2;
@@ -9,28 +9,30 @@ import org.testah.driver.http.requests.PostRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.http.load.HttpAkkaStats;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static org.hamcrest.Matchers.equalTo;
 
 public class TestHttpAkkaRunner {
 
-    @Test
-    public void getHttpAkkaRunnerTest() {
-        assertThat(HttpAkkaRunner.getHttpAkkaRunner(), notNullValue());
-        HttpAkkaRunner httpAkkaRunner = new HttpAkkaRunner();
-        HttpAkkaRunner.setHttpAkkaRunner(httpAkkaRunner);
-        assertThat(HttpAkkaRunner.getHttpAkkaRunner(), is(httpAkkaRunner));
+    @Before
+    public void setup() {
+        HttpAkkaRunner.reset();
     }
 
     @Test
@@ -43,25 +45,27 @@ public class TestHttpAkkaRunner {
         assertThat(HttpAkkaRunner.getInstance().getHttpWrapper(), notNullValue());
         assertThat(HttpAkkaRunner.getInstance().getHttpWrapper(), not(http));
         assertThat(HttpAkkaRunner.getInstance().getHttpWrapper(), instanceOf(HttpWrapperV2.class));
-
     }
 
     @Test
     public void invalidUrl() {
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
         akkaRunner.runAndReport(5, new GetRequestDto("htp:/www.goeeeeogle.com"), 5);
+        akkaRunner.waitForResponses(new LinkedBlockingQueue<ResponseDto>(), 5, Duration.ofSeconds(5).toMillis());
     }
 
     @Test
     public void wrongUrl() {
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
         akkaRunner.runAndReport(5, new GetRequestDto("http://www.goeeeeogle.com"), 5);
+        akkaRunner.waitForResponses(new LinkedBlockingQueue<ResponseDto>(), 5, Duration.ofSeconds(5).toMillis());
     }
 
     @Test
     public void happyPath() {
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
         akkaRunner.runAndReport(5, new GetRequestDto("http://www.google.com"), 5);
+        akkaRunner.waitForResponses(new LinkedBlockingQueue<ResponseDto>(), 5, Duration.ofSeconds(5).toMillis());
     }
 
     @Test
@@ -85,29 +89,27 @@ public class TestHttpAkkaRunner {
         }
 
         ConcurrentLinkedQueue<PostRequestDto> concurrentLinkedQueue =
-            new ConcurrentLinkedQueue<PostRequestDto>(postRequests);
-        List<HttpAkkaStats> statsList = new ArrayList<>();
+            new ConcurrentLinkedQueue<>(postRequests);
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
-        List<ResponseDto> responses = akkaRunner.runAndReport(2, concurrentLinkedQueue, false);
-        statsList.add(new HttpAkkaStats(responses));
+        LinkedBlockingQueue<ResponseDto> responseQueue = new LinkedBlockingQueue<>();
+        akkaRunner.runAndReport(responseQueue, 2, concurrentLinkedQueue, true);
+        akkaRunner.waitForResponses(responseQueue, totalNumberOfPosts, Duration.ofSeconds(5).toMillis());
+
+        List<ResponseDto> responseList = new ArrayList<>();
+        responseQueue.drainTo(responseList);
+        List<HttpAkkaStats> statsList = new ArrayList<>();
+        statsList.add(new HttpAkkaStats(responseList));
 
         statsList.stream().forEach(stats -> {
-            TS.log().info("Elapsed time for calls: " + stats.getDuration());
-            TS.asserts().isTrue(stats.getDuration() instanceof Long);
-            TS.asserts().isTrue(stats.getDuration() > 0);
-            TS.log().info("Average duration of call: " + stats.getAvgDuration());
-            TS.asserts().isTrue(stats.getDuration() instanceof Long);
-            TS.asserts().isTrue(stats.getDuration() > 0);
-            TS.log().info("Number of calls: " + stats.getStatsDuration().getN() + ", 90% = " +
-                stats.getStatsDuration().getPercentile(90.0));
-            TS.asserts().isTrue(stats.getTotalResponses() == totalNumberOfPosts);
-            TS.asserts().isTrue(stats.getStatsDuration().getPercentile(90.0) > 0);
+            TS.asserts().isGreaterThan("check average duration", 0, stats.getDuration());
+            TS.asserts().equalsTo("check number of posts", totalNumberOfPosts, stats.getTotalResponses());
+            TS.asserts().isTrue("check duration percentile", stats.getStatsDuration().getPercentile(90.0) > 0);
         });
 
         Pattern pattern = Pattern.compile(regexString);
         Set<String> responseValues = new HashSet<>();
-        for (ResponseDto response : responses) {
+        for (ResponseDto response : responseList) {
             Matcher matcher = pattern.matcher(response.getResponseBody().replaceAll("\\s", ""));
             if (matcher.matches()) {
                 responseValues.add(matcher.group(1));
@@ -135,11 +137,16 @@ public class TestHttpAkkaRunner {
 
         ConcurrentLinkedQueue<GetRequestDto> concurrentLinkedQueue =
             new ConcurrentLinkedQueue<>(getRequests);
-        List<HttpAkkaStats> statsList = new ArrayList<>();
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
-        List<ResponseDto> responses = akkaRunner.runAndReport(2, concurrentLinkedQueue, false);
-        statsList.add(new HttpAkkaStats(responses));
+        LinkedBlockingQueue<ResponseDto> responseQueue = new LinkedBlockingQueue<>();
+        akkaRunner.runAndReport(responseQueue, 2, concurrentLinkedQueue, false);
+        akkaRunner.waitForResponses(responseQueue, 4, Duration.ofSeconds(10).toMillis());
+
+        List<ResponseDto> responseList = new ArrayList<>();
+        responseQueue.drainTo(responseList);
+        List<HttpAkkaStats> statsList = new ArrayList<>();
+        statsList.add(new HttpAkkaStats(responseList));
 
         statsList.stream().forEach(stats -> {
             TS.log().info("Elapsed time for calls: " + stats.getDuration());
@@ -156,7 +163,7 @@ public class TestHttpAkkaRunner {
 
         Pattern pattern = Pattern.compile(regexString);
         Set<String> responseValues = new HashSet<>();
-        for (ResponseDto response : responses) {
+        for (ResponseDto response : responseList) {
             Matcher matcher = pattern.matcher(response.getResponseBody().replaceAll("\\s", ""));
             if (matcher.matches()) {
                 responseValues.add(matcher.group(1));
@@ -168,8 +175,15 @@ public class TestHttpAkkaRunner {
     @Test
     public void runTestsTestWithBadValue() {
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
-        TS.asserts().assertThat(akkaRunner.runTests(0, null, true), nullValue());
-        TS.asserts().assertThat(akkaRunner.runTests(0, new ConcurrentLinkedQueue(), true), nullValue());
+        LinkedBlockingQueue<ResponseDto> responseQueue = new LinkedBlockingQueue<>();
+        akkaRunner.runTests(responseQueue, 0, null, true);
+        TS.asserts().equalsTo(responseQueue.size(), 0);
+        responseQueue.clear();
+
+        akkaRunner.runTests(responseQueue, 0, new ConcurrentLinkedQueue(), true);
+        TS.asserts().equalsTo(responseQueue.size(), 0);
+        responseQueue.clear();
+
         TS.asserts().assertThat(akkaRunner.runTests(0, null, 0), nullValue());
     }
 
@@ -179,5 +193,4 @@ public class TestHttpAkkaRunner {
         when(akkaRunner.getActorSystem()).thenThrow(new ExceptionInInitializerError());
         akkaRunner.runTests(-1, new GetRequestDto("exit"), -1);
     }
-
 }

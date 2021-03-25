@@ -99,6 +99,10 @@ public class TestRunProperties {
         return runDuration;
     }
 
+    public Integer getRunDurationMinutes() {
+        return Math.toIntExact(Duration.ofMillis(runDuration).toMinutes());
+    }
+
     /**
      * Set the duration in milliseconds for the test to run.
      *
@@ -219,7 +223,7 @@ public class TestRunProperties {
      *
      * @return the isVerbose
      */
-    public boolean isVerbose() {
+    public Boolean isVerbose() {
         return isVerbose;
     }
 
