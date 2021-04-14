@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @TestCase
-@ParameterizedTest(name = "{index} => {0}")
+@ParameterizedTest(name = "{displayName} => {index} - {arguments}")
 @Target({ElementType.ANNOTATION_TYPE, ElementType.METHOD})
 public @interface TestCaseWithParamsJUnit5 {
 

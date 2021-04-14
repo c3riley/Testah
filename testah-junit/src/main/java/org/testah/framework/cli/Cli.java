@@ -44,7 +44,7 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "3.3.0";
+    public static final String version = "3.3.1";
 
     /**
      * The Constant BAR_LONG.
