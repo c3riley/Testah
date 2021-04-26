@@ -61,7 +61,6 @@ public class TestahUtilTest {
 
         assertThat(testahUtil.getResourceFolderFiles("/utilNotFound", true),
                 is(new ArrayList<File>()));
-
     }
 
     @Test
