@@ -1,6 +1,5 @@
 package org.testah.framework.annotations;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.testah.client.enums.TestType;
 
