@@ -4,6 +4,9 @@ import org.junit.jupiter.api.TestInfo;
 
 public class JUnit5TestUtil
 {
+    public static final int MAX_LENGTH = 55;
+    public static final int RANDOM_LENGTH = 5;
+
     /**
      * JUnit5 has a TestInfo class that includes information about the test. In particular,
      * it has the class, method name and display name. In case of the data provider, the display
@@ -22,6 +25,15 @@ public class JUnit5TestUtil
      */
     public static String getTestCaseId(TestInfo testInfo, int maxLength, int randomLength) {
         return new Junit5TestId(testInfo, maxLength, randomLength).getTestCaseId();
+    }
+
+    /**
+     * Construct a Junit5UniqueTestId object with default max length=55 and random length=5.
+     * @param testInfo TestInfo object from JUnit5 test case
+     * @return Junit5UniqueTestId object with unique id, and regex pattern for the deterministic part of the id
+     */
+    public static Junit5TestId getJunit5TestId(TestInfo testInfo) {
+        return new Junit5TestId(testInfo, MAX_LENGTH, RANDOM_LENGTH);
     }
 
     /**

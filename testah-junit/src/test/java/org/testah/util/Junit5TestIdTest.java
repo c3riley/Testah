@@ -40,7 +40,8 @@ class Junit5TestIdTest
 
     @TestCaseWithParamsJUnit5
     @MethodSource("testCaseProvider")
-    void getDeterministicPart(int maxLength, int randomLength, String expectedWithIndex, String expectedNoIndex, int index, TestInfo testInfo)
+    void getDeterministicPart(int maxLength, int randomLength, String expectedWithIndex, String expectedNoIndex,
+                              int index, TestInfo testInfo)
     {
         Junit5TestId junit5TestId = new Junit5TestId(testInfo, maxLength, randomLength);
         assertEquals(expectedWithIndex, junit5TestId.getDeterministicPart(INCL_ROW_NUM));

@@ -129,8 +129,7 @@ public class Junit5TestId
             String indexString = matcher.group(1);
             try {
                 dataSetIndex = Integer.parseInt(indexString);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 TS.log().warn(String.format("Cannot parse %s into Integer.", indexString));
             }
         }
