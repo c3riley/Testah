@@ -5,7 +5,7 @@ import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.HttpAkkaRunner;
 
-import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -24,11 +24,12 @@ public abstract class AbstractLongRunningTest {
                             ExecutionStatsPublisher... publishers) throws Exception {
         runProps.setDomain(loadTestDataGenerator.getDomain());
 
-        TS.log().info(runProps.toString());
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
+        runProps.setStopTime(System.currentTimeMillis() + runProps.getRunDuration());
+        TS.log().info(runProps.toString());
         long timeleft = runProps.getStopTime() - System.currentTimeMillis();
-        LinkedBlockingQueue<ResponseDto> responseQueue = new LinkedBlockingQueue<>();
-        List<ResponseDto> responses;
+        LinkedBlockingQueue<ResponseDto> responses = new LinkedBlockingQueue<>();
+        List<ResponseDto> responseDtoList = new ArrayList<>();
         long sentRequests = 0;
 
         try {
@@ -36,14 +37,14 @@ public abstract class AbstractLongRunningTest {
                 List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = loadTestDataGenerator.generateRequests();
                 for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues) {
                     sentRequests += concurrentLinkedQueue.size();
+                    responseDtoList.clear();
                     try {
-                        akkaRunner.runAndReport(responseQueue, runProps.getNumberOfAkkaThreads(), concurrentLinkedQueue,
+                        akkaRunner.runAndReport(responses, runProps.getNumberOfAkkaThreads(), concurrentLinkedQueue,
                                 runProps.isVerbose());
-
-                        responses = akkaRunner.updateResponseQueue(responseQueue);
-                        if (publishers != null && publishers.length > 0 && responses.size() > 0) {
+                        responses.drainTo(responseDtoList);
+                        if (publishers != null && publishers.length > 0) {
                             for (ExecutionStatsPublisher publisher : publishers) {
-                                publisher.push(responses);
+                                publisher.push(responseDtoList);
                             }
                         }
 
@@ -61,14 +62,8 @@ public abstract class AbstractLongRunningTest {
                     }
                 }
             }
-            akkaRunner.waitForResponses(responseQueue, sentRequests, Duration.ofSeconds(5).toMillis());
-            responses = akkaRunner.updateResponseQueue(responseQueue);
-            if (publishers != null && publishers.length > 0 && responses.size() > 0) {
-                for (ExecutionStatsPublisher publisher : publishers) {
-                    publisher.push(responses);
-                }
-            }
-        } finally {
+        } finally
+        {
             TS.log().info(String.format("Requests sent/received = %d/%d", sentRequests, akkaRunner.getReceiveCount()));
             akkaRunner.terminateActorSystems();
             if (publishers != null && publishers.length > 0) {

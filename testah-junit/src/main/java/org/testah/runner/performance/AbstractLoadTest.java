@@ -74,7 +74,7 @@ public abstract class AbstractLoadTest {
         loadTestDataGenerator.init(step.getChunkSize(), step.getNumberOfChunks());
         LinkedBlockingQueue<ResponseDto> responses = new LinkedBlockingQueue<>();
         List<ResponseDto> responseDtoList = new ArrayList<>();
-        long sendRequests = 0;
+        long sentRequests = 0;
 
         try
         {
@@ -84,7 +84,7 @@ public abstract class AbstractLoadTest {
                     loadTestDataGenerator.generateRequests();
                 for (ConcurrentLinkedQueue<AbstractRequestDto<?>> concurrentLinkedQueue : concurrentLinkedQueues)
                 {
-                    sendRequests += concurrentLinkedQueue.size();
+                    sentRequests += concurrentLinkedQueue.size();
                     responseDtoList.clear();
                     try
                     {
@@ -114,8 +114,15 @@ public abstract class AbstractLoadTest {
             }
         } finally
         {
-            TS.log().info(String.format("Requests send/received = %d/%d", sendRequests, akkaRunner.getReceiveCount()));
+            TS.log().info(String.format("Requests sent/received = %d/%d", sentRequests, akkaRunner.getReceiveCount()));
             akkaRunner.terminateActorSystems();
+            if (publishers != null && publishers.size() > 0)
+            {
+                for (ExecutionStatsPublisher publisher : publishers)
+                {
+                    publisher.cleanup();
+                }
+            }
         }
     }
 
