@@ -2,12 +2,15 @@ package org.testah.runner.performance.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joda.time.DateTime;
 import org.testah.runner.performance.TestRunProperties;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class LoadTestSequenceDto {
+public class LoadTestSequenceDto
+{
 
     static final String PARAM_DURATION_MINUTES = "durationMinutes";
+    static final String PARAM_DURATION_SECONDS = "durationSeconds";
     static final String PARAM_CHUNK_SIZE = "chunkSize";
     static final String PARAM_THREADS = "threads";
     static final String IS_PUBLISH = "isPublish";
@@ -24,6 +27,8 @@ public class LoadTestSequenceDto {
     private Integer chunkSize;
     @JsonProperty(PARAM_DURATION_MINUTES)
     private Integer durationMinutes;
+    @JsonProperty(PARAM_DURATION_SECONDS)
+    private Integer durationSeconds;
     @JsonProperty(IS_PUBLISH)
     private boolean isPublish = true;
     @JsonProperty(IS_VERBOSE)
@@ -34,57 +39,80 @@ public class LoadTestSequenceDto {
     private Integer numberOfChunks;
 
     @JsonProperty(PARAM_STEP)
-    public Integer getStep() {
+    public Integer getStep()
+    {
         return step;
     }
 
     @JsonProperty(PARAM_STEP)
-    public LoadTestSequenceDto setStep(Integer step) {
+    public LoadTestSequenceDto setStep(Integer step)
+    {
         this.step = step;
         return this;
     }
 
     @JsonProperty(PARAM_THREADS)
-    public Integer getThreads() {
+    public Integer getThreads()
+    {
         return threads;
     }
 
     @JsonProperty(PARAM_THREADS)
-    public LoadTestSequenceDto setThreads(Integer threads) {
+    public LoadTestSequenceDto setThreads(Integer threads)
+    {
         this.threads = threads;
         return this;
     }
 
     @JsonProperty(PARAM_CHUNK_SIZE)
-    public Integer getChunkSize() {
+    public Integer getChunkSize()
+    {
         return chunkSize;
     }
 
     @JsonProperty(PARAM_CHUNK_SIZE)
-    public LoadTestSequenceDto setChunkSize(Integer chunkSize) {
+    public LoadTestSequenceDto setChunkSize(Integer chunkSize)
+    {
         this.chunkSize = chunkSize;
         return this;
     }
 
     @JsonProperty(NUMBER_OF_CHUNKS)
-    public Integer getNumberOfChunks() {
+    public Integer getNumberOfChunks()
+    {
         return numberOfChunks;
     }
 
     @JsonProperty(NUMBER_OF_CHUNKS)
-    public LoadTestSequenceDto setNumberOfChunks(Integer numberOfChunks) {
+    public LoadTestSequenceDto setNumberOfChunks(Integer numberOfChunks)
+    {
         this.numberOfChunks = numberOfChunks;
         return this;
     }
 
     @JsonProperty(PARAM_DURATION_MINUTES)
-    public Integer getDurationMinutes() {
+    public Integer getDurationMinutes()
+    {
         return durationMinutes;
     }
 
     @JsonProperty(PARAM_DURATION_MINUTES)
-    public LoadTestSequenceDto setDurationMinutes(Integer durationMinutes) {
+    public LoadTestSequenceDto setDurationMinutes(Integer durationMinutes)
+    {
         this.durationMinutes = durationMinutes;
+        return this;
+    }
+
+    @JsonProperty(PARAM_DURATION_SECONDS)
+    public Integer getDurationSeconds()
+    {
+        return durationSeconds;
+    }
+
+    @JsonProperty(PARAM_DURATION_SECONDS)
+    public LoadTestSequenceDto setDurationSeconds(Integer durationSeconds)
+    {
+        this.durationSeconds = durationSeconds;
         return this;
     }
 
@@ -123,8 +151,16 @@ public class LoadTestSequenceDto {
         return this;
     }
 
+    public long getStopTimeMillis(DateTime dateTime)
+    {
+        int minutes = durationMinutes == null ? 0 : durationMinutes;
+        int seconds = durationSeconds == null ? 0 : durationSeconds;
+        return dateTime.plusMinutes(minutes).plusSeconds(seconds).getMillis();
+    }
+
     /**
      * Fill missing properties from TestRunProperties.
+     *
      * @param runProperties TestRunProperties containing default values
      * @return this object instance
      */
@@ -132,7 +168,7 @@ public class LoadTestSequenceDto {
     {
         threads = threads == null ? runProperties.getNumberOfAkkaThreads() : threads;
         chunkSize = chunkSize == null ? runProperties.getChunkSize() : chunkSize;
-        durationMinutes = durationMinutes == null ? runProperties.getRunDurationMinutes() : durationMinutes;
+        durationSeconds = (durationMinutes == null && durationSeconds == null) ? runProperties.getRunDurationSeconds() : durationSeconds;
         millisBetweenChunks = millisBetweenChunks == null ? runProperties.getMillisBetweenChunks() : millisBetweenChunks;
         isVerbose = isVerbose == null ? runProperties.isVerbose() : isVerbose;
         numberOfChunks = numberOfChunks == null ? runProperties.getNumberOfChunks() : numberOfChunks;
