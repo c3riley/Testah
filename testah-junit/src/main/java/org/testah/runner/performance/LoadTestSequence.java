@@ -13,6 +13,12 @@ import java.util.stream.Collectors;
 public class LoadTestSequence {
     LoadTestSequenceDto[] loadTestSequence;
 
+    /**
+     * Read the load test steps from the JSON step file.
+     *
+     * @param resourceFile location of the JSON test step configuration file
+     * @throws IOException when the file cannot be read
+     */
     public LoadTestSequence(String resourceFile) throws IOException
     {
         loadTestSequence =
@@ -24,6 +30,7 @@ public class LoadTestSequence {
     /**
      * Get the steps of the load test with parameters not set in the sequence resource file
      * defaulting to values from the runProperties.
+     *
      * @param runProperties properties for entire run
      * @return load test steps as list of LoadTestSequenceDto
      */
@@ -33,6 +40,7 @@ public class LoadTestSequence {
 
     /**
      * Get the number of steps.
+     *
      * @return the number of steps defined in the resource file
      */
     public int size() {

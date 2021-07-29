@@ -2,6 +2,7 @@ package org.testah.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -428,6 +429,10 @@ public class TestahUtil {
      * @param path the path
      * @return the resource as string
      */
+    @SuppressFBWarnings(
+        value = {"NP_LOAD_OF_KNOWN_NULL_VALUE", "RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE", "RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE"},
+        justification = "in contrast to what spotbugs says, is can be null if there is no file at the path"
+    )
     public String getResourceAsString(final String path) {
         try (InputStream is = getClass().getResourceAsStream(path)) {
             if (is != null) {

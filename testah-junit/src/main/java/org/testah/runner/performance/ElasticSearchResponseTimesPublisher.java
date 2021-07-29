@@ -111,35 +111,35 @@ public class ElasticSearchResponseTimesPublisher implements ExecutionStatsPublis
                 setStartTime(response.getStart());
                 setEndTime(response.getEnd());
                 payloadBuilder
-                        .append(bulkCreateString)
-                        .append(String.format("%s%n", mapper.writeValueAsString(
-                                new RequestExecutionDuration(TYPE_SINGLE_REQUEST)
-                                        .setCollectionTime(collectionTime)
-                                        .setDomain(runProps.getDomain())
-                                        .setDuration(response.getDuration())
-                                        .setService(runProps.getServiceUnderTest())
-                                        .setTestClass(runProps.getTestClass())
-                                        .setTestMethod(runProps.getTestMethod())
-                                        // Always use server time (GMT)
-                                        .setTimestamp(getDateTimeString(response.getStart(), zoneId))
-                                        .setStatusCode(response.getStatusCode())
-                        )));
+                    .append(bulkCreateString)
+                    .append(String.format("%s%n", mapper.writeValueAsString(
+                        new RequestExecutionDuration(TYPE_SINGLE_REQUEST)
+                            .setCollectionTime(collectionTime)
+                            .setDomain(runProps.getDomain())
+                            .setDuration(response.getDuration())
+                            .setService(runProps.getServiceUnderTest())
+                            .setTestClass(runProps.getTestClass())
+                            .setTestMethod(runProps.getTestMethod())
+                            // Always use server time (GMT)
+                            .setTimestamp(getDateTimeString(response.getStart(), zoneId))
+                            .setStatusCode(response.getStatusCode())
+                    )));
             } catch (JsonProcessingException e) {
                 TS.log().info(e);
             }
         });
 
         payloadBuilder
-                .append(bulkCreateString)
-                .append(String.format("%s%n", mapper.writeValueAsString(
-                        new RequestExecutionDuration(TYPE_CHUNK_OF_REQUESTS)
-                                .setTimestamp(collectionTime)
-                                .setDomain(runProps.getDomain())
-                                .setDuration(endTime - startTime)
-                                .setService(runProps.getServiceUnderTest())
-                                .setTestClass(runProps.getTestClass())
-                                .setTestMethod(runProps.getTestMethod()))
-                ));
+            .append(bulkCreateString)
+            .append(String.format("%s%n", mapper.writeValueAsString(
+                new RequestExecutionDuration(TYPE_CHUNK_OF_REQUESTS)
+                    .setTimestamp(collectionTime)
+                    .setDomain(runProps.getDomain())
+                    .setDuration(endTime - startTime)
+                    .setService(runProps.getServiceUnderTest())
+                    .setTestClass(runProps.getTestClass())
+                    .setTestMethod(runProps.getTestMethod()))
+            ));
 
         PostRequestDto postRequestDto = new PostRequestDto(getUploadUrl(), payloadBuilder.toString());
         postRequestDto.setBasicAuthCredentials(username, password).withJson();
