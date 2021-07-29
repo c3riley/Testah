@@ -49,7 +49,7 @@ public abstract class AbstractLoadTest {
                 }
                 executeStep(step);
             } catch (Exception e) {
-                TS.log().info(e);
+                TS.log().info(String.format("Caught exception in step %d.", step.getStep()), e);
             } finally {
                 if (publishers != null && publishers.size() > 0 && step.getIsPublish()) {
                     for (ExecutionStatsPublisher publisher : publishers) {

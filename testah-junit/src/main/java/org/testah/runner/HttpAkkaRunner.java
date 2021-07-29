@@ -131,8 +131,6 @@ public class HttpAkkaRunner {
         final ConcurrentLinkedQueue<?> concurrentLinkedQueue,
         boolean isVerbose)
     {
-        final Long hashId2 = Thread.currentThread().getId();
-        Assert.assertEquals(hashId, hashId2);
         try
         {
             if (null == concurrentLinkedQueue || concurrentLinkedQueue.size() == 0)
