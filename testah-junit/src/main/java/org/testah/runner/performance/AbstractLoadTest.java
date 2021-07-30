@@ -16,7 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public abstract class AbstractLoadTest
 {
     private static final String RUN_LOG_MESSAGE =
-        "Executing step %d of %d with: threads=%d, chunksize=%d, duration=%d minutes, millisBetweenChunks=%d, publish=%b";
+        "Executing step %d of %d with: threads=%d, chunksize=%d, duration=%s, millisBetweenChunks=%d, publish=%b";
     private final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
     private TestDataGenerator loadTestDataGenerator;
     private TestRunProperties runProps;
@@ -47,7 +47,7 @@ public abstract class AbstractLoadTest
                     loadTestSequence.size(),
                     step.getThreads(),
                     step.getChunkSize(),
-                    step.getDurationMinutes(),
+                    step.getStepRunDurationString(),
                     step.getMillisBetweenChunks(),
                     step.getIsPublish()));
             try

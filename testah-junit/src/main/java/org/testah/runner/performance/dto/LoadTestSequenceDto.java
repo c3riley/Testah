@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.DateTime;
 import org.testah.runner.performance.TestRunProperties;
 
+import java.time.Duration;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoadTestSequenceDto
 {
@@ -151,11 +153,24 @@ public class LoadTestSequenceDto
         return this;
     }
 
-    public long getStopTimeMillis(DateTime dateTime)
+    public Duration getStepRunDuration()
     {
         int minutes = durationMinutes == null ? 0 : durationMinutes;
         int seconds = durationSeconds == null ? 0 : durationSeconds;
-        return dateTime.plusMinutes(minutes).plusSeconds(seconds).getMillis();
+        return Duration.ofMinutes(minutes).plusSeconds(seconds);
+    }
+
+    public String getStepRunDurationString()
+    {
+        Duration duration = getStepRunDuration();
+        long minutes = duration.toMinutes();
+        long seconds = duration.minusMinutes(minutes).getSeconds();
+        return String.format("%d minutes %d seconds", minutes, seconds);
+    }
+
+    public long getStopTimeMillis(DateTime dateTime)
+    {
+        return dateTime.plusMillis(Math.toIntExact(getStepRunDuration().toMillis())).getMillis();
     }
 
     /**
