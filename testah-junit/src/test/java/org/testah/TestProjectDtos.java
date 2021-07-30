@@ -121,8 +121,6 @@ public class TestProjectDtos {
         test.testGettersAndSetters(new TestCaseDto());
         test.testGettersAndSetters(new TestPlanDto());
         test.testGettersAndSetters(new TestStepDto());
-        test.testGettersAndSetters(new LoadTestSequenceDto());
-
 
         test.testGettersAndSetters(new ShellInfoDto());
         test.testGettersAndSetters(new AssertHistoryItem());

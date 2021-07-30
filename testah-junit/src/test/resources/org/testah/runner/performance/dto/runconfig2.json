@@ -1,0 +1,7 @@
+[
+  {"step": 1, "threads": 1, "chunkSize": 1, "durationMinutes": 3, "isVerbose": true},
+  {"step": 2, "threads": 2, "chunkSize": 2, "durationMinutes": 1, "durationSeconds":  17},
+  {"step": 3, "threads": 3, "chunkSize": 3, "durationSeconds": 23},
+  {"step": 4, "threads": 4, "chunkSize": 4, "durationMinutes": 1, "durationSeconds": 187},
+  {"step": 5, "threads": 5, "chunkSize": 5}
+]

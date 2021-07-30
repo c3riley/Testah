@@ -9,7 +9,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-public class TestRunProperties {
+public class TestRunProperties
+{
     protected final Integer defaultNumberOfChunks = 2500;
     protected final Long defaultRunDuration = 48 * 3600 * 1000L;
     protected final Integer defaultChunkSize = 10;
@@ -23,13 +24,14 @@ public class TestRunProperties {
     private Integer numberOfAkkaThreads;
     private Long millisBetweenChunks;
     private boolean isVerbose = false;
-    private String serviceUnderTest;
+    private final String serviceUnderTest;
     private String domain;
-    private String testClass;
-    private String testMethod;
+    private final String testClass;
+    private final String testMethod;
     private String id;
 
-    protected TestRunProperties(String serviceUnderTest, String testClass, String testMethod) {
+    protected TestRunProperties(String serviceUnderTest, String testClass, String testMethod)
+    {
         this.serviceUnderTest = serviceUnderTest;
         this.testClass = testClass;
         this.testMethod = testMethod;
@@ -50,7 +52,8 @@ public class TestRunProperties {
         String testClass,
         String testMethod,
         int numberOfAkkaThreads,
-        long millisBetweenChunks) {
+        long millisBetweenChunks)
+    {
         this.serviceUnderTest = serviceUnderTest;
         this.testClass = testClass;
         this.testMethod = testMethod;
@@ -64,7 +67,8 @@ public class TestRunProperties {
      *
      * @return the numberOfChunks
      */
-    public Integer getNumberOfChunks() {
+    public Integer getNumberOfChunks()
+    {
         return numberOfChunks;
     }
 
@@ -74,7 +78,8 @@ public class TestRunProperties {
      * @param numberOfChunks the number of chunks as String
      * @return this object
      */
-    public TestRunProperties setNumberOfChunks(String numberOfChunks) {
+    public TestRunProperties setNumberOfChunks(String numberOfChunks)
+    {
         return setNumberOfChunks(Integer.parseInt(numberOfChunks));
     }
 
@@ -84,7 +89,8 @@ public class TestRunProperties {
      * @param numberOfChunks the number of chunks to set
      * @return this object
      */
-    public TestRunProperties setNumberOfChunks(int numberOfChunks) {
+    public TestRunProperties setNumberOfChunks(int numberOfChunks)
+    {
         TS.log().info("Setting numberOfChunks to " + numberOfChunks);
         this.numberOfChunks = numberOfChunks;
         return this;
@@ -95,12 +101,9 @@ public class TestRunProperties {
      *
      * @return the runDuration
      */
-    public long getRunDuration() {
+    public long getRunDuration()
+    {
         return runDuration;
-    }
-
-    public Integer getRunDurationMinutes() {
-        return Math.toIntExact(Duration.ofMillis(runDuration).toMinutes());
     }
 
     /**
@@ -109,7 +112,8 @@ public class TestRunProperties {
      * @param runDuration the run duration as a String
      * @return this object
      */
-    public TestRunProperties setRunDuration(String runDuration) {
+    public TestRunProperties setRunDuration(String runDuration)
+    {
         return setRunDuration(Long.parseLong(runDuration));
     }
 
@@ -119,10 +123,21 @@ public class TestRunProperties {
      * @param runDuration the run duration to set
      * @return this object
      */
-    public TestRunProperties setRunDuration(long runDuration) {
+    public TestRunProperties setRunDuration(long runDuration)
+    {
         TS.log().info("Setting runDuration to " + runDuration);
         this.runDuration = runDuration;
         return this;
+    }
+
+    public Integer getRunDurationMinutes()
+    {
+        return Math.toIntExact(Duration.ofMillis(runDuration).toMinutes());
+    }
+
+    public Integer getRunDurationSeconds()
+    {
+        return Math.toIntExact(Duration.ofMillis(runDuration).getSeconds());
     }
 
     /**
@@ -130,7 +145,8 @@ public class TestRunProperties {
      *
      * @return the chunkSize
      */
-    public Integer getChunkSize() {
+    public Integer getChunkSize()
+    {
         return chunkSize;
     }
 
@@ -140,7 +156,8 @@ public class TestRunProperties {
      * @param chunkSize the chunk size as a String
      * @return this object
      */
-    public TestRunProperties setChunkSize(String chunkSize) {
+    public TestRunProperties setChunkSize(String chunkSize)
+    {
         return setChunkSize(Integer.parseInt(chunkSize));
     }
 
@@ -150,7 +167,8 @@ public class TestRunProperties {
      * @param chunkSize the chunkSize to set
      * @return this object
      */
-    public TestRunProperties setChunkSize(int chunkSize) {
+    public TestRunProperties setChunkSize(int chunkSize)
+    {
         TS.log().info("Setting chunkSize to " + chunkSize);
         this.chunkSize = chunkSize;
         return this;
@@ -161,7 +179,8 @@ public class TestRunProperties {
      *
      * @return the numberOfAkkaThreads
      */
-    public Integer getNumberOfAkkaThreads() {
+    public Integer getNumberOfAkkaThreads()
+    {
         return numberOfAkkaThreads;
     }
 
@@ -171,7 +190,8 @@ public class TestRunProperties {
      * @param numberOfAkkaThreads the number of Akka threads as a String
      * @return this object
      */
-    public TestRunProperties setNumberOfAkkaThreads(String numberOfAkkaThreads) {
+    public TestRunProperties setNumberOfAkkaThreads(String numberOfAkkaThreads)
+    {
         return setNumberOfAkkaThreads(Integer.parseInt(numberOfAkkaThreads));
     }
 
@@ -181,7 +201,8 @@ public class TestRunProperties {
      * @param numberOfAkkaThreads the number of Akka threads to set
      * @return this object
      */
-    public TestRunProperties setNumberOfAkkaThreads(int numberOfAkkaThreads) {
+    public TestRunProperties setNumberOfAkkaThreads(int numberOfAkkaThreads)
+    {
         TS.log().info("Setting numberOfAkkaThreads to " + numberOfAkkaThreads);
         this.numberOfAkkaThreads = numberOfAkkaThreads;
         return this;
@@ -192,7 +213,8 @@ public class TestRunProperties {
      *
      * @return the milliseconds between chunks
      */
-    public Long getMillisBetweenChunks() {
+    public Long getMillisBetweenChunks()
+    {
         return millisBetweenChunks;
     }
 
@@ -202,7 +224,8 @@ public class TestRunProperties {
      * @param millisBetweenChunks the milliseconds between chunks as a String
      * @return this object
      */
-    public TestRunProperties setMillisBetweenChunks(String millisBetweenChunks) {
+    public TestRunProperties setMillisBetweenChunks(String millisBetweenChunks)
+    {
         return setMillisBetweenChunks(Long.parseLong(millisBetweenChunks));
     }
 
@@ -212,7 +235,8 @@ public class TestRunProperties {
      * @param millisBetweenChunks the milliseconds between chunks to set
      * @return this object
      */
-    public TestRunProperties setMillisBetweenChunks(long millisBetweenChunks) {
+    public TestRunProperties setMillisBetweenChunks(long millisBetweenChunks)
+    {
         TS.log().info("Setting millisBetweenChunks to " + millisBetweenChunks);
         this.millisBetweenChunks = millisBetweenChunks;
         return this;
@@ -223,7 +247,8 @@ public class TestRunProperties {
      *
      * @return the isVerbose
      */
-    public Boolean isVerbose() {
+    public Boolean isVerbose()
+    {
         return isVerbose;
     }
 
@@ -233,7 +258,8 @@ public class TestRunProperties {
      * @param isVerbose the isVerbose to set
      * @return this object
      */
-    public TestRunProperties setVerbose(boolean isVerbose) {
+    public TestRunProperties setVerbose(boolean isVerbose)
+    {
         TS.log().info("Setting isVerbose to " + isVerbose);
         this.isVerbose = isVerbose;
         return this;
@@ -242,6 +268,7 @@ public class TestRunProperties {
     /**
      * Get the identifier previously set for the test run.
      * The framework itself does not use it.
+     *
      * @return the test run id
      */
     public String getId()
@@ -252,6 +279,7 @@ public class TestRunProperties {
     /**
      * Set an id for a test run. The framework does not use it.
      * The framework itself does not use it.
+     *
      * @param id the test run id
      * @return this object
      */
@@ -266,7 +294,8 @@ public class TestRunProperties {
      *
      * @return the serviceUnderTest
      */
-    public String getServiceUnderTest() {
+    public String getServiceUnderTest()
+    {
         return serviceUnderTest;
     }
 
@@ -275,7 +304,8 @@ public class TestRunProperties {
      *
      * @return the testClass
      */
-    public String getTestClass() {
+    public String getTestClass()
+    {
         return testClass;
     }
 
@@ -284,11 +314,13 @@ public class TestRunProperties {
      *
      * @return the testMethod
      */
-    public String getTestMethod() {
+    public String getTestMethod()
+    {
         return testMethod;
     }
 
-    public String getDomain() {
+    public String getDomain()
+    {
         return domain;
     }
 
@@ -298,7 +330,8 @@ public class TestRunProperties {
      * @param domain service domain
      * @return this object
      */
-    public TestRunProperties setDomain(String domain) {
+    public TestRunProperties setDomain(String domain)
+    {
         TS.log().info("Setting domain to " + domain);
         this.domain = domain;
         return this;
@@ -309,15 +342,18 @@ public class TestRunProperties {
      *
      * @return the runtime
      */
-    public String getRuntime() {
-        if (runDuration != null) {
+    public String getRuntime()
+    {
+        if (runDuration != null)
+        {
             return Duration.ofMillis(runDuration).toString();
         }
         return null;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         getStopDateTime();
         return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
@@ -327,8 +363,10 @@ public class TestRunProperties {
      *
      * @return the stopDateTime
      */
-    public LocalDateTime getStopDateTime() {
-        if (stopDateTime == null) {
+    public LocalDateTime getStopDateTime()
+    {
+        if (stopDateTime == null)
+        {
             stopDateTime = Instant.ofEpochMilli(getStopTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
         }
         return stopDateTime;
@@ -339,8 +377,10 @@ public class TestRunProperties {
      *
      * @return the stopTime
      */
-    public long getStopTime() {
-        if (stopTime == null) {
+    public long getStopTime()
+    {
+        if (stopTime == null)
+        {
             stopTime = System.currentTimeMillis() + runDuration;
         }
         return stopTime;
@@ -352,7 +392,8 @@ public class TestRunProperties {
      * @param stopTime the stopTime to set
      * @return this object
      */
-    public TestRunProperties setStopTime(long stopTime) {
+    public TestRunProperties setStopTime(long stopTime)
+    {
         TS.log().info("Setting stopTime to " + stopTime);
         this.stopTime = stopTime;
         return this;
