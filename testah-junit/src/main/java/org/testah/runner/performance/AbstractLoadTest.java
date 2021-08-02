@@ -5,8 +5,11 @@ import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.HttpAkkaRunner;
+import org.testah.runner.performance.dto.ExecData;
 import org.testah.runner.performance.dto.LoadTestSequenceDto;
+import org.testah.runner.performance.dto.SequenceExecData;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,8 +39,9 @@ public abstract class AbstractLoadTest
         this.publishers = Arrays.asList(publishers);
     }
 
-    protected void runTest(String resourceFile) throws Exception
+    protected SequenceExecData runTest(String resourceFile) throws Exception
     {
+        SequenceExecData sequenceExecData = new SequenceExecData();
         LoadTestSequence loadTestSequence = new LoadTestSequence(resourceFile);
         loadTestSequence.getSteps(runProps).forEach(step ->
         {
@@ -50,6 +54,7 @@ public abstract class AbstractLoadTest
                     step.getStepRunDurationString(),
                     step.getMillisBetweenChunks(),
                     step.getIsPublish()));
+
             try
             {
                 if (publishers != null && publishers.size() > 0)
@@ -59,7 +64,8 @@ public abstract class AbstractLoadTest
                         publisher.beforeTestSequenceStep(step);
                     }
                 }
-                executeStep(step);
+                // execute the step and record execution data
+                sequenceExecData.add(step.getStep(), executeStep(step));
             } catch (Exception e)
             {
                 TS.log().info(String.format("Caught exception in step %d.", step.getStep()), e);
@@ -74,6 +80,7 @@ public abstract class AbstractLoadTest
                 }
             }
         });
+        return sequenceExecData;
     }
 
     /**
@@ -83,7 +90,7 @@ public abstract class AbstractLoadTest
      * @param step LoadTestSequenceDto for this step
      * @throws Exception when HTTP request generation fails
      */
-    public void executeStep(LoadTestSequenceDto step)
+    public ExecData executeStep(LoadTestSequenceDto step)
         throws Exception
     {
         long stopTime = step.getStopTimeMillis(DateTime.now());
@@ -92,6 +99,7 @@ public abstract class AbstractLoadTest
         List<ResponseDto> responseDtoList = new ArrayList<>();
         long sentRequests = 0;
 
+        ExecData execDataDto = new ExecData().withStart(Instant.now());
         try
         {
             while (System.currentTimeMillis() < stopTime)
@@ -130,8 +138,14 @@ public abstract class AbstractLoadTest
             }
         } finally
         {
+            execDataDto.withStop(Instant.now());
+            execDataDto.withSendCount(sentRequests);
+            execDataDto.withReceiveCount(akkaRunner.getReceiveCount());
             TS.log().info(String.format("Requests sent/received = %d/%d", sentRequests, akkaRunner.getReceiveCount()));
             akkaRunner.terminateActorSystems();
+            // do not carry over the received count from the previous step
+            akkaRunner.resetReceiveCount();
+
             if (publishers != null && publishers.size() > 0)
             {
                 for (ExecutionStatsPublisher publisher : publishers)
@@ -140,5 +154,6 @@ public abstract class AbstractLoadTest
                 }
             }
         }
+        return execDataDto;
     }
 }
