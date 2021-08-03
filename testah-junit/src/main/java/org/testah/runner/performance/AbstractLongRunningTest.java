@@ -4,7 +4,9 @@ import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.HttpAkkaRunner;
+import org.testah.runner.performance.dto.ExecData;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -20,8 +22,8 @@ public abstract class AbstractLongRunningTest {
      * @param publishers            0 or more ExecutionStatsPublisher, e.g. to push the statistics to Elasticsearch
      * @throws Exception when HTTP request generation fails
      */
-    public void executeTest(TestDataGenerator loadTestDataGenerator, TestRunProperties runProps,
-                            ExecutionStatsPublisher... publishers) throws Exception {
+    public ExecData executeTest(TestDataGenerator loadTestDataGenerator, TestRunProperties runProps,
+                                ExecutionStatsPublisher... publishers) throws Exception {
         runProps.setDomain(loadTestDataGenerator.getDomain());
 
         final HttpAkkaRunner akkaRunner = HttpAkkaRunner.getInstance();
@@ -32,6 +34,7 @@ public abstract class AbstractLongRunningTest {
         List<ResponseDto> responseDtoList = new ArrayList<>();
         long sentRequests = 0;
 
+        ExecData execDataDto = new ExecData().withStart(Instant.now());
         try {
             while (timeleft > 0) {
                 List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = loadTestDataGenerator.generateRequests();
@@ -64,7 +67,11 @@ public abstract class AbstractLongRunningTest {
             }
         } finally
         {
+            execDataDto.withStop(Instant.now());
+            execDataDto.withSendCount(sentRequests);
+            execDataDto.withReceiveCount(akkaRunner.getReceiveCount());
             TS.log().info(String.format("Requests sent/received = %d/%d", sentRequests, akkaRunner.getReceiveCount()));
+            akkaRunner.resetReceiveCount();
             akkaRunner.terminateActorSystems();
             if (publishers != null && publishers.length > 0) {
                 for (ExecutionStatsPublisher publisher : publishers) {
@@ -72,5 +79,6 @@ public abstract class AbstractLongRunningTest {
                 }
             }
         }
+        return execDataDto;
     }
 }

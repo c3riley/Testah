@@ -15,7 +15,7 @@ public class TestServiceGetRequestGenerator extends TestDataGenerator {
     private final List<Integer> statusCodes = Arrays.asList(200, 300, 400, 500);
     private final GetRestRequest getRestRequest;
 
-    TestServiceGetRequestGenerator(int chunkSize, int numberOfChunks) {
+    public TestServiceGetRequestGenerator(int chunkSize, int numberOfChunks) {
         super(chunkSize, numberOfChunks);
         getRestRequest = new GetRestRequest(statusCodes);
     }

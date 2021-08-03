@@ -121,7 +121,7 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.2'
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
-    testCompile "com.github.tomakehurst:wiremock-standalone:2.10.1"
+    testCompile "com.github.tomakehurst:wiremock-standalone:2.27.2"
 
     // https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.26'

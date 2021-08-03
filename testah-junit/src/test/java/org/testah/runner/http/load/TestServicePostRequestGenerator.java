@@ -15,7 +15,7 @@ public class TestServicePostRequestGenerator extends TestDataGenerator {
     private final List<String> stringList = Arrays.asList("xxxAxxx", "xxxBxxx", "xxxCxxx", "xxxDxxx");
     private final List<Long> longList = Arrays.asList(1L, 2L);
 
-    TestServicePostRequestGenerator(int chunkSize, int numberOfChunks) {
+    public TestServicePostRequestGenerator(int chunkSize, int numberOfChunks) {
         super(chunkSize, numberOfChunks);
     }
 

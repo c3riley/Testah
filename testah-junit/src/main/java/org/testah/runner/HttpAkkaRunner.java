@@ -263,6 +263,11 @@ public class HttpAkkaRunner {
         return responseDtoList;
     }
 
+    public void resetReceiveCount()
+    {
+        receivedCount = 0;
+    }
+
     /**
      * Return the count of received responses.
      * @return count of received responses

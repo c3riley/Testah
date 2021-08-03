@@ -1,15 +1,21 @@
-package org.testah.runner.http.load;
+package org.testah.runner.performance;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.testah.TS;
 import org.testah.runner.HttpAkkaRunner;
+import org.testah.runner.http.load.TestServiceGetRequestGenerator;
+import org.testah.runner.http.load.TestServicePostRequestGenerator;
 import org.testah.runner.performance.AbstractLongRunningTest;
 import org.testah.runner.performance.ChunkStatsLogPublisher;
 import org.testah.runner.performance.ElasticSearchResponseTimesPublisher;
 import org.testah.runner.performance.TestRunProperties;
+import org.testah.runner.performance.dto.ExecData;
+
+import java.time.Duration;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.matching;
@@ -121,11 +127,17 @@ public class TestLongRunning extends AbstractLongRunningTest {
             domain,
             testMethod);
 
-        executeTest(new TestServicePostRequestGenerator(chunkSize, numberOfChunks),
+        ExecData execData = executeTest(new TestServicePostRequestGenerator(chunkSize, numberOfChunks),
                 runProps.setVerbose(true).setRunDuration(runDuration),
                 elasticSearchExecutionStatsPublisher,
                 chunkStatsLogPublisher);
-        // verify datawas at least published once
+
+        TS.asserts().isGreaterThan("check run duration", runDuration, Duration.between(execData.getStart(), execData.getStop()).toMillis());
+        TS.asserts().isGreaterThan("some messages should be received", 1, execData.getReceiveCount());
+        TS.asserts().isGreaterThan("the send count should be larger or equal the receive count",
+            execData.getReceiveCount(), execData.getSendCount(), true);
+
+        // verify data was at least published once
         verify(postRequestedFor(urlEqualTo("/testah/load/_bulk"))
             .withRequestBody(matching(requestRegexIndexCounter))
             .withRequestBody(matching(String.format(requestRegexSingle, domain, testMethod)))
