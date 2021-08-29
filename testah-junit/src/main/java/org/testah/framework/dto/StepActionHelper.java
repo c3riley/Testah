@@ -3,6 +3,7 @@ package org.testah.framework.dto;
 import com.google.common.collect.Iterables;
 import org.testah.TS;
 import org.testah.client.dto.StepActionDto;
+import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestStepActionType;
 
 /**
@@ -110,6 +111,14 @@ public class StepActionHelper {
             }
         }
         return step;
+    }
+
+    public StepActionDto setTestStatusInfo(String message, final TestStatus testStatus) {
+        return create()
+            .setMessage1(message)
+            .setStatus(testStatus.getStatus())
+            .setTestStepActionType(TestStepActionType.INFO)
+            .setStatusEnum(testStatus);
     }
 
     /**

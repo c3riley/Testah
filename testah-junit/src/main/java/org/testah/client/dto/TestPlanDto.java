@@ -11,6 +11,7 @@ import java.util.List;
  * The Class TestPlanDto.
  */
 public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
+    public static final String TEST_PLAN_IGNORED_KNOWN_PROBLEM = "TEST PLAN IGNORED BECAUSE OF @KnownProblem ANNOTATION!";
 
     /**
      * The run time.
@@ -155,6 +156,12 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
         return this;
     }
 
+    public void fillTestCaseKnownProblem(TestCaseDto testCaseDto) {
+        if (hasKnownProblem()) {
+            testCaseDto.setKnownProblem(getKnownProblem());
+        }
+    }
+
     /**
      * Gets the run time.
      *
@@ -193,8 +200,10 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      * @return the test plan dto
      */
     public TestPlanDto setStatus() {
+        status = null;
         for (final TestCaseDto e : testCases) {
-            if (null != e.getStatus()) {
+            fillTestCaseKnownProblem(e);
+            if (null != e.getStatus() && !TestStatus.IGNORE.equals(e.getStatusEnum())) {
                 if (e.getStatus() == false) {
                     status = false;
                     return this;
@@ -252,10 +261,40 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      * @return test status enum
      */
     public TestStatus getStatusEnum() {
-        if (null == statusEnum) {
-            this.statusEnum = TestStatus.getStatus(status);
+        if (statusEnum == null) {
+            setStatusEnum();
         }
-        return this.statusEnum;
+        return statusEnum;
+    }
+
+    public TestPlanDto setStatusEnum() {
+        List<TestCaseDto> talliedTestCases = new ArrayList<>();
+        for (TestCaseDto testCaseDto : testCases)
+        {
+            fillTestCaseKnownProblem(testCaseDto);
+            // skip if the test case is marked as known problem
+            if (testCaseDto.getKnownProblem() != null) continue;
+            // also skip if the test case is marked as IGNORE
+            if (TestStatus.IGNORE.equals(testCaseDto.getStatusEnum())) continue;
+            talliedTestCases.add(testCaseDto);
+        }
+
+        if (talliedTestCases.size() == 0) {
+            statusEnum = TestStatus.IGNORE;
+            return this;
+        }
+        if (talliedTestCases.stream().filter(testCaseDto ->
+            testCaseDto.getStatus() != null && !testCaseDto.getStatus()).count() > 0) {
+            statusEnum = TestStatus.FAILED;
+        }
+        else if (talliedTestCases.stream().filter(testCaseDto ->
+            testCaseDto.getStatus() != null && testCaseDto.getStatus()).count() > 0) {
+            statusEnum = TestStatus.PASSED;
+        }
+        else {
+            statusEnum = TestStatus.NA;
+        }
+        return this;
     }
 
     public TestPlanDto setStatusEnum(final TestStatus statusEnum) {
@@ -289,6 +328,9 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      * @return the description
      */
     public String getDescription() {
+        if (hasKnownProblem()) {
+            return String.join(" ", TEST_PLAN_IGNORED_KNOWN_PROBLEM, description);
+        }
         return description;
     }
 
@@ -361,6 +403,15 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
     public TestPlanDto setTags(final List<String> tags) {
         this.tags = tags;
         return this;
+    }
+
+    /**
+     * Check if the test plan is marked with known problem.
+     *
+     * @return true if the test plan has the @KnownProblem annotation, false otherwise
+     */
+    public boolean hasKnownProblem() {
+        return null != knownProblem;
     }
 
     /**
@@ -542,5 +593,4 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
         this.id = id;
         return this;
     }
-
 }

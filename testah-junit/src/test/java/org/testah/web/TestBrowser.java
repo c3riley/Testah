@@ -18,6 +18,7 @@ import org.testah.framework.testPlan.BrowserTestPlan;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 @TestPlan
 public class TestBrowser extends BrowserTestPlan {
@@ -158,8 +159,10 @@ public class TestBrowser extends BrowserTestPlan {
     @Test
     @TestCase(name = "testScreenshot")
     public void testScreenshot() {
-
-        TS.browser().goTo("http://www.google.com").getHtml();
+        String browserContent = TS.browser().goTo("http://www.google.com").getHtml().toLowerCase(Locale.ROOT);
+        TS.asserts().contains("", browserContent, "</title>");
+        TS.asserts().contains("", browserContent, "google");
+        TS.asserts().contains("", browserContent, "</body>");
     }
 
 }

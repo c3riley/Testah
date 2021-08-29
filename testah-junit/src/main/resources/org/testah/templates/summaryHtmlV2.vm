@@ -47,16 +47,26 @@
                 <tbody>
                     #foreach( $result in $results )
                         #if( "$!result.getTestPlan()" != "" )
+                            #set($link_json = "file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get('json')")
+                            #set($link_html = "file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get('html')")
+                            #set($link_txt = "file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get('txt')")
+                            #set($link_xml = "file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get('xml')")
                         <tr>
                             <td class='label'>$result.getTestPlan().getName()</td>
                             <td class='label'>testah</td>
                             <td class='label' bgcolor='#if($result.getTestPlan().getStatusEnum()==
-                                "PASSED")MediumSeaGreen#{else}red#end'>$result.getTestPlan().getStatusEnum()</td>
+                                "PASSED")MediumSeaGreen#elseif($result.getTestPlan().getStatusEnum()==
+                                "IGNORE")lightgray#{else}red#end'>$result.getTestPlan().getStatusEnum()</td>
                             <td class='value'>$result.getTestPlan().getRunInfo().getTotal()</td>
                             <td class='value'>$result.getTestPlan().getRunInfo().getPass()</td>
                             <td class='value'>$result.getTestPlan().getRunInfo().getFail()</td>
                             <td class='value'>$result.getTestPlan().getRunInfo().getIgnore()</td>
-                        #else
+                            <td class='value'><a target='_blank' href="$link_html">html</a> </td>
+                            <td class='value'><a target='_blank' href="$link_xml">xml</a></td>
+                            <td class='value'><a target='_blank' href="$link_txt">txt</a></td>
+                            <td class='value'><a target='_blank' href="$link_json">json</a> </td>
+                            <td class='value'>$util.getDurationShort($result.getTestPlan().getRunTime().getDuration())</td>
+                        #elseif( "$!result.getJunitResult()" != "" )
                         <tr>
                             <td class='label'>$result.getClassName()</td>
                             <td class='label'>junit</td>
@@ -70,22 +80,36 @@
                             <td class='value'>$pass</td>
                             <td class='value'>$result.getJunitResult().getFailureCount()</td>
                             <td class='value'>$result.getJunitResult().getIgnoreCount()</td>
+                            <td class='value'>n/a</td>
+                            <td class='value'>n/a</td>
+                            <td class='value'>n/a</td>
+                            <td class='value'>n/a</td>
+                            <td class='value'>n/a</td>
+                        #elseif( "$!result.getTestExecutionSummary()" != "" )
+                        <tr>
+                            <td class='label'>$result.getClassName()</td>
+                            <td class='label'>junit</td>
+                            #set($ignored = $result.getTestExecutionSummary().getTestsSkippedCount() + $result.getTestExecutionSummary().getTestsAbortedCount())
+                            #set($failed = $result.getTestExecutionSummary().getTestsFailedCount())
+                            #set($passed = $result.getTestExecutionSummary().getTestsSucceededCount())
+                            #set($started = $result.getTestExecutionSummary().getTestsStartedCount())
+                            #if( "$ignored" == "$started" )
+                                <td class='label' bgcolor='lightgray'>IGNORED</td>
+                            #elseif( "$passed" == "$started" )
+                                <td class='label' bgcolor='MediumSeaGreen'>PASSED</td>
+                            #else
+                                <td class='label' bgcolor='red'>FAILED</td>
+                            #end
+                            <td class='value'>$started</td>
+                            <td class='value'>$passed</td>
+                            <td class='value'>$failed</td>
+                            <td class='value'>$ignored</td>
+                            <td class='value'>n/a</td>
+                            <td class='value'>n/a</td>
+                            <td class='value'>n/a</td>
+                            <td class='value'>n/a</td>
+                            <td class='value'>n/a</td>
                         #end
-                        <td class='value'><a target='_blank'
-                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get(
-                                                 "html")">html</a>
-                        </td>
-                        <td class='value'><a target='_blank'
-                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get(
-                                                 'xml')">xml</a></td>
-                        <td class='value'><a target='_blank'
-                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get(
-                                                 'txt')">txt</a></td>
-                        <td class='value'><a target='_blank'
-                                             href="file:///$!result.getTestPlan().getRunInfo().getReportFilePath().get(
-                                                 'json')">json</a>
-                        </td>
-                        <td class='value'>$util.getDurationShort($result.getTestPlan().getRunTime().getDuration())</td>
                     </tr>
                     #end
                 </tbody>

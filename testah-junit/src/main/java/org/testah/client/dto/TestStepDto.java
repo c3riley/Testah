@@ -133,7 +133,22 @@ public class TestStepDto {
      */
     public TestStepDto stop() {
         setStatus();
+        setStatusEnum();
         getRunTime().stop();
+        return this;
+    }
+
+    /**
+     * Sets the status.
+     *
+     * @return the test step dto
+     */
+    public TestStepDto setStatusEnum() {
+        for (final StepActionDto e : stepActions) {
+            if (TestStatus.IGNORE.equals(e.getStatusEnum())) {
+                statusEnum = TestStatus.IGNORE;
+            }
+        }
         return this;
     }
 

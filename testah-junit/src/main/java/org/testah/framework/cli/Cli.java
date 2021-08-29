@@ -44,7 +44,7 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "3.3.5";
+    public static final String version = "3.4.0";
 
     /**
      * The Constant BAR_LONG.
@@ -304,7 +304,7 @@ public class Cli {
                     totalTestCasesPassed += result.getTestPlan().getRunInfo().getPass();
                     totalTestCasesIgnored += result.getTestPlan().getRunInfo().getIgnore();
                 } else {
-                    TS.log().error("Testplan is null, looking at junit result for " + result.getJunitResult().getFailures());
+                    TS.log().error("Testplan is null, looking at junit result for " + result.getClassName());
 
                     if (null != result.getJunitResult()) {
                         if (null != result.getJunitResult().getFailures()) {

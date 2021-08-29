@@ -89,6 +89,7 @@ public abstract class AbstractLoadTest
      *
      * @param step LoadTestSequenceDto for this step
      * @throws Exception when HTTP request generation fails
+     * @return execution data
      */
     public ExecData executeStep(LoadTestSequenceDto step)
         throws Exception

@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class TestCaseDto {
 
+    public static final String TEST_CASE_IGNORED_KNOWN_PROBLEM = "TEST CASE IGNORED BECAUSE OF @KnownProblem ANNOTATION";
     /**
      * The run time.
      */
@@ -199,6 +200,8 @@ public class TestCaseDto {
      * @return the test case dto
      */
     public TestCaseDto stop(final Boolean status) {
+        setStatusEnum();
+
         if (null != status) {
             setStatus(status);
         } else {
@@ -315,7 +318,7 @@ public class TestCaseDto {
      */
     public TestStatus getStatusEnum() {
         if (null == statusEnum) {
-            this.statusEnum = TestStatus.getStatus(status);
+            setStatusEnum();
         }
         return this.statusEnum;
     }
@@ -328,6 +331,24 @@ public class TestCaseDto {
      */
     public TestCaseDto setStatusEnum(final TestStatus statusEnum) {
         this.statusEnum = statusEnum;
+        return this;
+    }
+
+    public TestCaseDto setStatusEnum() {
+        if (this.getTestSteps().stream().filter(testStepDto -> TestStatus.IGNORE.equals(testStepDto.getStatusEnum())).count() > 0) {
+            setStatusEnum(TestStatus.IGNORE);
+            return this;
+        }
+        else if (this.getTestSteps().stream().filter(testStepDto -> testStepDto.getStatus() != null && !testStepDto.getStatus()).count() > 0) {
+            setStatusEnum(TestStatus.FAILED);
+            return this;
+        }
+        else if (this.getTestSteps().stream().filter(testStepDto -> testStepDto.getStatus() != null && testStepDto.getStatus()).count() > 0) {
+            setStatusEnum(TestStatus.PASSED);
+        }
+        else {
+            setStatusEnum(TestStatus.NA);
+        }
         return this;
     }
 
@@ -377,6 +398,12 @@ public class TestCaseDto {
      * @return the description
      */
     public String getDescription() {
+        // when cloning the test case, any existing description is duplicated,
+        // needs to be fixed in cloning
+        if (hasKnownProblem() && !description.startsWith(TEST_CASE_IGNORED_KNOWN_PROBLEM))
+        {
+            return String.join(" ", TEST_CASE_IGNORED_KNOWN_PROBLEM, description);
+        }
         return description;
     }
 
@@ -449,6 +476,15 @@ public class TestCaseDto {
     public TestCaseDto setTags(final List<String> tags) {
         this.tags = tags;
         return this;
+    }
+
+    /**
+     * Check if the test case has the @KnowProblem annotation.
+     *
+     * @return true if the test case has the @KnownProblem annotation, false otherwise
+     */
+    public boolean hasKnownProblem() {
+        return null != knownProblem;
     }
 
     /**

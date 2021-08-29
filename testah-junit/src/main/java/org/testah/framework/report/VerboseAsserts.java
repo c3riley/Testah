@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testah.TS;
+import org.testah.client.enums.TestStatus;
 import org.testah.framework.cli.Cli;
 import org.testah.framework.report.asserts.AssertCollections;
 import org.testah.framework.report.asserts.AssertFile;
@@ -308,6 +309,11 @@ public class VerboseAsserts {
             }
             return rtn;
         }
+    }
+
+    public void ignore(final String reason)
+    {
+        TS.step().action().setTestStatusInfo("TEST CASE PROGRAMMATICALLY IGNORED: " + reason, TestStatus.IGNORE);
     }
 
     /**
