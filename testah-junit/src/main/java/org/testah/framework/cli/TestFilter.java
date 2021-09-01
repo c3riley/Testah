@@ -25,6 +25,8 @@ import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
+import static org.testah.framework.cli.IgnoredTestRecorder.recordIgnoredTestCase;
+import static org.testah.framework.cli.IgnoredTestRecorder.recordIgnoredTestPlan;
 
 /**
  * The Class TestFilter.
@@ -104,8 +106,8 @@ public class TestFilter {
      * @param testClassesMetFiltersToUse the test classes met filters to use
      * @return the list
      */
-    private List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter, final List<Class<
-            ?>> testClassesMetFiltersToUse) {
+    private List<Class<?>> filterTestPlansToRun(final Set<Class<?>> testClassesToFilter,
+                                                final List<Class<?>> testClassesMetFiltersToUse) {
 
         final Params filterParams = TS.params();
 
@@ -130,12 +132,15 @@ public class TestFilter {
                     TS.log().trace("test[" + test.getName() + "] filtered out by no TestMeta Annotation");
                     continue;
                 }
+
                 if (null != test.getAnnotation(KnownProblem.class) && null != filterByIgnoreKnownProblem) {
                     if (filterByIgnoreKnownProblem) {
+                        recordIgnoredTestPlan(test.getName(), meta.getTestCases().size());
                         TS.log().trace("test[" + test.getName() + "] filtered out by filterByIgnoreKnownProblem");
                         continue;
                     }
                 } else if (null != filterByIgnoreKnownProblem && !filterByIgnoreKnownProblem) {
+                    recordIgnoredTestPlan(test.getName(), meta.getTestCases().size());
                     TS.log().trace("test[" + test.getName() + "] filtered out by filterByIgnoreKnownProblem");
                     continue;
                 }
@@ -344,11 +349,11 @@ public class TestFilter {
             return true;
         }
         return Arrays.stream(StringUtils.split(startsWith, ","))
-                .filter(prefix ->
+                .anyMatch(prefix ->
                         StringUtils.startsWithIgnoreCase(
                                 (StringUtils.contains(prefix, ".") ? test.getCanonicalName() : test.getSimpleName()),
                                 prefix.trim())
-                ).findFirst().isPresent();
+                );
     }
 
     /**
@@ -373,7 +378,7 @@ public class TestFilter {
                     postitiveMatchUsed = true;
                     if (value.startsWith("!")) {
                         final String valueToCompareMatch = value.substring(1);
-                        if (!lst.stream().anyMatch(str -> equalsIgnoreCase(str, valueToCompareMatch))) {
+                        if (lst.stream().noneMatch(str -> equalsIgnoreCase(str, valueToCompareMatch))) {
                             return false; // Does not include required value, failed filter
                         } else {
                             postiveMatch = true; // Passed initially, still a Not could be used
@@ -409,11 +414,9 @@ public class TestFilter {
             final boolean filterByPlatform = isFilterOn(TS.params().getFilterByPlatform());
             final boolean filterByTag = isFilterOn(TS.params().getFilterByTag());
             final boolean filterByRunType = isFilterOn(TS.params().getFilterByRunType());
+            final boolean filterByIgnoreKnownProblem = isFilterOn(TS.params().getFilterIgnoreKnownProblem());
 
-            boolean filterByTestType = true;
-            if (null == TS.params().getFilterByTestType()) {
-                filterByTestType = false;
-            }
+            boolean filterByTestType = (null != TS.params().getFilterByTestType());
 
             String filter;
             if (filterByUuid) {
@@ -467,9 +470,15 @@ public class TestFilter {
                 }
             }
 
+            if (filterByIgnoreKnownProblem) {
+                if (meta.getKnownProblem() != null) {
+                    TS.log().trace("test case [" + testCaseName + "] filtered out by filterByIgnoreKnownProblem");
+                    recordIgnoredTestCase(testCaseName);
+                    return false;
+                }
+            }
         }
         return ok;
-
     }
 
     /**

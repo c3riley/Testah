@@ -26,6 +26,8 @@ import org.testah.runner.testPlan.TestPlanActor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import static org.testah.framework.cli.IgnoredTestRecorder.recordIgnoredTestCase;
+
 public class TestSystem {
 
     public static final int DEFAULT_TESTPLAN_JUNIT_VERSION = 4;
@@ -392,6 +394,7 @@ public class TestSystem {
      * @param reason       the reason
      */
     public void addIgnoredTest(final String testCaseName, final String reason) {
+        recordIgnoredTestCase(testCaseName);
         getIgnoredTests().put(testCaseName, reason);
     }
 
@@ -404,7 +407,6 @@ public class TestSystem {
     public void addIgnoredTest(final Description description, final String reason) {
         addIgnoredTest(description.getDisplayName(), reason);
     }
-
 
     /**
      * Gets the ignored tests.
@@ -490,6 +492,7 @@ public class TestSystem {
         final KnownProblem kp = description.getAnnotation(KnownProblem.class);
         TestCaseDto test = new TestCaseDto();
         test = TestDtoHelper.fill(test, testCase, kp, testPlan);
+
         if (!getTestFilter().filterTestCase(test, name)) {
             addIgnoredTest(name, "METADATA_FILTER");
             Assume.assumeTrue("Filtered out, For details use Trace level logging" +

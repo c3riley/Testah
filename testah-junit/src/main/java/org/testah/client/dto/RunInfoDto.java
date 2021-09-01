@@ -5,6 +5,8 @@ import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.util.HashMap;
 
+import static org.testah.framework.cli.IgnoredTestRecorder.recordIgnoredTestCase;
+
 /**
  * The Class RunInfoDto.
  */
@@ -86,6 +88,7 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto> {
                 || testPlan.hasKnownProblem()
                 || testCase.hasKnownProblem()
                 || TestStatus.IGNORE.equals(testCase.getStatusEnum())) {
+                recordIgnoredTestCase(testPlan.getName(), testCase.getName());
                 ignore++;
             } else if (testCase.getStatus()) {
                 pass++;
