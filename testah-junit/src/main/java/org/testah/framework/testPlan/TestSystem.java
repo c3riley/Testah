@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import static org.testah.framework.cli.IgnoredTestRecorder.recordIgnoredTestCase;
+import static org.testah.util.LogUtil.prettyJson;
 
 public class TestSystem {
 
@@ -492,6 +493,15 @@ public class TestSystem {
         final KnownProblem kp = description.getAnnotation(KnownProblem.class);
         TestCaseDto test = new TestCaseDto();
         test = TestDtoHelper.fill(test, testCase, kp, testPlan);
+        System.out.println(">>>>>>>>>>>>>>>>> TestSystem.filterTest testCase = " + prettyJson(testCase));
+        System.out.println(">>>>>>>>>>>>>>>>> TestSystem.filterTest testPlan = " + prettyJson(testPlan));
+        System.out.println(">>>>>>>>>>>>>>>>> TestSystem.filterTest description = " + prettyJson(description));
+        System.out.println(">>>>>>>>>>>>>>>>> TestSystem.filterTest description.getDisplayName = " + description.getDisplayName());
+        System.out.println(">>>>>>>>>>>>>>>>> TestSystem.filterTest description.getTestClass = " + description.getTestClass());
+        System.out.println(">>>>>>>>>>>>>>>>> TestSystem.filterTest description.getAnnotations = " + prettyJson(description.getAnnotations()));
+        System.out.println(">>>>>>>>>>>>>>>>> TestSystem.filterTest description.getMethodName = " + description.getMethodName());
+        System.out.println(">>>>>>>>>>>>>>>>> TestSystem.filterTest description.getClassName = " + description.getClassName());
+        System.out.println(">>>>>>>>>>>>>>>>> TestSystem.filterTest description.getChildren = " + prettyJson(description.getChildren()));
 
         if (!getTestFilter().filterTestCase(test, name)) {
             addIgnoredTest(name, "METADATA_FILTER");

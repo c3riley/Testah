@@ -1,5 +1,6 @@
 package org.testah.framework.dto;
 
+import org.apache.commons.lang3.StringUtils;
 import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.annotations.TestCaseJUnit5;
@@ -27,9 +28,39 @@ public class TestCaseAnnotationDto {
 
     }
 
-    private TestCaseAnnotationDto(TestCase testCase) {
+    private TestCaseAnnotationDto(Method method, TestCase testCase) {
         this.id = testCase.id();
-        this.name = testCase.name();
+        if (null == method || StringUtils.isNotEmpty(testCase.name()))
+        {
+            this.name = testCase.name();
+        }
+        else {
+            this.name = String.join(".", method.getDeclaringClass().getCanonicalName(), method.getName());
+        }
+        this.description = testCase.description();
+        this.relatedLinks = testCase.relatedLinks();
+        this.relatedIds = testCase.relatedIds();
+        this.testType = testCase.testType();
+        this.tags = testCase.tags();
+        this.components = testCase.components();
+        this.platforms = testCase.platforms();
+        this.devices = testCase.devices();
+        this.runTypes = testCase.runTypes();
+    }
+
+    private TestCaseAnnotationDto(TestCase testCase) {
+        this(null, testCase);
+    }
+
+    private TestCaseAnnotationDto(Method method, TestCaseJUnit5 testCase) {
+        this.id = testCase.id();
+        if (null == method || StringUtils.isNotEmpty(testCase.name()))
+        {
+            this.name = testCase.name();
+        }
+        else {
+            this.name = method.getName();
+        }
         this.description = testCase.description();
         this.relatedLinks = testCase.relatedLinks();
         this.relatedIds = testCase.relatedIds();
@@ -42,8 +73,18 @@ public class TestCaseAnnotationDto {
     }
 
     private TestCaseAnnotationDto(TestCaseJUnit5 testCase) {
+        this(null, testCase);
+    }
+
+    private TestCaseAnnotationDto(Method method, TestCaseWithParamsJUnit5 testCase) {
         this.id = testCase.id();
-        this.name = testCase.name();
+        if (null == method || StringUtils.isNotEmpty(testCase.name()))
+        {
+            this.name = testCase.name();
+        }
+        else {
+            this.name = method.getName();
+        }
         this.description = testCase.description();
         this.relatedLinks = testCase.relatedLinks();
         this.relatedIds = testCase.relatedIds();
@@ -56,17 +97,7 @@ public class TestCaseAnnotationDto {
     }
 
     private TestCaseAnnotationDto(TestCaseWithParamsJUnit5 testCase) {
-        this.id = testCase.id();
-        this.name = testCase.name();
-        this.description = testCase.description();
-        this.relatedLinks = testCase.relatedLinks();
-        this.relatedIds = testCase.relatedIds();
-        this.testType = testCase.testType();
-        this.tags = testCase.tags();
-        this.components = testCase.components();
-        this.platforms = testCase.platforms();
-        this.devices = testCase.devices();
-        this.runTypes = testCase.runTypes();
+        this(null, testCase);
     }
 
     /**
@@ -77,7 +108,7 @@ public class TestCaseAnnotationDto {
      */
     public static TestCaseAnnotationDto create(final Method testMethod) {
         if (testMethod != null) {
-            return create(testMethod.getAnnotations());
+            return create(testMethod, testMethod.getAnnotations());
         }
         return null;
     }
@@ -97,6 +128,21 @@ public class TestCaseAnnotationDto {
                     return new TestCaseAnnotationDto((TestCaseJUnit5) testCase);
                 } else if (testCase instanceof TestCaseWithParamsJUnit5) {
                     return new TestCaseAnnotationDto((TestCaseWithParamsJUnit5) testCase);
+                }
+            }
+        }
+        return null;
+    }
+
+    public static TestCaseAnnotationDto create(Method method, Annotation... testCases) {
+        if (testCases != null) {
+            for (Annotation testCase : testCases) {
+                if (testCase instanceof TestCase) {
+                    return new TestCaseAnnotationDto(method, (TestCase) testCase);
+                } else if (testCase instanceof TestCaseJUnit5) {
+                    return new TestCaseAnnotationDto(method, (TestCaseJUnit5) testCase);
+                } else if (testCase instanceof TestCaseWithParamsJUnit5) {
+                    return new TestCaseAnnotationDto(method, (TestCaseWithParamsJUnit5) testCase);
                 }
             }
         }

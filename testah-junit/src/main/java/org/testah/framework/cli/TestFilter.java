@@ -27,6 +27,7 @@ import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import static org.testah.framework.cli.IgnoredTestRecorder.recordIgnoredTestCase;
 import static org.testah.framework.cli.IgnoredTestRecorder.recordIgnoredTestPlan;
+import static org.testah.util.LogUtil.prettyJson;
 
 /**
  * The Class TestFilter.
@@ -85,6 +86,7 @@ public class TestFilter {
     public List<Class<?>> filterTestPlansToRun() {
         loadCompiledTestClass();
         loadUncompiledTestPlans();
+        getTestClasses().forEach(testClass -> System.out.println(">>>>>>>>>>>>>>>> TestFilter.filterTestPlansToRun getTestClasses() " + testClass.getCanonicalName()));
         return filterTestPlansToRun(getTestClasses(), getTestClassesMetFilters());
     }
 
@@ -127,9 +129,12 @@ public class TestFilter {
             for (final Class<?> test : testClassesToFilter) {
                 String filter;
                 meta = TestPlanAnnotationDto.create(test);
+                System.out.println(">>>>>>>>> TestFilter.filterTestPlansToRun() test = " + test.getCanonicalName());
+                System.out.println(">>>>>>>>> TestFilter.filterTestPlansToRun() meta = " + prettyJson(meta));
 
                 if (null == meta) {
                     TS.log().trace("test[" + test.getName() + "] filtered out by no TestMeta Annotation");
+                    TS.log().trace("test[" + meta.getTestClass().getCanonicalName() + "] filtered out by no TestMeta Annotation");
                     continue;
                 }
 
@@ -162,7 +167,7 @@ public class TestFilter {
                 boolean atleastOneTestMeetsCriteria = false;
                 if (testCases.size() > 0) {
                     for (TestCaseDto testCase : testCases) {
-                        if (filterTestCase(testCase, testCase.getName())) {
+                        if (filterTestCase(testCase, String.format("%s(%s)", testCase.getName(), test.getCanonicalName()))) {
                             atleastOneTestMeetsCriteria = true;
                             break;
                         }

@@ -114,6 +114,41 @@
                     #end
                 </tbody>
             </table>
+
+        #if("$isRecordFilterKnownProblems" == "true")
+            #if("$ignoredTestPlans.isEmpty()" == "false")
+                <h4>Test Plans filtered out (e.g. KnownProblem annotation):</h4>
+                <table class='tc_table_3' border="1">
+                    <thead>
+                        <th>Test Plan</th>
+                        <th>Case Count</th>
+                     </thead>
+                    <tbody>
+                       #foreach($ignoredTestPlan in $ignoredTestPlans)
+                            <tr>
+                                <td class='value'>$ignoredTestPlan.getKey()</td>
+                                <td class='value'>$ignoredTestPlan.getValue()</td>
+                            </tr>
+                        #end
+                    </tbody>
+                </table>
+            #end
+            #if("$ignoredTestCases.isEmpty()" == "false")
+                <h4>Test Cases filtered out (e.g. KnownProblem annotation):</h4>
+                <table class='tc_table_4' border="1">
+                    <thead>
+                    <th>Test Case</th>
+                    </thead>
+                    <tbody>
+                        #foreach($ignoredTestCase in $ignoredTestCases)
+                        <tr>
+                            <td class='value'>$ignoredTestCase</td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            #end
+        #end
         </td>
     </tr>
 

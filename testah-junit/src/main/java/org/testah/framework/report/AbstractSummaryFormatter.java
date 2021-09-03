@@ -6,6 +6,12 @@ import org.testah.framework.dto.ResultDto;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.testah.framework.cli.IgnoredTestRecorder.getIgnoredTestCases;
+import static org.testah.framework.cli.IgnoredTestRecorder.getIgnoredTestPlans;
+import static org.testah.framework.cli.IgnoredTestRecorder.isRecordFilterKnownProblems;
 
 /**
  * The Class AbstractFormatter.
@@ -101,6 +107,10 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter
 
         if (null != results)
         {
+
+            context.put("isRecordFilterKnownProblems", isRecordFilterKnownProblems());
+            context.put("ignoredTestPlans", getIgnoredTestPlans());
+            context.put("ignoredTestCases", getIgnoredTestCases());
             context.put("results", results);
             context.put("util", TS.util());
             if (totalTestPlans != -1)

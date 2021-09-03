@@ -1,5 +1,6 @@
 package org.testah.framework.dto;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.runner.Description;
 import org.testah.TS;
 import org.testah.client.dto.KnownProblemDto;
@@ -111,6 +112,11 @@ public class TestDtoHelper {
         }
         if (null != testCaseToFill && null != fillFromTestCase) {
             testCaseToFill.setId(fillFromTestCase.id());
+
+            if (StringUtils.isEmpty(testCaseToFill.getName()))
+            {
+                testCaseToFill.setName(fillFromTestCase.name());
+            }
 
             if (null != tpMeta && fillFromTestCase.components().length == 0) {
                 testCaseToFill.setComponents(Arrays.asList(tpMeta.components()));

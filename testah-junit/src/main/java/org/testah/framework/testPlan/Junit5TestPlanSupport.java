@@ -15,6 +15,7 @@ import org.testah.framework.annotations.TestCaseWithParamsJUnit5;
 import org.testah.framework.annotations.TestPlanJUnit5;
 import org.testah.framework.dto.TestCaseAnnotationDto;
 import org.testah.framework.dto.TestPlanAnnotationDto;
+import org.testah.util.LogUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -66,11 +67,16 @@ public class Junit5TestPlanSupport implements BeforeTestExecutionCallback, After
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
+        System.out.println(">>>>>>>>>> Junit5TestPlanSupport.beforeEach context = " + LogUtil.prettyJson(context));
         Description description = getDescription(context);
+        System.out.println(">>>>>>>>>> Junit5TestPlanSupport.beforeEach description = " + LogUtil.prettyJson(description));
         Annotation testcase = description.getAnnotation(TestCaseJUnit5.class);
+        System.out.println(">>>>>>>>>> Junit5TestPlanSupport.beforeEach testcase 1 = " + LogUtil.prettyJson(testcase));
         if (testcase == null) {
             testcase = description.getAnnotation(TestCaseWithParamsJUnit5.class);
+            System.out.println(">>>>>>>>>> Junit5TestPlanSupport.beforeEach testcase 2 = " + LogUtil.prettyJson(testcase));
         }
+        System.out.println(">>>>>>>>>> Junit5TestPlanSupport.beforeEach testcase 3 = " + LogUtil.prettyJson(testcase));
         TS.testSystem().filterTest(description,
                 TestPlanAnnotationDto.create(JUNIT_VERSION, description.getTestClass(),
                         description.getTestClass().getAnnotation(TestPlanJUnit5.class)),
