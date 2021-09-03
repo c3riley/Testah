@@ -298,7 +298,7 @@ public class TestFilter {
         return this;
     }
 
-    public boolean isFilterOn(final String filterValue) {
+    public static boolean isFilterOn(final String filterValue) {
         return (null != filterValue && filterValue.trim().length() > 0);
     }
 

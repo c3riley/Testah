@@ -1,6 +1,8 @@
 package org.testah.client.dto;
 
+import org.testah.TS;
 import org.testah.client.enums.TestStatus;
+import org.testah.framework.cli.TestFilter;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.util.HashMap;
@@ -85,8 +87,7 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto> {
 
         for (final TestCaseDto testCase : testPlan.getTestCases()) {
             if (null == testCase.getStatus()
-                || testPlan.hasKnownProblem()
-                || testCase.hasKnownProblem()
+                || TestFilter.isFilterOn(TS.params().getFilterIgnoreKnownProblem()) && (testPlan.hasKnownProblem() || testCase.hasKnownProblem())
                 || TestStatus.IGNORE.equals(testCase.getStatusEnum())) {
                 recordIgnoredTestCase(testPlan.getName(), testCase.getName());
                 ignore++;

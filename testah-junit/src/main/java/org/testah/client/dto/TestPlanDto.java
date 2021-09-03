@@ -1,11 +1,14 @@
 package org.testah.client.dto;
 
+import org.testah.TS;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestType;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.testah.framework.cli.TestFilter.isFilterOn;
 
 /**
  * The Class TestPlanDto.
@@ -273,7 +276,7 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
         {
             fillTestCaseKnownProblem(testCaseDto);
             // skip if the test case is marked as known problem
-            if (testCaseDto.getKnownProblem() != null) continue;
+            if (testCaseDto.hasKnownProblem() && isFilterOn(TS.params().getFilterIgnoreKnownProblem())) continue;
             // also skip if the test case is marked as IGNORE
             if (TestStatus.IGNORE.equals(testCaseDto.getStatusEnum())) continue;
             talliedTestCases.add(testCaseDto);

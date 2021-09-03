@@ -398,12 +398,6 @@ public class TestCaseDto {
      * @return the description
      */
     public String getDescription() {
-        // when cloning the test case, any existing description is duplicated,
-        // needs to be fixed in cloning
-        if (hasKnownProblem() && !description.startsWith(TEST_CASE_IGNORED_KNOWN_PROBLEM))
-        {
-            return String.join(" ", TEST_CASE_IGNORED_KNOWN_PROBLEM, description);
-        }
         return description;
     }
 
