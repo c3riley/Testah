@@ -35,7 +35,7 @@ public class TestCaseAnnotationDto {
             this.name = testCase.name();
         }
         else {
-            this.name = String.join(".", method.getDeclaringClass().getCanonicalName(), method.getName());
+            this.name = method.getName();
         }
         this.description = testCase.description();
         this.relatedLinks = testCase.relatedLinks();
@@ -134,6 +134,14 @@ public class TestCaseAnnotationDto {
         return null;
     }
 
+
+    /**
+     * Create a TestCaseAnnotationDto from test method and testCase annotation.
+     *
+     * @param method testCase method
+     * @param testCases testCase annotations
+     * @return return new TestCaseAnnotationDto or null
+     */
     public static TestCaseAnnotationDto create(Method method, Annotation... testCases) {
         if (testCases != null) {
             for (Annotation testCase : testCases) {

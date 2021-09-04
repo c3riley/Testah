@@ -76,7 +76,7 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto> {
     /**
      * Recalc.
      *
-     * @param testPlan the test plans
+     * @param testPlan the test plan
      * @return the run info dto
      */
     public RunInfoDto recalc(final TestPlanDto testPlan) {
@@ -86,8 +86,12 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto> {
         ignore = 0;
 
         for (final TestCaseDto testCase : testPlan.getTestCases()) {
+            // ignore the test case if the Boolean status is not defined ...
             if (null == testCase.getStatus()
+                // ... or the filter_DEFAULT_filterIgnoreKnownProblem is set to true
+                // and either the test plan or test case are marked with @KnownProblem ...
                 || TestFilter.isFilterOn(TS.params().getFilterIgnoreKnownProblem()) && (testPlan.hasKnownProblem() || testCase.hasKnownProblem())
+                // ot the status enum is IGNORE
                 || TestStatus.IGNORE.equals(testCase.getStatusEnum())) {
                 recordIgnoredTestCase(testPlan.getName(), testCase.getName());
                 ignore++;

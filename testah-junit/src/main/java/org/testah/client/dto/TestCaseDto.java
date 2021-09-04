@@ -1,6 +1,7 @@
 package org.testah.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.testah.TS;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestType;
 
@@ -12,7 +13,6 @@ import java.util.List;
  */
 public class TestCaseDto {
 
-    public static final String TEST_CASE_IGNORED_KNOWN_PROBLEM = "TEST CASE IGNORED BECAUSE OF @KnownProblem ANNOTATION";
     /**
      * The run time.
      */
@@ -334,19 +334,31 @@ public class TestCaseDto {
         return this;
     }
 
+    /**
+     * Determine the correct TestStatus for the test case.
+     *
+     * @return the test case dto
+     */
     public TestCaseDto setStatusEnum() {
+        // having an IGNORE as a status on a test step, means it was set programmatically in the test
+        // set the test case as IGNORE
         if (this.getTestSteps().stream().filter(testStepDto -> TestStatus.IGNORE.equals(testStepDto.getStatusEnum())).count() > 0) {
             setStatusEnum(TestStatus.IGNORE);
             return this;
         }
+        // reaching this point in the code the test case is not meant to be counted:
+        // any step failure is a test case failure
         else if (this.getTestSteps().stream().filter(testStepDto -> testStepDto.getStatus() != null && !testStepDto.getStatus()).count() > 0) {
             setStatusEnum(TestStatus.FAILED);
             return this;
         }
+        // reaching this point in code, the test case should pass; in that case there should be at least one success
         else if (this.getTestSteps().stream().filter(testStepDto -> testStepDto.getStatus() != null && testStepDto.getStatus()).count() > 0) {
             setStatusEnum(TestStatus.PASSED);
         }
+        // don't know what to make of it: not ignored, not failing and not passing
         else {
+            TS.log().warn("Cannot figure out test status for test case %s" + this.getName());
             setStatusEnum(TestStatus.NA);
         }
         return this;
@@ -640,5 +652,4 @@ public class TestCaseDto {
         this.owner = owner;
         return this;
     }
-
 }

@@ -86,7 +86,6 @@ public class TestFilter {
     public List<Class<?>> filterTestPlansToRun() {
         loadCompiledTestClass();
         loadUncompiledTestPlans();
-        getTestClasses().forEach(testClass -> System.out.println(">>>>>>>>>>>>>>>> TestFilter.filterTestPlansToRun getTestClasses() " + testClass.getCanonicalName()));
         return filterTestPlansToRun(getTestClasses(), getTestClassesMetFilters());
     }
 
@@ -129,12 +128,9 @@ public class TestFilter {
             for (final Class<?> test : testClassesToFilter) {
                 String filter;
                 meta = TestPlanAnnotationDto.create(test);
-                System.out.println(">>>>>>>>> TestFilter.filterTestPlansToRun() test = " + test.getCanonicalName());
-                System.out.println(">>>>>>>>> TestFilter.filterTestPlansToRun() meta = " + prettyJson(meta));
 
                 if (null == meta) {
                     TS.log().trace("test[" + test.getName() + "] filtered out by no TestMeta Annotation");
-                    TS.log().trace("test[" + meta.getTestClass().getCanonicalName() + "] filtered out by no TestMeta Annotation");
                     continue;
                 }
 

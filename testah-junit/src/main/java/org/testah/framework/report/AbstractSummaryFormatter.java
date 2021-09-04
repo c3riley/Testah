@@ -1,10 +1,12 @@
 package org.testah.framework.report;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.velocity.VelocityContext;
 import org.testah.TS;
 import org.testah.framework.dto.ResultDto;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +60,8 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter
                                     long totalDuration, final String pathToTemplate)
     {
         super(pathToTemplate);
-        this.results = results.stream().sorted(Comparator.comparing(result -> result.getTestPlan().getName())).collect(Collectors.toList());
+        this.results = CollectionUtils.isEmpty(results) ? results :
+            results.stream().sorted(Comparator.comparing(result -> result.getClassName())).collect(Collectors.toList());
         this.totalTestPlans = totalTestPlans;
         this.totalTestCases = totalTestCases;
         this.totalTestCasesPassed = totalTestCasesPassed;

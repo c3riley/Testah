@@ -14,9 +14,6 @@ import org.testah.framework.report.jira.dto.RemoteIssueLinkDto;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.testah.client.dto.TestCaseDto.TEST_CASE_IGNORED_KNOWN_PROBLEM;
-import static org.testah.client.dto.TestPlanDto.TEST_PLAN_IGNORED_KNOWN_PROBLEM;
-
 public class TestBasicJiraRemoteLinkBuilder {
 
     private BasicJiraRemoteLinkBuilder builder;
@@ -91,7 +88,6 @@ public class TestBasicJiraRemoteLinkBuilder {
         Assert.assertEquals(0, remoteLink.getId());
         Assert.assertEquals("E2E KP Testplan-com.test.BasicTestPlan", remoteLink.getGlobalId());
         Assert.assertEquals("E2E KP Testplan", remoteLink.getRelationship());
-        TS.asserts().startsWith("", remoteLink.getObject().getSummary(), TEST_PLAN_IGNORED_KNOWN_PROBLEM);
         Assert.assertEquals("Basic Testplan", remoteLink.getObject().getTitle());
         Assert.assertEquals(
                 "http://noLinkFoundToUsePlease.com/?errorTip=Use-Envir-Param=param_runLocation",
@@ -142,7 +138,6 @@ public class TestBasicJiraRemoteLinkBuilder {
         Assert.assertEquals(0, remoteLink.getId());
         Assert.assertEquals("E2E KP Testcase-com.test.BasicTestPlan", remoteLink.getGlobalId());
         Assert.assertEquals("E2E KP Testcase", remoteLink.getRelationship());
-        TS.asserts().startsWith("", remoteLink.getObject().getSummary(), TEST_CASE_IGNORED_KNOWN_PROBLEM);
         Assert.assertEquals("Basic Testcase", remoteLink.getObject().getTitle());
         Assert.assertEquals(
                 "http://noLinkFoundToUsePlease.com/?errorTip=Use-Envir-Param=param_runLocation",

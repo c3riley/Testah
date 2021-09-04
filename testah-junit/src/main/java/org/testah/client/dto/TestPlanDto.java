@@ -14,7 +14,6 @@ import static org.testah.framework.cli.TestFilter.isFilterOn;
  * The Class TestPlanDto.
  */
 public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
-    public static final String TEST_PLAN_IGNORED_KNOWN_PROBLEM = "TEST PLAN IGNORED BECAUSE OF @KnownProblem ANNOTATION!";
 
     /**
      * The run time.
@@ -31,6 +30,9 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      */
     private Boolean status = null;
 
+    /**
+     * Status enum to describe the specific test plan status.
+     */
     private TestStatus statusEnum = null;
 
     /**
@@ -204,14 +206,16 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      */
     public TestPlanDto setStatus() {
         status = null;
-        for (final TestCaseDto e : testCases) {
-            fillTestCaseKnownProblem(e);
-            if (null != e.getStatus() && !TestStatus.IGNORE.equals(e.getStatusEnum())) {
-                if (e.getStatus() == false) {
-                    status = false;
-                    return this;
-                } else if (e.getStatus() == true) {
-                    status = true;
+        if (!hasKnownProblem()) {
+            for (final TestCaseDto e : testCases) {
+                //fillTestCaseKnownProblem(e);
+                if (null != e.getStatus() && !TestStatus.IGNORE.equals(e.getStatusEnum())) {
+                    if (e.getStatus() == false) {
+                        status = false;
+                        return this;
+                    } else if (e.getStatus() == true) {
+                        status = true;
+                    }
                 }
             }
         }
@@ -270,34 +274,41 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
         return statusEnum;
     }
 
+    /**
+     * Set the specific test plan status from an enum.
+     *
+     * @return the test plan dto
+     */
     public TestPlanDto setStatusEnum() {
+        // Unless it is ignored in its entirety, the test plan status derives from the states of its parts/cases.
+        // Not all test cases count, some can be marked as ignored. Keep track of the ones are counted in talliedTestCases.
         List<TestCaseDto> talliedTestCases = new ArrayList<>();
         for (TestCaseDto testCaseDto : testCases)
         {
+            // if the @KnownProblem annotation exists on the test plan, propagate to the test cases
             fillTestCaseKnownProblem(testCaseDto);
-            // skip if the test case is marked as known problem
+            // skip the test case if it is marked as known problem
             if (testCaseDto.hasKnownProblem() && isFilterOn(TS.params().getFilterIgnoreKnownProblem())) continue;
             // also skip if the test case is marked as IGNORE
             if (TestStatus.IGNORE.equals(testCaseDto.getStatusEnum())) continue;
+            // otherwise make the test case count
             talliedTestCases.add(testCaseDto);
         }
 
         if (talliedTestCases.size() == 0) {
-            statusEnum = TestStatus.IGNORE;
-            return this;
+            return setStatusEnum(TestStatus.IGNORE);
         }
         if (talliedTestCases.stream().filter(testCaseDto ->
             testCaseDto.getStatus() != null && !testCaseDto.getStatus()).count() > 0) {
-            statusEnum = TestStatus.FAILED;
+            return setStatusEnum(TestStatus.FAILED);
         }
         else if (talliedTestCases.stream().filter(testCaseDto ->
             testCaseDto.getStatus() != null && testCaseDto.getStatus()).count() > 0) {
-            statusEnum = TestStatus.PASSED;
+            return setStatusEnum(TestStatus.PASSED);
         }
         else {
-            statusEnum = TestStatus.NA;
+            return setStatusEnum(TestStatus.NA);
         }
-        return this;
     }
 
     public TestPlanDto setStatusEnum(final TestStatus statusEnum) {
@@ -331,9 +342,6 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      * @return the description
      */
     public String getDescription() {
-        if (hasKnownProblem()) {
-            return String.join(" ", TEST_PLAN_IGNORED_KNOWN_PROBLEM, description);
-        }
         return description;
     }
 

@@ -311,6 +311,15 @@ public class VerboseAsserts {
         }
     }
 
+    /**
+     * Set the current test case to ignored.
+     * <br>
+     * A test plan can be marked a priori as ignorable via a KnowProblem annotation.
+     * In some cases it is determined at runtime, that there is no point in running a test case.
+     * The test case can be marked as ignored using this method.
+     *
+     * @param reason explain why the test case is ignored
+     */
     public void ignore(final String reason)
     {
         TS.step().action().setTestStatusInfo("TEST CASE PROGRAMMATICALLY IGNORED: " + reason, TestStatus.IGNORE);

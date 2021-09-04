@@ -139,16 +139,21 @@ public class TestStepDto {
     }
 
     /**
-     * Sets the status.
+     * Sets the TestStatus.
      *
      * @return the test step dto
      */
     public TestStepDto setStatusEnum() {
         for (final StepActionDto e : stepActions) {
             if (TestStatus.IGNORE.equals(e.getStatusEnum())) {
-                statusEnum = TestStatus.IGNORE;
+                return setStatusEnum(TestStatus.IGNORE);
             }
         }
+        return this;
+    }
+
+    public TestStepDto setStatusEnum(final TestStatus statusEnum) {
+        this.statusEnum = statusEnum;
         return this;
     }
 
@@ -280,11 +285,6 @@ public class TestStepDto {
             this.statusEnum = TestStatus.getStatus(status);
         }
         return this.statusEnum;
-    }
-
-    public TestStepDto setStatusEnum(final TestStatus statusEnum) {
-        this.statusEnum = statusEnum;
-        return this;
     }
 
     /**
