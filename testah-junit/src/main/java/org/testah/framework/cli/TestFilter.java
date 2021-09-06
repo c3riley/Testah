@@ -27,7 +27,6 @@ import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
 import static org.testah.framework.cli.IgnoredTestRecorder.recordIgnoredTestCase;
 import static org.testah.framework.cli.IgnoredTestRecorder.recordIgnoredTestPlan;
-import static org.testah.util.LogUtil.prettyJson;
 
 /**
  * The Class TestFilter.
