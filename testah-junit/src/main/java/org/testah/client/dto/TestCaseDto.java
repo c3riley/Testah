@@ -358,7 +358,7 @@ public class TestCaseDto {
         }
         // don't know what to make of it: not ignored, not failing and not passing
         else {
-            TS.log().warn("Cannot figure out test status for test case %s" + this.getName());
+            TS.log().warn("Cannot figure out test status for test case " + this.getName());
             setStatusEnum(TestStatus.NA);
         }
         return this;
