@@ -22,6 +22,7 @@ public enum IgnoredTestRecorder
     INSTANCE;
 
     public static final String FILTER_KNOWN_PROBLEMS = "FILTER_KNOWN_PROBLEMS";
+    public static final String IGNORED_TESTS_FILE = "ignoredTests.txt";
     private boolean isNewFile = true;
     private Boolean isFilterKnownProblems = null;
     private final Map<String, Map<String, Integer>> recordMap = new HashMap<>();
@@ -32,7 +33,7 @@ public enum IgnoredTestRecorder
     /**
      * Record the specified test plan as ignored.
      *
-     * @param testPlan fully qualified test plan name, e.g. 'com.eagleinvsys.e2e.TestPlan'
+     * @param testPlan fully qualified test plan name, e.g. 'org.mydomain.e2e.TestPlan'
      * @param testCaseCount count of test cases in the test plan
      */
     public static void recordIgnoredTestPlan(String testPlan, int testCaseCount)
@@ -51,11 +52,11 @@ public enum IgnoredTestRecorder
      * <ul>
      *     <li>
      *         (&lt;simple_case_name&gt;)&lt;canonical_plan_name&gt;, e.g.
-     *     'testCase(com.eagleinvsys.e2e.TestPlan)'
+     *     'testCase(org.mydomain.e2e.TestPlan)'
      *     </li>
      *     <li>
      *         &lt;canonical_case_name&gt;, e.g.
-     *         'com.eagleinvsys.e2e.TestPlan.testCase'
+     *         'org.mydomain.e2e.TestPlan.testCase'
      *     </li>
      * </ul>
      *
@@ -185,17 +186,16 @@ public enum IgnoredTestRecorder
 
     private synchronized void writeToFile(String test)
     {
-        String ignoredTestCasesFile = "fileName.txt";
         StandardOpenOption openOption = StandardOpenOption.APPEND;
         try
         {
             if (isNewFile)
             {
-                Files.deleteIfExists(Paths.get(ignoredTestCasesFile));
+                Files.deleteIfExists(Paths.get(IGNORED_TESTS_FILE));
                 openOption = StandardOpenOption.CREATE_NEW;
                 isNewFile = false;
             }
-            Files.write(Paths.get(ignoredTestCasesFile), String.format("%s%n", test).getBytes(StandardCharsets.UTF_8), openOption);
+            Files.write(Paths.get(IGNORED_TESTS_FILE), String.format("%s%n", test).getBytes(StandardCharsets.UTF_8), openOption);
         }
         catch (IOException e)
         {
