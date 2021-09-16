@@ -1,6 +1,7 @@
 package org.testah.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.testah.TS;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestType;
 
@@ -199,6 +200,8 @@ public class TestCaseDto {
      * @return the test case dto
      */
     public TestCaseDto stop(final Boolean status) {
+        setStatusEnum();
+
         if (null != status) {
             setStatus(status);
         } else {
@@ -315,7 +318,7 @@ public class TestCaseDto {
      */
     public TestStatus getStatusEnum() {
         if (null == statusEnum) {
-            this.statusEnum = TestStatus.getStatus(status);
+            setStatusEnum();
         }
         return this.statusEnum;
     }
@@ -328,6 +331,36 @@ public class TestCaseDto {
      */
     public TestCaseDto setStatusEnum(final TestStatus statusEnum) {
         this.statusEnum = statusEnum;
+        return this;
+    }
+
+    /**
+     * Determine the correct TestStatus for the test case.
+     *
+     * @return the test case dto
+     */
+    public TestCaseDto setStatusEnum() {
+        // having an IGNORE as a status on a test step, means it was set programmatically in the test
+        // set the test case as IGNORE
+        if (this.getTestSteps().stream().filter(testStepDto -> TestStatus.IGNORE.equals(testStepDto.getStatusEnum())).count() > 0) {
+            setStatusEnum(TestStatus.IGNORE);
+            return this;
+        }
+        // reaching this point in the code the test case is not meant to be counted:
+        // any step failure is a test case failure
+        else if (this.getTestSteps().stream().filter(testStepDto -> testStepDto.getStatus() != null && !testStepDto.getStatus()).count() > 0) {
+            setStatusEnum(TestStatus.FAILED);
+            return this;
+        }
+        // reaching this point in code, the test case should pass; in that case there should be at least one success
+        else if (this.getTestSteps().stream().filter(testStepDto -> testStepDto.getStatus() != null && testStepDto.getStatus()).count() > 0) {
+            setStatusEnum(TestStatus.PASSED);
+        }
+        // don't know what to make of it: not ignored, not failing and not passing
+        else {
+            TS.log().warn("Cannot figure out test status for test case " + this.getName());
+            setStatusEnum(TestStatus.NA);
+        }
         return this;
     }
 
@@ -449,6 +482,15 @@ public class TestCaseDto {
     public TestCaseDto setTags(final List<String> tags) {
         this.tags = tags;
         return this;
+    }
+
+    /**
+     * Check if the test case has the @KnowProblem annotation.
+     *
+     * @return true if the test case has the @KnownProblem annotation, false otherwise
+     */
+    public boolean hasKnownProblem() {
+        return null != knownProblem;
     }
 
     /**
@@ -610,5 +652,4 @@ public class TestCaseDto {
         this.owner = owner;
         return this;
     }
-
 }

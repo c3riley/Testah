@@ -34,6 +34,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
+import static org.testah.framework.cli.IgnoredTestRecorder.recordFilterKnownProblems;
+import static org.testah.framework.cli.IgnoredTestRecorder.recordTotalNumberExecutedTestCases;
+import static org.testah.framework.cli.IgnoredTestRecorder.recordTotalNumberExecutedTestPlans;
 
 /**
  * The Class Cli.
@@ -44,7 +47,7 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "3.3.5";
+    public static final String version = "3.4.0";
 
     /**
      * The Constant BAR_LONG.
@@ -304,7 +307,7 @@ public class Cli {
                     totalTestCasesPassed += result.getTestPlan().getRunInfo().getPass();
                     totalTestCasesIgnored += result.getTestPlan().getRunInfo().getIgnore();
                 } else {
-                    TS.log().error("Testplan is null, looking at junit result for " + result.getJunitResult().getFailures());
+                    TS.log().error("Testplan is null, looking at junit result for " + result.getClassName());
 
                     if (null != result.getJunitResult()) {
                         if (null != result.getJunitResult().getFailures()) {
@@ -346,6 +349,10 @@ public class Cli {
         TS.log().info(Cli.BAR_WALL + "Total TestCases Ignored: " + totalTestCasesIgnored);
         TS.log().info(Cli.BAR_WALL + "Total Duration: " + TS.util().getDurationPretty(totalDuration));
         TS.log().info(Cli.BAR_LONG);
+
+        recordFilterKnownProblems(TS.params().getFilterIgnoreKnownProblem());
+        recordTotalNumberExecutedTestPlans(totalTestPlans);
+        recordTotalNumberExecutedTestCases((totalTestCasesFailed + totalTestCasesPassed));
 
         File summaryHtml = new SummaryHtmlFormatter(results, totalTestPlans, totalTestCases, totalTestCasesPassed,
             totalTestCasesFailed, totalTestCasesIgnored, totalDuration).createReport().getReportFile();

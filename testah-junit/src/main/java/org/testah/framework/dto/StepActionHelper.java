@@ -3,6 +3,7 @@ package org.testah.framework.dto;
 import com.google.common.collect.Iterables;
 import org.testah.TS;
 import org.testah.client.dto.StepActionDto;
+import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestStepActionType;
 
 /**
@@ -110,6 +111,22 @@ public class StepActionHelper {
             }
         }
         return step;
+    }
+
+    /**
+     * If the test case is programmatically ignored, add a step that informs the user
+     * in the test results about it.
+     *
+     * @param message tell the reader of the result report why the test status was set
+     * @param testStatus the desired test status
+     * @return the step action dto
+     */
+    public StepActionDto setTestStatusInfo(String message, final TestStatus testStatus) {
+        return create()
+            .setMessage1(message)
+            .setStatus(testStatus.getStatus())
+            .setTestStepActionType(TestStepActionType.INFO)
+            .setStatusEnum(testStatus);
     }
 
     /**

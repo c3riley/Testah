@@ -143,17 +143,17 @@
                         <table class='tp_details'>
 
                             <tr>
-                                <td class='label'>testPlan:</td>
+                                <td class='label'>TestPlan:</td>
                                 <td class='value'>$testPlan.getName() [ $testPlan.getSource() ]</td>
                             </tr>
                             <tr>
-                                <td class='label'>testPlan Status:</td>
+                                <td class='label'>TestPlan Status:</td>
                                 <td class='value'>
                                     <div class='$testPlan.getStatusEnum()'>
                                         $testPlan.getStatusEnum()
                                         #foreach( $tc in $testPlan.getTestCases() )
                                             #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
-                                                | <a style='color:white;' href='$H$tc.getName()'
+                                                | <a style='color:red;' href='$H$tc.getName()'
                                                      title='See TestCase Results'>$tc.getName()</a>
                                             #end
                                         #end
@@ -230,9 +230,7 @@
                     </tr>
                     <tr>
                         <td class='label'>Status:</td>
-                        <td class='value'>
-                            <div class='$testcase.getStatusEnum()'>$testcase.getStatusEnum()</div>
-                        </td>
+                        <td class='value'>$testcase.getStatusEnum()</td>
                     </tr>
                     <tr>
                         <td class='label'>Time:</td>

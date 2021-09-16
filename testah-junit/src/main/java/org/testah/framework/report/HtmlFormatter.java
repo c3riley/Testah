@@ -26,7 +26,10 @@ public class HtmlFormatter extends AbstractTestPlanFormatter {
      */
     public VelocityContext getContext(final VelocityContext context) {
         context.put("GoogleChart",
-                getGoogleChart(this.getTestPlan().getRunInfo().getFail(), this.getTestPlan().getRunInfo().getPass()));
+                getGoogleChart(
+                    this.getTestPlan().getRunInfo().getFail(),
+                    this.getTestPlan().getRunInfo().getPass(),
+                    this.getTestPlan().getRunInfo().getIgnore()));
         return context;
     }
 
@@ -37,9 +40,10 @@ public class HtmlFormatter extends AbstractTestPlanFormatter {
      * @param numPass the num pass
      * @return the google chart
      */
-    private String getGoogleChart(final int numFail, final int numPass) {
-        return "http://chart.apis.google.com/chart?chs=400x100&chco=ff2233,00aa33&chd=t:" + numFail + "," + numPass +
-                "&cht=p3&chl=Failed [" + numFail + "]|Passed [" + numPass + "]&chtt=Run Results";
+    private String getGoogleChart(final int numFail, final int numPass, final int numIgnored) {
+        return "http://chart.apis.google.com/chart?chs=400x100&chco=ff2233,00aa33,C0C0C0&chd=t:"
+            + numFail + "," + numPass + "," + numIgnored +
+            "&cht=p3&chl=Failed [" + numFail + "]|Passed [" + numPass + "]|Ignored [" + numIgnored + "]&chtt=Run Results";
     }
 
     /* (non-Javadoc)

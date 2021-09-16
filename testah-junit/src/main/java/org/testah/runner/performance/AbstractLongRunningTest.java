@@ -21,6 +21,7 @@ public abstract class AbstractLongRunningTest {
      * @param runProps              properties that describe the test execution
      * @param publishers            0 or more ExecutionStatsPublisher, e.g. to push the statistics to Elasticsearch
      * @throws Exception when HTTP request generation fails
+     * @return execution data
      */
     public ExecData executeTest(TestDataGenerator loadTestDataGenerator, TestRunProperties runProps,
                                 ExecutionStatsPublisher... publishers) throws Exception {

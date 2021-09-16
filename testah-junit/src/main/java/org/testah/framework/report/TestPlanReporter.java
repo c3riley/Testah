@@ -57,7 +57,11 @@ public class TestPlanReporter {
             return testPlan;
         }
         try {
-            testPlan.getRunInfo().setIgnore(TS.testSystem().getIgnoredTests().size());
+            // testSystem().getIgnoredTests() holds tests that were filtered out before execution
+            int testCaseCountFilterIgnore = TS.testSystem().getIgnoredTests().size();
+            // in addition there may be tests that are ignored during test runtime
+            int testCaseCountRunTimeIgnore = testPlan.getRunInfo().getIgnore();
+            testPlan.getRunInfo().setIgnore(testCaseCountRunTimeIgnore + testCaseCountFilterIgnore);
             testPlan.getRunInfo()
                     .setTotal(testPlan.getRunInfo().getFail() + testPlan.getRunInfo().getPass() + testPlan.getRunInfo().getIgnore());
             testPlan.getRunInfo().getRunTimeProperties().put("builtOn", TS.params().getComputerName());

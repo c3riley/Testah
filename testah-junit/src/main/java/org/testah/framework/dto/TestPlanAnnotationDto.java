@@ -182,6 +182,9 @@ public class TestPlanAnnotationDto {
         return owner;
     }
 
+    public Class getTestClass() {
+        return testClass;
+    }
     /**
      * Get List of TestCaseAnnotationDto in the TestPlan.
      *

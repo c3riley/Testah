@@ -1,11 +1,19 @@
 package org.testah.framework.report;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.velocity.VelocityContext;
 import org.testah.TS;
 import org.testah.framework.dto.ResultDto;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.testah.framework.cli.IgnoredTestRecorder.getIgnoredTestCases;
+import static org.testah.framework.cli.IgnoredTestRecorder.getIgnoredTestPlans;
+import static org.testah.framework.cli.IgnoredTestRecorder.isRecordFilterKnownProblems;
 
 /**
  * The Class AbstractFormatter.
@@ -33,7 +41,7 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter
     public AbstractSummaryFormatter(final List<ResultDto> results, final String pathToTemplate)
     {
         super(pathToTemplate);
-        this.results = results;
+        this.results = results.stream().sorted(Comparator.comparing(result -> result.getTestPlan().getName())).collect(Collectors.toList());
     }
 
     /**
@@ -52,7 +60,8 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter
                                     long totalDuration, final String pathToTemplate)
     {
         super(pathToTemplate);
-        this.results = results;
+        this.results = CollectionUtils.isEmpty(results) ? results :
+            results.stream().sorted(Comparator.comparing(result -> result.getClassName())).collect(Collectors.toList());
         this.totalTestPlans = totalTestPlans;
         this.totalTestCases = totalTestCases;
         this.totalTestCasesPassed = totalTestCasesPassed;
@@ -101,6 +110,10 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter
 
         if (null != results)
         {
+
+            context.put("isRecordFilterKnownProblems", isRecordFilterKnownProblems());
+            context.put("ignoredTestPlans", getIgnoredTestPlans());
+            context.put("ignoredTestCases", getIgnoredTestCases());
             context.put("results", results);
             context.put("util", TS.util());
             if (totalTestPlans != -1)
@@ -122,7 +135,6 @@ public abstract class AbstractSummaryFormatter extends AbstractFormatter
     {
         return TS.util().toJson(this.results);
     }
-
 
     /**
      * Sets the report file.

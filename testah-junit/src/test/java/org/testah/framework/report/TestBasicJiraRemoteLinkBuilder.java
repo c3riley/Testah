@@ -3,6 +3,7 @@ package org.testah.framework.report;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.testah.TS;
 import org.testah.client.dto.KnownProblemDto;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
@@ -17,6 +18,7 @@ public class TestBasicJiraRemoteLinkBuilder {
 
     private BasicJiraRemoteLinkBuilder builder;
     private TestPlanDto basicTp;
+    private KnownProblemDto knownProblem;
 
     /**
      * Sets .
@@ -24,15 +26,16 @@ public class TestBasicJiraRemoteLinkBuilder {
     @Before
     public void setup() {
         builder = new BasicJiraRemoteLinkBuilder("test.ico");
-        KnownProblemDto knownProblem = new KnownProblemDto().setLinkedIds(new ArrayList<String>());
+        knownProblem = new KnownProblemDto().setLinkedIds(new ArrayList<String>());
         knownProblem.getLinkedIds().add("TEST-01");
         knownProblem.setDescription("This is a known Problem").setTypeOfKnown(TypeOfKnown.DEFECT);
 
         List<TestCaseDto> testcases = new ArrayList<>();
+        testcases.add(new TestCaseDto().setName("Basic Testcase").setDescription("This is a basic testcase"));
         testcases.add(new TestCaseDto().setName("Basic Testcase").setDescription("This is a basic testcase").setKnownProblem(knownProblem));
 
         basicTp = new TestPlanDto().setName("Basic Testplan").setDescription("This is a basic testplan").setTestCases(testcases)
-                .setSource("com.test.BasicTestPlan").setKnownProblem(knownProblem);
+                .setSource("com.test.BasicTestPlan");
     }
 
     @Test
@@ -80,12 +83,11 @@ public class TestBasicJiraRemoteLinkBuilder {
 
     @Test
     public void testGetRemoteLinkForTestPlanResultKnownProblem() {
-        final RemoteIssueLinkDto remoteLink = builder.getRemoteLinkForTestPlanResultKnownProblem(basicTp);
+        final RemoteIssueLinkDto remoteLink = builder.getRemoteLinkForTestPlanResultKnownProblem(basicTp.setKnownProblem(knownProblem));
         Assert.assertNotNull(remoteLink);
         Assert.assertEquals(0, remoteLink.getId());
         Assert.assertEquals("E2E KP Testplan-com.test.BasicTestPlan", remoteLink.getGlobalId());
         Assert.assertEquals("E2E KP Testplan", remoteLink.getRelationship());
-        Assert.assertEquals("This is a basic testplan - status: NA - duration: 0", remoteLink.getObject().getSummary());
         Assert.assertEquals("Basic Testplan", remoteLink.getObject().getTitle());
         Assert.assertEquals(
                 "http://noLinkFoundToUsePlease.com/?errorTip=Use-Envir-Param=param_runLocation",
@@ -131,12 +133,11 @@ public class TestBasicJiraRemoteLinkBuilder {
     @Test
     public void testGetRemoteLinkForTestCaseResultKnownProblem() {
         builder.setLastTestPlanDtoUsed(basicTp);
-        final RemoteIssueLinkDto remoteLink = builder.getRemoteLinkForTestCaseResultKnownProblem(basicTp.getTestCases().get(0));
+        final RemoteIssueLinkDto remoteLink = builder.getRemoteLinkForTestCaseResultKnownProblem(basicTp.getTestCases().get(1));
         Assert.assertNotNull(remoteLink);
         Assert.assertEquals(0, remoteLink.getId());
         Assert.assertEquals("E2E KP Testcase-com.test.BasicTestPlan", remoteLink.getGlobalId());
         Assert.assertEquals("E2E KP Testcase", remoteLink.getRelationship());
-        Assert.assertEquals("This is a basic testcase - status: NA - duration: 0", remoteLink.getObject().getSummary());
         Assert.assertEquals("Basic Testcase", remoteLink.getObject().getTitle());
         Assert.assertEquals(
                 "http://noLinkFoundToUsePlease.com/?errorTip=Use-Envir-Param=param_runLocation",

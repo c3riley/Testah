@@ -1,6 +1,7 @@
 package org.testah.framework.report;
 
 import org.apache.velocity.VelocityContext;
+import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.testah.TS;
 import org.testah.client.enums.TestStatus;
 import org.testah.framework.cli.Params;
@@ -52,7 +53,7 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
      */
     public VelocityContext getContext(final VelocityContext context) {
 
-        final HashMap<TestStatus, Integer> counts = new HashMap<TestStatus, Integer>();
+        final HashMap<TestStatus, Integer> counts = new HashMap<>();
         counts.put(TestStatus.PASSED, 0);
         counts.put(TestStatus.FAILED, 0);
         counts.put(TestStatus.IGNORE, 0);
@@ -62,12 +63,23 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
                 counts.put(TestStatus.PASSED, counts.get(TestStatus.PASSED) + result.getTestPlan().getRunInfo().getPass());
                 counts.put(TestStatus.FAILED, counts.get(TestStatus.FAILED) + result.getTestPlan().getRunInfo().getFail());
                 counts.put(TestStatus.IGNORE, counts.get(TestStatus.IGNORE) + result.getTestPlan().getRunInfo().getIgnore());
-            } else {
+            } else if (null != result.getJunitResult()) {
                 int pass = result.getJunitResult().getRunCount() -
                     (result.getJunitResult().getFailureCount() + result.getJunitResult().getIgnoreCount());
                 counts.put(TestStatus.PASSED, counts.get(TestStatus.PASSED) + pass);
                 counts.put(TestStatus.FAILED, counts.get(TestStatus.FAILED) + result.getJunitResult().getFailureCount());
                 counts.put(TestStatus.IGNORE, counts.get(TestStatus.IGNORE) + result.getJunitResult().getIgnoreCount());
+            } else if (null != result.getTestExecutionSummary()) {
+                TestExecutionSummary executionSummary = result.getTestExecutionSummary();
+                int pass = Math.toIntExact(executionSummary.getTestsSucceededCount());
+                int failed = Math.toIntExact(executionSummary.getTestsFailedCount());
+                int ignored = Math.toIntExact(executionSummary.getTestsSkippedCount() + executionSummary.getTestsAbortedCount());
+                counts.put(TestStatus.PASSED, counts.get(TestStatus.PASSED) + pass);
+                counts.put(TestStatus.FAILED, counts.get(TestStatus.FAILED) + failed);
+                counts.put(TestStatus.IGNORE, counts.get(TestStatus.IGNORE) + ignored);
+            }
+            else {
+                TS.log().warn("No results found for test class:" + result.getClassName());
             }
         });
 
@@ -75,7 +87,6 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
             getGoogleChart(counts.get(TestStatus.FAILED), counts.get(TestStatus.PASSED), counts.get(TestStatus.IGNORE)));
 
         context.put("htmlPath", "");
-
 
         return context;
     }

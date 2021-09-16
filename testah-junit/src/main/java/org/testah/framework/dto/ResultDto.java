@@ -5,6 +5,7 @@ import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.runner.Result;
 import org.testah.TS;
 import org.testah.client.dto.TestPlanDto;
+import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -12,7 +13,7 @@ import java.io.StringWriter;
 /**
  * The Class ResultDto.
  */
-public class ResultDto {
+public class ResultDto extends AbstractDtoBase<ResultDto> {
 
     /**
      * The junit 4 result.
@@ -56,6 +57,23 @@ public class ResultDto {
     public ResultDto(final Result junitResult, final TestPlanDto testPlan) {
         this.junitResult = junitResult;
         this.testPlan = testPlan;
+        if (testPlan != null) {
+            if (testPlan.hasKnownProblem() && testPlan.getKnownProblem().getTypeOfKnown() != null) {
+                junitIgnore += testPlan.getTestCases().size();
+            }
+            else {
+                long failedKnownProblemTestCaseCount = testPlan.getTestCases().stream().filter(testCase ->
+                    testCase.hasKnownProblem() && !testCase.getStatus()
+                ).count();
+                junitIgnore += failedKnownProblemTestCaseCount;
+                junitFailure -= failedKnownProblemTestCaseCount;
+                long passedKnownProblemTestCaseCount = testPlan.getTestCases().stream().filter(testCase ->
+                    testCase.hasKnownProblem() && !testCase.getStatus()
+                ).count();
+                junitIgnore += passedKnownProblemTestCaseCount;
+                junitPass -= passedKnownProblemTestCaseCount;
+            }
+        }
     }
 
     /**
@@ -66,8 +84,8 @@ public class ResultDto {
     public ResultDto(final Result junitResult) {
         this(junitResult, getTestPlanDto());
         this.junitCount = junitResult.getRunCount();
-        this.junitFailure = junitResult.getFailureCount();
-        this.junitIgnore = junitResult.getIgnoreCount();
+        this.junitFailure += junitResult.getFailureCount();
+        this.junitIgnore += junitResult.getIgnoreCount();
         this.junitFailureMessage = junitResult.getFailures().toString();
         this.junitPass = this.junitCount - (this.junitFailure + this.junitIgnore);
     }

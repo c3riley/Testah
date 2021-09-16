@@ -1,11 +1,14 @@
 package org.testah.client.dto;
 
+import org.testah.TS;
 import org.testah.client.enums.TestStatus;
 import org.testah.client.enums.TestType;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.testah.framework.cli.TestFilter.isFilterOn;
 
 /**
  * The Class TestPlanDto.
@@ -27,6 +30,9 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      */
     private Boolean status = null;
 
+    /**
+     * Status enum to describe the specific test plan status.
+     */
     private TestStatus statusEnum = null;
 
     /**
@@ -155,6 +161,12 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
         return this;
     }
 
+    public void fillTestCaseKnownProblem(TestCaseDto testCaseDto) {
+        if (hasKnownProblem()) {
+            testCaseDto.setKnownProblem(getKnownProblem());
+        }
+    }
+
     /**
      * Gets the run time.
      *
@@ -193,13 +205,17 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      * @return the test plan dto
      */
     public TestPlanDto setStatus() {
-        for (final TestCaseDto e : testCases) {
-            if (null != e.getStatus()) {
-                if (e.getStatus() == false) {
-                    status = false;
-                    return this;
-                } else if (e.getStatus() == true) {
-                    status = true;
+        status = null;
+        if (!hasKnownProblem()) {
+            for (final TestCaseDto e : testCases) {
+                //fillTestCaseKnownProblem(e);
+                if (null != e.getStatus() && !TestStatus.IGNORE.equals(e.getStatusEnum())) {
+                    if (e.getStatus() == false) {
+                        status = false;
+                        return this;
+                    } else if (e.getStatus() == true) {
+                        status = true;
+                    }
                 }
             }
         }
@@ -252,10 +268,47 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
      * @return test status enum
      */
     public TestStatus getStatusEnum() {
-        if (null == statusEnum) {
-            this.statusEnum = TestStatus.getStatus(status);
+        if (statusEnum == null) {
+            setStatusEnum();
         }
-        return this.statusEnum;
+        return statusEnum;
+    }
+
+    /**
+     * Set the specific test plan status from an enum.
+     *
+     * @return the test plan dto
+     */
+    public TestPlanDto setStatusEnum() {
+        // Unless it is ignored in its entirety, the test plan status derives from the states of its parts/cases.
+        // Not all test cases count, some can be marked as ignored. Keep track of the ones are counted in talliedTestCases.
+        List<TestCaseDto> talliedTestCases = new ArrayList<>();
+        for (TestCaseDto testCaseDto : testCases)
+        {
+            // if the @KnownProblem annotation exists on the test plan, propagate to the test cases
+            fillTestCaseKnownProblem(testCaseDto);
+            // skip the test case if it is marked as known problem
+            if (testCaseDto.hasKnownProblem() && isFilterOn(TS.params().getFilterIgnoreKnownProblem())) continue;
+            // also skip if the test case is marked as IGNORE
+            if (TestStatus.IGNORE.equals(testCaseDto.getStatusEnum())) continue;
+            // otherwise make the test case count
+            talliedTestCases.add(testCaseDto);
+        }
+
+        if (talliedTestCases.size() == 0) {
+            return setStatusEnum(TestStatus.IGNORE);
+        }
+        if (talliedTestCases.stream().filter(testCaseDto ->
+            testCaseDto.getStatus() != null && !testCaseDto.getStatus()).count() > 0) {
+            return setStatusEnum(TestStatus.FAILED);
+        }
+        else if (talliedTestCases.stream().filter(testCaseDto ->
+            testCaseDto.getStatus() != null && testCaseDto.getStatus()).count() > 0) {
+            return setStatusEnum(TestStatus.PASSED);
+        }
+        else {
+            return setStatusEnum(TestStatus.NA);
+        }
     }
 
     public TestPlanDto setStatusEnum(final TestStatus statusEnum) {
@@ -361,6 +414,15 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
     public TestPlanDto setTags(final List<String> tags) {
         this.tags = tags;
         return this;
+    }
+
+    /**
+     * Check if the test plan is marked with known problem.
+     *
+     * @return true if the test plan has the @KnownProblem annotation, false otherwise
+     */
+    public boolean hasKnownProblem() {
+        return null != knownProblem;
     }
 
     /**
@@ -542,5 +604,4 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
         this.id = id;
         return this;
     }
-
 }

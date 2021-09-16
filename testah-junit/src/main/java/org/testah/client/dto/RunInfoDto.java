@@ -1,8 +1,13 @@
 package org.testah.client.dto;
 
+import org.testah.TS;
+import org.testah.client.enums.TestStatus;
+import org.testah.framework.cli.TestFilter;
 import org.testah.framework.dto.base.AbstractDtoBase;
 
 import java.util.HashMap;
+
+import static org.testah.framework.cli.IgnoredTestRecorder.recordIgnoredTestCase;
 
 /**
  * The Class RunInfoDto.
@@ -71,17 +76,24 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto> {
     /**
      * Recalc.
      *
-     * @param testPlans the test plans
+     * @param testPlan the test plan
      * @return the run info dto
      */
-    public RunInfoDto recalc(final TestPlanDto testPlans) {
-        total = testPlans.getTestCases().size();
+    public RunInfoDto recalc(final TestPlanDto testPlan) {
+        total = testPlan.getTestCases().size();
         pass = 0;
         fail = 0;
         ignore = 0;
 
-        for (final TestCaseDto testCase : testPlans.getTestCases()) {
-            if (null == testCase.getStatus()) {
+        for (final TestCaseDto testCase : testPlan.getTestCases()) {
+            // ignore the test case if the Boolean status is not defined ...
+            if (null == testCase.getStatus()
+                // ... or the filter_DEFAULT_filterIgnoreKnownProblem is set to true
+                // and either the test plan or test case are marked with @KnownProblem ...
+                || TestFilter.isFilterOn(TS.params().getFilterIgnoreKnownProblem()) && (testPlan.hasKnownProblem() || testCase.hasKnownProblem())
+                // ot the status enum is IGNORE
+                || TestStatus.IGNORE.equals(testCase.getStatusEnum())) {
+                recordIgnoredTestCase(testPlan.getName(), testCase.getName());
                 ignore++;
             } else if (testCase.getStatus()) {
                 pass++;
