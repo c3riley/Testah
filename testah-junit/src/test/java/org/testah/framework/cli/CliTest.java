@@ -14,6 +14,7 @@ public class CliTest {
     private static final String ORG_TESTAH = "org.testah";
     private static final String PARAM_LOOK_AT_INTERNAL_TESTS = "param_lookAtInternalTests";
     private static final String FILTER_BY_TAG = "filter_DEFAULT_filterByTag";
+    public static final String OVERRIDE_JUNIT_5 = "OVERRIDE_JUNIT5";
 
     @Before
     public void setup() {
@@ -152,6 +153,7 @@ public class CliTest {
         final String[] args = {"run"};
         boolean found = false;
         System.setProperty(FILTER_BY_TAG, "JUNIT_5_NEG");
+        System.setProperty(OVERRIDE_JUNIT_5, "true");
         Cli cli = new Cli();
         try
         {
@@ -166,6 +168,7 @@ public class CliTest {
         finally
         {
             System.clearProperty(FILTER_BY_TAG);
+            System.clearProperty(OVERRIDE_JUNIT_5);
         }
         Assert.assertTrue(found);
     }

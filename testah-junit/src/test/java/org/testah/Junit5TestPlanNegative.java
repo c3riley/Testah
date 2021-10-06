@@ -1,11 +1,12 @@
 package org.testah;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.testah.framework.annotations.TestCaseWithParamsJUnit5;
 import org.testah.framework.annotations.TestPlanJUnit5;
 
-@Ignore
+@EnabledIfSystemProperty(named = "OVERRIDE_JUNIT5", matches = "true")
 @TestPlanJUnit5(name = "test plan for junit5 test with data provider", tags = "JUNIT_5_NEG")
 public class Junit5TestPlanNegative
 {
