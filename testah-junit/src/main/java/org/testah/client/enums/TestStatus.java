@@ -16,6 +16,10 @@ public enum TestStatus {
      */
     FAILED(false),
     /**
+     * JUnit initialization failure.
+     */
+    INIT_FAILURE(false),
+    /**
      * The na.
      */
     NA(null),

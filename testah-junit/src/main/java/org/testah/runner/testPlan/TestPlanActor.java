@@ -4,7 +4,6 @@ import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.actor.UntypedAbstractActor;
 import akka.routing.RoundRobinPool;
-import org.testah.TS;
 import org.testah.framework.dto.ResultDto;
 
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class TestPlanActor extends UntypedAbstractActor {
      */
     public static List<ResultDto> getResults() {
         if (null == results) {
-            results = new ArrayList<ResultDto>();
+            results = new ArrayList<>();
         }
         return results;
     }
@@ -64,9 +63,8 @@ public class TestPlanActor extends UntypedAbstractActor {
      * @see akka.actor.UntypedAbstractActor#onReceive(java.lang.Object)
      */
     @SuppressWarnings("unchecked")
-    public void onReceive(final Object message) throws Exception {
+    public void onReceive(final Object message) {
         if (message instanceof ResultDto) {
-            TS.log().info(Thread.currentThread().getId());
             getResults().add((ResultDto) message);
         } else if (message instanceof Set) {
             for (final Class<?> test : (Set<Class<?>>) message) {

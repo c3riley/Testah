@@ -40,7 +40,7 @@ public class TestFilter {
     /**
      * The test classes.
      */
-    private Set<Class<?>> testClasses;
+    private final Set<Class<?>> testClasses;
 
     /**
      * Instantiates a new test filter.
@@ -237,9 +237,6 @@ public class TestFilter {
      */
     private TestFilter loadUncompiledTestPlans(final String externalValue) {
         try {
-            // final String externalValue =
-            // TS.params().getLookAtExternalTests();
-
             if (null != externalValue && externalValue.length() > 0) {
                 final List<File> files = new ArrayList<>();
                 try (final GroovyClassLoader loader = (GroovyClassLoader) AccessController.doPrivileged(new PrivilegedAction<Object>() {

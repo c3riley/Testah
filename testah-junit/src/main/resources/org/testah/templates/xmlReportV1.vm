@@ -12,7 +12,7 @@
             </testcase>
         #else
             <testcase name="$testCaseRow.getName()" time="$testCaseRow.getRunTime().getDuration()" status="fail">
-                <failure message="" type="failed">
+                <failure message="$testCaseRow.getExceptions()" type="failed">
                     <![CDATA[]]>
                 </failure>
             </testcase>
