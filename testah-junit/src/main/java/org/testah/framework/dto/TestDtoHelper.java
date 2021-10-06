@@ -40,7 +40,6 @@ public class TestDtoHelper {
         return testPlanToFill;
     }
 
-
     /**
      * Creates the test plan dto.
      *

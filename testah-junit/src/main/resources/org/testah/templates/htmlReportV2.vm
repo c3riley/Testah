@@ -477,7 +477,11 @@
           </tr>
           <tr>
             <td class='label'>Description:</td>
-            <td class='value'>$testcase.getDescription()</td>
+            #if($testcase.getStatusEnum().toString()=="INIT_FAILURE")
+              <td class='value' style="background-color:rgba(255,0,0,0.75);"><b>$testcase.getDescription()</b></td>
+            #else
+              <td class='value'>$testcase.getDescription()</td>
+            #end
           </tr>
           <tr>
             <td class='label'>Time:</td>

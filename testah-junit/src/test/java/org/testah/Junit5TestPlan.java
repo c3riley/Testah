@@ -19,9 +19,7 @@ public class Junit5TestPlan {
      */
     @BeforeEach
     public void setup() {
-        TS.testSystem().setDoOnPassClosure((description) -> {
-            didDoOnPassOccur = true;
-        });
+        TS.testSystem().setDoOnPassClosure((description) -> didDoOnPassOccur = true);
     }
 
     @AfterAll
@@ -45,5 +43,4 @@ public class Junit5TestPlan {
     public void test2() {
         TS.asserts().isTrue(true);
     }
-
 }

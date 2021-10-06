@@ -7,12 +7,16 @@ import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 import net.sourceforge.argparse4j.inf.Subparsers;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.dto.TestPlanDto;
 import org.testah.client.enums.BrowserType;
+import org.testah.client.enums.TestStatus;
 import org.testah.framework.annotations.KnownProblem;
 import org.testah.framework.annotations.TestCase;
 import org.testah.framework.dto.ResultDto;
@@ -26,12 +30,13 @@ import org.testah.runner.TestahJUnitRunner;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static net.sourceforge.argparse4j.impl.Arguments.enumStringType;
 import static org.testah.framework.cli.IgnoredTestRecorder.recordFilterKnownProblems;
@@ -47,7 +52,7 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "3.4.0";
+    public static final String version = "3.4.1";
 
     /**
      * The Constant BAR_LONG.
@@ -247,7 +252,6 @@ public class Cli {
                         throw new RuntimeException(e);
                     }
                 }
-
             } else {
                 TS.log().debug(Cli.BAR_LONG);
                 TS.log().debug(Cli.BAR_WALL + "Not using cli params, only loading from properties file [ " +
@@ -299,8 +303,11 @@ public class Cli {
 
             TS.util().pause(1000L, "Waiting for TestsPlans to complete");
             for (final ResultDto result : results) {
-
+                List<TestExecutionSummary.Failure> initFailures = getInitializationErrors(result, initializationErrorFailures);
+                updateTestPlanWithInitializationErrors(result, initFailures);
                 if (null != result.getTestPlan()) {
+                    result.getTestPlan().getRunInfo().setFail(result.getTestPlan().getRunInfo().getFail() + initFailures.size());
+                    result.getTestPlan().getRunInfo().setTotal(result.getTestPlan().getRunInfo().getTotal() + initFailures.size());
                     result.getTestPlan().getRunInfo().recalc(result.getTestPlan());
                     totalTestCases += result.getTestPlan().getRunInfo().getTotal();
                     totalTestCasesFailed += result.getTestPlan().getRunInfo().getFail();
@@ -366,10 +373,70 @@ public class Cli {
         }
 
         if (!initializationErrorFailures.isEmpty()) {
-            throw new RuntimeException("There are test failures due to test classes not being able to load: " +
+            throw new RuntimeException("There are test failures because test classes/resources cannot be loaded: " +
                 initializationErrorFailures);
         }
+    }
 
+    public void updateTestPlanWithInitializationErrors(ResultDto result, List<TestExecutionSummary.Failure> initializationErrorFailures) {
+        if (CollectionUtils.isNotEmpty(initializationErrorFailures))
+        {
+            if (result.getTestPlan() == null)
+            {
+                TestPlanDto testPlanDto = new TestPlanDto();
+                testPlanDto.setName(result.getClassName());
+                testPlanDto.setStatus(false);
+                testPlanDto.setSource(result.getClassName());
+                testPlanDto.getRunTime().start(0L);
+                testPlanDto.getRunTime().stop(0L);
+                result.setTestPlan(testPlanDto);
+            }
+            // since there are initialization errors, the test plan failed
+            result.getTestPlan().setStatusEnum(TestStatus.FAILED);
+            for (TestExecutionSummary.Failure initializationError : initializationErrorFailures)
+            {
+                TestCaseDto testCase = new TestCaseDto();
+                testCase.setName(initializationError.getTestIdentifier().getDisplayName());
+                testCase.setDescription(String.format("INIT_FAILURE: %s", initializationError.getException().getMessage()));
+                testCase.setStatus(false);
+                testCase.setSource(String.join("#", result.getClassName(), initializationError.getTestIdentifier().getDisplayName()));
+                testCase.setStatusEnum(TestStatus.INIT_FAILURE);
+                testCase.setExceptions(initializationError.getException().getMessage());
+                testCase.getRunTime().start(0L);
+                testCase.getRunTime().stop(0L);
+                result.getTestPlan().addTestCase(testCase);
+            }
+        }
+    }
+
+    public List<TestExecutionSummary.Failure> getInitializationErrors(ResultDto result, List<String> initializationErrorFailures)
+    {
+        List<TestExecutionSummary.Failure> initFailures = new ArrayList<>();
+        if (null != result.getTestExecutionSummary())
+        {
+            List<TestExecutionSummary.Failure> failures = result.getTestExecutionSummary().getFailures();
+            if (null != failures)
+            {
+                for (TestExecutionSummary.Failure failure : failures) {
+                    if (failure.getException() != null) {
+                        TS.log().warn(String.format("TestExecutionSummary Failure '%s' in '%s.%s' : '%s'",
+                            failure.getException().getClass().getName(),
+                            result.getClassName(),
+                            failure.getTestIdentifier().getDisplayName(),
+                            failure.getException().getMessage())
+                        );
+                    }
+                }
+
+                // not all failures are initialization errors
+                initFailures = failures
+                    .stream()
+                    .filter(failure -> failure.getException() instanceof PreconditionViolationException)
+                    .collect(Collectors.toList());
+                initFailures.forEach(failure -> initializationErrorFailures.add(failure.getException().getMessage()));
+            }
+        }
+        return initFailures;
     }
 
     /**
@@ -436,7 +503,7 @@ public class Cli {
             resultObject = testPlans;
         }
 
-        FileUtils.writeStringToFile(results, TS.util().toJson(resultObject), Charset.forName("UTF-8"));
+        FileUtils.writeStringToFile(results, TS.util().toJson(resultObject), StandardCharsets.UTF_8);
         TS.log().info("Query Results: Found[" + getTestPlanFilter().getTestClassesMetFilters().size() + "] " +
             results.getAbsolutePath());
 

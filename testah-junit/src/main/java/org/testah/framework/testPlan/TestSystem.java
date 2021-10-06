@@ -523,11 +523,11 @@ public class TestSystem {
      *
      * @param desc        the desc
      * @param testPlan    the test plan
-     * @param knowProblem the know problem
+     * @param knownProblem the known problem
      * @return the test plan dto
      */
-    public TestPlanDto startTestPlan(final Description desc, final TestPlanAnnotationDto testPlan, final KnownProblem knowProblem) {
-        getTestPlanThreadLocal().set(TestDtoHelper.createTestPlanDto(desc, testPlan, knowProblem).start());
+    public TestPlanDto startTestPlan(final Description desc, final TestPlanAnnotationDto testPlan, final KnownProblem knownProblem) {
+        getTestPlanThreadLocal().set(TestDtoHelper.createTestPlanDto(desc, testPlan, knownProblem).start());
         setTestPlanStart(true);
         return this.testPlan.get();
     }

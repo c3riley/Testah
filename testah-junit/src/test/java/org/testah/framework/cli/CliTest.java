@@ -13,11 +13,13 @@ public class CliTest {
 
     private static final String ORG_TESTAH = "org.testah";
     private static final String PARAM_LOOK_AT_INTERNAL_TESTS = "param_lookAtInternalTests";
+    private static final String FILTER_BY_TAG = "filter_DEFAULT_filterByTag";
+    public static final String OVERRIDE_JUNIT_5 = "OVERRIDE_JUNIT5";
 
     @Before
     public void setup() {
-        System.getProperties().remove(PARAM_LOOK_AT_INTERNAL_TESTS);
-        System.getProperties().remove("filter_DEFAULT_filterByTag");
+        System.clearProperty(PARAM_LOOK_AT_INTERNAL_TESTS);
+        System.clearProperty(FILTER_BY_TAG);
     }
 
     @Test
@@ -103,17 +105,17 @@ public class CliTest {
     }
 
     @Test
-    public void testCliunJUnit4() {
+    public void testCliRunJUnit4() {
         final String[] args = {"run"};
-        System.setProperty("filter_DEFAULT_filterByTag", "JUNIT_4");
+        System.setProperty(FILTER_BY_TAG, "JUNIT_4");
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
     }
 
     @Test
-    public void testCliunJUnit5() {
+    public void testCliRunJUnit5() {
         final String[] args = {"run"};
-        System.setProperty("filter_DEFAULT_filterByTag", "JUNIT_5");
+        System.setProperty(FILTER_BY_TAG, "JUNIT_5");
         final Cli cli = new Cli();
         cli.getArgumentParser(args);
     }
@@ -144,5 +146,30 @@ public class CliTest {
         final String version = "";
         String longBarToPrint = Cli.getLongBarWithTextInCenter(version);
         Assert.assertEquals(version + "\n" + Cli.BAR_LONG, longBarToPrint);
+    }
+
+    @Test
+    public void testInitializationError() {
+        final String[] args = {"run"};
+        boolean found = false;
+        System.setProperty(FILTER_BY_TAG, "JUNIT_5_NEG");
+        System.setProperty(OVERRIDE_JUNIT_5, "true");
+        Cli cli = new Cli();
+        try
+        {
+            cli.getArgumentParser(args);
+        }
+        catch(RuntimeException e) {
+            found =
+                cli.getResults().stream().anyMatch(
+                    resultDto -> resultDto.getTestPlan().getTestCases().get(0).getDescription().contains("does not exist")
+                );
+        }
+        finally
+        {
+            System.clearProperty(FILTER_BY_TAG);
+            System.clearProperty(OVERRIDE_JUNIT_5);
+        }
+        Assert.assertTrue(found);
     }
 }

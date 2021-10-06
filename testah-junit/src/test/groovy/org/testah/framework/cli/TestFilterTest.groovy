@@ -132,6 +132,4 @@ class TestFilterTest extends Specification {
     public void teardown() {
         TS.params().setFilterByRunType(null)
     }
-
-
 }
