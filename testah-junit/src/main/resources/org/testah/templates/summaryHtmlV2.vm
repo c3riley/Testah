@@ -115,38 +115,55 @@
                 </tbody>
             </table>
 
-        #if("$isRecordFilterKnownProblems" == "true")
+        #if("$isRecordFilterKnownProblems" == "true" && ("$ignoredTestPlans.isEmpty()" == "false" || "$ignoredTestCases.isEmpty()" == "false"))
+            <br><hr></br>
+            <h3>Ignored/Filtered Tests</h3>
+            To understand why a tests is filtered out, check the test code. Tests may be filtered out e.g. because of @KnownProblem annotation, runtime exclusion, etc.
+            <br>
+            Tests that are excluded 'a priori' (e.g. @KnownProblem) do not appear in the 'Ignored' count in the report above, but are listed below.
+            <br>
+            Expand the node(s) below to see the list of ignored tests.
+            <br><br>
             #if("$ignoredTestPlans.isEmpty()" == "false")
-                <h4>Test Plans filtered out (e.g. KnownProblem annotation):</h4>
-                <table class='tc_table_3' border="1">
-                    <thead>
+                <details>
+                    <summary>
+                        <b>Test Plans</b>
+                    </summary>
+                    <table class='tc_table_3' border="1">
+                        <thead>
                         <th>Test Plan</th>
                         <th>Case Count</th>
-                     </thead>
-                    <tbody>
-                       #foreach($ignoredTestPlan in $ignoredTestPlans)
+                        </thead>
+                        <tbody>
+                            #foreach($ignoredTestPlan in $ignoredTestPlans)
                             <tr>
                                 <td class='value'>$ignoredTestPlan.getKey()</td>
                                 <td class='value'>$ignoredTestPlan.getValue()</td>
                             </tr>
-                        #end
-                    </tbody>
-                </table>
+                            #end
+                        </tbody>
+                    </table>
+                </details>
             #end
             #if("$ignoredTestCases.isEmpty()" == "false")
-                <h4>Test Cases filtered out (e.g. KnownProblem annotation):</h4>
-                <table class='tc_table_4' border="1">
-                    <thead>
-                    <th>Test Case</th>
-                    </thead>
-                    <tbody>
-                        #foreach($ignoredTestCase in $ignoredTestCases)
-                        <tr>
-                            <td class='value'>$ignoredTestCase</td>
-                        </tr>
-                        #end
-                    </tbody>
-                </table>
+                <br>
+                <details>
+                    <summary>
+                        <b>Test Cases</b>
+                    </summary>
+                    <table class='tc_table_4' border="1">
+                        <thead>
+                        <th>Test Case</th>
+                        </thead>
+                        <tbody>
+                            #foreach($ignoredTestCase in $ignoredTestCases)
+                            <tr>
+                                <td class='value'>$ignoredTestCase</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </details>
             #end
         #end
         </td>
