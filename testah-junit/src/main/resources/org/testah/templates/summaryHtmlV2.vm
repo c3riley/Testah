@@ -120,7 +120,7 @@
             <h3>Ignored/Filtered Tests</h3>
             To understand why a tests is filtered out, check the test code. Tests may be filtered out e.g. because of @KnownProblem annotation, runtime exclusion, etc.
             <br>
-            Tests that are excluded a priori (e.g. @KnownProblem) do not appear in the 'Ignored' count in the report above, but are listed below.
+            Tests that are excluded 'a priori' (e.g. @KnownProblem) do not appear in the 'Ignored' count in the report above, but are listed below.
             <br>
             Expand the node(s) below to see the list of ignored tests.
             <br><br>
