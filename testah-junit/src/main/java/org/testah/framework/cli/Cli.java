@@ -10,6 +10,7 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.params.provider.CsvParsingException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.testah.TS;
@@ -52,7 +53,7 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "3.4.2";
+    public static final String version = "3.4.3";
 
     /**
      * The Constant BAR_LONG.
@@ -431,7 +432,10 @@ public class Cli {
                 // not all failures are initialization errors
                 initFailures = failures
                     .stream()
-                    .filter(failure -> failure.getException() instanceof PreconditionViolationException)
+                    .filter(failure ->
+                        failure.getException() instanceof PreconditionViolationException
+                            || failure.getException() instanceof CsvParsingException
+                    )
                     .collect(Collectors.toList());
                 initFailures.forEach(failure -> initializationErrorFailures.add(failure.getException().getMessage()));
             }
