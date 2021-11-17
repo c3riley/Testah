@@ -63,10 +63,18 @@
       height: 30px;
       width: 30px;
     }
-    .ball-status-PASSED{
+    .ball-list {
+      display: inline-block;
+      border-radius: 50%;
+      height: 15px;
+      width: 15px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+    .ball-status-PASSED {
       background: radial-gradient(circle at 5px 10px, green, #010F00);
     }
-    .ball-status-FAILED{
+    .ball-status-FAILED {
       background: radial-gradient(circle at 5px 10px, red, #010F00);
     }
     .label {
@@ -452,11 +460,10 @@
     <hr>
     <div class="row">
       <div class="col-sm-12 middle">
-        <span class="ball middle ball-status-$testPlan.getStatusEnum()"> </span>
         #foreach( $tc in $testPlan.getTestCases() )
-          #if("$!tc.getStatus()" != "" && $tc.getStatus()==false )
-            | <a class='plan-status-$testPlan.getStatusEnum()' href='$H$tc.getName()'
-            title='See TestCase Results'>$tc.getName()</a>
+          #if("$!tc.getStatus()" != "" && $tc.getStatus() == false )
+            <br><span class="ball-list ball-status-$testPlan.getStatusEnum()"></span><a class='plan-status-$testPlan.getStatusEnum()' href='$H$tc.getName()'
+            title='See TestCase Results'>$tc.getName().replace(", null", ",")</a>
           #end
         #end
       </div>
