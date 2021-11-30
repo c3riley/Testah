@@ -19,9 +19,7 @@ import static org.testah.util.PortUtil.getFreePort;
 public class SenderThreadLoadTest extends AbstractLoadTest
 {
     private static final int longResponseTime = 4000;
-    private static final int shortResponseTime = 200;
-    private static final int numberOfChunks = 900;
-    private static final int chunkSize = 2;
+    private static final int shortResponseTime = 1000;
     private static final String serviceUnderTest = "SenderThreadLoadTest";
 
     WireMockServer wm;
@@ -51,15 +49,15 @@ public class SenderThreadLoadTest extends AbstractLoadTest
         TestRunProperties runProps =
             new TestRunProperties(serviceUnderTest, testClass, testMethod);
         TestTimingGetRequestGenerator testTimingGetRequestGenerator =
-            new TestTimingGetRequestGenerator(wm.baseUrl(), 0, chunkSize, numberOfChunks);
+            new TestTimingGetRequestGenerator(wm.baseUrl(), 0, 1, 500);
         ExecutionTimePublisher executionTimePublisher = new ExecutionTimePublisher();
         ChunkStatsLogPublisher chunkStatsLogPublisher = new ChunkStatsLogPublisher();
         initialize(testTimingGetRequestGenerator, runProps, executionTimePublisher, chunkStatsLogPublisher);
         SequenceExecData sequenceExecData = runTest(getRunStepFile(this.getClass()));
-        TS.asserts().isLessThan("", 60, sequenceExecData.getByStepCount(0).getReceiveCount());
-        TS.asserts().isLessThan("", 60, sequenceExecData.getByStepCount(0).getSendCount());
-        TS.asserts().isGreaterThan("", 180, sequenceExecData.getByStepCount(1).getReceiveCount());
-        TS.asserts().isGreaterThan("", 180, sequenceExecData.getByStepCount(1).getSendCount());
+        TS.asserts().isLessThan("", 12, sequenceExecData.getByStepCount(0).getReceiveCount());
+        TS.asserts().isLessThan("", 12, sequenceExecData.getByStepCount(0).getSendCount());
+        TS.asserts().isGreaterThan("", 50, sequenceExecData.getByStepCount(1).getReceiveCount());
+        TS.asserts().isGreaterThan("", 50, sequenceExecData.getByStepCount(1).getSendCount());
         executionTimePublisher.getStartTimes();
     }
 }
