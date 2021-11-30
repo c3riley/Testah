@@ -10,6 +10,9 @@ import org.testah.client.enums.TestType;
 import org.testah.framework.annotations.TestPlan;
 import org.testah.runner.http.load.TestTimingGetRequestGenerator;
 
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
@@ -23,7 +26,7 @@ public class SlowLongRunningTest extends AbstractLongRunningTest
     public static final int LONG_RESPONSE_TIME = 4000;
     public static final int SHORT_RESPONSE_TIME = 10;
     protected static final int numberOfChunks = 900;
-    protected static final int chunkSize = 2;
+    protected static final int chunkSize = 3;
     protected static final int numThreads = 1;
     protected static final long millisBetweenChunks = 470L;
     protected static final long runDuration = 10000L;
@@ -56,7 +59,7 @@ public class SlowLongRunningTest extends AbstractLongRunningTest
         String testClass = this.getClass().getSimpleName();
         String testMethod = Thread.currentThread().getStackTrace()[1].getMethodName();
         TestRunProperties runProps =
-            new TestRunProperties(serviceUnderTest, testClass, testMethod, numThreads, millisBetweenChunks);
+            new TestRunProperties(serviceUnderTest, testClass, testMethod, numThreads, millisBetweenChunks).setNumberOfSenderThreads(10);
 
         TestTimingGetRequestGenerator testTimingGetRequestGenerator =
             new TestTimingGetRequestGenerator(wm.baseUrl(), 10, chunkSize, numberOfChunks);
@@ -64,10 +67,12 @@ public class SlowLongRunningTest extends AbstractLongRunningTest
         ExecutionTimePublisher executionTimePublisher = new ExecutionTimePublisher();
         executeTest(
             testTimingGetRequestGenerator,
-            runProps.setVerbose(true).setRunDuration(runDuration),
+            runProps.setVerbose(false).setRunDuration(runDuration),
             executionTimePublisher);
+
         executionTimePublisher.getStartTimeSpacing().forEach(
             period -> TS.asserts().isLessThan("Check limit on period between requests.", 600, period));
+        TS.log().info(String.format("Sorted spacing:%n%s", executionTimePublisher.getStartTimeSpacing().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList())));
         TS.asserts().isGreaterThan("Expect at requests with long execution time.", 0,
             executionTimePublisher.getElapsedTimes().stream().filter(responseTime -> responseTime >= LONG_RESPONSE_TIME).count());
     }
