@@ -3,20 +3,17 @@ package org.testah.runner;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-import org.junit.Assert;
 import org.testah.TS;
 import org.testah.driver.http.AbstractHttpWrapper;
 import org.testah.driver.http.HttpWrapperV2;
-import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
 import org.testah.runner.http.load.HttpActor;
+import org.testah.runner.performance.StepRequestQueueWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static java.lang.System.currentTimeMillis;
 import static org.testah.runner.http.load.HttpActor.getResults;
 
 /**
@@ -24,13 +21,10 @@ import static org.testah.runner.http.load.HttpActor.getResults;
  */
 public class HttpAkkaRunner {
 
-    private static final String rptInfo = "[%d] %d [%s] - %s - %s";
-
-    List<ActorSystem> actorSystemList = new ArrayList<>();
-
+    private static final String rptInfo = "HttpAkkaRunner.rptInfo [%d] %d [%s] - %s - %s";
     private static HttpAkkaRunner httpAkkaRunner = new HttpAkkaRunner();
     private final Long hashId;
-    private long receivedCount = 0;
+    List<ActorSystem> actorSystemList = new ArrayList<>();
 
     /**
      * The http wrapper.
@@ -38,6 +32,9 @@ public class HttpAkkaRunner {
     private AbstractHttpWrapper httpWrapper;
 
     protected HttpAkkaRunner() {
+        httpWrapper = new HttpWrapperV2();
+        httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
+
         hashId = Thread.currentThread().getId();
     }
 
@@ -54,6 +51,7 @@ public class HttpAkkaRunner {
     {
         HttpActor.resetResults();
         HttpActor.resetReceivedCount();
+        HttpActor.resetSentCount();
         httpAkkaRunner = new HttpAkkaRunner();
     }
 
@@ -63,20 +61,21 @@ public class HttpAkkaRunner {
     }
 
     /**
-     * Run and report.
-     *
-     * @param responseQueue         queue to hold the responses
-     * @param numConcurrent         the num concurrent
-     * @param concurrentLinkedQueue ConcurrentLinkedQueue of PostRequestDto
-     * @param isVerbose             if true the requests/responses are written to log
+     * Execute tests and report results.
+     * @param responseQueue queue holding responses
+     * @param numOfWorkers number of 'worker' Akka actors
+     * @param numOfSenders number of 'sender' Akka actors
+     * @param stepRequestQueueWrapper wrapper of request queues
+     * @param isVerbose provide additional information if true
      */
     public void runAndReport(
         LinkedBlockingQueue<ResponseDto> responseQueue,
-        final int numConcurrent,
-        final ConcurrentLinkedQueue<?> concurrentLinkedQueue,
+        final int numOfWorkers,
+        final int numOfSenders,
+        final StepRequestQueueWrapper stepRequestQueueWrapper,
         boolean isVerbose)
     {
-        runTests(responseQueue, numConcurrent, concurrentLinkedQueue, isVerbose);
+        runTests(responseQueue, numOfWorkers, numOfSenders, stepRequestQueueWrapper, isVerbose);
         if (isVerbose) {
             int responseCount = 1;
             for (final ResponseDto response : responseQueue)
@@ -90,103 +89,33 @@ public class HttpAkkaRunner {
     }
 
     /**
-     * Run and report.
-     *
-     * @param numConcurrent       the num concurrent
-     * @param request             the request
-     * @param numOfRequestsToMake the num of requests to make
-     * @return the list
-     */
-    public LinkedBlockingQueue<ResponseDto> runAndReport(final int numConcurrent, final AbstractRequestDto<?> request,
-                                                         final int numOfRequestsToMake)
-    {
-        final LinkedBlockingQueue<ResponseDto> responseQueue = runTests(numConcurrent, request, numOfRequestsToMake);
-        if (TS.http().isVerbose())
-        {
-            int responseCount = 1;
-            for (final ResponseDto response : responseQueue)
-            {
-                TS.log().info(String.format(rptInfo,
-                    responseCount++,
-                    response.getStatusCode(),
-                    response.getStatusText(),
-                    TS.util().toDateString(response.getStart()),
-                    TS.util().toDateString(response.getEnd())));
-            }
-        }
-        return responseQueue;
-    }
-
-    /**
      * Run tests.
      *
-     * @param responseQueue         queue for the responses
-     * @param numConcurrent         the num concurrent
-     * @param concurrentLinkedQueue ConcurrentLinkedQueue of
-     * @param isVerbose             TODO
+     * @param responseQueue               queue for the responses
+     * @param numOfWorkers                the num concurrent chunks of requests
+     * @param numOfSenders                the num concurrent threads to handle a chunk;
+     *                                    the requests are synchronous
+     * @param stepRequestQueueWrapperList wrapper of ConcurrentLinkedQueue for this step
+     * @param isVerbose                   verbose sending of requests
      */
     public void runTests(
-        LinkedBlockingQueue responseQueue,
-        final int numConcurrent,
-        final ConcurrentLinkedQueue<?> concurrentLinkedQueue,
+        LinkedBlockingQueue<ResponseDto> responseQueue,
+        final int numOfWorkers,
+        final int numOfSenders,
+        final StepRequestQueueWrapper stepRequestQueueWrapperList,
         boolean isVerbose)
     {
         try
         {
-            if (null == concurrentLinkedQueue || concurrentLinkedQueue.size() == 0)
-            {
-                TS.log().warn("No Request Found to Run!");
-                return;
-            }
-            httpWrapper = new HttpWrapperV2();
             httpWrapper.setVerbose(isVerbose);
-            httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
 
             final ActorSystem system = ActorSystem.create("HttpAkkaRunner");
             actorSystemList.add(system);
-            final ActorRef master = system.actorOf(Props.create(HttpActor.class, numConcurrent,
-                concurrentLinkedQueue.size(), hashId), "master");
+            final ActorRef master = system.actorOf(Props.create(HttpActor.class, numOfWorkers, numOfSenders, hashId), "master");
 
-            master.tell(concurrentLinkedQueue, master);
+            master.tell(stepRequestQueueWrapperList, master);
 
             updateResponseQueue(responseQueue);
-        } catch (final Exception e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * Run tests.
-     *
-     * @param numConcurrent       the num concurrent
-     * @param request             the request
-     * @param numOfRequestsToMake the num of requests to make
-     * @return the list
-     */
-    public LinkedBlockingQueue<ResponseDto> runTests(final int numConcurrent, final AbstractRequestDto<?> request,
-                                                     final int numOfRequestsToMake)
-    {
-        try
-        {
-            if (null == request)
-            {
-                TS.log().warn("No Request Found to Run!");
-                return null;
-            }
-
-            httpWrapper = new HttpWrapperV2();
-            httpWrapper.setConnectManagerDefaultPooling().setHttpClient();
-
-            final ActorSystem system = getActorSystem();
-            final ActorRef master = system.actorOf(Props.create(HttpActor.class, numConcurrent, numOfRequestsToMake,
-                hashId), "master");
-
-            HttpActor.resetResults();
-
-            master.tell(request, master);
-
-            return getResults(hashId);
         } catch (final Exception e)
         {
             throw new RuntimeException(e);
@@ -226,62 +155,26 @@ public class HttpAkkaRunner {
     }
 
     /**
-     * Wait for the expected number of responses, but no longer that the time specified.
-     * @param responseQueue queue that holds the responses so far received
-     * @param expectedCount total count of expected responses
-     * @param millis maximal time to wait in milliseconds
-     * @return total number of received responses
-     */
-    public long waitForResponses(LinkedBlockingQueue<ResponseDto> responseQueue, long expectedCount, long millis)
-    {
-        long stopTimestamp = currentTimeMillis() + millis;
-        while (currentTimeMillis() < stopTimestamp &&
-            (HttpActor.getResults(hashId) == null || receivedCount < expectedCount))
-        {
-            try
-            {
-                Thread.sleep(500);
-            } catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            updateResponseQueue(responseQueue);
-        }
-        return receivedCount;
-    }
-
-    /**
      * Fill the response queue with received responses.
+     *
      * @param responseQueue response queue to update
      * @return the responses that were added to the queue
      */
-    public List<ResponseDto> updateResponseQueue(LinkedBlockingQueue<ResponseDto> responseQueue) {
+    public List<ResponseDto> updateResponseQueue(LinkedBlockingQueue<ResponseDto> responseQueue)
+    {
         List<ResponseDto> responseDtoList = new ArrayList<>();
         getResults(hashId).drainTo(responseDtoList);
-        receivedCount += responseDtoList.size();
         responseQueue.addAll(responseDtoList);
         return responseDtoList;
-    }
-
-    public void resetReceiveCount()
-    {
-        receivedCount = 0;
-    }
-
-    /**
-     * Return the count of received responses.
-     * @return count of received responses
-     */
-    public long getReceiveCount()
-    {
-        return receivedCount;
     }
 
     /**
      * Terminate the actor systems.
      */
-    public void terminateActorSystems() {
-        for (ActorSystem actorSystem : getActorSystemList()) {
+    public void terminateActorSystems()
+    {
+        for (ActorSystem actorSystem : getActorSystemList())
+        {
             actorSystem.terminate();
         }
     }

@@ -53,7 +53,7 @@ public class Cli {
      * The Constant version.
      */
 
-    public static final String version = "3.4.4";
+    public static final String version = "3.4.5";
 
     /**
      * The Constant BAR_LONG.
@@ -379,6 +379,11 @@ public class Cli {
         }
     }
 
+    /**
+     * Update the test plan DTO with initialization errors.
+     * @param result test plan results
+     * @param initializationErrorFailures list of JUnit initialization errors
+     */
     public void updateTestPlanWithInitializationErrors(ResultDto result, List<TestExecutionSummary.Failure> initializationErrorFailures) {
         if (CollectionUtils.isNotEmpty(initializationErrorFailures))
         {
@@ -410,6 +415,12 @@ public class Cli {
         }
     }
 
+    /**
+     * Collect JUnit initialization errors from the results DTO.
+     * @param result test results DTO
+     * @param initializationErrorFailures list of initialization failure messages
+     * @return a list of JUnit TestExecutionSummary.Failure objects representing initialization errors
+     */
     public List<TestExecutionSummary.Failure> getInitializationErrors(ResultDto result, List<String> initializationErrorFailures)
     {
         List<TestExecutionSummary.Failure> initFailures = new ArrayList<>();
@@ -433,8 +444,8 @@ public class Cli {
                 initFailures = failures
                     .stream()
                     .filter(failure ->
-                        failure.getException() instanceof PreconditionViolationException
-                            || failure.getException() instanceof CsvParsingException
+                        failure.getException() instanceof PreconditionViolationException ||
+                            failure.getException() instanceof CsvParsingException
                     )
                     .collect(Collectors.toList());
                 initFailures.forEach(failure -> initializationErrorFailures.add(failure.getException().getMessage()));

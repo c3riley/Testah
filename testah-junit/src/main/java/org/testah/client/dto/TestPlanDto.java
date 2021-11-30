@@ -23,7 +23,7 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
     /**
      * The test cases.
      */
-    private List<TestCaseDto> testCases = new ArrayList<TestCaseDto>();
+    private List<TestCaseDto> testCases = new ArrayList<>();
 
     /**
      * The status.
@@ -58,17 +58,17 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
     /**
      * The related links.
      */
-    private List<String> relatedLinks = new ArrayList<String>();
+    private List<String> relatedLinks = new ArrayList<>();
 
     /**
      * The related ids.
      */
-    private List<String> relatedIds = new ArrayList<String>();
+    private List<String> relatedIds = new ArrayList<>();
 
     /**
      * The tags.
      */
-    private List<String> tags = new ArrayList<String>();
+    private List<String> tags = new ArrayList<>();
 
     /**
      * The known problem.
@@ -88,22 +88,22 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
     /**
      * The components.
      */
-    private List<String> components = new ArrayList<String>();
+    private List<String> components = new ArrayList<>();
 
     /**
      * The devices.
      */
-    private List<String> devices = new ArrayList<String>();
+    private List<String> devices = new ArrayList<>();
 
     /**
      * The platforms.
      */
-    private List<String> platforms = new ArrayList<String>();
+    private List<String> platforms = new ArrayList<>();
 
     /**
      * The run types.
      */
-    private List<String> runTypes = new ArrayList<String>();
+    private List<String> runTypes = new ArrayList<>();
 
     /**
      * The owner.
@@ -161,6 +161,10 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
         return this;
     }
 
+    /**
+     * Update test case DTO with known test problem.
+     * @param testCaseDto test case DTO
+     */
     public void fillTestCaseKnownProblem(TestCaseDto testCaseDto) {
         if (hasKnownProblem()) {
             testCaseDto.setKnownProblem(getKnownProblem());
@@ -210,10 +214,10 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
             for (final TestCaseDto e : testCases) {
                 //fillTestCaseKnownProblem(e);
                 if (null != e.getStatus() && !TestStatus.IGNORE.equals(e.getStatusEnum())) {
-                    if (e.getStatus() == false) {
+                    if (!e.getStatus()) {
                         status = false;
                         return this;
-                    } else if (e.getStatus() == true) {
+                    } else if (e.getStatus()) {
                         status = true;
                     }
                 }
@@ -288,25 +292,27 @@ public class TestPlanDto extends AbstractDtoBase<TestPlanDto> {
             // if the @KnownProblem annotation exists on the test plan, propagate to the test cases
             fillTestCaseKnownProblem(testCaseDto);
             // skip the test case if it is marked as known problem
-            if (testCaseDto.hasKnownProblem() && isFilterOn(TS.params().getFilterIgnoreKnownProblem())) continue;
+            if (testCaseDto.hasKnownProblem() && isFilterOn(TS.params().getFilterIgnoreKnownProblem())) {
+                continue;
+            }
             // also skip if the test case is marked as IGNORE
-            if (TestStatus.IGNORE.equals(testCaseDto.getStatusEnum())) continue;
-            // otherwise make the test case count
+            if (TestStatus.IGNORE.equals(testCaseDto.getStatusEnum())) {
+                continue;
+            }
+            // otherwise, make the test case count
             talliedTestCases.add(testCaseDto);
         }
 
         if (talliedTestCases.size() == 0) {
             return setStatusEnum(TestStatus.IGNORE);
         }
-        if (talliedTestCases.stream().filter(testCaseDto ->
-            testCaseDto.getStatus() != null && !testCaseDto.getStatus()).count() > 0) {
+        if (talliedTestCases.stream().anyMatch(testCaseDto ->
+            testCaseDto.getStatus() != null && !testCaseDto.getStatus())) {
             return setStatusEnum(TestStatus.FAILED);
-        }
-        else if (talliedTestCases.stream().filter(testCaseDto ->
-            testCaseDto.getStatus() != null && testCaseDto.getStatus()).count() > 0) {
+        } else if (talliedTestCases.stream().anyMatch(testCaseDto ->
+            testCaseDto.getStatus() != null && testCaseDto.getStatus())) {
             return setStatusEnum(TestStatus.PASSED);
-        }
-        else {
+        } else {
             return setStatusEnum(TestStatus.NA);
         }
     }

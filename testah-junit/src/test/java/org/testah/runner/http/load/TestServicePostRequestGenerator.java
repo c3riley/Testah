@@ -3,7 +3,9 @@ package org.testah.runner.http.load;
 import com.google.common.collect.Lists;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.runner.http.load.request.PostRestRequest;
+import org.testah.runner.performance.RequestQueueWrapper;
 import org.testah.runner.performance.TestDataGenerator;
+import org.testah.runner.performance.dto.LoadTestSequenceDto;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,14 +22,14 @@ public class TestServicePostRequestGenerator extends TestDataGenerator {
     }
 
     @Override
-    public List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> generateRequests() throws Exception {
+    public ConcurrentLinkedQueue<ConcurrentLinkedQueue<AbstractRequestDto<?>>> generateRequests() {
         PostRestRequest postRestRequest = new PostRestRequest(stringList, longList);
         while (addRequest(postRestRequest.next())) {
         }
 
-        List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = new ArrayList<>();
+        ConcurrentLinkedQueue<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = new ConcurrentLinkedQueue<>();
         for (List<AbstractRequestDto<?>> postRequestSublist : Lists.partition(getRequestList(), getChunkSize())) {
-            concurrentLinkedQueues.add(new ConcurrentLinkedQueue<AbstractRequestDto<?>>(postRequestSublist));
+            concurrentLinkedQueues.add(new ConcurrentLinkedQueue<>(postRequestSublist));
         }
         return concurrentLinkedQueues;
     }

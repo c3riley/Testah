@@ -7,6 +7,7 @@ import org.testah.runner.performance.AbstractPerformanceRestRequest;
 public class SimpleGetRestRequest extends AbstractPerformanceRestRequest
 {
     private final String urlString;
+    private int count = 1;
 
     public SimpleGetRestRequest(String urlString)
     {
@@ -16,6 +17,6 @@ public class SimpleGetRestRequest extends AbstractPerformanceRestRequest
     @Override
     public AbstractRequestDto<?> next()
     {
-        return new GetRequestDto(urlString);
+        return new GetRequestDto(urlString + "?" + count++);
     }
 }

@@ -12,6 +12,12 @@ public class TestahTestInfo implements TestInfo
     Class testClass;
     Method testMethod;
 
+    /**
+     * Holder for basic test information.
+     * @param displayName name to display
+     * @param testClass test class name
+     * @param testMethod test method name
+     */
     public TestahTestInfo(String displayName, Class testClass, Method testMethod)
     {
         this.displayName = displayName;

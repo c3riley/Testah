@@ -41,8 +41,8 @@ public class HtmlFormatter extends AbstractTestPlanFormatter {
      * @return the google chart
      */
     private String getGoogleChart(final int numFail, final int numPass, final int numIgnored) {
-        return "http://chart.apis.google.com/chart?chs=400x100&chco=ff2233,00aa33,C0C0C0&chd=t:"
-            + numFail + "," + numPass + "," + numIgnored +
+        return "http://chart.apis.google.com/chart?chs=400x100&chco=ff2233,00aa33,C0C0C0&chd=t:" +
+            numFail + "," + numPass + "," + numIgnored +
             "&cht=p3&chl=Failed [" + numFail + "]|Passed [" + numPass + "]|Ignored [" + numIgnored + "]&chtt=Run Results";
     }
 

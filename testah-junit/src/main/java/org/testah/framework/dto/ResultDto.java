@@ -60,8 +60,7 @@ public class ResultDto extends AbstractDtoBase<ResultDto> {
         if (testPlan != null) {
             if (testPlan.hasKnownProblem() && testPlan.getKnownProblem().getTypeOfKnown() != null) {
                 junitIgnore += testPlan.getTestCases().size();
-            }
-            else {
+            } else {
                 long failedKnownProblemTestCaseCount = testPlan.getTestCases().stream().filter(testCase ->
                     testCase.hasKnownProblem() && !testCase.getStatus()
                 ).count();

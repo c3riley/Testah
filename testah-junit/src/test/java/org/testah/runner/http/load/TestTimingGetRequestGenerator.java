@@ -2,28 +2,26 @@ package org.testah.runner.http.load;
 
 import com.google.common.collect.Lists;
 import org.testah.driver.http.requests.AbstractRequestDto;
-import org.testah.runner.http.load.request.GetRestRequest;
-import org.testah.runner.performance.RequestQueueWrapper;
+import org.testah.runner.http.load.request.SimpleRequest;
 import org.testah.runner.performance.TestDataGenerator;
-import org.testah.runner.performance.dto.LoadTestSequenceDto;
 
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class TestServiceGetRequestGenerator extends TestDataGenerator {
+public class TestTimingGetRequestGenerator extends TestDataGenerator {
     private final List<Integer> statusCodes = Arrays.asList(200, 300, 400, 500);
-    private final GetRestRequest getRestRequest;
+    private final SimpleRequest simpleRequest;
 
-    public TestServiceGetRequestGenerator(int chunkSize, int numberOfChunks) {
+    public TestTimingGetRequestGenerator(String baseUrl, int outlierFrequency, int chunkSize, int numberOfChunks) {
         super(chunkSize, numberOfChunks);
-        getRestRequest = new GetRestRequest(statusCodes);
+        simpleRequest = new SimpleRequest(baseUrl, outlierFrequency);
     }
 
     @Override
     public ConcurrentLinkedQueue<ConcurrentLinkedQueue<AbstractRequestDto<?>>> generateRequests() {
-        while (addRequest(getRestRequest.next())) {
+        while (addRequest(simpleRequest.next())) {
         }
 
         ConcurrentLinkedQueue<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = new ConcurrentLinkedQueue<>();

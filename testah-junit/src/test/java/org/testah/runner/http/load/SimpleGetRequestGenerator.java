@@ -1,11 +1,11 @@
 package org.testah.runner.http.load;
 
 import com.google.common.collect.Lists;
+import org.testah.TS;
 import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.runner.http.load.request.SimpleGetRestRequest;
 import org.testah.runner.performance.TestDataGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -20,20 +20,20 @@ public class SimpleGetRequestGenerator extends TestDataGenerator
     }
 
     @Override
-    public List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> generateRequests() throws Exception
+    public ConcurrentLinkedQueue<ConcurrentLinkedQueue<AbstractRequestDto<?>>> generateRequests()
     {
         while (addRequest(simpleGetRestRequest.next())) {
         }
 
-        List<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = new ArrayList<>();
+        ConcurrentLinkedQueue<ConcurrentLinkedQueue<AbstractRequestDto<?>>> concurrentLinkedQueues = new ConcurrentLinkedQueue<>();
         for (List<AbstractRequestDto<?>> getRequestSublist : Lists.partition(getRequestList(), getChunkSize())) {
-            concurrentLinkedQueues.add(new ConcurrentLinkedQueue<AbstractRequestDto<?>>(getRequestSublist));
+            concurrentLinkedQueues.add(new ConcurrentLinkedQueue<>(getRequestSublist));
         }
         return concurrentLinkedQueues;
     }
 
     @Override
-    public String getDomain() throws Exception
+    public String getDomain()
     {
         return "localhost";
     }

@@ -1,5 +1,6 @@
 [
-  {"step": 1, "threads": 1, "chunkSize": 2, "durationSeconds": 20, "millisBetweenChunks": 970},
-  {"step": 2, "threads": 1, "chunkSize": 2, "durationSeconds": 10, "millisBetweenChunks": 970},
-  {"step": 3, "threads": 1, "chunkSize": 2, "durationSeconds": 10, "millisBetweenChunks": 970}
+  {"step": 1, "threads": 1, "chunkSize": 1, "durationSeconds": 10, "millisBetweenChunks": 930, "isVerbose": true},
+  {"step": 2, "threads": 1, "chunkSize": 2, "durationSeconds": 10, "millisBetweenChunks": 930, "isVerbose": true},
+  {"step": 3, "threads": 2, "chunkSize": 2, "durationSeconds": 10, "millisBetweenChunks": 930, "isVerbose": true},
+  {"step": 4, "threads": 1, "chunkSize": 4, "durationSeconds": 10, "millisBetweenChunks": 930, "isVerbose": true}
 ]

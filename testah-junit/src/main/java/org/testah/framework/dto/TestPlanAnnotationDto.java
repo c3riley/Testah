@@ -185,6 +185,7 @@ public class TestPlanAnnotationDto {
     public Class getTestClass() {
         return testClass;
     }
+
     /**
      * Get List of TestCaseAnnotationDto in the TestPlan.
      *

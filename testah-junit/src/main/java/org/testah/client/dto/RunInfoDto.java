@@ -59,12 +59,12 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto> {
      */
     private int total = 0;
 
-    private HashMap<String, String> reportFilePaths = new HashMap<String, String>();
+    private HashMap<String, String> reportFilePaths = new HashMap<>();
 
     /**
      * The run time properties.
      */
-    private HashMap<String, String> runTimeProperties = new HashMap<String, String>();
+    private HashMap<String, String> runTimeProperties = new HashMap<>();
 
     /**
      * Instantiates a new run info dto.
@@ -87,12 +87,14 @@ public class RunInfoDto extends AbstractDtoBase<RunInfoDto> {
 
         for (final TestCaseDto testCase : testPlan.getTestCases()) {
             // ignore the test case if the Boolean status is not defined ...
-            if (null == testCase.getStatus()
+            if (null == testCase.getStatus() ||
                 // ... or the filter_DEFAULT_filterIgnoreKnownProblem is set to true
                 // and either the test plan or test case are marked with @KnownProblem ...
-                || TestFilter.isFilterOn(TS.params().getFilterIgnoreKnownProblem()) && (testPlan.hasKnownProblem() || testCase.hasKnownProblem())
-                // ot the status enum is IGNORE
-                || TestStatus.IGNORE.equals(testCase.getStatusEnum())) {
+                TestFilter.isFilterOn(
+                    TS.params().getFilterIgnoreKnownProblem()) && (testPlan.hasKnownProblem() || testCase.hasKnownProblem()) ||
+                    // ot the status enum is IGNORE
+                    TestStatus.IGNORE.equals(testCase.getStatusEnum())
+            ) {
                 recordIgnoredTestCase(testPlan.getName(), testCase.getName());
                 ignore++;
             } else if (testCase.getStatus()) {

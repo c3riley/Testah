@@ -19,6 +19,11 @@ public class WebElementWrapperV1Test {
 
     static String browserPathToFilePage;
 
+    /**
+     * Setup of test: configure and start the Wiremock server.
+     *
+     * @throws IOException in case of errors while writing to file
+     */
     @BeforeClass
     public static void setupForClass() throws IOException {
         String htmlPageContent = TS.util().getResourceAsString("/formPage.html");

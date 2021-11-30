@@ -22,7 +22,7 @@ public class ChunkStatsLogPublisher implements ExecutionStatsPublisher {
         ChunkStats chunkStats = new ChunkStats(stats);
 
         // no pretty print to save space in log file
-        TS.log().info(new ObjectMapper().writeValueAsString((ChunkStats) chunkStats));
+        TS.log().info(new ObjectMapper().writeValueAsString(chunkStats));
     }
 
     @Override

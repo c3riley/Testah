@@ -5,38 +5,44 @@ import akka.actor.Props;
 import akka.actor.UntypedAbstractActor;
 import akka.routing.RoundRobinPool;
 import org.testah.TS;
-import org.testah.driver.http.requests.AbstractRequestDto;
 import org.testah.driver.http.response.ResponseDto;
+import org.testah.runner.performance.StepRequestQueueWrapper;
+import org.testah.runner.performance.dto.SentCount;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class HttpActor extends UntypedAbstractActor {
     public static final int UNKNOWN_ERROR_STATUS = 700;
-    private static Map<Long, LinkedBlockingQueue<ResponseDto>> results = new HashMap<>();
-    private final ActorRef workerRouter;
-    private final int nrOfWorkers;
-    private final int numOfAttempts;
-    private final Long hashId;
+    private static volatile Map<Long, LinkedBlockingQueue<ResponseDto>> results = new HashMap<>();
     private static volatile Map<Long, Long> receivedCount = new HashMap<>();
+    private static volatile Map<Long, Long> sentCount = new HashMap<>();
+    private final ActorRef workerRouter;
+    private final ActorRef responseReceiver;
+    private final ActorRef scheduler;
+    private final int numOfWorkers;
+
+    private final Long hashId;
 
     /**
      * Constructor.
      *
-     * @param nrOfWorkers   number of Akka workers
-     * @param numOfAttempts number of attempts
+     * @param numOfWorkers   number of Akka workers
+     * @param numOfSenders   number of Akka senders
      * @param hashId        Akka actor hash
      */
-    public HttpActor(final int nrOfWorkers, final int numOfAttempts, final Long hashId) {
+    public HttpActor(final int numOfWorkers, final int numOfSenders, final Long hashId) {
         this.hashId = hashId;
         results.put(hashId, new LinkedBlockingQueue<>());
-        this.nrOfWorkers = nrOfWorkers;
-        this.numOfAttempts = numOfAttempts;
+        this.numOfWorkers = numOfWorkers;
+        responseReceiver = this.getContext()
+            .actorOf(Props.create(HttpReceiver.class, getSelf()).withRouter(new RoundRobinPool(numOfWorkers)), "responseReceiver");
         workerRouter = this.getContext()
-                .actorOf(Props.create(HttpWorker.class).withRouter(new RoundRobinPool(nrOfWorkers)), "workerRouter");
+            .actorOf(Props.create(HttpWorker.class, numOfSenders, hashId, getSelf(), responseReceiver)
+                .withRouter(new RoundRobinPool(numOfWorkers)), "workerRouter");
+        scheduler = this.getContext()
+            .actorOf(Props.create(HttpScheduler.class, workerRouter, responseReceiver, numOfWorkers, hashId), "scheduler");
     }
 
     /**
@@ -48,7 +54,7 @@ public class HttpActor extends UntypedAbstractActor {
     public static LinkedBlockingQueue<ResponseDto> getResults(final Long hashId) {
         Map<Long, LinkedBlockingQueue<ResponseDto>> resultsLocalPointer = getResults();
         if (!resultsLocalPointer.containsKey(hashId)) {
-            resultsLocalPointer.put(hashId, new LinkedBlockingQueue<ResponseDto>());
+            resultsLocalPointer.put(hashId, new LinkedBlockingQueue<>());
         }
         return resultsLocalPointer.get(hashId);
     }
@@ -68,11 +74,25 @@ public class HttpActor extends UntypedAbstractActor {
     /**
      * Increment the count of received messages, file by thread hash.
      * @param hashId thread id
+     * @param increment number of additional requests sent
+     */
+    public synchronized void incrementSendCount(long hashId, int increment) {
+        Long count = sentCount.get(hashId);
+        if (count == null) {
+            sentCount.put(hashId, (long) increment);
+        } else {
+            sentCount.put(hashId, count + increment);
+        }
+    }
+
+    /**
+     * Increment the count of received messages, file by thread hash.
+     * @param hashId thread id
      */
     public synchronized void incrementReceiveCount(long hashId) {
         Long count = receivedCount.get(hashId);
         if (count == null) {
-            receivedCount.put(hashId, 0L);
+            receivedCount.put(hashId, 1L);
         } else {
             receivedCount.put(hashId, count + 1);
         }
@@ -80,16 +100,14 @@ public class HttpActor extends UntypedAbstractActor {
 
     /**
      * Get the count of received responses.
-     * @param hashId thread id
      * @return count of received responses
      */
-    public static long getReceivedCount(long hashId) {
-        Long count = receivedCount.get(hashId);
-        if (count == null) {
-            return 0;
-        } else {
-            return count;
-        }
+    public static long getReceivedCount() {
+        return receivedCount.values().stream().mapToLong(Long::longValue).sum();
+    }
+
+    public static long getSentCount() {
+        return sentCount.values().stream().mapToLong(Long::longValue).sum();
     }
 
     public static void resetResults() {
@@ -100,34 +118,28 @@ public class HttpActor extends UntypedAbstractActor {
         receivedCount = new HashMap<>();
     }
 
+    public static void resetSentCount() {
+        sentCount = new HashMap<>();
+    }
+
     /**
      * Implementation of UntypedAbstractActor.onReceiver(...).
      *
      * @see akka.actor.UntypedAbstractActor#onReceive(java.lang.Object)
      */
-    @SuppressWarnings("unchecked")
-    public void onReceive(final Object message) throws Exception {
+    public void onReceive(final Object message) {
         try {
             if (message instanceof ResponseDto) {
                 incrementReceiveCount(hashId);
                 getResults(hashId).add((ResponseDto) message);
-            } else if (message instanceof List) {
-                for (final Class<?> test : (List<Class<?>>) message) {
-                    workerRouter.tell(test, getSelf());
-                }
-            } else if (message instanceof AbstractRequestDto) {
-                for (int start = 1; start <= numOfAttempts; start++) {
-                    workerRouter.tell(message, getSelf());
-                }
-            } else if (message instanceof ConcurrentLinkedQueue) {
-                for (int start = 1; start <= numOfAttempts; start++) {
-                    workerRouter.tell(message, getSelf());
-                }
+            } else if (message instanceof SentCount) {
+                incrementSendCount(hashId, ((SentCount) message).getCount());
+            } else if (message instanceof StepRequestQueueWrapper) {
+                scheduler.tell(message, responseReceiver);
             } else if (message instanceof Throwable) {
                 results.get(hashId).add(getUnExpectedErrorResponseDto((Throwable) message));
             } else {
                 TS.log().info("Issue, should not have made it here, message is " + message);
-
             }
         } catch (Throwable throwable) {
             TS.log().info("Throwable thrown in HttpActor.onReceive()", throwable);
@@ -148,7 +160,7 @@ public class HttpActor extends UntypedAbstractActor {
         return workerRouter;
     }
 
-    public int getNrOfWorkers() {
-        return nrOfWorkers;
+    public int getNumOfWorkers() {
+        return numOfWorkers;
     }
 }

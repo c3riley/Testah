@@ -40,8 +40,7 @@ public enum IgnoredTestRecorder
     {
         if (StringUtils.isNotBlank(testPlan)) {
             INSTANCE.record(TEST_PLAN, testPlan, testCaseCount);
-        }
-        else {
+        } else {
             TS.log().warn("Not recording ignored test without a name.");
         }
     }
@@ -69,8 +68,7 @@ public enum IgnoredTestRecorder
                 Arrays.stream(testName.split("[()]")).filter(item -> !item.trim().isEmpty()).collect(Collectors.toList());
             Collections.reverse(normalizedTestName);
             INSTANCE.record(TEST_CASE, String.join(".", normalizedTestName), 1);
-        }
-        else {
+        } else {
             TS.log().warn("Not recording ignored test without a name.");
         }
     }
@@ -87,13 +85,11 @@ public enum IgnoredTestRecorder
             String normalizedTestCaseName = testCaseName.split("\\(\\)")[0].trim();
             if (StringUtils.isNotEmpty(normalizedTestCaseName)) {
                 INSTANCE.record(TEST_CASE, String.join(".", testPlanName, normalizedTestCaseName), 1);
-            }
-            else {
+            } else {
                 TS.log().warn(String.format("Not recording ignored test. Test plan name '%s', invalid test case name '%s')",
                     testPlanName, testCaseName));
             }
-        }
-        else {
+        } else {
             TS.log().warn("Not recording ignored test without a name.");
         }
     }
@@ -134,7 +130,7 @@ public enum IgnoredTestRecorder
      * @return value of isFilterKnownProblems parameter
      */
     public static boolean isRecordFilterKnownProblems() {
-        return INSTANCE.isFilterKnownProblems.booleanValue();
+        return INSTANCE.isFilterKnownProblems;
     }
 
     /**
@@ -189,16 +185,13 @@ public enum IgnoredTestRecorder
         StandardOpenOption openOption = StandardOpenOption.APPEND;
         try
         {
-            if (isNewFile)
-            {
+            if (isNewFile) {
                 Files.deleteIfExists(Paths.get(IGNORED_TESTS_FILE));
                 openOption = StandardOpenOption.CREATE_NEW;
                 isNewFile = false;
             }
             Files.write(Paths.get(IGNORED_TESTS_FILE), String.format("%s%n", test).getBytes(StandardCharsets.UTF_8), openOption);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
