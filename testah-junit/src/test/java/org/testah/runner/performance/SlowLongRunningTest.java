@@ -26,9 +26,9 @@ public class SlowLongRunningTest extends AbstractLongRunningTest
     public static final int LONG_RESPONSE_TIME = 4000;
     public static final int SHORT_RESPONSE_TIME = 10;
     protected static final int numberOfChunks = 900;
-    protected static final int chunkSize = 3;
+    protected static final int chunkSize = 5;
     protected static final int numThreads = 1;
-    protected static final long millisBetweenChunks = 470L;
+    protected static final long millisBetweenChunks = 970L;
     protected static final long runDuration = 10000L;
     protected static final String serviceUnderTest = "SlowLongRunningTest";
 
@@ -59,7 +59,9 @@ public class SlowLongRunningTest extends AbstractLongRunningTest
         String testClass = this.getClass().getSimpleName();
         String testMethod = Thread.currentThread().getStackTrace()[1].getMethodName();
         TestRunProperties runProps =
-            new TestRunProperties(serviceUnderTest, testClass, testMethod, numThreads, millisBetweenChunks).setNumberOfSenderThreads(10);
+            new TestRunProperties(serviceUnderTest, testClass, testMethod, numThreads, millisBetweenChunks)
+                .setNumberOfSenderThreads(10)
+                .setVerbose(false);
 
         TestTimingGetRequestGenerator testTimingGetRequestGenerator =
             new TestTimingGetRequestGenerator(wm.baseUrl(), 10, chunkSize, numberOfChunks);
@@ -71,7 +73,7 @@ public class SlowLongRunningTest extends AbstractLongRunningTest
             executionTimePublisher);
 
         executionTimePublisher.getStartTimeSpacing().forEach(
-            period -> TS.asserts().isLessThan("Check limit on period between requests.", 1100, period));
+            period -> TS.asserts().isLessThan("Check limit on period between requests.", 2100, period));
         TS.log().info(String.format("Sorted spacing:%n%s", executionTimePublisher.getStartTimeSpacing().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList())));
         TS.asserts().isGreaterThan("Expect at requests with long execution time.", 0,
             executionTimePublisher.getElapsedTimes().stream().filter(responseTime -> responseTime >= LONG_RESPONSE_TIME).count());
