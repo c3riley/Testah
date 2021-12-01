@@ -11,31 +11,34 @@ import java.time.ZoneId;
 
 public class TestRunProperties
 {
-    protected final Integer defaultNumberOfChunks = 2500;
-    protected final Long defaultRunDuration = 48 * 3600 * 1000L;
-    protected final Integer defaultChunkSize = 10;
-    protected final Integer defaultNumberOfAkkaThreads = 3;
-    protected final Long defaultMillisBetweenChunks = 3000L;
+    public static final Integer DEFAULT_NUMBER_OF_CHUNKS = 2500;
+    public static final Long DEFAULT_RUN_DURATION = 48 * 3600 * 1000L;
+    public static final Integer DEFAULT_CHUNK_SIZE = 10;
+    public static final Integer DEFAULT_NUMBER_OF_AKKA_THREADS = 3;
+    public static final Integer DEFAULT_NUMBER_OF_SENDER_THREADS = 50;
+    public static final Long DEFAULT_MILLIS_BETWEEN_CHUNKS = 3000L;
+    private final String serviceUnderTest;
+    private final String testClass;
+    private final String testMethod;
     private Integer numberOfChunks;
-    private Long runDuration = null;
+    private Long runDuration;
     private Long stopTime = null;
     private LocalDateTime stopDateTime = null;
     private Integer chunkSize;
     private Integer numberOfAkkaThreads;
+    private Integer numberOfSenderThreads;
     private Long millisBetweenChunks;
     private boolean isVerbose = false;
-    private final String serviceUnderTest;
     private String domain;
-    private final String testClass;
-    private final String testMethod;
     private String id;
+    private Long millisPauseExecution;
 
     protected TestRunProperties(String serviceUnderTest, String testClass, String testMethod)
     {
         this.serviceUnderTest = serviceUnderTest;
         this.testClass = testClass;
         this.testMethod = testMethod;
-        this.runDuration = this.defaultRunDuration;
+        this.runDuration = DEFAULT_RUN_DURATION;
     }
 
     /**
@@ -54,12 +57,9 @@ public class TestRunProperties
         int numberOfAkkaThreads,
         long millisBetweenChunks)
     {
-        this.serviceUnderTest = serviceUnderTest;
-        this.testClass = testClass;
-        this.testMethod = testMethod;
+        this(serviceUnderTest, testClass, testMethod);
         this.numberOfAkkaThreads = numberOfAkkaThreads;
         this.millisBetweenChunks = millisBetweenChunks;
-        this.runDuration = this.defaultRunDuration;
     }
 
     /**
@@ -67,8 +67,10 @@ public class TestRunProperties
      *
      * @return the numberOfChunks
      */
-    public Integer getNumberOfChunks()
-    {
+    public Integer getNumberOfChunks() {
+        if (numberOfChunks == null || numberOfChunks < 1) {
+            return DEFAULT_NUMBER_OF_CHUNKS;
+        }
         return numberOfChunks;
     }
 
@@ -145,8 +147,10 @@ public class TestRunProperties
      *
      * @return the chunkSize
      */
-    public Integer getChunkSize()
-    {
+    public Integer getChunkSize() {
+        if (chunkSize == null || chunkSize < 1) {
+            return DEFAULT_CHUNK_SIZE;
+        }
         return chunkSize;
     }
 
@@ -167,8 +171,7 @@ public class TestRunProperties
      * @param chunkSize the chunkSize to set
      * @return this object
      */
-    public TestRunProperties setChunkSize(int chunkSize)
-    {
+    public TestRunProperties setChunkSize(int chunkSize) {
         TS.log().info("Setting chunkSize to " + chunkSize);
         this.chunkSize = chunkSize;
         return this;
@@ -179,8 +182,10 @@ public class TestRunProperties
      *
      * @return the numberOfAkkaThreads
      */
-    public Integer getNumberOfAkkaThreads()
-    {
+    public Integer getNumberOfAkkaThreads() {
+        if (numberOfAkkaThreads == null || numberOfAkkaThreads < 1) {
+            return DEFAULT_NUMBER_OF_AKKA_THREADS;
+        }
         return numberOfAkkaThreads;
     }
 
@@ -209,12 +214,32 @@ public class TestRunProperties
     }
 
     /**
+     * Get the number of threads.
+     * @return the number of threads
+     */
+    public Integer getNumberOfSenderThreads()
+    {
+        if (numberOfSenderThreads == null || numberOfSenderThreads < 1) {
+            return DEFAULT_NUMBER_OF_SENDER_THREADS;
+        }
+        return numberOfSenderThreads;
+    }
+
+    public TestRunProperties setNumberOfSenderThreads(Integer numberOfSenderThreads)
+    {
+        this.numberOfSenderThreads = numberOfSenderThreads;
+        return this;
+    }
+
+    /**
      * Get the pause time in milliseconds between chunks of requests.
      *
      * @return the milliseconds between chunks
      */
-    public Long getMillisBetweenChunks()
-    {
+    public Long getMillisBetweenChunks() {
+        if (millisBetweenChunks == null || millisBetweenChunks < 1) {
+            return DEFAULT_MILLIS_BETWEEN_CHUNKS;
+        }
         return millisBetweenChunks;
     }
 
@@ -396,6 +421,26 @@ public class TestRunProperties
     {
         TS.log().info("Setting stopTime to " + stopTime);
         this.stopTime = stopTime;
+        return this;
+    }
+
+    /**
+     * Get the time between executing two chunks in milliseconds, with a fallback number
+     * if the value is not set.
+     * @param defaultMillisPauseExecution milliseconds to pause while waiting for the step to finish
+     * @return the time between execution two chunks in milliseconds
+     */
+    public long getMillisPauseExecution(long defaultMillisPauseExecution)
+    {
+        if (millisPauseExecution == null || millisPauseExecution <= 0L) {
+            return defaultMillisPauseExecution;
+        }
+        return millisPauseExecution;
+    }
+
+    public TestRunProperties setMillisPauseExecution(Long millisPauseExecution)
+    {
+        this.millisPauseExecution = millisPauseExecution;
         return this;
     }
 }

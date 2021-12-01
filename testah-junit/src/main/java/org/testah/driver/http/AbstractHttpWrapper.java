@@ -58,6 +58,7 @@ import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -153,7 +154,7 @@ public abstract class AbstractHttpWrapper {
      */
     private PoolingHttpClientConnectionManager connManager;
 
-    private HashMap<String, Header> customHeaders = new HashMap<String, Header>();
+    private HashMap<String, Header> customHeaders = new HashMap<>();
 
 
     private VerboseAsserts verboseAsserts;
@@ -239,9 +240,7 @@ public abstract class AbstractHttpWrapper {
 
             if (!getCustomHeaders().isEmpty()) {
                 TS.log().trace("adding custom headers");
-                getCustomHeaders().values().forEach(value -> {
-                    request.addHeader(value);
-                });
+                getCustomHeaders().values().forEach(request::addHeader);
             }
 
             final ResponseDto responseDto = new ResponseDto().setStart();
@@ -255,7 +254,7 @@ public abstract class AbstractHttpWrapper {
                 responseDto.setStatusText(response.getStatusLine().getReasonPhrase());
                 if (null != entity) {
                     responseDto.setResponseBytes(EntityUtils.toByteArray(entity));
-                    responseDto.setResponseBody(new String(responseDto.getResponseBytes(), "UTF-8"));
+                    responseDto.setResponseBody(new String(responseDto.getResponseBytes(), StandardCharsets.UTF_8));
                 }
                 responseDto.setUrl(request.getHttpRequestBase().getURI().toString());
                 responseDto.setHeaders(response.getAllHeaders()).setRequestType(request.getHttpMethod());
@@ -273,7 +272,7 @@ public abstract class AbstractHttpWrapper {
         } catch (final IOException e) {
             TS.log().error(e);
             if (!ignoreHttpError) {
-                getVerboseAsserts().equalsTo("Unexpected Exception thrown from preformRequest in IHttpWrapper", "",
+                getVerboseAsserts().equalsTo("Unexpected Exception thrown from performRequest in IHttpWrapper", "",
                     e.getMessage());
             }
             return new ResponseDto(-1).setStatusText(e.toString()).setResponseBody(e.toString());
@@ -622,7 +621,7 @@ public abstract class AbstractHttpWrapper {
                 responseDto.setStatusCode(response.getStatusLine().getStatusCode());
                 responseDto.setStatusText(response.getStatusLine().getReasonPhrase());
                 responseDto.setResponseBytes(EntityUtils.toByteArray(entity));
-                responseDto.setResponseBody(new String(responseDto.getResponseBytes(), "UTF-8"));
+                responseDto.setResponseBody(new String(responseDto.getResponseBytes(), StandardCharsets.UTF_8));
                 responseDto.setRequestUsed(request);
                 if (null != request) {
                     responseDto.setUrl(request.getHttpRequestBase().getURI().toString());
@@ -751,8 +750,6 @@ public abstract class AbstractHttpWrapper {
         return getSelf();
     }
 
-    ;
-
     /**
      * Gets the dns resolver.
      *
@@ -819,12 +816,8 @@ public abstract class AbstractHttpWrapper {
      * Sets the connection manager pooling advanced.
      *
      * @return the abstract http wrapper
-     * @throws NoSuchAlgorithmException the no such algorithm exception
-     * @throws KeyStoreException        the key store exception
      */
-    public AbstractHttpWrapper setConnectionManagerPoolingAdvanced()
-        throws NoSuchAlgorithmException, KeyStoreException {
-
+    public AbstractHttpWrapper setConnectionManagerPoolingAdvanced() {
         final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory = new ManagedHttpClientConnectionFactory(
             requestWriterFactory, responseParserFactory);
 

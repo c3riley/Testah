@@ -1,0 +1,4 @@
+[
+  {"step": 1, "threads": 1, "chunkSize": 10, "durationSeconds": 10, "millisBetweenChunks": 930, "isVerbose": true, "senders":  1},
+  {"step": 2, "threads": 1, "chunkSize": 10, "durationSeconds": 10, "millisBetweenChunks": 930, "isVerbose": true, "senders":  10}
+]

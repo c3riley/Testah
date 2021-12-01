@@ -1,17 +1,18 @@
 package org.testah.runner.performance;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.testah.client.dto.StepActionDto;
-import org.testah.util.unittest.dtotest.DtoTest;
 
 import java.time.Instant;
 import java.time.ZoneId;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 public class TestRunPropertiesTest {
 
@@ -43,7 +44,7 @@ public class TestRunPropertiesTest {
 
     @Test
     public void setNumberOfChunks1Test() {
-        assertThat(properties.getNumberOfChunks(), nullValue());
+        assertThat(properties.getNumberOfChunks(), equalTo(2500));
         properties.setNumberOfChunks(2);
         assertThat(properties.getNumberOfChunks(), equalTo(2));
         properties.setNumberOfChunks("3");
@@ -52,7 +53,7 @@ public class TestRunPropertiesTest {
 
     @Test
     public void chunkSizeTest() {
-        assertThat(properties.getChunkSize(), nullValue());
+        assertThat(properties.getChunkSize(), equalTo(10));
         properties.setChunkSize(2);
         assertThat(properties.getChunkSize(), equalTo(2));
         properties.setChunkSize("3");
@@ -61,7 +62,7 @@ public class TestRunPropertiesTest {
 
     @Test
     public void numberOfAkkaThreadsTest() {
-        assertThat(properties.getNumberOfAkkaThreads(), nullValue());
+        assertThat(properties.getNumberOfAkkaThreads(), equalTo(3));
         properties.setNumberOfAkkaThreads(2);
         assertThat(properties.getNumberOfAkkaThreads(), equalTo(2));
         properties.setNumberOfAkkaThreads("3");
@@ -70,7 +71,7 @@ public class TestRunPropertiesTest {
 
     @Test
     public void millisBetweenChunksTest() {
-        assertThat(properties.getMillisBetweenChunks(), nullValue());
+        assertThat(properties.getMillisBetweenChunks(), equalTo(3000L));
         properties.setMillisBetweenChunks(2L);
         assertThat(properties.getMillisBetweenChunks(), equalTo(2L));
         properties.setMillisBetweenChunks("3");
@@ -96,11 +97,9 @@ public class TestRunPropertiesTest {
         assertThat(properties.getRuntime(), equalTo("PT48H"));
 
         properties.setRunDuration(100L);
-        properties.toString();
         assertThat(properties.getRuntime(), equalTo("PT0.1S"));
         assertThat(properties.getRunDuration(), equalTo(100L));
         properties.setRunDuration("200");
-        properties.toString();
         assertThat(properties.getRuntime(), equalTo("PT0.2S"));
         assertThat(properties.getRunDuration(), equalTo(200L));
     }

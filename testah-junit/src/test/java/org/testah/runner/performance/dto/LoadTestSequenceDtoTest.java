@@ -18,8 +18,8 @@ public class LoadTestSequenceDtoTest
         Assert.assertEquals(13, loadTestSequenceDto.getStep().intValue());
         Assert.assertEquals(14, loadTestSequenceDto.getThreads().intValue());
         Assert.assertEquals(111, loadTestSequenceDto.getMillisBetweenChunks().intValue());
-        Assert.assertEquals(true, loadTestSequenceDto.getIsVerbose());
-        Assert.assertEquals(false, loadTestSequenceDto.getIsPublish());
+        Assert.assertTrue(loadTestSequenceDto.getIsVerbose());
+        Assert.assertFalse(loadTestSequenceDto.getIsPublish());
     }
 
     @Test
@@ -77,16 +77,16 @@ public class LoadTestSequenceDtoTest
     @Test
     public void fillUndefined()
     {
-        int numberOfAkkaThreads = 13;
-        int numberOfChunks = 111;
-        int chunkSize = 32;
-        long millisBetweenChunks = 123L;
-        int runDurationSeconds = 1800;
-        long runDurationMillis = runDurationSeconds * 1000L;
-        boolean isVerbose = false;
-        String serviceUnderTest = "myService";
-        String testClass = "myTestClass";
-        String testMethod = "myTestMethod";
+        final int numberOfAkkaThreads = 13;
+        final int numberOfChunks = 111;
+        final int chunkSize = 32;
+        final long millisBetweenChunks = 123L;
+        final int runDurationSeconds = 1800;
+        final long runDurationMillis = runDurationSeconds * 1000L;
+        final boolean isVerbose = false;
+        final String serviceUnderTest = "myService";
+        final String testClass = "myTestClass";
+        final String testMethod = "myTestMethod";
 
         LoadTestSequenceDto loadTestSequenceDto = new LoadTestSequenceDto();
         Assert.assertNull(loadTestSequenceDto.getThreads());

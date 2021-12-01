@@ -30,11 +30,9 @@ public class TestCaseAnnotationDto {
 
     private TestCaseAnnotationDto(Method method, TestCase testCase) {
         this.id = testCase.id();
-        if (null == method || StringUtils.isNotEmpty(testCase.name()))
-        {
+        if (null == method || StringUtils.isNotEmpty(testCase.name())) {
             this.name = testCase.name();
-        }
-        else {
+        } else {
             this.name = method.getName();
         }
         this.description = testCase.description();
@@ -54,11 +52,9 @@ public class TestCaseAnnotationDto {
 
     private TestCaseAnnotationDto(Method method, TestCaseJUnit5 testCase) {
         this.id = testCase.id();
-        if (null == method || StringUtils.isNotEmpty(testCase.name()))
-        {
+        if (null == method || StringUtils.isNotEmpty(testCase.name())) {
             this.name = testCase.name();
-        }
-        else {
+        } else {
             this.name = method.getName();
         }
         this.description = testCase.description();
@@ -78,11 +74,9 @@ public class TestCaseAnnotationDto {
 
     private TestCaseAnnotationDto(Method method, TestCaseWithParamsJUnit5 testCase) {
         this.id = testCase.id();
-        if (null == method || StringUtils.isNotEmpty(testCase.name()))
-        {
+        if (null == method || StringUtils.isNotEmpty(testCase.name())) {
             this.name = testCase.name();
-        }
-        else {
+        } else {
             this.name = method.getName();
         }
         this.description = testCase.description();

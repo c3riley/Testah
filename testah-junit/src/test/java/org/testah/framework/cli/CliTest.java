@@ -155,18 +155,14 @@ public class CliTest {
         System.setProperty(FILTER_BY_TAG, "JUNIT_5_NEG");
         System.setProperty(OVERRIDE_JUNIT_5, "true");
         Cli cli = new Cli();
-        try
-        {
+        try {
             cli.getArgumentParser(args);
-        }
-        catch(RuntimeException e) {
+        } catch (RuntimeException e) {
             found =
                 cli.getResults().stream().anyMatch(
                     resultDto -> resultDto.getTestPlan().getTestCases().get(0).getDescription().contains("does not exist")
                 );
-        }
-        finally
-        {
+        } finally {
             System.clearProperty(FILTER_BY_TAG);
             System.clearProperty(OVERRIDE_JUNIT_5);
         }

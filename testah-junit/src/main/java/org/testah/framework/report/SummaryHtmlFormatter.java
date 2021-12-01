@@ -77,8 +77,7 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
                 counts.put(TestStatus.PASSED, counts.get(TestStatus.PASSED) + pass);
                 counts.put(TestStatus.FAILED, counts.get(TestStatus.FAILED) + failed);
                 counts.put(TestStatus.IGNORE, counts.get(TestStatus.IGNORE) + ignored);
-            }
-            else {
+            } else {
                 TS.log().warn("No results found for test class:" + result.getClassName());
             }
         });
@@ -127,7 +126,6 @@ public class SummaryHtmlFormatter extends AbstractSummaryFormatter {
         summaryResults.put("totalTestCasesFailed", totalTestCasesFailed);
         summaryResults.put("totalTestCasesPassed", totalTestCasesPassed);
         summaryResults.put("totalTestCasesIgnored", totalTestCasesIgnored);
-        summaryResults.put("totalTestPlans", totalTestPlans);
         summaryResults.put("totalDuration", totalDuration);
 
         createReport("summaryResults.json", Params.getUserDir(), TS.util().toJson(summaryResults));

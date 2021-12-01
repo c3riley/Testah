@@ -413,7 +413,7 @@ public class TestFilter {
             final boolean filterByRunType = isFilterOn(TS.params().getFilterByRunType());
             final boolean filterByIgnoreKnownProblem = isFilterOn(TS.params().getFilterIgnoreKnownProblem());
 
-            boolean filterByTestType = (null != TS.params().getFilterByTestType());
+            final boolean filterByTestType = (null != TS.params().getFilterByTestType());
 
             String filter;
             if (filterByUuid) {

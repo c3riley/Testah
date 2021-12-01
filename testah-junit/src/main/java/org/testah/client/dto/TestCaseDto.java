@@ -21,7 +21,7 @@ public class TestCaseDto {
     /**
      * The test steps.
      */
-    private List<TestStepDto> testSteps = new ArrayList<TestStepDto>();
+    private List<TestStepDto> testSteps = new ArrayList<>();
 
     /**
      * The status.
@@ -56,17 +56,17 @@ public class TestCaseDto {
     /**
      * The related links.
      */
-    private List<String> relatedLinks = new ArrayList<String>();
+    private List<String> relatedLinks = new ArrayList<>();
 
     /**
      * The related ids.
      */
-    private List<String> relatedIds = new ArrayList<String>();
+    private List<String> relatedIds = new ArrayList<>();
 
     /**
      * The tags.
      */
-    private List<String> tags = new ArrayList<String>();
+    private List<String> tags = new ArrayList<>();
 
     /**
      * The known problem.
@@ -86,22 +86,22 @@ public class TestCaseDto {
     /**
      * The components.
      */
-    private List<String> components = new ArrayList<String>();
+    private List<String> components = new ArrayList<>();
 
     /**
      * The devices.
      */
-    private List<String> devices = new ArrayList<String>();
+    private List<String> devices = new ArrayList<>();
 
     /**
      * The platforms.
      */
-    private List<String> platforms = new ArrayList<String>();
+    private List<String> platforms = new ArrayList<>();
 
     /**
      * The run types.
      */
-    private List<String> runTypes = new ArrayList<String>();
+    private List<String> runTypes = new ArrayList<>();
 
     /**
      * The owner.
@@ -219,10 +219,10 @@ public class TestCaseDto {
     public TestCaseDto setStatus() {
         for (final TestStepDto e : testSteps) {
             if (null != e.getStatus()) {
-                if (e.getStatus() == false) {
+                if (!e.getStatus()) {
                     status = false;
                     return this;
-                } else if (e.getStatus() == true) {
+                } else if (e.getStatus()) {
                     status = true;
                 }
             }
@@ -289,9 +289,9 @@ public class TestCaseDto {
      */
     public String getExceptions() {
         if (null == this.exceptions) {
-            final StringBuffer sb = new StringBuffer();
+            final StringBuilder sb = new StringBuilder();
             for (final TestStepDto e : testSteps) {
-                if (null != e.getStatus() && e.getStatus() == false) {
+                if (null != e.getStatus() && !e.getStatus()) {
                     sb.append(e.getExceptionMessages());
                 }
             }
@@ -339,25 +339,25 @@ public class TestCaseDto {
      *
      * @return the test case dto
      */
-    public TestCaseDto setStatusEnum() {
+    public TestCaseDto setStatusEnum()
+    {
         // having an IGNORE as a status on a test step, means it was set programmatically in the test
         // set the test case as IGNORE
-        if (this.getTestSteps().stream().filter(testStepDto -> TestStatus.IGNORE.equals(testStepDto.getStatusEnum())).count() > 0) {
+        if (this.getTestSteps().stream().anyMatch(testStepDto -> TestStatus.IGNORE.equals(testStepDto.getStatusEnum())))
+        {
             setStatusEnum(TestStatus.IGNORE);
             return this;
-        }
-        // reaching this point in the code the test case is not meant to be counted:
-        // any step failure is a test case failure
-        else if (this.getTestSteps().stream().filter(testStepDto -> testStepDto.getStatus() != null && !testStepDto.getStatus()).count() > 0) {
+            // reaching this point in the code the test case is not meant to be counted:
+            // any step failure is a test case failure
+        } else if (this.getTestSteps().stream().anyMatch(testStepDto -> testStepDto.getStatus() != null && !testStepDto.getStatus()))
+        {
             setStatusEnum(TestStatus.FAILED);
             return this;
-        }
-        // reaching this point in code, the test case should pass; in that case there should be at least one success
-        else if (this.getTestSteps().stream().filter(testStepDto -> testStepDto.getStatus() != null && testStepDto.getStatus()).count() > 0) {
+            // reaching this point in code, the test case should pass; in that case there should be at least one success
+        } else if (this.getTestSteps().stream().anyMatch(testStepDto -> testStepDto.getStatus() != null && testStepDto.getStatus())) {
             setStatusEnum(TestStatus.PASSED);
-        }
         // don't know what to make of it: not ignored, not failing and not passing
-        else {
+        } else {
             TS.log().warn("Cannot figure out test status for test case " + this.getName());
             setStatusEnum(TestStatus.NA);
         }
