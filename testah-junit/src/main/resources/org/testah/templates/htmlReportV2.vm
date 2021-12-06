@@ -14,8 +14,8 @@
       } else {
         obj.style.display = '';
       }
-
     }
+
     function loadUI() {
       google.charts.load("current", {packages:["corechart"]});
       pCount = parseInt(document.getElementById('sc').innerText);
