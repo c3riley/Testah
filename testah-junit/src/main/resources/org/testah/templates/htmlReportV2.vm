@@ -462,7 +462,7 @@
       <div class="col-sm-12 middle">
         #foreach( $tc in $testPlan.getTestCases() )
           #if("$!tc.getStatus()" != "" && $tc.getStatus() == false )
-            <br><span class="ball-list ball-status-$testPlan.getStatusEnum()"></span><a class='plan-status-$testPlan.getStatusEnum()' href='$H$tc.getName()'
+            <br><span class="ball-list ball-status-$testPlan.getStatusEnum()"></span><a class='plan-status-$testPlan.getStatusEnum()' href='$H$tc.getName().hashCode()'
             title='See TestCase Results'>$tc.getName().replace(", null", ",")</a>
           #end
         #end
@@ -474,7 +474,7 @@
     <div class="row">
       <div class="col-12">
         <table class='table table-sm table-borderless'>
-          <tr><th id="$testcase.getName()" colspan="2" class="test-status-$testcase.getStatusEnum()">
+          <tr><th id="$testcase.getName().hashCode()" colspan="2" class="test-status-$testcase.getStatusEnum()">
           </th></tr>
           <tr>
             <td class='label'>Test Case: <span class='middle'></span></td>
