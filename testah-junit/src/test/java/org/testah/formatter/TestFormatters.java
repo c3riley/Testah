@@ -1,6 +1,7 @@
 package org.testah.formatter;
 
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.testah.TS;
 import org.testah.framework.annotations.KnownProblem;
@@ -27,13 +28,13 @@ public class TestFormatters extends BrowserTestPlan {
         TS.asserts().isFalse(false);
     }
 
-    //    @KnownProblem(linkedIds = "test")
-    //    @Test(expected = AssertionError.class)
-    //    @TestCase(description = "THIS IS A JUST TEST")
-    //    public void test2() {
-    //        TS.browser().goTo("https://www.google.com");
-    //        TS.asserts().isFalse(true);
-    //    }
+    @KnownProblem(linkedIds = "test")
+    @Test(expected = AssertionError.class)
+    @TestCase(description = "THIS IS A JUST TEST")
+    public void test2() {
+        TS.browser().goTo("https://www.google.com");
+        TS.asserts().isFalse(true);
+    }
 
     @After
     public void tearDown() {
