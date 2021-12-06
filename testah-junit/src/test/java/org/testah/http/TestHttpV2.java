@@ -36,16 +36,16 @@ public class TestHttpV2 extends HttpTestPlan {
     public void testWith2Gets() throws ClientProtocolException, IOException {
         step("Got to google");
         final HttpWrapperV2 http = new HttpWrapperV2();
-        http.setHttpClient().doRequestWithAssert(new GetRequestDto("http://www.google.com"));
+        http.setHttpClient().doRequestWithAssert(new GetRequestDto("https://www.google.com"));
         step("go to google again");
-        http.setHttpClient().doRequestWithAssert(new GetRequestDto("http://www.google.com"));
+        http.setHttpClient().doRequestWithAssert(new GetRequestDto("https://www.google.com"));
     }
 
     @Ignore
     @TestCase(tags = "test")
     @Test()
     public void postWithNUll() throws ClientProtocolException, IOException {
-        TS.http().doPost("http://www.google.com", null);
+        TS.http().doPost("https://www.google.com", null);
     }
 
     @TestCase
@@ -64,7 +64,7 @@ public class TestHttpV2 extends HttpTestPlan {
     @TestCase
     @Test
     public void postWithObject() throws ClientProtocolException, IOException {
-        TS.http().doPost("http://www.google.com", new TestCaseDto());
+        TS.http().doPost("https://www.google.com", new TestCaseDto());
     }
 
     @TestCase
@@ -73,7 +73,7 @@ public class TestHttpV2 extends HttpTestPlan {
         final HttpWrapperV2 http = new HttpWrapperV2();
         http.addCustomTestHeader("test-app");
         TS.asserts().equalsTo("test-app", http.getCustomHeaders().get("X-Application-Id").getValue());
-        http.doRequestWithAssert(new GetRequestDto("http://www.google.com"));
+        http.doRequestWithAssert(new GetRequestDto("https://www.google.com"));
     }
 
     @TestCase
@@ -82,7 +82,7 @@ public class TestHttpV2 extends HttpTestPlan {
         final HttpWrapperV2 http = new HttpWrapperV2();
         http.addCustomHeader("X-hellow-world", "hello");
         TS.asserts().equalsTo("hello", http.getCustomHeaders().get("X-hellow-world").getValue());
-        http.doRequestWithAssert(new GetRequestDto("http://www.google.com"));
+        http.doRequestWithAssert(new GetRequestDto("https://www.google.com"));
     }
 
     @TestCase
