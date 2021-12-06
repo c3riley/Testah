@@ -125,7 +125,7 @@ public class ParamLoader {
                 }
 
                 config.getKeys().forEachRemaining(value -> {
-                    // System Props Trumps property file if found, else use property file value
+                    // system props trumps property file if found, else use property file value
                     System.setProperty(value, System.getProperty(value, config.getString(value)));
                 });
                 final ObjectMapper mapper = new ObjectMapper();
