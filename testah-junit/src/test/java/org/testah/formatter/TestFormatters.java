@@ -21,19 +21,19 @@ import org.testah.framework.testPlan.BrowserTestPlan;
 public class TestFormatters extends BrowserTestPlan {
 
     @Test
-    @TestCase(description = "THIS IS A JUST TEST 1")
+    @TestCase(description = "THIS IS A JUST TEST")
     public void test1() {
         TS.browser().goTo("http://www.google.com");
         TS.asserts().isFalse(false);
     }
 
-    @KnownProblem(linkedIds = "test")
-    @Test(expected = AssertionError.class)
-    @TestCase(description = "THIS IS A JUST TEST 2")
-    public void test2() {
-        TS.browser().goTo("http://www.google.com");
-        TS.asserts().isFalse(true);
-    }
+    //    @KnownProblem(linkedIds = "test")
+    //    @Test(expected = AssertionError.class)
+    //    @TestCase(description = "THIS IS A JUST TEST")
+    //    public void test2() {
+    //        TS.browser().goTo("http://www.google.com");
+    //        TS.asserts().isFalse(true);
+    //    }
 
     @After
     public void tearDown() {
