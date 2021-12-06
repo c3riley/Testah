@@ -6,7 +6,7 @@ import org.testah.framework.dto.base.TestAbstractDtoBaseDto;
 
 public class AbstractRequestDtoTest {
 
-    public static final String url = "https://www.google.com";
+    public static final String url = "http://www.google.com";
     public static final String payloadString = "This is a payload String";
 
     @Test

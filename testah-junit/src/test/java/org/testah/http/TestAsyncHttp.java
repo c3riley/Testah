@@ -20,7 +20,7 @@ public class TestAsyncHttp {
     @Test
     public void basicTest() throws InterruptedException, ExecutionException {
         try (final HttpAsyncWrapperV1 http = new HttpAsyncWrapperV1()) {
-            final HttpResponse response = http.doRequestAsync(new GetRequestDto("https://www.google.com"), true).get();
+            final HttpResponse response = http.doRequestAsync(new GetRequestDto("http://www.google.com"), true).get();
             Assert.assertThat(response, is(notNullValue()));
             Assert.assertThat(response.getStatusLine().getStatusCode(), is(200));
         }

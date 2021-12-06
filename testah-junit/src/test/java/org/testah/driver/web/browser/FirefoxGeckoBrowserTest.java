@@ -17,8 +17,8 @@ public class FirefoxGeckoBrowserTest {
         Assume.assumeTrue("Only run on windows", Params.isWindows());
         FirefoxGeckoBrowser browser = new FirefoxGeckoBrowser();
         browser.getDriverBinary();
-        browser.start().getDriver().get("https://www.google.com");
-        browser.goToAndWaitForTitleToChange("https://www.google.com");
+        browser.start().getDriver().get("http://www.google.com");
+        browser.goToAndWaitForTitleToChange("http://www.google.com");
         browser.close();
     }
 

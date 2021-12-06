@@ -10,8 +10,8 @@ public class GoogleChromeBrowserTest {
     public void happyPathTest() {
         GoogleChromeBrowser browser = new GoogleChromeBrowser();
         browser.getDriverBinary();
-        browser.start().getDriver().get("https://www.google.com");
-        browser.goToAndWaitForTitleToChange("https://www.google.com");
+        browser.start().getDriver().get("http://www.google.com");
+        browser.goToAndWaitForTitleToChange("http://www.google.com");
         browser.close();
     }
 }

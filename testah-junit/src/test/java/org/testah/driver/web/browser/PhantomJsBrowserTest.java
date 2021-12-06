@@ -18,8 +18,8 @@ public class PhantomJsBrowserTest {
         Assume.assumeTrue("Only run on windows", Params.isWindows());
         PhantomJsBrowser phantomJsBrowser = new PhantomJsBrowser();
         phantomJsBrowser.getDriverBinary();
-        phantomJsBrowser.start().getDriver().get("https://www.google.com");
-        phantomJsBrowser.goToAndWaitForTitleToChange("https://www.google.com");
+        phantomJsBrowser.start().getDriver().get("http://www.google.com");
+        phantomJsBrowser.goToAndWaitForTitleToChange("http://www.google.com");
         phantomJsBrowser.close();
     }
 
