@@ -74,7 +74,9 @@ public class SlowLongRunningTest extends AbstractLongRunningTest
 
         executionTimePublisher.getStartTimeSpacing().forEach(
             period -> TS.asserts().isLessThan("Check limit on period between requests.", 2500, period));
-        TS.log().info(String.format("Sorted spacing:%n%s", executionTimePublisher.getStartTimeSpacing().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList())));
+        TS.log().info(
+            String.format("Sorted spacing:%n%s",
+                executionTimePublisher.getStartTimeSpacing().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList())));
         TS.asserts().isGreaterThan("Expect at requests with long execution time.", 0,
             executionTimePublisher.getElapsedTimes().stream().filter(responseTime -> responseTime >= LONG_RESPONSE_TIME).count());
     }

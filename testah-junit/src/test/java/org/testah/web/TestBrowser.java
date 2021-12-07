@@ -127,8 +127,8 @@ public class TestBrowser extends BrowserTestPlan {
     public void testPhantomJs() {
 
         final PhantomJsBrowser b = new PhantomJsBrowser();
-        b.start().getDriver().get("http://www.google.com");
-        b.goToAndWaitForTitleToChange("http://www.google.com");
+        b.start().getDriver().get("https://www.google.com");
+        b.goToAndWaitForTitleToChange("https://www.google.com");
         b.close();
         TS.asserts().isTrue(false);
 
@@ -139,8 +139,8 @@ public class TestBrowser extends BrowserTestPlan {
     public void testChrome() {
 
         final AbstractBrowser<GoogleChromeBrowser> b = new GoogleChromeBrowser().start();
-        b.start().getDriver().get("http://www.google.com");
-        b.goToAndWaitForTitleToChange("http://www.google.com");
+        b.start().getDriver().get("https://www.google.com");
+        b.goToAndWaitForTitleToChange("https://www.google.com");
         b.close();
 
     }
@@ -150,8 +150,8 @@ public class TestBrowser extends BrowserTestPlan {
     public void testFirefox() {
 
         final FirefoxBrowser b = new FirefoxBrowser();
-        b.start().getDriver().get("http://www.google.com");
-        b.goToAndWaitForTitleToChange("http://www.google.com");
+        b.start().getDriver().get("https://www.google.com");
+        b.goToAndWaitForTitleToChange("https://www.google.com");
         b.close();
 
     }
@@ -159,7 +159,7 @@ public class TestBrowser extends BrowserTestPlan {
     @Test
     @TestCase(name = "testScreenshot")
     public void testScreenshot() {
-        String browserContent = TS.browser().goTo("http://www.google.com").getHtml().toLowerCase(Locale.ROOT);
+        String browserContent = TS.browser().goTo("https://www.google.com").getHtml().toLowerCase(Locale.ROOT);
         TS.asserts().contains("", browserContent, "</title>");
         TS.asserts().contains("", browserContent, "google");
         TS.asserts().contains("", browserContent, "</body>");

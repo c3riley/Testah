@@ -7,7 +7,7 @@ import spock.lang.Specification
 class AbstractBrowserTest extends Specification {
     def "WaitTillElementIsPresent Not Found"() {
         given:
-        TS.browser().goTo("http://www.google.com");
+        TS.browser().goTo("https://www.google.com");
 
         when:
         Boolean rtn = TS.browser().waitTillElementIsPresent(By.id('NOT_FOUND'), 2, false)
@@ -18,7 +18,7 @@ class AbstractBrowserTest extends Specification {
 
     def "WaitTillElementIsPresent Not Found and Throw error"() {
         given:
-        TS.browser().goTo("http://www.google.com");
+        TS.browser().goTo("https://www.google.com");
 
         when:
         TS.browser().waitTillElementIsPresent(By.id('NOT_FOUND'), 2, true)
@@ -30,7 +30,7 @@ class AbstractBrowserTest extends Specification {
 
     def "WaitTillElementIsPresent"() {
         given:
-        TS.browser().goTo("http://www.google.com");
+        TS.browser().goTo("https://www.google.com");
 
         when:
         boolean rtn = TS.browser().waitTillElementIsPresent(By.name('q'), 2, true)
