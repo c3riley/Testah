@@ -82,8 +82,8 @@ dependencies {
     compile 'com.codeborne:phantomjsdriver:1.4.4'
     compile localGroovy()
     // upgrading apache logging to version 2.13.x messes up SystemOutCapture
-    compile 'org.apache.logging.log4j:log4j-api:2.14.0'
-    compile 'org.apache.logging.log4j:log4j-core:2.14.0'
+    compile "org.apache.logging.log4j:log4j-api:${log4JVersion}"
+    compile "org.apache.logging.log4j:log4j-core:${log4JVersion}"
     compile 'pl.pragmatists:JUnitParams:1.0.4'
     compile('org.apache.velocity:velocity:1.7')
 
