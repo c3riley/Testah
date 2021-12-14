@@ -52,7 +52,6 @@ public class Cli {
     /**
      * The Constant version.
      */
-
     public static final String version = "3.4.8";
 
     /**
