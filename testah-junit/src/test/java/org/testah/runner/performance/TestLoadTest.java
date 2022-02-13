@@ -2,6 +2,7 @@ package org.testah.runner.performance;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import org.apache.http.HttpStatus;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.testah.TS;
@@ -41,6 +42,15 @@ public class TestLoadTest extends AbstractLoadTest
         wm.start();
         wm.stubFor(get(urlPathEqualTo(URL_PATH_GET)).willReturn(aResponse()
             .withStatus(HttpStatus.SC_ACCEPTED).withFixedDelay(RESPONSE_TIME_MILLIS)));
+    }
+
+    /**
+     * Need to stop the Wiremock server once the tests\ completed.
+     */
+    @After
+    public void teardown()
+    {
+        wm.stop();
     }
 
     @TestCase

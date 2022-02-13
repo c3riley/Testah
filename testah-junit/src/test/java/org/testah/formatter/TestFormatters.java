@@ -40,5 +40,4 @@ public class TestFormatters extends BrowserTestPlan {
     public void tearDown() {
         TS.browser().close();
     }
-
 }

@@ -14,7 +14,10 @@ public class CliTest {
     private static final String ORG_TESTAH = "org.testah";
     private static final String PARAM_LOOK_AT_INTERNAL_TESTS = "param_lookAtInternalTests";
     private static final String FILTER_BY_TAG = "filter_DEFAULT_filterByTag";
-    public static final String OVERRIDE_JUNIT_5 = "OVERRIDE_JUNIT5";
+    public static final String OVERRIDE_JUNIT5_CSV_NO_SUCH_COLUMN = "OVERRIDE_JUNIT5_CSV_NO_SUCH_COLUMN";
+    public static final String OVERRIDE_JUNIT5_CSV_NO_SUCH_FILE = "OVERRIDE_JUNIT5_CSV_NO_SUCH_FILE";
+    public static final String OVERRIDE_JUNIT5_NO_SUCH_METHOD = "OVERRIDE_JUNIT5_METHOD_NO_SUCH_METHOD";
+    public static final String OVERRIDE_JUNIT5_CSV_INVALID_TYPE = "OVERRIDE_JUNIT5_CSV_NO_SUCH_TYPE";
 
     @Before
     public void setup() {
@@ -149,22 +152,41 @@ public class CliTest {
     }
 
     @Test
-    public void testInitializationError() {
+    public void testInitializationErrorNoCsvFile() {
+        runJUnitInitializationTest(OVERRIDE_JUNIT5_CSV_NO_SUCH_FILE, "does not exist");
+    }
+
+    @Test
+    public void testInitializationErrorInvalidType() {
+        runJUnitInitializationTest(OVERRIDE_JUNIT5_CSV_INVALID_TYPE, "Failed to convert String");
+    }
+
+    @Test
+    public void testInitializationErrorNoSuchCsvColumn() {
+        runJUnitInitializationTest(OVERRIDE_JUNIT5_CSV_NO_SUCH_COLUMN, "Junit5CsvDataProviderNoSuchColumn");
+    }
+
+    @Test
+    public void testInitializationErrorNoSuchMethod() {
+        runJUnitInitializationTest(OVERRIDE_JUNIT5_NO_SUCH_METHOD, "noSuchSourceMethod");
+    }
+
+    private void runJUnitInitializationTest(String tag, String errorString) {
         final String[] args = {"run"};
         boolean found = false;
-        System.setProperty(FILTER_BY_TAG, "JUNIT_5_NEG");
-        System.setProperty(OVERRIDE_JUNIT_5, "true");
+        System.setProperty(FILTER_BY_TAG, tag);
+        System.setProperty(tag, "true");
         Cli cli = new Cli();
         try {
             cli.getArgumentParser(args);
-        } catch (RuntimeException e) {
+        } catch (Throwable e) {
             found =
                 cli.getResults().stream().anyMatch(
-                    resultDto -> resultDto.getTestPlan().getTestCases().get(0).getDescription().contains("does not exist")
+                    resultDto -> resultDto.getTestPlan().getTestCases().get(0).getExceptions().contains(errorString)
                 );
         } finally {
             System.clearProperty(FILTER_BY_TAG);
-            System.clearProperty(OVERRIDE_JUNIT_5);
+            System.clearProperty(tag);
         }
         Assert.assertTrue(found);
     }

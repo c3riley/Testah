@@ -3,7 +3,6 @@ import org.gradle.api.internal.ConventionTask
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -35,7 +34,7 @@ def getEnvirVariable = {
         }
         return value
     } else {
-        System.out.println("Missing env MAVEN_REPO_TO_USE. Using /tmp instead");
+        System.out.println("Missing env MAVEN_REPO_TO_USE. Using /tmp instead")
         value = "file:///tmp"
     }
 }
@@ -61,7 +60,6 @@ repositories {
     //    url "http://repo1.maven.org/maven2"
     //}
     mavenCentral()
-    jcenter()
 }
 
 // Set checkstyle version.
@@ -121,7 +119,7 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.2'
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
 
-    testCompile "com.github.tomakehurst:wiremock-standalone:2.27.2"
+    compile "com.github.tomakehurst:wiremock-standalone:2.27.2"
 
     // https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson
     compile group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '2.26'
