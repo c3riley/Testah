@@ -10,7 +10,13 @@ import net.sourceforge.argparse4j.inf.Subparsers;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
+import org.junit.jupiter.api.extension.ExtensionContextException;
+import org.junit.jupiter.api.extension.TestInstantiationException;
+import org.junit.jupiter.params.aggregator.ArgumentAccessException;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
 import org.junit.jupiter.params.provider.CsvParsingException;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.testah.TS;
@@ -52,7 +58,7 @@ public class Cli {
     /**
      * The Constant version.
      */
-    public static final String version = "3.4.10";
+    public static final String version = "3.4.11";
 
     /**
      * The Constant BAR_LONG.
@@ -444,7 +450,13 @@ public class Cli {
                     .stream()
                     .filter(failure ->
                         failure.getException() instanceof PreconditionViolationException ||
-                            failure.getException() instanceof CsvParsingException
+                        failure.getException() instanceof ArgumentsAggregationException ||
+                        failure.getException() instanceof CsvParsingException ||
+                        failure.getException() instanceof ExtensionContextException ||
+                        failure.getException() instanceof TestInstantiationException ||
+                        failure.getException() instanceof ArgumentAccessException ||
+                        failure.getException() instanceof ExtensionConfigurationException ||
+                        failure.getException().getClass().equals(JUnitException.class)
                     )
                     .collect(Collectors.toList());
                 initFailures.forEach(failure -> initializationErrorFailures.add(failure.getException().getMessage()));

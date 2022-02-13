@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.helpers.FileUtils;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
 import org.testah.TS;
 import org.testah.client.dto.TestCaseDto;
 import org.testah.client.enums.TestType;
@@ -15,6 +16,8 @@ import org.testah.framework.dto.TestPlanAnnotationDto;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.trimToEmpty;
@@ -72,9 +76,55 @@ public class TestFilter {
             Set<Class<?>> lst = reflections.getTypesAnnotatedWith(TestPlan.class);
             lst.addAll(reflections.getTypesAnnotatedWith(TestPlanJUnit5.class));
             testClasses.addAll(lst);
+            recordTestClassesWithoutTestPlansTestCases(
+                internalClass,
+                org.testah.framework.annotations.TestPlanJUnit5.class,
+                org.testah.framework.annotations.TestCaseJUnit5.class,
+                org.testah.framework.annotations.TestCaseWithParamsJUnit5.class
+            );
+            recordTestClassesWithoutTestPlansTestCases(
+                internalClass,
+                org.testah.framework.annotations.TestPlan.class,
+                org.testah.framework.annotations.TestCase.class
+            );
             return lst.size();
         }
         return 0;
+    }
+
+    /**
+     * Record all classes that have Testah test case annotation but no Testah test plan annotation.
+     *
+     * @param internalClass base test package path
+     * @param testPlanAnnotation annotation marking the class as test plan
+     * @param testCaseAnnotations annotations marking methods as test methods
+     * @param <T> test plan annotation type
+     */
+    @SafeVarargs
+    public final <T extends Annotation> void recordTestClassesWithoutTestPlansTestCases(
+        final String internalClass,
+        final Class<T> testPlanAnnotation,
+        final Class<? extends Annotation>... testCaseAnnotations) {
+        final Reflections reflectionsCase = new Reflections(internalClass, new MethodAnnotationsScanner());
+
+        Set<Class<?>> testClassesWithoutTestPlanAnnotation = new HashSet<>();
+        for (Class<? extends Annotation> testCaseAnnotation : testCaseAnnotations) {
+            Set<Method> methods = reflectionsCase.getMethodsAnnotatedWith(testCaseAnnotation);
+            Set<Class<?>> declaringClasses =  methods.stream().map(Method::getDeclaringClass).collect(Collectors.toSet());
+            Set<Class<?>> filteredClasses = declaringClasses.stream().filter(it ->
+                    it.getAnnotation(testPlanAnnotation) == null
+            ).collect(Collectors.toSet());
+            testClassesWithoutTestPlanAnnotation.addAll(filteredClasses);
+        }
+        testClassesWithoutTestPlanAnnotation.forEach(clazz ->
+        {
+            long testCaseCount = Arrays.stream(testCaseAnnotations).map(testCaseAnnotation ->
+                new Reflections(clazz.getCanonicalName(), new MethodAnnotationsScanner())
+                    .getMethodsAnnotatedWith(testCaseAnnotation).size()).count();
+            TS.log().warn(String.format("Class %s has %d methods with test case annotations, but no test plan annotation.",
+                clazz.getCanonicalName(), testCaseCount));
+            recordIgnoredTestPlan(clazz.getCanonicalName(), (int) testCaseCount);
+        });
     }
 
     /**
