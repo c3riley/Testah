@@ -14,10 +14,10 @@ public class CliTest {
     private static final String ORG_TESTAH = "org.testah";
     private static final String PARAM_LOOK_AT_INTERNAL_TESTS = "param_lookAtInternalTests";
     private static final String FILTER_BY_TAG = "filter_DEFAULT_filterByTag";
+    public static final String OVERRIDE_JUNIT5_CSV_INVALID_TYPE = "OVERRIDE_JUNIT5_CSV_NO_SUCH_TYPE";
     public static final String OVERRIDE_JUNIT5_CSV_NO_SUCH_COLUMN = "OVERRIDE_JUNIT5_CSV_NO_SUCH_COLUMN";
     public static final String OVERRIDE_JUNIT5_CSV_NO_SUCH_FILE = "OVERRIDE_JUNIT5_CSV_NO_SUCH_FILE";
     public static final String OVERRIDE_JUNIT5_NO_SUCH_METHOD = "OVERRIDE_JUNIT5_METHOD_NO_SUCH_METHOD";
-    public static final String OVERRIDE_JUNIT5_CSV_INVALID_TYPE = "OVERRIDE_JUNIT5_CSV_NO_SUCH_TYPE";
 
     @Before
     public void setup() {
